@@ -3,60 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@react-pdf-viewer/core": "^3.12.0",
-    "@react-pdf-viewer/default-layout": "^3.12.0",
-    "@react-pdf-viewer/toolbar": "^3.12.0",
-    "@react-pdf-viewer/zoom": "^3.12.0",
-    "@reduxjs/toolkit": "^2.2.8",
-    "@stomp/stompjs": "^7.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
-    "braintree-web-drop-in-react": "^1.2.1",
-    "eslint-plugin-import": "^2.31.0",
-    "file-saver": "^2.0.5",
-    "font-awesome": "^4.7.0",
-    "framer-motion": "^11.11.7",
-    "html2canvas": "^1.4.1",
     "jquery": "^3.7.1",
-    "jspdf": "^2.5.2",
-    "moment": "^2.30.1",
     "owl.carousel": "^2.3.4",
     "react": "^18.3.1",
-    "react-bootstrap": "^2.10.5",
-    "react-countup": "^6.5.3",
+    "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",
-    "react-hook-form": "^7.53.0",
     "react-icons": "^5.3.0",
-    "react-infinite-scroll-component": "^6.1.0",
-    "react-loader-spinner": "^6.1.6",
-    "react-paginate": "^8.2.0",
-    "react-pdf": "^9.1.0",
-    "react-router-dom": "^6.26.2",
-    "react-scripts": "^5.0.1",
-    "react-scroll": "^1.9.0",
-    "react-spinners": "^0.14.1",
-    "react-toastify": "^10.0.5",
-    "react-transition-group": "^4.4.5",
-    "react-type-animation": "^3.2.0",
-    "recharts": "^2.13.3",
-    "sockjs-client": "^1.6.1",
-    "sweetalert2": "^11.14.0",
-    "url": "^0.11.4",
-    "web-vitals": "^2.1.4",
-    "xlsx": "^0.18.5"
+    "react-router-dom": "^6.26.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "_moduleAliases": {
-    "@modules": "build/modules",
-    "@core": "build/core"
   },
   "eslintConfig": {
     "extends": [
@@ -75,8 +40,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }

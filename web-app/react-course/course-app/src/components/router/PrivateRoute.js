@@ -1,40 +1,41 @@
 import React, { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
-import { introspect } from "../../service/AuthenticationService";
-
-const LoadingSpinner = () => (
-  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-    <div className="spinner-border text-primary" role="status">
-      <span className="sr-only">Loading...</span>
-    </div>
-  </div>
-);
+import { Navigate } from 'react-router-dom';
 
 export const PrivateRoute = ({ children }) => {
-  const [isValidToken, setIsValidToken] = useState(null);
-  const token = localStorage.getItem("token");
+    
+    const [isValidToken, setIsValidToken] = useState(null);
+    const token = localStorage.getItem('token');
 
-  useEffect(() => {
-    if (!token) {
-      setIsValidToken(false);
-      return;
-    }
-    introspect()
-      .then((data) => {
-        if (data?.valid) {
-          setIsValidToken(true);
-        } else {
-          setIsValidToken(false);
+    useEffect(() => {
+        if (!token) {
+            setIsValidToken(false);
+            return;
         }
-      })
-      .catch(() => {
-        setIsValidToken(false);
-      });
-  }, [token]);
 
-  if (isValidToken === null) {
-    return <LoadingSpinner />;
-  }
+        fetch(`http://localhost:8080/api/v1/auth/introspect`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ token }) // gửi token để kiểm tra
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.result.valid) {
+                setIsValidToken(true);
+            } else {
+                setIsValidToken(false);
+            }
+        })
+        .catch(() => {
+            setIsValidToken(false);
+        });
+    }, [token]);
 
-  return isValidToken ? children : <Navigate to="/login" />;
+    if (isValidToken === null) {
+        return <div></div>;
+    }
+
+    return isValidToken ? children : <Navigate to="/login" />;
 };
