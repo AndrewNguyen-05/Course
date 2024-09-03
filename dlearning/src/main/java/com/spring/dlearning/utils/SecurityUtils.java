@@ -8,15 +8,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class SecurityUtils {
-
-    private SecurityUtils(){
-    }
-
-    private static final Random RANDOM = new Random();
 
     public static Optional<String> getCurrentUserLogin(){
         SecurityContext contextHolder = SecurityContextHolder.getContext();
@@ -36,11 +30,10 @@ public class SecurityUtils {
         return null;
     }
 
-    public static String generateOtp(){
-        StringBuilder otp = new StringBuilder();
-        for(int i = 0; i < 6 ; i++){
-            otp.append(RANDOM.nextInt(10));
-        }
-        return otp.toString();
+    public static Optional<String> getCurrentUserJwt(){
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        return Optional.ofNullable(securityContext.getAuthentication())
+                .filter(authentication -> authentication.getCredentials() instanceof String)
+                .map(authentication -> (String) authentication.getCredentials());
     }
 }

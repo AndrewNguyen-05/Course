@@ -1,8 +1,8 @@
 package com.spring.dlearning.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.spring.dlearning.common.CourseLevel;
-import com.spring.dlearning.common.Gender;
+import com.spring.dlearning.utils.CourseLevel;
+import com.spring.dlearning.utils.Gender;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;

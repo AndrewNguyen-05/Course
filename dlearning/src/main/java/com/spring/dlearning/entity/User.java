@@ -1,33 +1,35 @@
 package com.spring.dlearning.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.spring.dlearning.common.Gender;
-import com.spring.dlearning.common.RegistrationStatus;
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.spring.dlearning.utils.CourseLevel;
+import com.spring.dlearning.utils.Gender;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Set;
 
-@Entity
-@Table(name = "users")
 @Setter
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User extends AbstractEntity<Long> {
+@Entity
+@Table(name = "users")
+public class User extends AbstractEntity<Long>{
 
     @Column(name = "email", nullable = false, unique = true)
-    @NotBlank
+    @NotNull
     @Email
     String email;
 
@@ -37,36 +39,34 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "name", nullable = false)
     String name;
 
+    @Column(name = "avatar")
+    String avatar;
+
     @Column(name = "first_name", nullable = false)
     String firstName;
 
     @Column(name = "last_name", nullable = false)
     String lastName;
 
-    @Column(name = "avatar")
-    String avatar;
+    @Column(name = "dob")
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    LocalDate dob;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
     Gender gender;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "courseLevel")
+    CourseLevel courseLevel;
+
     @Column(name = "phone")
     String phone;
-
-    @Column(name = "dob")
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
-    LocalDate dob;
-
-    @Column(name = "otp")
-    String otp;
-
-    @Column(name = "otp_expiry_date")
-    LocalDateTime otpExpiryDate;
 
     @Column(name = "address")
     String address;
 
-    @Column(name = "description", columnDefinition = "MEDIUMTEXT")
+    @Column(name = "description")
     String description;
 
     @Column(name = "zipCode")
@@ -75,67 +75,25 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "enabled")
     Boolean enabled;
 
-    @Column(name = "expertise")
-    String expertise;
-
-    @Column(name = "yearsOfExperience")
-    Double yearsOfExperience;
-
-    @Column(name = "bio")
-    String bio;
-
-    @Column(name = "certificate")
-    String certificate;
-
-    @Column(name = "cvUrl")
-    String cvUrl;
-
-    @Column(name = "facebookLink")
-    String facebookLink;
-
-    @Column(name = "points", columnDefinition = "BIGINT DEFAULT 0")
-    Long points;
-
-    @Column(name = "registrationStatus")
-    @Enumerated(EnumType.STRING)
-    RegistrationStatus registrationStatus;
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     Role role;
 
-    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonIgnore
-    Set<Course> courses;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "author", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    private Set<Course> authoredCourses;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "reviews"})
-    Set<Review> reviews;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "user"})
-    Set<Enrollment> enrollments;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    Set<Favorite> favorites;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonInclude
-    List<Post> posts;
-
-    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Set<Message> sentMessages;
-
-    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private Set<Message> receivedMessages;
+    private Set<Wishlist> wishlists;
 
     @PrePersist
     protected void onCreate() {
         if (enabled == null) {
-            enabled = Boolean.TRUE;
+            enabled = true;
         }
+    }
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(role.getName()));
     }
 
 }

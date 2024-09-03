@@ -12,12 +12,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -30,12 +30,9 @@ public class ApplicationInitConfiguration {
     PasswordEncoder passwordEncoder;
 
     @NonFinal
-    @Value("${admin.username}")
-    String ADMIN_USER_NAME;
-
+    static final String ADMIN_USER_NAME = "admin@gmail.com";
     @NonFinal
-    @Value("${admin.password}")
-    String ADMIN_PASSWORD;
+    static final String ADMIN_PASSWORD = "123456";
 
     @Bean
     @ConditionalOnProperty(
@@ -60,14 +57,6 @@ public class ApplicationInitConfiguration {
                 roleRepository.save(Role.builder()
                         .name(PredefinedRole.ADMIN_ROLE)
                         .description("Admin role")
-                        .build());
-            }
-
-            Optional<Role> teacherRole = roleRepository.findByName(PredefinedRole.TEACHER_ROLE);
-            if(teacherRole.isEmpty()){
-                roleRepository.save(Role.builder()
-                        .name(PredefinedRole.TEACHER_ROLE)
-                        .description("Teacher role")
                         .build());
             }
 

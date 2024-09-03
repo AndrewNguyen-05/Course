@@ -1,9 +1,14 @@
 package com.spring.dlearning.configuration;
 
-import com.spring.dlearning.filter.CustomJwtAuthFilter;
+
+import com.spring.dlearning.security.UserSecurityDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -22,33 +26,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
-    private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final CustomJwtDecoder jwtDecoder;
+    private final UserSecurityDetails userDetailService;
 
-    private static final String[] PUBLIC_ENDPOINT = new String[]{
-            "/api/v1/auth/token",
-            "/api/v1/register",
-            "/api/v1/auth/logout",
-            "/api/v1/auth/introspect",
-            "/api/v1/auth/refresh",
-            "/api/v1/auth/outbound/authentication",
-            "/api/v1/create-password",
-            "/api/v1/send-otp",
-            "/api/v1/reset-password",
-            "/api/v1/verify-otp",
-            "/api/v1/check-exists-user",
-            "/api/v1/send-otp-register",
-            "/api/v1/courses/**",
-            "/api/v1/course/{id}",
-            "/api/v1/info-course/{id}",
-            "/ws/**",
-            "/upload/**",
-            "/api/v1/courses-review/{courseId}",
-            "/api/v1/payment/vn-pay-callback",
-            "/api/v1/payment/vn-pay/**",
-            "/api/v1/get-ads-active",
-            "/api/v1/info-teacher/**",
-            "/api/v1/search-title/**"
+    private static final String[] PUBLIC_ENDPOINT = {
+            "/api/v1/auth/token", "/api/v1/register",
+            "/api/v1/auth/logout", "/css/**", "/img/**", "/js/**",
+            "/lib/**", "/scss/**", "/", "/home",
+            "/api/v1/auth/introspect", "/api/v1/auth/refresh",
+            "/login", "/templates/**", "/register", "api/v1/auth/outbound/authentication",
+            "/oauth2/authorization/**", "/create-password", "/authenticate", "/api/v1/create-password",
+            "/authenticate-fb"
     };
 
     @Bean
@@ -56,19 +44,31 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
+
+    @Bean
+    AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(PUBLIC_ENDPOINT).permitAll()
                         .anyRequest().authenticated())
-                .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler))
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                                 .decoder(jwtDecoder)
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
-                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(new JwtAccessDeniedHandler()))
-                .addFilterBefore(new CustomJwtAuthFilter(), BearerTokenAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return httpSecurity.build();
@@ -84,5 +84,4 @@ public class SecurityConfiguration {
 
         return jwtAuthenticationConverter;
     }
-
 }

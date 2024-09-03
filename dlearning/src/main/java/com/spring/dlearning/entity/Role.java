@@ -15,10 +15,10 @@ import java.util.Set;
 @Entity
 public class Role extends AbstractEntity<Long> {
 
+
     @Column(nullable = false, unique = true)
     String name;
 
-    @Column(name = "description")
     String description;
 
     @OneToMany(mappedBy = "role")

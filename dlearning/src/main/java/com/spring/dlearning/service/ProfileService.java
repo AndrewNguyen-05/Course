@@ -1,5 +1,6 @@
 package com.spring.dlearning.service;
 
+
 import com.spring.dlearning.dto.request.UserProfileRequest;
 import com.spring.dlearning.dto.response.UserProfileResponse;
 import com.spring.dlearning.entity.User;
@@ -7,15 +8,14 @@ import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.ProfileMapper;
 import com.spring.dlearning.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,7 +27,6 @@ public class ProfileService {
     ProfileMapper profileMapper;
 
     @Transactional
-    @PreAuthorize("isAuthenticated()")
     public void updateProfile(UserProfileRequest request) {
         SecurityContext contextHolder = SecurityContextHolder.getContext();
         String email = contextHolder.getAuthentication().getName();
@@ -46,7 +45,6 @@ public class ProfileService {
         }
     }
 
-    @PreAuthorize("isAuthenticated()")
     public UserProfileResponse getInfoProfile(){
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();

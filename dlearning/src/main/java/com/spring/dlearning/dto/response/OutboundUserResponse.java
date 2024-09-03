@@ -1,12 +1,12 @@
 package com.spring.dlearning.dto.response;
 
+
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -20,5 +20,5 @@ public class OutboundUserResponse {
     String givenName;
     String familyName;
     String picture;
-    String locale;
+    String hd;
 }
