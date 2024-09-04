@@ -5,7 +5,6 @@ import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.PasswordCreationRequest;
 import com.spring.dlearning.dto.request.UserCreationRequest;
 import com.spring.dlearning.dto.request.VerifyOtpRequest;
-import com.spring.dlearning.dto.response.UserProfileResponse;
 import com.spring.dlearning.dto.response.UserResponse;
 import com.spring.dlearning.dto.response.VerifyOtpResponse;
 import com.spring.dlearning.entity.Role;
@@ -15,8 +14,6 @@ import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.UserMapper;
 import com.spring.dlearning.repository.RoleRepository;
 import com.spring.dlearning.repository.UserRepository;
-import com.spring.dlearning.repository.http_client.OutboundIdentityClient;
-import com.spring.dlearning.utils.SecurityUtils;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
@@ -24,17 +21,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -48,12 +41,23 @@ public class UserService {
     PasswordEncoder passwordEncoder;
     RoleRepository roleRepository;
     EmailService emailService;
+    OtpService otpService;
+
+    public boolean findByEmail(String email){
+       return userRepository.existsByEmail(email);
+    }
 
     @Transactional
-    public UserResponse createUser(UserCreationRequest request){
+    public UserResponse createUser(UserCreationRequest request, String otp) throws MessagingException {
         if(userRepository.findByEmail(request.getEmail()).isPresent())
             throw new AppException(ErrorCode.USER_EXISTED);
 
+
+        // Xác thực otp
+        String storedOtp = otpService.getOtp(request.getEmail());
+        if (storedOtp == null || !storedOtp.equals(otp)) {
+            throw new AppException(ErrorCode.INVALID_OTP);
+        }
 
         User user = userMapper.toUser(request);
         Role role = roleRepository.findByName(PredefinedRole.USER_ROLE)
@@ -63,6 +67,9 @@ public class UserService {
         user.setRole(role);
         user.setName(request.getFirstName() + " " + request.getLastName());
         userRepository.save(user);
+
+        // Xóa OTP khỏi Redis sau khi xác thực thành công
+        otpService.deleteOtp(request.getEmail());
 
         return userMapper.toUserResponse(user);
     }
@@ -136,6 +143,38 @@ public class UserService {
         );
         emailService.sendEmail(subject, content, List.of(email));
     }
+
+    public void sendOtpRegister(String email) throws MessagingException {
+        String otp = generateOtp();
+
+        otpService.saveOtp(email, otp);
+
+        String subject = "Your OTP Code for Account Registration";
+
+        StringBuilder content = new StringBuilder();
+        content.append("<html>")
+                .append("<body style='font-family: Arial, sans-serif; line-height: 1.6;'>")
+                .append("<h2 style='color: #4CAF50;'>Welcome to [Your Company Name]!</h2>")
+                .append("<p>Dear <strong>")
+                .append(email)
+                .append("</strong>,</p>")
+                .append("<p>Thank you for registering with <strong>[Your Company Name]</strong>. We are excited to have you on board!</p>")
+                .append("<p style='font-size: 18px;'><strong>Your OTP Code is:</strong> ")
+                .append("<span style='font-size: 22px; color: #FF5733;'><strong>")
+                .append(otp)
+                .append("</strong></span></p>")
+                .append("<p><strong>Note:</strong> This OTP is valid for <em>5 minutes</em>. Please enter it as soon as possible to complete your registration.</p>")
+                .append("<p>If you did not request this code, please ignore this email. For your security, do not share this code with anyone.</p>")
+                .append("<br/>")
+                .append("<p>Best regards,</p>")
+                .append("<p><strong>[Your Company Name] Team</strong></p>")
+                .append("</body>")
+                .append("</html>");
+
+        String emailContent = content.toString();
+        emailService.sendEmail(subject, emailContent, List.of(email));
+    }
+
 
     public VerifyOtpResponse verifyOtp(VerifyOtpRequest request){
         User user = userRepository.findByEmail(request.getEmail())

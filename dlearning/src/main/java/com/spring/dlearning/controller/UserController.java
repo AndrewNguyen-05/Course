@@ -1,7 +1,6 @@
 package com.spring.dlearning.controller;
 
 
-import com.cloudinary.Api;
 import com.spring.dlearning.dto.request.PasswordCreationRequest;
 import com.spring.dlearning.dto.request.UserCreationRequest;
 import com.spring.dlearning.dto.request.VerifyOtpRequest;
@@ -28,11 +27,23 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/register")
-    ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request){
-        var result = userService.createUser(request);
+    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request,
+                                                @RequestParam String otp) throws MessagingException {
+        var result = userService.createUser(request, otp);
 
         return ApiResponse.<UserResponse>builder()
                 .code(HttpStatus.CREATED.value())
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/check-exists-user")
+    ApiResponse<Boolean> checkExistsUser(@RequestParam String email ){
+        var result = userService.findByEmail(email);
+        System.out.println(result);
+
+        return ApiResponse.<Boolean>builder()
+                .code(HttpStatus.OK.value())
                 .result(result)
                 .build();
     }
@@ -52,6 +63,16 @@ public class UserController {
 
         userService.sendOtp(email);
 
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.OK.value())
+                .message("Send Otp Successfully")
+                .build();
+    }
+
+    @PostMapping("/send-otp-register")
+    ApiResponse<Void> sendOtpRegister(@RequestParam String email)
+            throws MessagingException {
+        userService.sendOtpRegister(email);
         return ApiResponse.<Void>builder()
                 .code(HttpStatus.OK.value())
                 .message("Send Otp Successfully")

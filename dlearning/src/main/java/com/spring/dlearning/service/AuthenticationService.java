@@ -188,8 +188,7 @@ public class AuthenticationService {
 //                .token(token)
 //                .build();
 //    }
-
-
+    
     private String generateToken(User user) {
 
         JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
