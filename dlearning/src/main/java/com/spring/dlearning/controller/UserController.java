@@ -1,11 +1,15 @@
 package com.spring.dlearning.controller;
 
 
+import com.cloudinary.Api;
 import com.spring.dlearning.dto.request.PasswordCreationRequest;
 import com.spring.dlearning.dto.request.UserCreationRequest;
+import com.spring.dlearning.dto.request.VerifyOtpRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.UserResponse;
+import com.spring.dlearning.dto.response.VerifyOtpResponse;
 import com.spring.dlearning.service.UserService;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +43,42 @@ public class UserController {
 
         return ApiResponse.<Void>builder()
                 .message("Password has ben created, you could use it to log-in")
+                .build();
+    }
+
+    @PostMapping("/send-otp")
+    ApiResponse<Void> sendOtp(@RequestParam String email)
+            throws MessagingException {
+
+        userService.sendOtp(email);
+
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.OK.value())
+                .message("Send Otp Successfully")
+                .build();
+    }
+
+    @PostMapping("/verify-otp")
+    public ApiResponse<VerifyOtpResponse> verifyOtp(@RequestBody VerifyOtpRequest request) {
+        var result = userService.verifyOtp(request);
+
+        return ApiResponse.<VerifyOtpResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("Verify Otp Successfully")
+                .result(result)
+                .build();
+    }
+
+
+    @PostMapping("/reset-password")
+    ApiResponse<?> resetPassword(@RequestBody @Valid PasswordCreationRequest request,
+                                 @RequestParam String email,
+                                 @RequestParam String otp ){
+        userService.resetPassword(email, otp, request);
+
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.OK.value())
+                .message("Reset Password Successfully")
                 .build();
     }
 

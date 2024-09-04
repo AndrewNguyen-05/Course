@@ -32,23 +32,24 @@ spring:
 
 jwt:
   signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
-  valid-duration: 3600 # in second
-  refreshable-duration: 36000 # in seconds
+  valid-duration: 24
+  refreshable-duration: 72
 
 outbound:
   identity:
     client-id: "1063674841920-mtlapuiv2d8gc3rgf6b4oi4vlaa31pah.apps.googleusercontent.com"
     client-secret: "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"
-    redirect-uri: "http://localhost:8080/authenticate"
+    redirect-uri: "http://localhost:3000/authenticate"
     grant-type: "authorization_code"
 
-  facebook:
-    client-id: "1184572409447891"
-    client-secret: "bcf09ccad760216ccae41807e1a82d1f"
-    redirect-uri: "http://localhost:8080/authenticate-fb"
-    grant-type: "authorization_code"
+#  facebook:
+#    client-id: "1184572409447891"
+#    client-secret: "bcf09ccad760216ccae41807e1a82d1f"
+#    redirect-uri: "http://localhost:8080/authenticate-fb"
+#    grant-type: "authorization_code"
 
 cloudinary:
   cloud-name: "dznef2sae"
   api-key: "537285485346489"
   api-secret: "PHu0HBagBqf1rgfKMSJpSLUh29M"
+

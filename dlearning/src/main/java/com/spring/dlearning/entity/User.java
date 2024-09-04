@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -35,6 +36,12 @@ public class User extends AbstractEntity<Long>{
 
     @Column(name = "password")
     String password;
+
+    @Column(name = "otp")
+    String otp;
+
+    @Column(name = "otp_expiry_date")
+    LocalDateTime otpExpiryDate;
 
     @Column(name = "name", nullable = false)
     String name;

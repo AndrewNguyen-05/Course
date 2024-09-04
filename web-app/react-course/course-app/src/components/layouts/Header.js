@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { UseAuth } from '../authentication/UseAuth.js';
+import { HandleLogout } from '../authentication/HandleLogout.js';
 
 export const Header = () => {
     const location = useLocation();
@@ -17,7 +18,8 @@ export const Header = () => {
 
     {/* Handle Login and Logout*/}
 
-    const {isTokenValid, handleLogout} = UseAuth();
+    const {isTokenValid} = UseAuth();
+    const {handleLogout} = HandleLogout();
     
 
     return (
@@ -87,7 +89,7 @@ export const Header = () => {
                                     <i className="fa-solid fa-user-graduate"></i>
                                 </button>
                                 <ul className="dropdown-menu dropdown-menu-end text-start" style={{ transform: 'translateX(-50%)', left: '50%' }}>
-                                    {isTokenValid === null ? (
+                                    {isTokenValid === null  ? (
                                         <li></li> ) // Hiển thị khi đang kiểm tra token, không hiện gì
 
                                         : isTokenValid ? ( // nếu token đúng

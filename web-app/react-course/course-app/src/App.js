@@ -2,21 +2,25 @@ import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Header } from './components/layouts/Header';
 import { Footer } from './components/layouts/Footer';
-import { LoginPage } from './components/myComponents/LoginPage';
+import { LoginPage } from './components/UserComponents/LoginPage';
 import { HomePage } from './components/pages/HomePage';
-import { LayoutWithoutHeaderFooter } from './components/myComponents/LayoutWithoutHeaderFooter';
-import { About } from './components/myComponents/About';
-import { Courses } from './components/myComponents/Courses';
-import { CourseDetail } from './components/myComponents/CourseDetail';
-import { Contact } from './components/myComponents/Contact';
-import { Profile } from './components/myComponents/Profile';
+import { About } from './components/UserComponents/About';
+import { Courses } from './components/UserComponents/Courses';
+import { CourseDetail } from './components/UserComponents/CourseDetail';
+import { Contact } from './components/UserComponents/Contact';
+import { Profile } from './components/UserComponents/Profile';
 import { PrivateRoute } from './components/router/PrivateRoute';
-import { ChangePassword } from './components/myComponents/ChangePassword';
+import { ChangePassword } from './components/UserComponents/ChangePassword';
+import { ProcessLoginOAuth2 } from './components/authentication/OAuth2';
+import { CreatePassword } from './components/UserComponents/CreatePassword';
+import { UploadCourse } from './components/TeacherComponents/UploadCourse';
+import { MyCourses } from './components/TeacherComponents/ManagerCourse';
+import { LayoutWithoutHeaderFooter } from './components/UserComponents/LayoutWithoutHeaderFooter';
+import { ForgotPassword } from './components/authentication/ForgotPassword';
 
 function App() {
   return (
     <Router>
-
       <div className="App">
         <Routes>
 
@@ -26,6 +30,19 @@ function App() {
               <HomePage />
               <Footer />
             </>
+          } />
+
+          <Route path="/teacher-add-courses" element={
+            <LayoutWithoutHeaderFooter>
+              <UploadCourse />
+            </LayoutWithoutHeaderFooter>
+          } />
+
+
+          <Route path="/manager-courses" element={
+            <LayoutWithoutHeaderFooter>
+              <MyCourses />
+            </LayoutWithoutHeaderFooter>
           } />
 
           <Route path="/home" element={
@@ -48,10 +65,37 @@ function App() {
             </LayoutWithoutHeaderFooter>
           } />
 
+          <Route path="/forgot-password" element={
+            <LayoutWithoutHeaderFooter>
+              <ForgotPassword />
+            </LayoutWithoutHeaderFooter>
+          } />
+
+          <Route path="/authenticate" element={
+            <LayoutWithoutHeaderFooter>
+              <ProcessLoginOAuth2 />
+            </LayoutWithoutHeaderFooter>
+          } />
+
+          <Route path="/forgot-password" element={
+            <LayoutWithoutHeaderFooter>
+              <ForgotPassword />
+            </LayoutWithoutHeaderFooter>
+          } />
+
+
           <Route path="/change-password" element={
             <PrivateRoute>
               <LayoutWithoutHeaderFooter>
                 <ChangePassword />
+              </LayoutWithoutHeaderFooter>
+            </PrivateRoute>
+          } />
+
+          <Route path="/create-password" element={
+            <PrivateRoute>
+              <LayoutWithoutHeaderFooter>
+                <CreatePassword />
               </LayoutWithoutHeaderFooter>
             </PrivateRoute>
           } />

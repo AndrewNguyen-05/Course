@@ -1,7 +1,5 @@
-import React from 'react';
-import { useState } from 'react';
-
-
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 // Import các hình ảnh
 import aboutImage from './../../img/about.jpg';
@@ -129,83 +127,75 @@ export const HomePage = () => {
                     </div>
                 </div>
 
-                <div className="owl-carousel courses-carousel">
-                    <div className="courses-item position-relative">
-                        <img className="img-fluid" src={course1Image} alt="Course 1" />
-                        <div className="courses-text">
-                            <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                            <div className="border-top w-100 mt-3">
-                                <div className="d-flex justify-content-between p-4">
-                                    <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
+                <div className="row">
+                    <div className="col-lg-3 col-md-6 mb-4">
+                        <div className="courses-item position-relative">
+                            <img className="img-fluid" src={course1Image} alt="Course 1" />
+                            <div className="courses-text">
+                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
+                                <div className="border-top w-100 mt-3">
+                                    <div className="d-flex justify-content-between p-4">
+                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
+                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="w-100 bg-white text-center p-4">
-                                <a className="btn btn-primary" href="/course-detail">Course Detail</a>
+                                <div className="w-100 bg-white text-center p-4">
+                                    <Link className="btn btn-primary" to="/course-detail">Course Detail</Link>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="courses-item position-relative">
-                        <img className="img-fluid" src={course2Image} alt="Course 2" />
-                        <div className="courses-text">
-                            <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                            <div className="border-top w-100 mt-3">
-                                <div className="d-flex justify-content-between p-4">
-                                    <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
+                    <div className="col-lg-3 col-md-6 mb-4">
+                        <div className="courses-item position-relative">
+                            <img className="img-fluid" src={course2Image} alt="Course 2" />
+                            <div className="courses-text">
+                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
+                                <div className="border-top w-100 mt-3">
+                                    <div className="d-flex justify-content-between p-4">
+                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
+                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="w-100 bg-white text-center p-4">
-                                <a className="btn btn-primary" href="/course-detail">Course Detail</a>
+                                <div className="w-100 bg-white text-center p-4">
+                                    <Link className="btn btn-primary" to="/course-detail">Course Detail</Link>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="courses-item position-relative">
-                        <img className="img-fluid" src={course3Image} alt="Course 3" />
-                        <div className="courses-text">
-                            <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                            <div className="border-top w-100 mt-3">
-                                <div className="d-flex justify-content-between p-4">
-                                    <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
+                    <div className="col-lg-3 col-md-6 mb-4">
+                        <div className="courses-item position-relative">
+                            <img className="img-fluid" src={course3Image} alt="Course 3" />
+                            <div className="courses-text">
+                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
+                                <div className="border-top w-100 mt-3">
+                                    <div className="d-flex justify-content-between p-4">
+                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
+                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="w-100 bg-white text-center p-4">
-                                <a className="btn btn-primary" href="/course-detail">Course Detail</a>
+                                <div className="w-100 bg-white text-center p-4">
+                                    <Link className="btn btn-primary" to="/course-detail">Course Detail</Link>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div className="courses-item position-relative">
-                        <img className="img-fluid" src={course4Image} alt="Course 4" />
-                        <div className="courses-text">
-                            <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                            <div className="border-top w-100 mt-3">
-                                <div className="d-flex justify-content-between p-4">
-                                    <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
+                    <div className="col-lg-3 col-md-6 mb-4">
+                        <div className="courses-item position-relative">
+                            <img className="img-fluid" src={course4Image} alt="Course 4" />
+                            <div className="courses-text">
+                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
+                                <div className="border-top w-100 mt-3">
+                                    <div className="d-flex justify-content-between p-4">
+                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
+                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="w-100 bg-white text-center p-4">
-                                <a className="btn btn-primary" href="/course-detail">Course Detail</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="courses-item position-relative">
-                        <img className="img-fluid" src={course5Image} alt="Course 5" />
-                        <div className="courses-text">
-                            <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                            <div className="border-top w-100 mt-3">
-                                <div className="d-flex justify-content-between p-4">
-                                    <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                    <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
+                                <div className="w-100 bg-white text-center p-4">
+                                    <Link className="btn btn-primary" to="/course-detail">Course Detail</Link>
                                 </div>
-                            </div>
-                            <div className="w-100 bg-white text-center p-4">
-                                <a className="btn btn-primary" href="/course-detail">Course Detail</a>
                             </div>
                         </div>
                     </div>
@@ -262,60 +252,71 @@ export const HomePage = () => {
                         <h6 className="d-inline-block position-relative text-secondary text-uppercase pb-2">Instructors</h6>
                         <h1 className="display-4">Meet Our Instructors</h1>
                     </div>
-                    <div className="owl-carousel team-carousel position-relative" style={{ padding: '0 30px' }}>
-                        <div className="team-item">
-                            <img className="img-fluid w-100" src={instructor1Image} alt="Instructor 1" />
-                            <div className="bg-light text-center p-4">
-                                <h5 className="mb-3">Instructor Name</h5>
-                                <p className="mb-2">Web Design & Development</p>
-                                <div className="d-flex justify-content-center">
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-linkedin-in"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-instagram"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-youtube"></i></a>
+                    <div className="row">
+                        <div className="col-lg-3 col-md-6 mb-4">
+                            <div className="team-item">
+                                <img className="img-fluid w-100" src={instructor1Image} alt="Instructor 1" />
+                                <div className="bg-light text-center p-4">
+                                    <h5 className="mb-3">Instructor Name</h5>
+                                    <p className="mb-2">Web Design & Development</p>
+                                    <div className="d-flex justify-content-center">
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-linkedin-in"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-instagram"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-youtube"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="team-item">
-                            <img className="img-fluid w-100" src={instructor2Image} alt="Instructor 2" />
-                            <div className="bg-light text-center p-4">
-                                <h5 className="mb-3">Instructor Name</h5>
-                                <p className="mb-2">Web Design & Development</p>
-                                <div className="d-flex justify-content-center">
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-linkedin-in"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-instagram"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-youtube"></i></a>
+
+                        <div className="col-lg-3 col-md-6 mb-4">
+                            <div className="team-item">
+                                <img className="img-fluid w-100" src={instructor2Image} alt="Instructor 2" />
+                                <div className="bg-light text-center p-4">
+                                    <h5 className="mb-3">Instructor Name</h5>
+                                    <p className="mb-2">Web Design & Development</p>
+                                    <div className="d-flex justify-content-center">
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-linkedin-in"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-instagram"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-youtube"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="team-item">
-                            <img className="img-fluid w-100" src={instructor3Image} alt="Instructor 3" />
-                            <div className="bg-light text-center p-4">
-                                <h5 className="mb-3">Instructor Name</h5>
-                                <p className="mb-2">Web Design & Development</p>
-                                <div className="d-flex justify-content-center">
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-linkedin-in"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-instagram"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-youtube"></i></a>
+
+                        <div className="col-lg-3 col-md-6 mb-4">
+                            <div className="team-item">
+                                <img className="img-fluid w-100" src={instructor3Image} alt="Instructor 3" />
+                                <div className="bg-light text-center p-4">
+                                    <h5 className="mb-3">Instructor Name</h5>
+                                    <p className="mb-2">Web Design & Development</p>
+                                    <div className="d-flex justify-content-center">
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-linkedin-in"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-instagram"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-youtube"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="team-item">
-                            <img className="img-fluid w-100" src={instructor4Image} alt="Instructor 4" />
-                            <div className="bg-light text-center p-4">
-                                <h5 className="mb-3">Instructor Name</h5>
-                                <p className="mb-2">Web Design & Development</p>
-                                <div className="d-flex justify-content-center">
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-linkedin-in"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-instagram"></i></a>
-                                    <a className="mx-1 p-1" href="#"><i className="fab fa-youtube"></i></a>
+
+                        <div className="col-lg-3 col-md-6 mb-4">
+                            <div className="team-item">
+                                <img className="img-fluid w-100" src={instructor4Image} alt="Instructor 4" />
+                                <div className="bg-light text-center p-4">
+                                    <h5 className="mb-3">Instructor Name</h5>
+                                    <p className="mb-2">Web Design & Development</p>
+                                    <div className="d-flex justify-content-center">
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-twitter"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-facebook-f"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-linkedin-in"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-instagram"></i></a>
+                                        <a className="mx-1 p-1" href="#"><i className="fab fa-youtube"></i></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

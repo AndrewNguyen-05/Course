@@ -20,6 +20,7 @@ public enum ErrorCode {
     INVALID_CREDENTIALS(400, "Invalid credentials, please try again.", HttpStatus.BAD_REQUEST),
     PASSWORD_EXISTED(409, "Password existed", HttpStatus.CONFLICT),
     ROLE_NOT_EXISTED(400, "Role not existed", HttpStatus.NOT_FOUND),
+    INVALID_OTP(400, "OTP is invalid or expired", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

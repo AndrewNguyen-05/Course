@@ -25,15 +25,13 @@ import com.spring.dlearning.repository.http_client.OutboundFacebookUserClient;
 import com.spring.dlearning.repository.http_client.OutboundIdentityClient;
 import com.spring.dlearning.repository.http_client.OutboundUserClient;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -79,21 +77,21 @@ public class AuthenticationService {
     protected String GRANT_TYPE;
 
 
-    @NonFinal
-    @Value("${outbound.facebook.client-id}")
-    protected String CLIENT_ID_FB;
-
-    @NonFinal
-    @Value("${outbound.facebook.client-secret}")
-    protected String CLIENT_SECRET_FB;
-
-    @NonFinal
-    @Value("${outbound.facebook.redirect-uri}")
-    protected String REDIRECT_URI_FB;
-
-    @NonFinal
-    @Value("${outbound.facebook.grant-type}")
-    protected String GRANT_TYPE_FB;
+//    @NonFinal
+//    @Value("${outbound.facebook.client-id}")
+//    protected String CLIENT_ID_FB;
+//
+//    @NonFinal
+//    @Value("${outbound.facebook.client-secret}")
+//    protected String CLIENT_SECRET_FB;
+//
+//    @NonFinal
+//    @Value("${outbound.facebook.redirect-uri}")
+//    protected String REDIRECT_URI_FB;
+//
+//    @NonFinal
+//    @Value("${outbound.facebook.grant-type}")
+//    protected String GRANT_TYPE_FB;
 
 
     UserRepository userRepository;
@@ -119,7 +117,6 @@ public class AuthenticationService {
 
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
-
 
     public AuthenticationResponse outboundAuthenticate(String code) {
         ExchangeTokenResponse response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
@@ -153,44 +150,44 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse facebookAuthenticate(String code) {
-
-        var response = facebookIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
-                .code(code)
-                .clientId(CLIENT_ID_FB)
-                .clientSecret(CLIENT_SECRET_FB)
-                .redirectUri(REDIRECT_URI_FB)
-                .grantType(GRANT_TYPE_FB)
-                .build());
-        log.info("FACEBOOK TOKEN RESPONSE {}", response);
-
-        OutboundFacebookResponse userInfo = facebookUserClient.getUserInfo(
-                "email,first_name,last_name,picture",
-                response.getAccessToken());
-
-        log.info("Facebook User info {}", userInfo);
-
-        Role roles = roleRepository.findByName(PredefinedRole.USER_ROLE)
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-
-        var user = userRepository.findByEmail(userInfo.getEmail()).orElseGet(() -> {
-            User newUser = User.builder()
-                    .email(userInfo.getEmail())
-                    .name(userInfo.getFirstName() +" "+ userInfo.getLastName())
-                    .firstName(userInfo.getFirstName())
-                    .lastName(userInfo.getLastName())
-                    .avatar(userInfo.getPicture().getPicture().getUrl())
-                    .role(roles)
-                    .build();
-            return userRepository.save(newUser);
-        });
-
-        var token = generateToken(user);
-
-        return AuthenticationResponse.builder()
-                .token(token)
-                .build();
-    }
+//    public AuthenticationResponse facebookAuthenticate(String code) {
+//
+//        var response = facebookIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
+//                .code(code)
+//                .clientId(CLIENT_ID_FB)
+//                .clientSecret(CLIENT_SECRET_FB)
+//                .redirectUri(REDIRECT_URI_FB)
+//                .grantType(GRANT_TYPE_FB)
+//                .build());
+//        log.info("FACEBOOK TOKEN RESPONSE {}", response);
+//
+//        OutboundFacebookResponse userInfo = facebookUserClient.getUserInfo(
+//                "email,first_name,last_name,picture",
+//                response.getAccessToken());
+//
+//        log.info("Facebook User info {}", userInfo);
+//
+//        Role roles = roleRepository.findByName(PredefinedRole.USER_ROLE)
+//                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+//
+//        var user = userRepository.findByEmail(userInfo.getEmail()).orElseGet(() -> {
+//            User newUser = User.builder()
+//                    .email(userInfo.getEmail())
+//                    .name(userInfo.getFirstName() +" "+ userInfo.getLastName())
+//                    .firstName(userInfo.getFirstName())
+//                    .lastName(userInfo.getLastName())
+//                    .avatar(userInfo.getPicture().getPicture().getUrl())
+//                    .role(roles)
+//                    .build();
+//            return userRepository.save(newUser);
+//        });
+//
+//        var token = generateToken(user);
+//
+//        return AuthenticationResponse.builder()
+//                .token(token)
+//                .build();
+//    }
 
 
     private String generateToken(User user) {
@@ -240,33 +237,27 @@ public class AuthenticationService {
     public SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
 
         JWSVerifier verifier =
-                new MACVerifier(SIGNER_KEY.getBytes()); // Kiểm tra chữ kí có khớp với chữ ký hệ thống hay không
+                new MACVerifier(SIGNER_KEY.getBytes());
 
-        SignedJWT signedJWT = SignedJWT.parse(token); // phân tích chuỗi token
+        SignedJWT signedJWT = SignedJWT.parse(token);
 
         Date expiryTime = (isRefresh)
                 ? new Date(signedJWT
                 .getJWTClaimsSet()
                 .getIssueTime()
                 .toInstant()
-                .plus(REFRESHABLE_DURATION, ChronoUnit.SECONDS)
+                .plus(REFRESHABLE_DURATION, ChronoUnit.HOURS)
                 .toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 
-        // lấy thời gian hết hạn của token, hàm này nhận vào 1 cái cờ, boolean => nếu người dùng hàm này để verify thì
-        // thời gian khác
-        // nếu dùng để refresh token thì thời gian hết hạn token sẽ khác
-        var verified = signedJWT.verify(verifier); // Kiểm tra xem chữ ký có khớp với nội dung token hay không
+        var verified = signedJWT.verify(verifier);
 
         if (!(verified && expiryTime.after(new Date()))) throw new AppException(ErrorCode.UNAUTHENTICATED);
-        // Kiểm tra xem chữ kí và token còn hiệu lực hay không => ! : nghĩa là nếu cả 2 không đúng => throw ra lỗi
 
         if (invalidatedTokenRepository.existsById(signedJWT.getJWTClaimsSet().getJWTID()))
             throw new AppException(ErrorCode.UNAUTHENTICATED);
-        // Nếu JWT ID đó mà có trong bảng InvalidatedToken thì chứng tỏ token đó đã Logout
 
-        return signedJWT; // nếu token hợp lệ thì return về đối tượng SignedJWT để xác thực token, hoặc giải mã, truy
-        // xuất thông tin....
+        return signedJWT;
     }
 
     public AuthenticationResponse refreshToken(RefreshTokenRequest request) throws ParseException, JOSEException {
@@ -276,7 +267,6 @@ public class AuthenticationService {
         var jit = signJWT.getJWTClaimsSet().getJWTID();
         var expiryTime = signJWT.getJWTClaimsSet().getExpirationTime();
 
-        // Lưu token hiện tại vào bảng invalidedToken, bởi vì khi refreshToken thì token cũ phải bị vô hiệu hóa
         InvalidatedToken invalidatedToken = InvalidatedToken.builder().id(jit).expiryTime(expiryTime).build();
         invalidatedTokenRepository.save(invalidatedToken);
 
@@ -285,6 +275,7 @@ public class AuthenticationService {
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var token = generateToken(user);
+
 
         return AuthenticationResponse.builder()
                 .token(token)

@@ -36,7 +36,8 @@ public class SecurityConfiguration {
             "/api/v1/auth/introspect", "/api/v1/auth/refresh",
             "/login", "/templates/**", "/register", "api/v1/auth/outbound/authentication",
             "/oauth2/authorization/**", "/create-password", "/authenticate", "/api/v1/create-password",
-            "/authenticate-fb"
+            "/authenticate-fb", "/api/v1/send-otp", "/api/v1/reset-password", "/api/v1/verify-otp",
+            "/api/v1/auth/refresh"
     };
 
     @Bean
