@@ -17,6 +17,7 @@ import { UploadCourse } from './components/TeacherComponents/UploadCourse';
 import { MyCourses } from './components/TeacherComponents/ManagerCourse';
 import { LayoutWithoutHeaderFooter } from './components/UserComponents/LayoutWithoutHeaderFooter';
 import { ForgotPassword } from './components/authentication/ForgotPassword';
+import { Register } from './components/UserComponents/Register';
 
 function App() {
   return (
@@ -56,6 +57,12 @@ function App() {
           <Route path="/login" element={
             <LayoutWithoutHeaderFooter>
               <LoginPage />
+            </LayoutWithoutHeaderFooter>
+          } />
+
+          <Route path="/register" element={
+            <LayoutWithoutHeaderFooter>
+              <Register />
             </LayoutWithoutHeaderFooter>
           } />
 

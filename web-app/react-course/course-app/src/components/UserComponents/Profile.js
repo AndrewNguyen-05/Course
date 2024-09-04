@@ -350,10 +350,10 @@ export const Profile = () => {
                                                 onChange={handleInputChange}
                                             >
                                                 <option value="">Select your skill level</option>
-                                                <option value="beginner">Beginner</option>
-                                                <option value="intermediate">Intermediate</option>
-                                                <option value="advanced">Advanced</option>
-                                                <option value="expert">Expert</option>
+                                                <option value="BEGINNER">Beginner</option>
+                                                <option value="INTERMEDIATE">Intermediate</option>
+                                                <option value="ADVANCED">Advanced</option>
+                                                <option value="EXPERT">Expert</option>
                                             </select>
                                         </div>
                                     </div>
