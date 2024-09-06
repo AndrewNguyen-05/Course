@@ -10,9 +10,7 @@ import com.spring.dlearning.dto.request.RefreshTokenRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.AuthenticationResponse;
 import com.spring.dlearning.dto.response.IntrospectResponse;
-import com.spring.dlearning.dto.response.TokenInfoResponse;
 import com.spring.dlearning.service.AuthenticationService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -40,16 +38,6 @@ public class AuthenticationController {
 
         return ApiResponse.<AuthenticationResponse>builder().result(result).build();
     }
-
-//    @PostMapping("/outbound/authentication-fb")
-//    public ApiResponse<AuthenticationResponse> outboundAuthenticateFacebook(@RequestParam("code") String code) {
-//        log.info("Received code LoginFb: {}", code);
-//
-//        var result = authenticationService.facebookAuthenticate(code);
-//        log.info("Authentication result Fb: {}", result);
-//
-//        return ApiResponse.<AuthenticationResponse>builder().result(result).build();
-//    }
 
     @PostMapping("/token")
     public ApiResponse<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {

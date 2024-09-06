@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Toast, ToastContainer } from 'react-bootstrap';
 import { Footer } from '../layouts/Footer';
 import { Navbar } from '../layouts/Navbar';
+import { OAuthConfig } from '../config/OAuthConfig';
 
 export const LoginPage = () => {
 
@@ -13,13 +14,16 @@ export const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleGoogleLogin = () => {
-    const OAuthConfig = {
-      clientId: '1063674841920-mtlapuiv2d8gc3rgf6b4oi4vlaa31pah.apps.googleusercontent.com',
-      redirectUri: 'http://localhost:3000/authenticate',
-      authUri: 'https://accounts.google.com/o/oauth2/auth',
-    };
+    const callbackUrl = OAuthConfig.redirectUri;
+    const authUrl = OAuthConfig.authUri;
+    const googleClientId = OAuthConfig.clientId;
 
-    const targetUrl = `${OAuthConfig.authUri}?redirect_uri=${encodeURIComponent(OAuthConfig.redirectUri)}&response_type=code&client_id=${OAuthConfig.clientId}&scope=openid%20email%20profile`;
+    const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
+      callbackUrl
+    )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
+
+    console.log(targetUrl);
+
     window.location.href = targetUrl;
 
   };

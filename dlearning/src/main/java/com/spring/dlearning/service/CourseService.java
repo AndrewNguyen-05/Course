@@ -2,6 +2,8 @@ package com.spring.dlearning.service;
 
 import com.spring.dlearning.dto.response.CourseResponse;
 import com.spring.dlearning.entity.Course;
+import com.spring.dlearning.exception.AppException;
+import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.CourseMapper;
 import com.spring.dlearning.repository.CourseRepository;
 import lombok.AccessLevel;
@@ -27,4 +29,10 @@ public class CourseService {
                 .map(courseMapper::toCourseResponse)
                 .toList();
     }
+
+    public CourseResponse getCourseById(Long id){
+        return courseRepository.findById(id).map(courseMapper::toCourseResponse)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+    }
+
 }

@@ -39,14 +39,13 @@ public class SecurityConfiguration {
             "/oauth2/authorization/**", "/api/v1/create-password",
             "/api/v1/send-otp", "/api/v1/reset-password", "/api/v1/verify-otp",
             "/api/v1/check-exists-user", "/api/v1/send-otp-register",
-            "/api/v1/courses"
+            "/api/v1/courses", "/api/v1/course/{id}"
     };
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     @Bean
     AuthenticationProvider authenticationProvider() {
@@ -93,4 +92,5 @@ public class SecurityConfiguration {
         template.setConnectionFactory(connectionFactory);
         return template;
     }
+
 }

@@ -21,6 +21,7 @@ public enum ErrorCode {
     PASSWORD_EXISTED(409, "Password existed", HttpStatus.CONFLICT),
     ROLE_NOT_EXISTED(400, "Role not existed", HttpStatus.NOT_FOUND),
     INVALID_OTP(400, "OTP is invalid or expired", HttpStatus.BAD_REQUEST),
+    COURSER_NOT_EXISTED(400, "Course not existed", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

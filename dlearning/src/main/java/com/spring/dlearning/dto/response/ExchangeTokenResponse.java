@@ -14,11 +14,10 @@ import lombok.experimental.FieldDefaults;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ExchangeTokenResponse {
 
-
     String accessToken;
     Long expiresIn;
-    Long reauthorizeRequiredIn;
-    String signedRequest;
-    String userId;
+    String refreshToken;
+    String scope;
+    String tokenType;
 
 }
