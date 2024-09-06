@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import { UseAuth } from "../authentication/UseAuth";
 import { Footer } from "../layouts/Footer";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Profile = () => {
-
     const { isTokenValid, handleLogout } = UseAuth();
-    
-    const navigate = useNavigate();
+    const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
+    const [isRemovingAvatar, setIsRemovingAvatar] = useState(false);
+
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [profileData, setProfileData] = useState({
@@ -21,49 +23,6 @@ export const Profile = () => {
         courseLevel: '',
     });
 
-    const handleOnChangeAvatar = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSelectedImage(reader.result); // Hiển thị ảnh đã chọn
-            };
-            reader.readAsDataURL(file); // Chuyển file sang Data URL để hiển thị
-        }
-
-        // Upload file lên dịch vụ lưu trữ và nhận đường dẫn
-        uploadAvatar(file).then(url => {
-            setProfileData({
-                ...profileData,
-                avatar: url // Lưu đường dẫn ảnh vào profileData
-            });
-        });
-    };
-
-    const uploadAvatar = async (file) => {
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append("upload_preset", "upload"); 
-    
-        const response = await fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", {
-            method: "POST",
-            body: formData
-        });
-    
-        const data = await response.json();
-        return data.secure_url; // Đường dẫn của ảnh đã upload
-    };
-
-    // Xử lý thay đổi dữ liệu trong form
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setProfileData({
-            ...profileData,
-            [name]: value
-        });
-    };
-
-    // Lấy dữ liệu người dùng khi component được mount
     useEffect(() => {
         fetch(`http://localhost:8080/api/v1/info-user`, {
             method: 'GET',
@@ -72,29 +31,110 @@ export const Profile = () => {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.result) {
-                setProfileData({
-                    avatar: data.result.avatar || '',
-                    firstName: data.result.firstName || '',
-                    lastName: data.result.lastName || '',
-                    gender: data.result.gender || '',
-                    phone: data.result.phone || '',
-                    dob: data.result.dob || '',
-                    address: data.result.address || '',
-                    description: data.result.description || '',
-                    courseLevel: data.result.courseLevel || '',
-                });
-                setSelectedImage(data.result.avatar || '');
-            }
-        })
-        .catch(error => {
-            console.log('Get Info User Fail ', error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    setProfileData({
+                        avatar: data.result.avatar || '',
+                        firstName: data.result.firstName || '',
+                        lastName: data.result.lastName || '',
+                        gender: data.result.gender || '',
+                        phone: data.result.phone || '',
+                        dob: data.result.dob || '',
+                        address: data.result.address || '',
+                        description: data.result.description || '',
+                        courseLevel: data.result.courseLevel || '',
+                    });
+                    setSelectedImage(data.result.avatar || "https://bootdey.com/img/Content/avatar/avatar7.png");
+                }
+            })
+            .catch(error => {
+                console.log('Get Info User Fail ', error);
+            });
     }, []);
 
-    // Cập nhật thông tin người dùng
+    const handleOnChangeAvatar = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSelectedImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleUpdateAvatar = (event) => {
+        event.preventDefault();
+
+        if (!selectedImage) {
+            toast.error('Please select an image first');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", document.getElementById("url-update-avatar").files[0]);
+
+        setIsUpdatingAvatar(true);
+
+        fetch(`http://localhost:8080/api/v1/update-avatar`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                toast.success('Avatar updated successfully!');
+                return response.json();
+            } else {
+                throw new Error("Failed to update avatar");
+            }
+        }).then(data => {
+            if (data && data.avatarUrl) {
+                setSelectedImage(data.avatarUrl);
+                toast.success('Avatar updated successfully!');
+            }
+        }).catch(error => {
+            toast.error('Failed to update avatar');
+            console.error(error);
+        }).finally(() => {
+            setIsUpdatingAvatar(false);
+        });
+    };
+
+    const handleRemoveAvatar = () => {
+        setIsRemovingAvatar(true);
+
+        fetch(`http://localhost:8080/api/v1/remove-avatar`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(response => {
+            if (response.ok) {
+                setSelectedImage("https://bootdey.com/img/Content/avatar/avatar7.png");
+                toast.success('Avatar removed successfully!');
+            } else {
+                throw new Error("Failed to remove avatar");
+            }
+        }).catch(error => {
+            toast.error('Failed to remove avatar');
+            console.error(error);
+        }).finally(() => {
+            setIsRemovingAvatar(false);
+        });
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setProfileData({
+            ...profileData,
+            [name]: value
+        });
+    };
+
+    
     const handleUpdateProfile = () => {
         const filteredData = {};
         Object.keys(profileData).forEach(key => {
@@ -102,7 +142,7 @@ export const Profile = () => {
                 filteredData[key] = profileData[key];
             }
         });
-    
+
         fetch('http://localhost:8080/api/v1/update-profile', {
             method: 'PUT',
             headers: {
@@ -111,18 +151,19 @@ export const Profile = () => {
             },
             body: JSON.stringify(filteredData)
         })
-        .then(response => {
-            if (response.ok) {
-                alert("Profile updated successfully");
-                navigate('/profile');
-            } else {
-                throw new Error("Failed to update profile");
-            }
-        })
-        .catch(error => console.error('Error updating profile:', error));
+            .then(response => {
+                if (response.ok) {
+                    toast.success("Profile updated successfully");
+                } else {
+                    throw new Error("Failed to update profile");
+                }
+            })
+            .catch(error => {
+                toast.error('Error updating profile');
+                console.error('Error updating profile:', error);
+            });
     };
-    
-    
+
     return (
         <div>
             <div className="container-fluid bg-dark">
@@ -189,9 +230,7 @@ export const Profile = () => {
                             </button>
                             <ul className="dropdown-menu dropdown-menu-end text-start" style={{ transform: 'translateX(-50%)', left: '50%' }}>
                                 {isTokenValid === null ? (
-                                    <li></li>) // Hiển thị khi đang kiểm tra token, không hiện gì
-
-                                    : isTokenValid ? ( // nếu token đúng
+                                    <li></li>) : isTokenValid ? (
                                         <>
                                             <li><Link to="/profile" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-address-card me-2"></i>Profile</Link></li>
                                             <li><Link to="/deposit" className="dropdown-item d-flex align-items-center"><i className="fa-brands fa-bitcoin me-2"></i>Deposit</Link></li>
@@ -202,19 +241,18 @@ export const Profile = () => {
                                                 </Link>
                                             </li>
                                         </>
-                                    ) : ( // token sai thì hiện Login
-                                        <li>
-                                            <Link to="/login" className="dropdown-item d-flex align-items-center" id="login">
-                                                <i className="fa-solid fa-sign-in-alt me-2"></i>Login
-                                            </Link>
-                                        </li>
-                                    )}
+                                    ) : (
+                                    <li>
+                                        <Link to="/login" className="dropdown-item d-flex align-items-center" id="login">
+                                            <i className="fa-solid fa-sign-in-alt me-2"></i>Login
+                                        </Link>
+                                    </li>
+                                )}
                             </ul>
                         </div>
                     </div>
                 </nav>
             </div>
-            <hr /><br />
 
             {/* FORM INFO AND UPDATE PROFILE */}
 
@@ -224,38 +262,60 @@ export const Profile = () => {
                         <div className="card h-100">
                             <div className="card-body">
                                 <div className="account-settings">
-                                    <div className="user-profile">
+                                    <div className="d-flex flex-column align-items-center justify-content-center">
                                         <div className="user-avatar">
-                                            <img src={selectedImage || "https://bootdey.com/img/Content/avatar/avatar7.png"}
+                                            <img
+                                                src={selectedImage}
                                                 alt="User Avatar"
-                                                id="avatar-preview" />
+                                                id="avatar-preview"
+                                                className="rounded-circle"
+                                                style={{ width: "150px", height: "150px", objectFit: "cover", border: "3px solid #007bff" }}
+                                            />
                                         </div>
-                                        <div className="account-title">
-                                            <div className="button-container">
-                                                <input type="file"
-                                                    className="form-control"
-                                                    id="url-update-avatar"
-                                                    name="file"
-                                                    accept="image/*"
-                                                    onChange={handleOnChangeAvatar} // upload avatar
-                                                />
-                                            </div>
+                                        <div className="account-title mt-3">
+                                            <input
+                                                type="file"
+                                                className="form-control"
+                                                id="url-update-avatar"
+                                                name="file"
+                                                accept="image/*"
+                                                onChange={handleOnChangeAvatar}
+                                            />
                                         </div>
-                                    </div>
+                                        <br />
+                                        <div className="d-flex mt-2">
+                                            {/* Nút Update Avatar hoặc Spinner */}
+                                            {isUpdatingAvatar ? (
+                                                <button className="btn btn-primary btn-sm me-2" disabled>
+                                                    <i className="fas fa-spinner fa-spin me-1"></i> Updating...
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-primary btn-sm me-2"
+                                                    onClick={handleUpdateAvatar}
+                                                >
+                                                    <i className="fas fa-upload me-1"></i> Update
+                                                </button>
+                                            )}
 
-                                    <div className="about">
-                                        <h5 className="text-primary mb-2">Biography</h5>
-                                        <textarea
-                                            className="form-control form-control-sm"
-                                            rows="2"
-                                            placeholder="Enter My Biography"
-                                            style={{ width: '100%', maxWidth: '300px', resize: 'none', textAlign: 'center' }}
-                                            name="description"
-                                            value={profileData.description}
-                                            onChange={handleInputChange}
-                                        ></textarea>
-                                    </div>
+                                            {/* Nút Remove Avatar hoặc Spinner */}
+                                            {isRemovingAvatar ? (
+                                                <button className="btn btn-danger btn-sm" disabled>
+                                                    <i className="fas fa-spinner fa-spin me-1"></i> Removing...
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    className="btn btn-danger btn-sm"
+                                                    onClick={handleRemoveAvatar}
+                                                >
+                                                    <i className="fas fa-trash-alt me-1"></i> Remove
+                                                </button>
+                                            )}
+                                        </div>
 
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -264,11 +324,11 @@ export const Profile = () => {
                         <div className="card h-100">
                             <div className="card-body">
                                 <div className="row gutters">
-                                   
                                     <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div className="form-group">
                                             <label htmlFor="firstname" style={{ fontWeight: "bold", fontSize: "16px", color: "#333" }}>First Name</label>
-                                            <input type="text"
+                                            <input
+                                                type="text"
                                                 className="form-control"
                                                 id="firstname"
                                                 name="firstName"
@@ -282,7 +342,8 @@ export const Profile = () => {
                                     <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div className="form-group">
                                             <label htmlFor="lastname" style={{ fontWeight: "bold", fontSize: "16px", color: "#333" }}>Last Name</label>
-                                            <input type="text"
+                                            <input
+                                                type="text"
                                                 className="form-control"
                                                 id="lastname"
                                                 name="lastName"
@@ -314,7 +375,8 @@ export const Profile = () => {
                                     <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div className="form-group">
                                             <label htmlFor="phone" style={{ fontWeight: "bold", fontSize: "16px", color: "#333" }}>Phone</label>
-                                            <input type="text"
+                                            <input
+                                                type="text"
                                                 className="form-control"
                                                 id="phone"
                                                 name="phone"
@@ -328,7 +390,8 @@ export const Profile = () => {
                                     <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                                         <div className="form-group">
                                             <label htmlFor="birthday" style={{ fontWeight: "bold", fontSize: "16px", color: "#333" }}>Date Of Birth</label>
-                                            <input type="date"
+                                            <input
+                                                type="date"
                                                 className="form-control"
                                                 id="birthday"
                                                 name="dob"
@@ -402,7 +465,15 @@ export const Profile = () => {
                     </div>
                 </div>
             </div>
-            <Footer/>
+
+            {/* Toast container to display notifications */}
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                className="custom-toast-container"
+            />
+
+            <Footer />
         </div>
     );
-}
+};

@@ -1,10 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { UseAuth } from '../authentication/UseAuth';
+import { HandleLogout } from '../authentication/HandleLogout';
 
 export const Navbar = () => {
 
-  const { isTokenValid, handleLogout } = UseAuth();
+  const {isTokenValid} = UseAuth();
+  const {handleLogout} = HandleLogout();
 
   return (
     <div>
@@ -14,7 +16,7 @@ export const Navbar = () => {
             <div className="d-inline-flex align-items-center text-white">
               <small><i className="fa fa-phone-alt mr-2"></i>+012 345 6789</small>
               <small className="px-3">|</small>
-              <small><i className="fa fa-envelope mr-2"></i>info@example.com</small>
+              <small><i className="fa fa-envelope mr-2"></i>ducdeptrai@gmail.com</small>
             </div>
           </div>
           <div className="col-lg-6 text-center text-lg-right">

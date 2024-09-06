@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 
 // Import các hình ảnh
 import aboutImage from './../../img/about.jpg';
 import featureImage from './../../img/feature.jpg';
-import course1Image from './../../img/courses-1.jpg';
-import course2Image from './../../img/courses-2.jpg';
-import course3Image from './../../img/courses-3.jpg';
-import course4Image from './../../img/courses-4.jpg';
-import course5Image from './../../img/courses-5.jpg';
+
 import instructor1Image from './../../img/team-1.jpg';
 import instructor2Image from './../../img/team-2.jpg';
 import instructor3Image from './../../img/team-3.jpg';
@@ -16,13 +13,45 @@ import instructor4Image from './../../img/team-4.jpg';
 import testimonial1Image from './../../img/testimonial-1.jpg';
 import testimonial2Image from './../../img/testimonial-2.jpg';
 
+import axios from 'axios';
+
 export const HomePage = () => {
-
+    // Đặt hooks useState ngoài tất cả các hàm khác
     const [selectedCourse, setSelectedCourse] = useState('');
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);  // State để hiển thị loading
+    const [error, setError] = useState(null);  // State để lưu lỗi (nếu có)
 
+    // Hàm handleChange chỉ để xử lý thay đổi từ dropdown, không dùng useState ở đây
     const handleChange = (event) => {
         setSelectedCourse(event.target.value);
     };
+
+    // Sử dụng useEffect để gọi API sau khi component mount
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/v1/courses', {
+                    timeout: 5000 
+                });
+                setCourses(response.data.result || []);
+            } catch (err) {
+                setError(err);  // Xử lý lỗi nếu có
+            } finally {
+                setLoading(false);  // Tắt trạng thái loading
+            }
+        };
+        fetchCourses();  // Gọi hàm fetchCourses khi component render lần đầu
+    }, []);  // Thực hiện chỉ một lần khi component được mount
+
+    // Kiểm tra trạng thái loading và lỗi
+    if (loading) {
+        return <div>Loading...</div>;  // Hiển thị khi đang tải dữ liệu
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;  // Hiển thị nếu có lỗi
+    }
 
     return (
         <div>
@@ -128,77 +157,34 @@ export const HomePage = () => {
                 </div>
 
                 <div className="row">
-                    <div className="col-lg-3 col-md-6 mb-4">
-                        <div className="courses-item position-relative">
-                            <img className="img-fluid" src={course1Image} alt="Course 1" />
-                            <div className="courses-text">
-                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                <div className="border-top w-100 mt-3">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
-                                    </div>
+                    {courses.map((course) => (
+                        <div className="col-lg-3 col-md-6 mb-4" key={course.id}>
+                            <div className="course-card-custom-design-container shadow-sm">
+                                {/* Ảnh bìa */}
+                                <div className="course-card-custom-image-container">
+                                    <img className="course-card-custom-image" src={course.thumbnail} alt={course.title} />
                                 </div>
-                                <div className="w-100 bg-white text-center p-4">
-                                    <Link className="btn btn-primary" to="/course-detail">Course Detail</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div className="col-lg-3 col-md-6 mb-4">
-                        <div className="courses-item position-relative">
-                            <img className="img-fluid" src={course2Image} alt="Course 2" />
-                            <div className="courses-text">
-                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                <div className="border-top w-100 mt-3">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
-                                    </div>
-                                </div>
-                                <div className="w-100 bg-white text-center p-4">
-                                    <Link className="btn btn-primary" to="/course-detail">Course Detail</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                {/* Nội dung khóa học */}
+                                <div className="course-card-custom-body text-center">
+                                    {/* Tiêu đề khóa học */}
+                                    <h5 className="course-card-custom-title">{course.title}</h5>
 
-                    <div className="col-lg-3 col-md-6 mb-4">
-                        <div className="courses-item position-relative">
-                            <img className="img-fluid" src={course3Image} alt="Course 3" />
-                            <div className="courses-text">
-                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                <div className="border-top w-100 mt-3">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
-                                    </div>
+                                    {/* Tác giả khóa học */}
+                                    <p className="course-card-custom-author">
+                                        <i className="fa fa-user mr-2"></i>{course.author}
+                                    </p>
                                 </div>
-                                <div className="w-100 bg-white text-center p-4">
-                                    <Link className="btn btn-primary" to="/course-detail">Course Detail</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div className="col-lg-3 col-md-6 mb-4">
-                        <div className="courses-item position-relative">
-                            <img className="img-fluid" src={course4Image} alt="Course 4" />
-                            <div className="courses-text">
-                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                <div className="border-top w-100 mt-3">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
-                                    </div>
-                                </div>
-                                <div className="w-100 bg-white text-center p-4">
-                                    <Link className="btn btn-primary" to="/course-detail">Course Detail</Link>
+                                {/* Nút "Course Detail" */}
+                                <div className="course-card-custom-footer text-center">
+                                    <Link className="course-card-custom-btn" to={`/course-detail/${course.id}`}>
+                                        Course Detail
+                                    </Link>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    ))}
                 </div>
 
                 <div className="row justify-content-center bg-image mx-0 mb-5">

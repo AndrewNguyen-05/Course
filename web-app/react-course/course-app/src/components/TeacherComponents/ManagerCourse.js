@@ -3,6 +3,8 @@ import { FaEdit, FaTrash } from 'react-icons/fa';
 import Sidebar from '../layouts/Sidebar';
 import { Footer } from '../layouts/Footer';
 import { Navbar } from '../layouts/Navbar';
+import { UseAuth } from '../authentication/UseAuth';
+import { HandleLogout } from '../authentication/HandleLogout';
 
 export const MyCourses = () => {
     const [courses, setCourses] = useState([]);

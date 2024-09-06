@@ -10138,6 +10138,8 @@ h6,
   height: calc(100% + 40px);
 }
 
+
+
 .team-carousel .owl-nav,
 .related-carousel .owl-nav {
   position: absolute;
@@ -10210,3 +10212,144 @@ h6,
 .testimonial-carousel .owl-nav .owl-prev:hover {
   background: #2878EB;
 }
+
+/* Thẻ card tổng quát */
+.course-card-custom-design-container {
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #ffffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin-bottom: 20px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+/* Ảnh bìa */
+.course-card-custom-image-container {
+  width: 100%;
+  height: 260px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f8f9fa;
+}
+
+.course-card-custom-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.course-card-custom-image-container:hover .course-card-custom-image {
+  transform: scale(1.05); /* Tạo hiệu ứng zoom nhẹ khi hover vào hình ảnh */
+}
+
+/* Tiêu đề khóa học */
+.course-card-custom-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #343a40;
+  margin: 20px 0 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+/* Tác giả khóa học */
+.course-card-custom-author {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #6c757d;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.course-card-custom-author i {
+  margin-right: 5px;
+}
+
+/* Hiệu ứng hover khi rê chuột vào card */
+.course-card-custom-design-container:hover {
+  transform: translateY(-8px);
+  box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer card */
+.course-card-custom-footer {
+  background-color: #ffffff;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+/* Nút Course Detail */
+.course-card-custom-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 25px;
+  text-decoration: none;
+  border-radius: 50px;
+  display: inline-block;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  font-weight: 600;
+}
+
+.course-card-custom-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Đảm bảo nội dung giữa các phần tử có khoảng cách đều */
+.course-card-custom-body {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.custom-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 25px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #fff;
+  z-index: 9999;
+  animation: slide-in 0.3s ease-out;
+}
+
+.custom-notification.success {
+  background-color: #28a745;
+}
+
+.custom-notification.error {
+  background-color: #dc3545;
+}
+
+@keyframes slide-in {
+  from {
+      opacity: 0;
+      transform: translateY(-50px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+.fas.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.custom-toast-container {
+  top: 150px !important;  /* Dịch xuống 50px từ trên cùng */
+  right: 20px !important; /* Giữ vị trí bên phải */
+}
+

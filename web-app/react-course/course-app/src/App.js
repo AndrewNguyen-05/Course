@@ -18,6 +18,9 @@ import { MyCourses } from './components/TeacherComponents/ManagerCourse';
 import { LayoutWithoutHeaderFooter } from './components/UserComponents/LayoutWithoutHeaderFooter';
 import { ForgotPassword } from './components/authentication/ForgotPassword';
 import { Register } from './components/UserComponents/Register';
+import { Authorization } from './components/authorization/Authorization';
+import { Accessdenied } from './components/error/Accessdenied';
+
 
 function App() {
   return (
@@ -41,9 +44,11 @@ function App() {
 
 
           <Route path="/manager-courses" element={
-            <LayoutWithoutHeaderFooter>
-              <MyCourses />
-            </LayoutWithoutHeaderFooter>
+            <Authorization requiredRole="TEACHER">
+              <LayoutWithoutHeaderFooter>
+                <MyCourses />
+              </LayoutWithoutHeaderFooter>
+            </Authorization>
           } />
 
           <Route path="/home" element={
@@ -144,6 +149,16 @@ function App() {
               <PrivateRoute>
                 <LayoutWithoutHeaderFooter>
                   <Profile />
+                </LayoutWithoutHeaderFooter>
+              </PrivateRoute>
+            </>
+          } />
+
+          <Route path='/accessdenied' element={
+            <>
+              <PrivateRoute>
+                <LayoutWithoutHeaderFooter>
+                  <Accessdenied/>
                 </LayoutWithoutHeaderFooter>
               </PrivateRoute>
             </>

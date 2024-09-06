@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^1.7.7",
     "bootstrap": "^5.3.0",
     "react-bootstrap": "^2.10.4",
     "react-owl-carousel": "^2.3.3",

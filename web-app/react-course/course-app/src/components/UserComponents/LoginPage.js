@@ -21,12 +21,12 @@ export const LoginPage = () => {
 
     const targetUrl = `${OAuthConfig.authUri}?redirect_uri=${encodeURIComponent(OAuthConfig.redirectUri)}&response_type=code&client_id=${OAuthConfig.clientId}&scope=openid%20email%20profile`;
     window.location.href = targetUrl;
-    
+
   };
 
   const handleLogin = (event) => {
     event.preventDefault();
-
+  
     fetch('http://localhost:8080/api/v1/auth/token', {
       method: "POST",
       headers: {
@@ -43,20 +43,62 @@ export const LoginPage = () => {
         return response.json();
       })
       .then(data => {
-        const expiryTime = new Date().getTime() + 86400 * 1000; 
-        localStorage.setItem('token', data.result.token);
+        const expiryTime = new Date().getTime() + 86400 * 1000;  // Token có thời hạn 1 ngày
+        const token = data.result.token; 
+        console.log(token); 
+  
+        localStorage.setItem('token', token);
         localStorage.setItem('expiryTime', expiryTime);
-        alert('Login Success');
-        navigate("/home");
+  
+        // Gọi API introspect để kiểm tra token, phân quyền
+        fetch(`http://localhost:8080/api/v1/auth/introspect`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}` 
+          },
+          body: JSON.stringify({ token })
+        })
+          .then(response => {
+            if (!response.ok) {
+              return response.json().then(errorData => {
+                throw new Error(errorData.message);
+              });
+            }
+            return response.json();
+          })
+          .then(introspectData => {
+            if (introspectData.result && introspectData.result.valid) { 
+              const role = introspectData.result.scope;  // Lấy role từ token
+              localStorage.setItem('role', role);
+  
+              if (role === 'USER') {
+                navigate('/home');
+              } else if (role === 'ADMIN') {
+                navigate('/admin');
+              } else if (role === 'TEACHER') {
+                navigate('/manager-courses');
+              }
+
+            } else {
+              throw new Error('Invalid token.');
+            }
+          })
+          .catch(error => {
+            console.error('Error during introspect:', error); 
+            setError(error.message);
+            setShowToast(true);
+            setTimeout(() => setShowToast(false), 4000);
+          });
       })
       .catch(error => {
+        console.error('Login error:', error);  // In lỗi ra console để kiểm tra
         setError(error.message);
         setShowToast(true);
-
         setTimeout(() => setShowToast(false), 4000);
       });
   };
-
+  
   useEffect(() => {
     if (showToast) {
       const timer = setTimeout(() => setShowToast(false), 3000);
@@ -160,7 +202,7 @@ export const LoginPage = () => {
                       <i className="bi bi-apple text-dark"></i>
                       <span className="ms-2 fs-6 flex-grow-1">Continue with Apple</span>
                     </button>
-                    
+
                   </div>
                 </div>
               </div>
