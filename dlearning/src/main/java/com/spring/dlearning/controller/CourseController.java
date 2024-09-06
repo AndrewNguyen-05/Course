@@ -1,6 +1,7 @@
 package com.spring.dlearning.controller;
 
 
+import com.spring.dlearning.dto.request.CourseRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.CourseResponse;
 import com.spring.dlearning.service.CourseService;
@@ -9,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -43,6 +41,17 @@ public class CourseController {
         return ApiResponse.<CourseResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Get Course Successfully")
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/create-course")
+    ApiResponse<CourseResponse> createCourse(@RequestBody CourseRequest courseRequest){
+        var result = courseService.createCourse(courseRequest);
+
+        return ApiResponse.<CourseResponse>builder()
+                .code(HttpStatus.CREATED.value())
+                .message("Create Course Successfully")
                 .result(result)
                 .build();
     }

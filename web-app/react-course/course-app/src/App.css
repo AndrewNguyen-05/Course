@@ -10353,3 +10353,84 @@ h6,
   right: 20px !important; /* Giữ vị trí bên phải */
 }
 
+.course-features-container {
+  background: linear-gradient(135deg, #0061a8, #00c6ff);
+  border-radius: 15px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-features-container:hover {
+  transform: translateY(-10px);
+  box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.course-features-title {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.course-feature-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.course-price {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffd700;
+  text-align: center;
+}
+
+.currency {
+  font-size: 0.8em;
+  vertical-align: top;
+  margin-left: 5px;
+}
+
+.enroll-now-btn {
+  background-color: #ffd700;
+  color: #333;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  text-transform: uppercase;
+}
+
+.enroll-now-btn:hover {
+  background-color: #fff;
+  color: #ff9800;
+  box-shadow: 0px 5px 15px rgba(255, 152, 0, 0.4);
+}
+
+.fa-user.text-info {
+  color: #00c6ff; /* Blue for Instructor */
+}
+
+.fa-star.text-warning {
+  color: #ffd700; /* Yellow for Rating */
+}
+
+.fa-book.text-success {
+  color: #28a745; /* Green for Lectures */
+}
+
+.fa-clock.text-danger {
+  color: #dc3545; /* Red for Duration */
+}
+
+.fa-signal.text-warning {
+  color: #ff9800; /* Orange for Skill Level */
+}
+
+.fa-language.text-purple {
+  color: #6f42c1; /* Purple for Language */
+}
+
+.fa-money.text-warning {
+  color: #ffd700; /* Gold for Price */
+}
+
+

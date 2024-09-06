@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -28,7 +29,7 @@ public class Course extends AbstractEntity<Long>{
     String description;
 
     @Column(name = "price", nullable = false)
-    Double price;
+    BigDecimal price;
 
     @Column(name = "duration")
     Integer duration; // in hours
@@ -38,7 +39,7 @@ public class Course extends AbstractEntity<Long>{
 
     @Enumerated(EnumType.STRING)
     @Column(name = "level")
-    CourseLevel level;
+    CourseLevel courseLevel;
 
     @Column(name = "thumbnail")
     String thumbnail;
