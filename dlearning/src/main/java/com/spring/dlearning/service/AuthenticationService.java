@@ -11,7 +11,6 @@ import com.spring.dlearning.dto.request.*;
 import com.spring.dlearning.dto.response.AuthenticationResponse;
 import com.spring.dlearning.dto.response.ExchangeTokenResponse;
 import com.spring.dlearning.dto.response.IntrospectResponse;
-import com.spring.dlearning.dto.response.OutboundFacebookResponse;
 import com.spring.dlearning.entity.InvalidatedToken;
 import com.spring.dlearning.entity.Role;
 import com.spring.dlearning.entity.User;
@@ -24,7 +23,6 @@ import com.spring.dlearning.repository.http_client.OutboundFacebookIdentityClien
 import com.spring.dlearning.repository.http_client.OutboundFacebookUserClient;
 import com.spring.dlearning.repository.http_client.OutboundIdentityClient;
 import com.spring.dlearning.repository.http_client.OutboundUserClient;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -118,6 +116,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().token(token).authenticated(true).build();
     }
 
+    @Transactional
     public AuthenticationResponse outboundAuthenticate(String code) {
         ExchangeTokenResponse response = outboundIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
                 .code(code)
@@ -287,12 +286,17 @@ public class AuthenticationService {
         var token = request.getToken();
 
         boolean isValid = true;
+        String scope =  null;
         try {
-            verifyToken(token, false);
+            SignedJWT signedJWT = verifyToken(token, false);
+            scope = (String) signedJWT.getJWTClaimsSet().getClaim("scope");
         } catch (AppException e) {
             isValid = false;
         }
-        return IntrospectResponse.builder().valid(isValid).build();
+        return IntrospectResponse.builder()
+                .valid(isValid)
+                .scope(scope)
+                .build();
     }
 
     private String buildScope(User user) {

@@ -33,13 +33,13 @@ public class SecurityConfiguration {
 
     private static final String[] PUBLIC_ENDPOINT = {
             "/api/v1/auth/token", "/api/v1/register",
-            "/api/v1/auth/logout", "/css/**", "/img/**", "/js/**",
-            "/lib/**", "/scss/**", "/", "/home",
+            "/api/v1/auth/logout",
             "/api/v1/auth/introspect", "/api/v1/auth/refresh",
-            "/login", "/templates/**", "/register", "api/v1/auth/outbound/authentication",
-            "/oauth2/authorization/**", "/create-password", "/authenticate", "/api/v1/create-password",
-            "/authenticate-fb", "/api/v1/send-otp", "/api/v1/reset-password", "/api/v1/verify-otp",
-            "/api/v1/auth/refresh", "/api/v1/check-exists-user", "/api/v1/send-otp-register"
+            "/api/v1/auth/outbound/authentication",
+            "/oauth2/authorization/**", "/api/v1/create-password",
+            "/api/v1/send-otp", "/api/v1/reset-password", "/api/v1/verify-otp",
+            "/api/v1/check-exists-user", "/api/v1/send-otp-register",
+            "/api/v1/courses"
     };
 
     @Bean
@@ -65,7 +65,6 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers(PUBLIC_ENDPOINT).permitAll()
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer

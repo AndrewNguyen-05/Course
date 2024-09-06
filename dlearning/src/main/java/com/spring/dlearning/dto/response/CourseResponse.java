@@ -1,17 +1,16 @@
 package com.spring.dlearning.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.spring.dlearning.common.CourseLevel;
+
+import com.spring.dlearning.entity.User;
+import com.spring.dlearning.utils.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CourseResponse {
 
     Long id;
@@ -23,7 +22,4 @@ public class CourseResponse {
     CourseLevel courseLevel;
     String thumbnail;
     String videoUrl;
-    Double averageRating;
-    Long points;
-
 }

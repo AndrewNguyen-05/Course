@@ -6,16 +6,15 @@ import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.repository.UserRepository;
+import com.spring.dlearning.utils.SecurityUtils;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 
 @Service
@@ -27,14 +26,8 @@ public class CloudinaryService {
     Cloudinary cloudinary;
     UserRepository userRepository;
 
-    public String getImage(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        return (user.getAvatar() != null) ? user.getAvatar() : "";
-    }
-
-    public String uploadImage(MultipartFile file) throws IOException {
+    @PreAuthorize("isAuthenticated()")
+    public String uploadImage(MultipartFile file){
         try{
             var result = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
                     "folder", "/upload",
@@ -50,9 +43,15 @@ public class CloudinaryService {
     }
 
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     public void updateImage(String url, String email) {
-        User user = userRepository.findByEmail(email)
+        String currentUserEmail = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        User user = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        System.out.println(user.getEmail());
 
         user.setAvatar(url);
         userRepository.save(user);
@@ -60,17 +59,20 @@ public class CloudinaryService {
         log.info("Avatar updated successfully for user with email: {}", email);
     }
 
+
     @Transactional
     public void deleteAvatar() {
-        SecurityContext contextHolder = SecurityContextHolder.getContext();
-        String email = contextHolder.getAuthentication().getName();
+        String currentUserEmail = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         user.setAvatar(null);
         userRepository.save(user);
 
-        log.info("Avatar deleted successfully for user with email: {}", email);
+        log.info("Avatar deleted successfully for user with email: {}", currentUserEmail);
     }
+
+
 }
