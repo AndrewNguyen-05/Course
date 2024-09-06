@@ -13,44 +13,74 @@ import instructor4Image from './../../img/team-4.jpg';
 import testimonial1Image from './../../img/testimonial-1.jpg';
 import testimonial2Image from './../../img/testimonial-2.jpg';
 
-import axios from 'axios';
 
 export const HomePage = () => {
-    // Đặt hooks useState ngoài tất cả các hàm khác
+    
     const [selectedCourse, setSelectedCourse] = useState('');
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);  // State để hiển thị loading
-    const [error, setError] = useState(null);  // State để lưu lỗi (nếu có)
+    const [error, setError] = useState(null); 
+    const [currentPage, setCurrentPage] = useState(1); 
+    const [pageSize] = useState(4); 
+    const [hasMore, setHasMore] = useState(true); // Trạng thái có còn dữ liệu không
 
-    // Hàm handleChange chỉ để xử lý thay đổi từ dropdown, không dùng useState ở đây
+    
     const handleChange = (event) => {
         setSelectedCourse(event.target.value);
     };
 
-    // Sử dụng useEffect để gọi API sau khi component mount
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/v1/courses', {
-                    timeout: 5000 
+                const response = await fetch(`http://localhost:8080/api/v1/courses?page=${currentPage}&size=${pageSize}`, {
+                    method: 'GET',
                 });
-                setCourses(response.data.result || []);
+    
+                if (!response.ok) {
+                    throw new Error(`${response.status}`);
+                }
+    
+                const result = await response.json();
+    
+                const { data, totalPages } = result.result;
+    
+                // Nếu là trang đầu tiên thì không cần nối thêm dữ liệu
+                if (currentPage === 1) {
+                    setCourses(data); 
+                } else {
+                    setCourses(prevCourses => {
+                        // Kiểm tra xem các khóa học mới có khác với các khóa học hiện tại không
+                        const newCourses = data.filter(course => !prevCourses.some(prev => prev.id === course.id));
+                        return [...prevCourses, ...newCourses]; 
+                    });
+                }
+    
+                if (currentPage >= totalPages) {
+                    setHasMore(false); // Nếu đã tải hết các trang, không còn dữ liệu nữa
+                }
             } catch (err) {
-                setError(err);  // Xử lý lỗi nếu có
+                setError(err);
             } finally {
-                setLoading(false);  // Tắt trạng thái loading
+                setLoading(false);
             }
         };
-        fetchCourses();  // Gọi hàm fetchCourses khi component render lần đầu
-    }, []);  // Thực hiện chỉ một lần khi component được mount
 
-    // Kiểm tra trạng thái loading và lỗi
-    if (loading) {
-        return <div>Loading...</div>;  // Hiển thị khi đang tải dữ liệu
+        fetchCourses();
+    }, [currentPage, pageSize]); // useEffect chạy lại mỗi khi currentPage hoặc pageSize thay đổi
+    
+
+    const loadMoreCourses = () => {
+        if (hasMore) {
+            setCurrentPage(prevPage => prevPage + 1); // Tăng trang hiện tại để tải thêm dữ liệu
+        }
+    };
+
+    if (loading && currentPage === 1) {
+        return <div>Loading...</div>;
     }
 
     if (error) {
-        return <div>Error: {error.message}</div>;  // Hiển thị nếu có lỗi
+        return <div>Error: {error.message}</div>;
     }
 
     return (
@@ -185,6 +215,17 @@ export const HomePage = () => {
                             </div>
                         </div>
                     ))}
+                </div>
+
+                {/* Xem thêm */}
+                <div className="row justify-content-center mt-4">
+                    {hasMore ? (
+                        <button className="btn btn-primary" style={{ width: '150px' }} onClick={loadMoreCourses}>
+                            Xem thêm
+                        </button>
+                    ) : (
+                        <p className="text-center">Đã tải hết các khóa học</p>
+                    )}
                 </div>
 
                 <div className="row justify-content-center bg-image mx-0 mb-5">

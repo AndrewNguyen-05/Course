@@ -4,6 +4,7 @@ package com.spring.dlearning.controller;
 import com.spring.dlearning.dto.request.CourseRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.CourseResponse;
+import com.spring.dlearning.dto.response.PageResponse;
 import com.spring.dlearning.service.CourseService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,10 +24,12 @@ public class CourseController {
     CourseService courseService;
 
     @GetMapping("/courses")
-    ApiResponse<List<CourseResponse>> getAllCourse() {
-        var result = courseService.getAllCourse();
+    ApiResponse<PageResponse<CourseResponse>> getAllCourse(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                           @RequestParam(value = "size", required = false, defaultValue = "4") int size) {
+        // page: currentPage, size: tổng element của currentPage
+        var result = courseService.getAllCourse(page, size);
 
-        return ApiResponse.<List<CourseResponse>>builder()
+        return ApiResponse.<PageResponse<CourseResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .message("Get ALl Course Successfully")
                 .result(result)

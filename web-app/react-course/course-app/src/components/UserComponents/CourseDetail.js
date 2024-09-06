@@ -1,7 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Carousel } from 'react-bootstrap';
+import { useParams } from "react-router-dom";
 
 export const CourseDetail = () => {
+
+    const { id } = useParams(); // Lấy id từ url 
+    const [course, setCourse] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+        fetch(`http://localhost:8080/api/v1/course/${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => response.json()
+        ).then(data => {
+            console.log(data);
+            setCourse(data.result);
+            setLoading(false);
+        }).catch(error => {
+            console.log(error);
+            setLoading(false);
+        });
+    }, [id]);
+
+    if (loading) return <div>Loading...</div>
+
     return (
         <div>
             <div className="container-fluid py-5">
@@ -11,13 +37,13 @@ export const CourseDetail = () => {
                             <div className="mb-5">
                                 <div className="section-title position-relative mb-5">
                                     <h6 className="d-inline-block position-relative text-secondary text-uppercase pb-2">Course Detail</h6>
-                                    <h1 className="display-4">Web design & development courses for beginners</h1>
+                                    <h1 className="display-4">{course.title}</h1>
                                 </div>
-                                <img className="img-fluid rounded w-100 mb-4" src={require('./../../img/header.jpg')} alt="Course Detail" />
-                                <p>Tempor erat elitr at rebum at at clita aliquyam consetetur. Diam dolor diam ipsum et, tempor voluptua sit consetetur sit. Aliquyam diam amet diam et eos sadipscing labore. Clita erat ipsum et lorem et sit, sed stet no labore lorem sit. Sanctus clita duo justo et tempor consetetur takimata eirmod, dolores takimata consetetur invidunt magna dolores aliquyam dolores dolore. Amet erat amet et magna</p>
-                                <p>Sadipscing labore amet rebum est et justo gubergren. Et eirmod ipsum sit diam ut magna lorem. Nonumy vero labore lorem sanctus rebum et lorem magna kasd, stet amet magna accusam consetetur eirmod. Kasd accusam sit ipsum sadipscing et at at sanctus et. Ipsum sit gubergren dolores et, consetetur justo invidunt at et aliquyam ut et vero clita. Diam sea sea no sed dolores diam nonumy, gubergren sit stet no diam kasd vero.</p>
+                                <img className="img-fluid rounded w-100 mb-4" src={course.thumbnail} alt="Course Detail" />
+                                <p>{course.description}</p>
                             </div>
 
+                            {/* Khóa học liên quan */}
                             <h2 className="mb-3">Related Courses</h2>
                             <Carousel>
                                 <Carousel.Item>
@@ -35,8 +61,8 @@ export const CourseDetail = () => {
                                     </a>
                                 </Carousel.Item>
                                 <Carousel.Item>
-                                    <a className="courses-list-item position-relative d-block overflow-hidden mb-2" href="detail.html">
-                                        <img className="img-fluid" src={require('./../../img/courses-2.jpg')} alt="Course 2" />
+                                    <div className="courses-list-item position-relative d-block overflow-hidden mb-2">
+                                        <img className="img-fluid" src={require('./../../img/courses-1.jpg')} alt="Course 1" />
                                         <div className="courses-text">
                                             <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
                                             <div className="border-top w-100 mt-3">
@@ -46,11 +72,12 @@ export const CourseDetail = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </Carousel.Item>
+
                                 <Carousel.Item>
-                                    <a className="courses-list-item position-relative d-block overflow-hidden mb-2" href="detail.html">
-                                        <img className="img-fluid" src={require('./../../img/courses-3.jpg')} alt="Course 3" />
+                                    <div className="courses-list-item position-relative d-block overflow-hidden mb-2">
+                                        <img className="img-fluid" src={require('./../../img/courses-1.jpg')} alt="Course 1" />
                                         <div className="courses-text">
                                             <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
                                             <div className="border-top w-100 mt-3">
@@ -60,44 +87,79 @@ export const CourseDetail = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </Carousel.Item>
+
                             </Carousel>
                         </div>
 
 
                         <div className="col-lg-4 mt-5 mt-lg-0">
-                            <div className="bg-primary mb-5 py-3">
-                                <h3 className="text-white py-3 px-4 m-0">Course Features</h3>
-                                <div className="d-flex justify-content-between border-bottom px-4">
-                                    <h6 className="text-white my-3">Instructor</h6>
-                                    <h6 className="text-white my-3">John Doe</h6>
+                            <div className="course-features-container mb-5 py-4 px-4 shadow-lg">
+                                <h3 className="course-features-title text-white py-3 px-4 m-0">Course Features</h3>
+
+                                {/* Instructor */}
+                                <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-user mr-2 text-info"></i> Instructor
+                                    </h6>
+                                    <h6 className="text-white my-2">{course.author}</h6>
                                 </div>
-                                <div className="d-flex justify-content-between border-bottom px-4">
-                                    <h6 className="text-white my-3">Rating</h6>
-                                    <h6 className="text-white my-3">4.5 <small>(250)</small></h6>
+
+                                {/* Rating */}
+                                <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-star mr-2 text-warning"></i> Rating
+                                    </h6>
+                                    <h6 className="text-white my-2">4.5 <small>(250)</small></h6>
                                 </div>
-                                <div className="d-flex justify-content-between border-bottom px-4">
-                                    <h6 className="text-white my-3">Lectures</h6>
-                                    <h6 className="text-white my-3">15</h6>
+
+                                {/* Lectures */}
+                                <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-book mr-2 text-success"></i> Lectures
+                                    </h6>
+                                    <h6 className="text-white my-2">15</h6>
                                 </div>
-                                <div className="d-flex justify-content-between border-bottom px-4">
-                                    <h6 className="text-white my-3">Duration</h6>
-                                    <h6 className="text-white my-3">10.00 Hrs</h6>
+
+                                {/* Duration */}
+                                <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-clock mr-2 text-danger"></i> Duration
+                                    </h6>
+                                    <h6 className="text-white my-2">{course.duration} hours</h6>
                                 </div>
-                                <div className="d-flex justify-content-between border-bottom px-4">
-                                    <h6 className="text-white my-3">Skill level</h6>
-                                    <h6 className="text-white my-3">All Level</h6>
+
+                                {/* Skill Level */}
+                                <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-signal mr-2 text-warning"></i> Skill level
+                                    </h6>
+                                    <h6 className="text-white my-2">{course.courseLevel}</h6>
                                 </div>
-                                <div className="d-flex justify-content-between px-4">
-                                    <h6 className="text-white my-3">Language</h6>
-                                    <h6 className="text-white my-3">English</h6>
+
+                                {/* Language */}
+                                <div className="course-feature-item d-flex justify-content-between px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-language mr-2 text-purple"></i> Language
+                                    </h6>
+                                    <h6 className="text-white my-2">{course.language}</h6>
                                 </div>
-                                <h5 className="text-white py-3 px-4 m-0">Course Price: $199</h5>
+
+                                {/* Course Price */}
+                                <h5 className="course-price text-white py-3 px-4 m-0">
+                                    <i className="fa fa-money mr-2 text-warning"></i>
+                                    Course Price: {new Intl.NumberFormat('vi-VN').format(course.price)}
+                                    <span className="currency">₫</span>
+                                </h5>
+
+                                {/* Enroll Now Button */}
                                 <div className="py-3 px-4">
-                                    <a className="btn btn-block btn-secondary py-3 px-5" href="">Enroll Now</a>
+                                    <a className="btn enroll-now-btn btn-block py-3 px-5" href="">Enroll Now</a>
                                 </div>
                             </div>
+
+
 
                             <div className="mb-5">
                                 <h2 className="mb-3">Categories</h2>
@@ -172,6 +234,6 @@ export const CourseDetail = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     );
 };

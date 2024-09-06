@@ -128,13 +128,15 @@ function App() {
             </>
           } />
 
-          <Route path='/course-detail' element={
+          <Route path='/course-detail/:id' element={
             <>
               <Header />
               <CourseDetail />
               <Footer />
             </>
           } />
+
+
 
           <Route path='/contact' element={
             <>
@@ -158,7 +160,7 @@ function App() {
             <>
               <PrivateRoute>
                 <LayoutWithoutHeaderFooter>
-                  <Accessdenied/>
+                  <Accessdenied />
                 </LayoutWithoutHeaderFooter>
               </PrivateRoute>
             </>
