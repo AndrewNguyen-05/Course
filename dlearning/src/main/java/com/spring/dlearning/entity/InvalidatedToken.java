@@ -2,9 +2,7 @@ package com.spring.dlearning.entity;
 
 import java.util.Date;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -21,6 +19,7 @@ public class InvalidatedToken {
     @Id
     String id;
 
+    @Column(name = "expiry_time", nullable = false)
     Date expiryTime;
 
 }
