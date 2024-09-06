@@ -46,7 +46,7 @@ export const ProcessLoginOAuth2 = () => {
     }
 
     handleAuthentication();
-  }, [navigate]);
+  }, []);
 
   return (
     <div className="container text-center">

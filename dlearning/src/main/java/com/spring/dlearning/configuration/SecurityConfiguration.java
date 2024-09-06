@@ -48,19 +48,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
-
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
