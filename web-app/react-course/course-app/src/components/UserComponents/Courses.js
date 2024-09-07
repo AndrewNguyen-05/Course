@@ -1,7 +1,57 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from "react";
 
 export const Courses = () => {
+
+    const [loading, setLoading] = useState(true);
+    const [courses, setCourses] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize] = useState(6);
+    const [totalPages, setTotalPages] = useState(0);
+
+    const fetchCourses = async () => {
+
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/courses?page=${currentPage}&size=${pageSize}`, {
+                method: 'GET',
+            });
+
+            if (!response.ok) {
+                throw new Error(`${response.status}`);
+            }
+            const result = await response.json();
+            const { data, totalPages } = result.result;
+            setTotalPages(totalPages);
+
+            if (currentPage === 1) {
+                setCourses(data);
+            } else {
+                setCourses(prevCourses => {
+                    const newCourse = data.filter(course => !prevCourses.some(prev => prev.id === course.id))
+                    return [...newCourse];
+                })
+            }
+
+        } catch (err) {
+            console.log(err);
+            setLoading(false);
+        }
+        finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        fetchCourses();
+    }, [currentPage, pageSize]);
+
+    const changePage = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);  // Cập nhật trang hiện tại
+        }
+    };
+
     return (
         <div className="container-fluid py-5">
             <div className="container py-5">
@@ -13,118 +63,61 @@ export const Courses = () => {
                         </div>
                     </div>
                 </div>
+
                 <div className="row">
-                    <div className="col-lg-4 col-md-6 pb-4">
-                        <Link className="courses-list-item position-relative d-block overflow-hidden mb-2" to="/detail">
-                            <img className="img-fluid" src={require('./../../img/courses-1.jpg')} alt="Course 1" />
-                            <div className="courses-text">
-                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                <div className="border-top w-100 mt-3">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
+                    {courses.map((course) => (
+                        <div className="col-lg-4 col-md-6 pb-4" key={course.id}>
+                            <Link className="courses-list-item" to={`/course-detail/${course.id}`}>
+                                <img className="img-fluid" src={course.thumbnail} alt="Course Thumbnail" />
+                                <div className="courses-info">
+                                    <div className="courses-author">
+                                        <span><i className="fa fa-user mr-2"></i>{course.author}</span>
+                                    </div>
+                                    <div className="courses-title">
+                                        {course.title}
+                                    </div>
+                                    <div className="course-meta">
+                                        <span><i className="fa fa-star mr-2"></i>4.5 (250)</span>
                                     </div>
                                 </div>
-                            </div>
-                        </Link>
-                    </div>
-                    <div className="col-lg-4 col-md-6 pb-4">
-                        <Link className="courses-list-item position-relative d-block overflow-hidden mb-2" to="/detail">
-                            <img className="img-fluid" src={require('./../../img/courses-2.jpg')} alt="Course 2" />
-                            <div className="courses-text">
-                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                <div className="border-top w-100 mt-3">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-                    <div className="col-lg-4 col-md-6 pb-4">
-                        <Link className="courses-list-item position-relative d-block overflow-hidden mb-2" to="/detail">
-                            <img className="img-fluid" src={require('./../../img/courses-3.jpg')} alt="Course 3" />
-                            <div className="courses-text">
-                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                <div className="border-top w-100 mt-3">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-                    <div className="col-lg-4 col-md-6 pb-4">
-                        <Link className="courses-list-item position-relative d-block overflow-hidden mb-2" to="/detail">
-                            <img className="img-fluid" src={require('./../../img/courses-4.jpg')} alt="Course 4" />
-                            <div className="courses-text">
-                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                <div className="border-top w-100 mt-3">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-
-                    <div className="col-lg-4 col-md-6 pb-4">
-                        <Link className="courses-list-item position-relative d-block overflow-hidden mb-2" to="/detail">
-                            <img className="img-fluid" src={require('./../../img/courses-5.jpg')} alt="Course 3" />
-                            <div className="courses-text">
-                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                <div className="border-top w-100 mt-3">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-
-                    <div className="col-lg-4 col-md-6 pb-4">
-                        <Link className="courses-list-item position-relative d-block overflow-hidden mb-2" to="/detail">
-                            <img className="img-fluid" src={require('./../../img/courses-6.jpg')} alt="Course 3" />
-                            <div className="courses-text">
-                                <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                <div className="border-top w-100 mt-3">
-                                    <div className="d-flex justify-content-between p-4">
-                                        <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                        <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
-          
-                    <div className="col-12">
-                        <nav aria-label="Page navigation">
-                            <ul className="pagination pagination-lg justify-content-center mb-0">
-                                <li className="page-item disabled">
-                                    <Link className="page-link rounded-0" to="#" aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                        <span className="sr-only">Previous</span>
-                                    </Link>
-                                </li>
-                                <li className="page-item active"><Link className="page-link" to="#">1</Link></li>
-                                <li className="page-item"><Link className="page-link" to="#">2</Link></li>
-                                <li className="page-item"><Link className="page-link" to="#">3</Link></li>
-                                <li className="page-item">
-                                    <Link className="page-link rounded-0" to="#" aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                        <span className="sr-only">Next</span>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
+                            </Link>
+                        </div>
+                    ))}
                 </div>
+
+
+                <div className="col-12">
+                    <nav aria-label="Page navigation">
+                        <ul className="pagination pagination-lg justify-content-center mb-0">
+                            {/* Previous button */}
+                            <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                                <button className="page-link rounded-0" onClick={() => changePage(currentPage - 1)} aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </button>
+                            </li>
+
+                            {/* Render dynamic page numbers */}
+                            {Array.from({ length: totalPages }, (_, index) => (
+                                <li key={index + 1} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
+                                    <button className="page-link" onClick={() => changePage(index + 1)}>
+                                        {index + 1}
+                                    </button>
+                                </li>
+                            ))}
+
+                            {/* Next button */}
+                            <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                                <button className="page-link rounded-0" onClick={() => changePage(currentPage + 1)} aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
             </div>
         </div>
+
     );
 }
 

@@ -1,11 +1,39 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { UseAuth } from '../authentication/UseAuth.js';
 import { HandleLogout } from '../authentication/HandleLogout.js';
 
 export const Header = () => {
+
+    const { isTokenValid } = UseAuth();
+    const { handleLogout } = HandleLogout();
+
     const location = useLocation();
     const underlineRef = useRef(null);
+    const [avatar, setAvatar] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    const token = localStorage.getItem('token');
+
+    useEffect(() => {
+        if (!token) {
+            setLoading(false);
+            return;
+        }
+
+        fetch(`http://localhost:8080/api/v1/get-avatar`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => response.json()
+        ).then(data => {
+            console.log(data.result);
+            const urlAvatar = data.result;
+            setAvatar(urlAvatar);
+        }).catch(error => console.log(error))
+    }, [token]);
 
     useEffect(() => {
         const activeLink = document.querySelector(`.nav-item.active`);
@@ -16,9 +44,6 @@ export const Header = () => {
     }, [location.pathname]);
 
     const isActive = (path) => location.pathname === path;
-
-    const { isTokenValid } = UseAuth();
-    const { handleLogout } = HandleLogout();
 
     return (
         <div>
@@ -160,12 +185,18 @@ export const Header = () => {
                             </div>
 
                             {/* Nút Profile */}
+
                             <div className="nav-item dropdown mx-2">
-                                <button className="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '50px', height: '50px' }} data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i className="fa-solid fa-user-graduate"></i>
+                                <button className="btn btn-primary rounded-circle d-flex align-items-center justify-content-center p-0" style={{ width: '50px', height: '50px', overflow: 'hidden' }} data-bs-toggle="dropdown" aria-expanded="false">
+                                    {avatar ? (
+                                        <img src={avatar} alt="User Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                                    ) : (
+                                        <i className="fa-solid fa-user-graduate"></i>
+                                    )}
                                 </button>
+
                                 <ul className="dropdown-menu dropdown-menu-end text-start" style={{ transform: 'translateX(-50%)', left: '50%' }}>
-                                    {isTokenValid === null  ? (
+                                    {isTokenValid === null ? (
                                         <li></li> // Hiển thị khi đang kiểm tra token, không hiện gì
 
                                     ) : isTokenValid ? ( // nếu token đúng

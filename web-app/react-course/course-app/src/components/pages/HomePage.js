@@ -27,7 +27,7 @@ export const HomePage = () => {
     
     const handleChange = (event) => {
         setSelectedCourse(event.target.value);
-    };
+    };  
 
     useEffect(() => {
         const fetchCourses = async () => {

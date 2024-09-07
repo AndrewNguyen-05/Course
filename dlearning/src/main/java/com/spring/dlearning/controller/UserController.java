@@ -7,6 +7,7 @@ import com.spring.dlearning.dto.request.VerifyOtpRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.UserResponse;
 import com.spring.dlearning.dto.response.VerifyOtpResponse;
+import com.spring.dlearning.service.CloudinaryService;
 import com.spring.dlearning.service.UserService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import java.util.List;
 public class UserController {
 
     UserService userService;
+    CloudinaryService cloudinaryService;
 
     @PostMapping("/register")
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request,
@@ -121,5 +123,14 @@ public class UserController {
                 .result(result)
                 .build();
 
+    }
+
+    @GetMapping("/get-avatar")
+    ApiResponse<String> getAvatar(){
+        String urlAvatar = cloudinaryService.getImage();
+        return ApiResponse.<String>builder()
+                .code(HttpStatus.OK.value())
+                .result(urlAvatar)
+                .build();
     }
 }

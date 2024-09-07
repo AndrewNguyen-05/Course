@@ -1,12 +1,8 @@
 package com.spring.dlearning.configuration;
 
-
-import com.spring.dlearning.security.UserSecurityDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,17 +21,22 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     private final CustomJwtDecoder jwtDecoder;
-    private final UserSecurityDetails userDetailService;
 
     private static final String[] PUBLIC_ENDPOINT = {
-            "/api/v1/auth/token", "/api/v1/register",
+            "/api/v1/auth/token",
+            "/api/v1/register",
             "/api/v1/auth/logout",
-            "/api/v1/auth/introspect", "/api/v1/auth/refresh",
+            "/api/v1/auth/introspect",
+            "/api/v1/auth/refresh",
             "/api/v1/auth/outbound/authentication",
-            "/oauth2/authorization/**", "/api/v1/create-password",
-            "/api/v1/send-otp", "/api/v1/reset-password", "/api/v1/verify-otp",
-            "/api/v1/check-exists-user", "/api/v1/send-otp-register",
-            "/api/v1/courses", "/api/v1/course/{id}"
+            "/api/v1/create-password",
+            "/api/v1/send-otp",
+            "/api/v1/reset-password",
+            "/api/v1/verify-otp",
+            "/api/v1/check-exists-user",
+            "/api/v1/send-otp-register",
+            "/api/v1/courses",
+            "/api/v1/course/{id}"
     };
 
     @Bean
@@ -67,13 +68,6 @@ public class SecurityConfiguration {
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
 
         return jwtAuthenticationConverter;
-    }
-
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(connectionFactory);
-        return template;
     }
 
 }

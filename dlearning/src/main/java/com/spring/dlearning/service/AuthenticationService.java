@@ -19,8 +19,6 @@ import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.repository.InvalidatedTokenRepository;
 import com.spring.dlearning.repository.RoleRepository;
 import com.spring.dlearning.repository.UserRepository;
-import com.spring.dlearning.repository.http_client.OutboundFacebookIdentityClient;
-import com.spring.dlearning.repository.http_client.OutboundFacebookUserClient;
 import com.spring.dlearning.repository.http_client.OutboundIdentityClient;
 import com.spring.dlearning.repository.http_client.OutboundUserClient;
 import jakarta.transaction.Transactional;
@@ -33,8 +31,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -74,32 +70,11 @@ public class AuthenticationService {
     @Value("${outbound.identity.grant-type}")
     protected String GRANT_TYPE;
 
-
-//    @NonFinal
-//    @Value("${outbound.facebook.client-id}")
-//    protected String CLIENT_ID_FB;
-//
-//    @NonFinal
-//    @Value("${outbound.facebook.client-secret}")
-//    protected String CLIENT_SECRET_FB;
-//
-//    @NonFinal
-//    @Value("${outbound.facebook.redirect-uri}")
-//    protected String REDIRECT_URI_FB;
-//
-//    @NonFinal
-//    @Value("${outbound.facebook.grant-type}")
-//    protected String GRANT_TYPE_FB;
-
-
     UserRepository userRepository;
     RoleRepository roleRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     OutboundIdentityClient outboundIdentityClient;
     OutboundUserClient outboundUserClient;
-    OutboundFacebookIdentityClient facebookIdentityClient;
-    OutboundFacebookUserClient facebookUserClient;
-
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -148,45 +123,6 @@ public class AuthenticationService {
                 .token(token)
                 .build();
     }
-
-//    public AuthenticationResponse facebookAuthenticate(String code) {
-//
-//        var response = facebookIdentityClient.exchangeToken(ExchangeTokenRequest.builder()
-//                .code(code)
-//                .clientId(CLIENT_ID_FB)
-//                .clientSecret(CLIENT_SECRET_FB)
-//                .redirectUri(REDIRECT_URI_FB)
-//                .grantType(GRANT_TYPE_FB)
-//                .build());
-//        log.info("FACEBOOK TOKEN RESPONSE {}", response);
-//
-//        OutboundFacebookResponse userInfo = facebookUserClient.getUserInfo(
-//                "email,first_name,last_name,picture",
-//                response.getAccessToken());
-//
-//        log.info("Facebook User info {}", userInfo);
-//
-//        Role roles = roleRepository.findByName(PredefinedRole.USER_ROLE)
-//                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-//
-//        var user = userRepository.findByEmail(userInfo.getEmail()).orElseGet(() -> {
-//            User newUser = User.builder()
-//                    .email(userInfo.getEmail())
-//                    .name(userInfo.getFirstName() +" "+ userInfo.getLastName())
-//                    .firstName(userInfo.getFirstName())
-//                    .lastName(userInfo.getLastName())
-//                    .avatar(userInfo.getPicture().getPicture().getUrl())
-//                    .role(roles)
-//                    .build();
-//            return userRepository.save(newUser);
-//        });
-//
-//        var token = generateToken(user);
-//
-//        return AuthenticationResponse.builder()
-//                .token(token)
-//                .build();
-//    }
     
     private String generateToken(User user) {
 
@@ -230,7 +166,6 @@ public class AuthenticationService {
             log.info("Token already expired or invalid");
         }
     }
-
 
     public SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
 
@@ -311,4 +246,5 @@ public class AuthenticationService {
         });
         return stringJoiner.toString();
     }
+
 }

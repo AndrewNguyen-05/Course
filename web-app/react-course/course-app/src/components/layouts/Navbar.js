@@ -2,11 +2,36 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { UseAuth } from '../authentication/UseAuth';
 import { HandleLogout } from '../authentication/HandleLogout';
+import { useState, useEffect} from 'react';
 
 export const Navbar = () => {
 
-  const {isTokenValid} = UseAuth();
-  const {handleLogout} = HandleLogout();
+  const { isTokenValid } = UseAuth();
+  const { handleLogout } = HandleLogout();
+  const [avatar, setAvatar] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    fetch(`http://localhost:8080/api/v1/get-avatar`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    }).then(response => response.json()
+    ).then(data => {
+      console.log(data.result);
+      const urlAvatar = data.result;
+      setAvatar(urlAvatar);
+    }).catch(error => console.log(error))
+  }, []);
 
   return (
     <div>
@@ -67,9 +92,15 @@ export const Navbar = () => {
               <Link to="/contact" className="nav-item nav-link rounded">Contact</Link>
             </div>
             <div className="nav-item dropdown">
-              <button className="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style={{ width: '50px', height: '50px' }} data-bs-toggle="dropdown" aria-expanded="false">
-                <i className="fa-solid fa-user-graduate"></i>
+
+              <button className="btn btn-primary rounded-circle d-flex align-items-center justify-content-center p-0" style={{ width: '50px', height: '50px', overflow: 'hidden' }} data-bs-toggle="dropdown" aria-expanded="false">
+                {avatar ? (
+                  <img src={avatar} alt="User Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                ) : (
+                  <i className="fa-solid fa-user-graduate"></i>
+                )}
               </button>
+
               <ul className="dropdown-menu dropdown-menu-end text-start" style={{ transform: 'translateX(-50%)', left: '50%' }}>
                 {isTokenValid === null ? (
                   <li></li>) // Hiển thị khi đang kiểm tra token, không hiện gì

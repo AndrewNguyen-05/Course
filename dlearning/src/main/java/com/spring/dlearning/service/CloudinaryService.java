@@ -27,6 +27,17 @@ public class CloudinaryService {
     UserRepository userRepository;
 
     @PreAuthorize("isAuthenticated()")
+    public String getImage(){
+        String currentLogin = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        User user = userRepository.findByEmail(currentLogin)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return (user.getAvatar() != null) ? user.getAvatar() : "";
+    }
+
+    @PreAuthorize("isAuthenticated()")
     public String uploadImage(MultipartFile file){
         try{
             var result = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
