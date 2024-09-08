@@ -167,7 +167,7 @@ export const Profile = () => {
 
     return (
         <div>
-            <Navbar/>
+          <Navbar/>
             {/* FORM INFO AND UPDATE PROFILE */}
             <div className="container">
                 <div className="row gutters">

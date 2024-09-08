@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -56,4 +58,15 @@ public class CourseController {
                 .result(result)
                 .build();
     }
+
+    @GetMapping("/my-courses")
+    ApiResponse<List<CourseResponse>> myCourses(){
+        var result = courseService.myCourses();
+
+        return ApiResponse.<List<CourseResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .result(result)
+                .build();
+    }
+
 }

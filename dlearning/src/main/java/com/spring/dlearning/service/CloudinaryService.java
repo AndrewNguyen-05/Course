@@ -29,7 +29,7 @@ public class CloudinaryService {
     @PreAuthorize("isAuthenticated()")
     public String getImage(){
         String currentLogin = SecurityUtils.getCurrentUserLogin()
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User user = userRepository.findByEmail(currentLogin)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -57,7 +57,7 @@ public class CloudinaryService {
     @PreAuthorize("isAuthenticated()")
     public void updateImage(String url, String email) {
         String currentUserEmail = SecurityUtils.getCurrentUserLogin()
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User user = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -74,7 +74,7 @@ public class CloudinaryService {
     @Transactional
     public void deleteAvatar() {
         String currentUserEmail = SecurityUtils.getCurrentUserLogin()
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User user = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));

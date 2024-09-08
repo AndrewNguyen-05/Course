@@ -10495,4 +10495,20 @@ h6,
 .course-meta span {
   font-size: 0.85rem;
 }
+/* Đảm bảo các mục trong thẻ được căn đều theo chiều ngang */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.card-text {
+  text-align: left; /* Căn trái cho nội dung */
+  margin-bottom: 10px;
+}
+
+.course-price {
+  text-align: left;
+  font-weight: bold;
+}
 

@@ -13,6 +13,7 @@ export const LoginPage = () => {
   const [showToast, setShowToast] = useState(false);
   const navigate = useNavigate();
 
+
   const handleGoogleLogin = () => {
     const callbackUrl = OAuthConfig.redirectUri;
     const authUrl = OAuthConfig.authUri;
@@ -27,6 +28,14 @@ export const LoginPage = () => {
     window.location.href = targetUrl;
 
   };
+
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if(token){
+      navigate('/home')
+    }
+  })
 
   const handleLogin = (event) => {
     event.preventDefault();

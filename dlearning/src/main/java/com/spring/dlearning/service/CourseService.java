@@ -23,6 +23,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +63,7 @@ public class CourseService {
         Course course = courseMapper.toCourse(request);
 
         String email = SecurityUtils.getCurrentUserLogin()
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -73,4 +75,16 @@ public class CourseService {
         return courseMapper.toCourseResponse(course);
     }
 
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER', 'USER')")
+    public List<CourseResponse> myCourses(){
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        List<Course> myCourse = courseRepository.findByAuthor(user);
+
+        return myCourse.stream().map(courseMapper::toCourseResponse).toList();
+    }
 }

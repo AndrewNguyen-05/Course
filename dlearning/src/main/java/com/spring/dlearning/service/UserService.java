@@ -105,7 +105,6 @@ public class UserService {
                 .stream().map(userMapper::toUserResponse).toList();
     }
 
-    @PreAuthorize("isAuthenticated()")
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();

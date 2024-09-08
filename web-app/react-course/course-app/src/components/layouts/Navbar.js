@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { UseAuth } from '../authentication/UseAuth';
 import { HandleLogout } from '../authentication/HandleLogout';
-import { useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 
 export const Navbar = () => {
 
@@ -10,6 +10,8 @@ export const Navbar = () => {
   const { handleLogout } = HandleLogout();
   const [avatar, setAvatar] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const role = localStorage.getItem('role');
 
   const token = localStorage.getItem('token');
 
@@ -31,7 +33,7 @@ export const Navbar = () => {
       const urlAvatar = data.result;
       setAvatar(urlAvatar);
     }).catch(error => console.log(error))
-  }, []);
+  }, [token]);
 
   return (
     <div>
@@ -97,7 +99,7 @@ export const Navbar = () => {
                 {avatar ? (
                   <img src={avatar} alt="User Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                 ) : (
-                  <i className="fa-solid fa-user-graduate"></i>
+                  <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="User Avatar" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                 )}
               </button>
 
@@ -108,6 +110,9 @@ export const Navbar = () => {
                   : isTokenValid ? ( // nếu token đúng
                     <>
                       <li><Link to="/profile" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-address-card me-2"></i>Profile</Link></li>
+                      {role === 'TEACHER' && (
+                        <li><Link to="/manager-courses" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-book me-2"></i>My Course</Link></li>
+                      )}
                       <li><Link to="/deposit" className="dropdown-item d-flex align-items-center"><i className="fa-brands fa-bitcoin me-2"></i>Deposit</Link></li>
                       <li><Link to="/change-password" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-key me-2"></i>Password</Link></li>
                       <li>

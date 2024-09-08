@@ -36,21 +36,6 @@ function App() {
             </>
           } />
 
-          <Route path="/teacher-add-courses" element={
-            <LayoutWithoutHeaderFooter>
-              <UploadCourse />
-            </LayoutWithoutHeaderFooter>
-          } />
-
-
-          <Route path="/manager-courses" element={
-            <Authorization requiredRole="TEACHER">
-              <LayoutWithoutHeaderFooter>
-                <MyCourses />
-              </LayoutWithoutHeaderFooter>
-            </Authorization>
-          } />
-
           <Route path="/home" element={
             <>
               <Header />
@@ -62,6 +47,12 @@ function App() {
           <Route path="/login" element={
             <LayoutWithoutHeaderFooter>
               <LoginPage />
+            </LayoutWithoutHeaderFooter>
+          } />
+
+          <Route path="/authenticate" element={
+            <LayoutWithoutHeaderFooter>
+              <ProcessLoginOAuth2 />
             </LayoutWithoutHeaderFooter>
           } />
 
@@ -77,16 +68,12 @@ function App() {
             </LayoutWithoutHeaderFooter>
           } />
 
-          <Route path="/forgot-password" element={
-            <LayoutWithoutHeaderFooter>
-              <ForgotPassword />
-            </LayoutWithoutHeaderFooter>
-          } />
-
-          <Route path="/authenticate" element={
-            <LayoutWithoutHeaderFooter>
-              <ProcessLoginOAuth2 />
-            </LayoutWithoutHeaderFooter>
+          <Route path="/create-password" element={
+            <PrivateRoute>
+              <LayoutWithoutHeaderFooter>
+                <CreatePassword />
+              </LayoutWithoutHeaderFooter>
+            </PrivateRoute>
           } />
 
           <Route path="/forgot-password" element={
@@ -94,7 +81,6 @@ function App() {
               <ForgotPassword />
             </LayoutWithoutHeaderFooter>
           } />
-
 
           <Route path="/change-password" element={
             <PrivateRoute>
@@ -104,12 +90,14 @@ function App() {
             </PrivateRoute>
           } />
 
-          <Route path="/create-password" element={
-            <PrivateRoute>
-              <LayoutWithoutHeaderFooter>
-                <CreatePassword />
-              </LayoutWithoutHeaderFooter>
-            </PrivateRoute>
+          <Route path='/profile' element={
+            <>
+              <PrivateRoute>
+                <LayoutWithoutHeaderFooter>
+                  <Profile />
+                </LayoutWithoutHeaderFooter>
+              </PrivateRoute>
+            </>
           } />
 
           <Route path='/about' element={
@@ -136,8 +124,6 @@ function App() {
             </>
           } />
 
-
-
           <Route path='/contact' element={
             <>
               <Header />
@@ -146,23 +132,27 @@ function App() {
             </>
           } />
 
-          <Route path='/profile' element={
-            <>
-              <PrivateRoute>
-                <LayoutWithoutHeaderFooter>
-                  <Profile />
-                </LayoutWithoutHeaderFooter>
-              </PrivateRoute>
-            </>
+          <Route path="/teacher-add-courses" element={
+            <Authorization requiredRole="TEACHER">
+              <LayoutWithoutHeaderFooter>
+              <UploadCourse />
+            </LayoutWithoutHeaderFooter>
+            </Authorization>
+          } />
+
+          <Route path="/manager-courses" element={
+            <Authorization requiredRole="TEACHER">
+              <LayoutWithoutHeaderFooter>
+                <MyCourses />
+              </LayoutWithoutHeaderFooter>
+            </Authorization>
           } />
 
           <Route path='/accessdenied' element={
             <>
-              <PrivateRoute>
                 <LayoutWithoutHeaderFooter>
                   <Accessdenied />
                 </LayoutWithoutHeaderFooter>
-              </PrivateRoute>
             </>
           } />
 

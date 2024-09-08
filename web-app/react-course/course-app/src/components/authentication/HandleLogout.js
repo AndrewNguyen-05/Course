@@ -5,7 +5,7 @@ export const HandleLogout = () => {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        const token = localStorage.getItem('token'); // Lấy token từ localStorage
+        const token = localStorage.getItem('token');
 
         if (!token) {
             console.log('No token found');

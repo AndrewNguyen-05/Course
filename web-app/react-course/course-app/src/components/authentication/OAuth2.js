@@ -18,28 +18,29 @@ export const ProcessLoginOAuth2 = () => {
           .then(response => response.json())
           .then(data => {
             if (data.result && data.result.token) {
+              console.log(data)
               localStorage.setItem('token', data.result.token);
 
               let token = localStorage.getItem('token');
-              const headers = {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-              };
 
-              fetch(`http://localhost:8080/api/v1/my-info`, { headers: headers })
+              fetch(`http://localhost:8080/api/v1/my-info`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                }
+              })
                 .then(response => response.json())
                 .then(userData => {
+                  console.log('data', data);
                   if (userData.result && userData.result.noPassword) {
                     navigate('/create-password');
                   } else {
                     navigate('/home');
                   }
                 });
-            } else {
-              console.error('Authentication failed');
             }
-          })
-          .catch(error => {
+          }).catch(error => {
             console.error('Error:', error);
           });
       }
