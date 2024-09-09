@@ -30,10 +30,7 @@ public class AuthenticationController {
 
     @PostMapping("/outbound/authentication")
     public ApiResponse<AuthenticationResponse> outboundAuthenticateGoogle(@RequestParam("code") String code) {
-        log.info("Received code: {}", code);
-
         var result = authenticationService.outboundAuthenticate(code);
-        log.info("Authentication result: {}", result);
 
         return ApiResponse.<AuthenticationResponse>builder().result(result).build();
     }

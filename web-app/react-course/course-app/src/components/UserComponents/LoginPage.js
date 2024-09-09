@@ -29,7 +29,6 @@ export const LoginPage = () => {
 
   };
 
-
   useEffect(() => {
     const token = localStorage.getItem('token')
     if(token){
@@ -52,7 +51,7 @@ export const LoginPage = () => {
           return response.json().then(errorData => {
             throw new Error(errorData.message || 'An error occurred.');
           });
-        }
+        } 
         return response.json();
       })
       .then(data => {

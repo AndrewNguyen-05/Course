@@ -4,13 +4,13 @@ server:
 spring:
   datasource:
     url: "jdbc:mysql://localhost:3306/d_learning"
+#    url: ${DBMS_CONNECTION:jdbc:mysql://mysql-course:3307/d_learning}
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
     password: 1234
   jpa:
     hibernate:
       ddl-auto: update
-
 
   data:
     redis:
@@ -60,4 +60,5 @@ cloudinary:
   cloud-name: "dznef2sae"
   api-key: "537285485346489"
   api-secret: "PHu0HBagBqf1rgfKMSJpSLUh29M"
+
 

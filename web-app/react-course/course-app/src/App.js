@@ -133,7 +133,7 @@ function App() {
           } />
 
           <Route path="/teacher-add-courses" element={
-            <Authorization requiredRole="TEACHER">
+            <Authorization requiredRole={["TEACHER", "ADMIN"]}>
               <LayoutWithoutHeaderFooter>
               <UploadCourse />
             </LayoutWithoutHeaderFooter>
@@ -141,7 +141,7 @@ function App() {
           } />
 
           <Route path="/manager-courses" element={
-            <Authorization requiredRole="TEACHER">
+            <Authorization requiredRole={["TEACHER", "ADMIN"]}>
               <LayoutWithoutHeaderFooter>
                 <MyCourses />
               </LayoutWithoutHeaderFooter>

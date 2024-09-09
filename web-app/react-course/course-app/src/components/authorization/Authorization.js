@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-export const Authorization = ({children, requiredRole }) => {
+export const Authorization = ({ children, requiredRole }) => {
 
     const navigate = useNavigate();
 
@@ -14,16 +14,19 @@ export const Authorization = ({children, requiredRole }) => {
     const role = localStorage.getItem('role');
 
     useEffect(() => {
-        if(! token){
+        if (!token) {
             navigate('/login');
             return;
         }
-        if(role){
-            if(role === requiredRole){
+
+        const roles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+
+        if (role) {
+            if (roles.includes(role)) {
                 setIsAuthorized(true);
                 setIsLoading(false);
             } else {
-                navigate('/accessdenied')
+                navigate("/accessdenied");
             }
             // Kiểm tra thêm như khi login google, hoặc 1 số trường hợp sẽ không lưu role trên UI
         } else {
@@ -36,34 +39,34 @@ export const Authorization = ({children, requiredRole }) => {
                 },
                 body: JSON.stringify({ token })
             })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(errorData => {
-                        throw new Error(errorData.message || 'An error occurred.');
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.result && data.result.valid) {
-                    const userRole = data.result.scope; 
-                    localStorage.setItem('role', userRole);
-                    if (userRole === requiredRole) {
-                        setIsAuthorized(true);
-                    } else {
-                        navigate('/accessdenied');
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(errorData => {
+                            throw new Error(errorData.message || 'An error occurred.');
+                        });
                     }
-                } else {
-                    throw new Error('Invalid token.');
-                }
-            })
-            .catch(error => {
-                console.error('Error during introspect:', error);
-                navigate('/login');
-            })
-            .finally(() => {
-                setIsLoading(false); // Kết thúc trạng thái tải
-            });
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.result && data.result.valid) {
+                        const userRole = data.result.scope;
+                        localStorage.setItem('role', userRole);
+                        if (userRole === requiredRole) {
+                            setIsAuthorized(true);
+                        } else {
+                            navigate('/accessdenied');
+                        }
+                    } else {
+                        throw new Error('Invalid token.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error during introspect:', error);
+                    navigate('/login');
+                })
+                .finally(() => {
+                    setIsLoading(false); // Kết thúc trạng thái tải
+                });
         }
     }, [navigate, token, requiredRole, role]);
 

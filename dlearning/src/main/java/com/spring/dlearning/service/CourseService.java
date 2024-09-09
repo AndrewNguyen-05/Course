@@ -75,7 +75,7 @@ public class CourseService {
         return courseMapper.toCourseResponse(course);
     }
 
-    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER', 'USER')")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER', 'USER', 'ADMIN')")
     public List<CourseResponse> myCourses(){
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
