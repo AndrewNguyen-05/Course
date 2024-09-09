@@ -1,22 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UseAuth } from '../authentication/UseAuth';
 import { HandleLogout } from '../authentication/HandleLogout';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 export const Navbar = () => {
+  const [loggedOut, setLoggedOut] = useState(false);
+  const { isTokenValid } = UseAuth({ loggedOut });
 
-  const { isTokenValid } = UseAuth();
-  const { handleLogout } = HandleLogout();
+  const { handleLogout } = HandleLogout({ setLoggedOut });
   const [avatar, setAvatar] = useState('');
   const [loading, setLoading] = useState(true);
-
   const role = localStorage.getItem('role');
-
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    if (!token) {
+    if (!token || !isTokenValid) {
       setLoading(false);
       return;
     }
@@ -27,13 +26,21 @@ export const Navbar = () => {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       }
-    }).then(response => response.json()
-    ).then(data => {
-      console.log(data.result);
-      const urlAvatar = data.result;
-      setAvatar(urlAvatar);
-    }).catch(error => console.log(error))
-  }, [token]);
+    })
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to fetch avatar');
+        return response.json();
+      })
+      .then(data => {
+        const urlAvatar = data.result;
+        setAvatar(urlAvatar);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.log('Error fetching avatar:', error);
+        setLoading(false);
+      });
+  }, [token, isTokenValid]);
 
   return (
     <div>

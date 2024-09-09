@@ -5,9 +5,9 @@ import { HandleLogout } from '../authentication/HandleLogout.js';
 
 export const Header = () => {
 
-
-    const { isTokenValid } = UseAuth();
-    const { handleLogout } = HandleLogout();
+    const [loggedOut, setLoggedOut] = useState(false);  // Thêm trạng thái đăng xuất
+    const { isTokenValid } = UseAuth({ loggedOut });
+    const { handleLogout } = HandleLogout({ setLoggedOut });
 
     const location = useLocation();
     const underlineRef = useRef(null);

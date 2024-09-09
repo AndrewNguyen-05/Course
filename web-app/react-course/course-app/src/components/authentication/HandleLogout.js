@@ -1,39 +1,43 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export const HandleLogout = () => {
+export const HandleLogout = ({ setLoggedOut }) => {
     const navigate = useNavigate();
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         const token = localStorage.getItem('token');
 
         if (!token) {
             console.log('No token found');
+            setLoggedOut(true); // Cập nhật trạng thái logout
+            navigate('/login');
             return;
         }
 
-        fetch('http://localhost:8080/api/v1/auth/logout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ token })
-        })
-        .then(response => {
+        // Xóa token ngay lập tức trước khi gửi yêu cầu
+        localStorage.clear();
+        setLoggedOut(true); // Cập nhật trạng thái logout
+
+        try {
+            const response = await fetch('http://localhost:8080/api/v1/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ token })
+            });
+
             if (response.ok) {
-                localStorage.clear(); 
                 navigate('/login');  
             } else {
-                return response.json().then(err => {
-                    console.log('Logout Failed: ', err.message || response.statusText);
-                });
+                const errorData = await response.json();
+                console.log('Logout Failed: ', errorData.message || response.statusText);
             }
-        })
-        .catch(error => {
+        } catch (error) {
             console.log('Logout error: ', error);
-        });
+        }
     };
 
-    return { handleLogout }; 
+    return { handleLogout };
 };

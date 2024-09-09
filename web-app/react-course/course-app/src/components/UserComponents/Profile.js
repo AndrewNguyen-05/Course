@@ -6,7 +6,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Navbar } from "../layouts/Navbar";
 
 export const Profile = () => {
-    const { isTokenValid, handleLogout } = UseAuth();
+    const [loggedOut, setLoggedOut] = useState(false); 
+    const { isTokenValid } = UseAuth({ loggedOut });
+
     const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
     const [isRemovingAvatar, setIsRemovingAvatar] = useState(false);
 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export const UseAuth = () => {
+export const UseAuth = ({ loggedOut }) => {
     const [isTokenValid, setIsTokenValid] = useState(null);
 
     const token = localStorage.getItem('token');
@@ -8,7 +8,7 @@ export const UseAuth = () => {
 
     useEffect(() => {
         const checkToken = async () => {
-            if (!token || isNaN(expiryTime)) {
+            if (!token || isNaN(expiryTime) || loggedOut) {
                 setIsTokenValid(false);
                 return;
             }
@@ -49,11 +49,12 @@ export const UseAuth = () => {
         };
 
         checkToken();
-    }, [token, expiryTime]);
+    }, [token, expiryTime, loggedOut]);
 
     useEffect(() => {
         const introspectToken = async () => {
-            if (!token) {
+            // Nếu không có token hoặc đã đăng xuất, không thực hiện introspect nữa
+            if (!token || loggedOut) {
                 setIsTokenValid(false);
                 return;
             }
@@ -79,7 +80,7 @@ export const UseAuth = () => {
         };
 
         introspectToken();
-    }, [token]);
+    }, [token, loggedOut]);
 
     return { isTokenValid };
 };
