@@ -15,6 +15,7 @@ public class UserRegisterTeacherRequest {
     String email;
     String name;
     String phone;
+
     String expertise;
     Double yearsOfExperience;
     String bio;

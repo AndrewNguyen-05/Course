@@ -3,6 +3,7 @@ package com.spring.dlearning.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.dlearning.utils.CourseLevel;
 import com.spring.dlearning.utils.Gender;
+import com.spring.dlearning.utils.RegistrationStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -82,6 +83,28 @@ public class User extends AbstractEntity<Long>{
     @Column(name = "enabled")
     Boolean enabled;
 
+    @Column(name = "expertise")
+    String expertise;
+
+    @Column(name = "yearsOfExperience")
+    Double yearsOfExperience;
+
+    @Column(name = "bio")
+    String bio;
+
+    @Column(name = "certificate")
+    String certificate;
+
+    @Column(name = "cvUrl")
+    String cvUrl;
+
+    @Column(name = "facebookLink")
+    String facebookLink;
+
+    @Column(name = "registrationStatus")
+    @Enumerated(EnumType.STRING)
+    RegistrationStatus registrationStatus;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id", nullable = false)
     Role role;
@@ -96,7 +119,7 @@ public class User extends AbstractEntity<Long>{
     @PrePersist
     protected void onCreate() {
         if (enabled == null) {
-            enabled = true;
+            enabled = Boolean.TRUE;
         }
     }
     public Collection<? extends GrantedAuthority> getAuthorities() {

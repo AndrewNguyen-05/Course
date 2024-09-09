@@ -87,4 +87,5 @@ public class CourseService {
 
         return myCourse.stream().map(courseMapper::toCourseResponse).toList();
     }
+
 }
