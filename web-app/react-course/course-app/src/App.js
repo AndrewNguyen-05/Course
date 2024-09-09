@@ -20,6 +20,7 @@ import { ForgotPassword } from './components/authentication/ForgotPassword';
 import { Register } from './components/UserComponents/Register';
 import { Authorization } from './components/authorization/Authorization';
 import { Accessdenied } from './components/error/Accessdenied';
+import { RegisterTeacher } from './components/UserComponents/RegisterTeacher';
 
 
 function App() {
@@ -133,26 +134,34 @@ function App() {
           } />
 
           <Route path="/teacher-add-courses" element={
-            <Authorization requiredRole={["TEACHER", "ADMIN"]}>
+            <Authorization requiredRole={["TEACHER"]}>
               <LayoutWithoutHeaderFooter>
-              <UploadCourse />
-            </LayoutWithoutHeaderFooter>
+                <UploadCourse />
+              </LayoutWithoutHeaderFooter>
             </Authorization>
           } />
 
           <Route path="/manager-courses" element={
-            <Authorization requiredRole={["TEACHER", "ADMIN"]}>
+            <Authorization requiredRole={["TEACHER"]}>
               <LayoutWithoutHeaderFooter>
                 <MyCourses />
               </LayoutWithoutHeaderFooter>
             </Authorization>
           } />
 
+          <Route path="/register-teacher" element={
+            <Authorization requiredRole={["USER"]}>
+              <LayoutWithoutHeaderFooter>
+                <RegisterTeacher />
+              </LayoutWithoutHeaderFooter>
+            </Authorization>
+          } />
+
           <Route path='/accessdenied' element={
             <>
-                <LayoutWithoutHeaderFooter>
-                  <Accessdenied />
-                </LayoutWithoutHeaderFooter>
+              <LayoutWithoutHeaderFooter>
+                <Accessdenied />
+              </LayoutWithoutHeaderFooter>
             </>
           } />
 

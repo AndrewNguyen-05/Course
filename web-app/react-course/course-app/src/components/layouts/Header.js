@@ -229,6 +229,12 @@ export const Header = () => {
                                             {role === 'TEACHER' && (
                                                 <li><Link to="/manager-courses" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-book me-2"></i>My Course</Link></li>
                                             )}
+
+                                            {role === 'USER' && (
+                                                <li><Link to="/register-teacher" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-user-graduate me-2"></i>
+                                                    Teach Now</Link></li>
+                                            )}
+
                                             <li><Link to="/deposit" className="dropdown-item d-flex align-items-center"><i className="fa-brands fa-bitcoin me-2"></i>Deposit</Link></li>
                                             <li><Link to="/change-password" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-key me-2"></i>Password</Link></li>
                                             <li>
