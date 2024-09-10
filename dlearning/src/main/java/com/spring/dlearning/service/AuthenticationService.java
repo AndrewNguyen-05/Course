@@ -67,8 +67,7 @@ public class AuthenticationService {
     protected String REDIRECT_URI;
 
     @NonFinal
-    @Value("${outbound.identity.grant-type}")
-    protected String GRANT_TYPE;
+    protected final String GRANT_TYPE = "authorization_code";
 
     UserRepository userRepository;
     RoleRepository roleRepository;

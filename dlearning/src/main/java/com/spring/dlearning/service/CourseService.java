@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +36,10 @@ public class CourseService {
     CourseRepository courseRepository;
     CourseMapper courseMapper;
 
-    public PageResponse<CourseResponse> getAllCourse(int page, int size){
+    public PageResponse<CourseResponse> getAllCourses(Specification<Course> spec, int page, int size) {
 
-        Sort sort = Sort.by("title").ascending();
-        Pageable pageable = PageRequest.of(page - 1, size, sort); // vì bên controller để defaultValue = 1 => khi convert về phải trừ đi 1
-
-        Page<Course> pageData = courseRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Course> pageData = courseRepository.findAll(spec, pageable);
 
         return PageResponse.<CourseResponse>builder()
                 .currentPage(page)
@@ -51,6 +49,7 @@ public class CourseService {
                 .data(pageData.getContent().stream().map(courseMapper::toCourseResponse).toList())
                 .build();
     }
+
 
     public CourseResponse getCourseById(Long id){
         return courseRepository.findById(id).map(courseMapper::toCourseResponse)

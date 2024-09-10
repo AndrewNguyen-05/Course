@@ -10512,3 +10512,151 @@ h6,
   font-weight: bold;
 }
 
+/* Card container styling */
+.custom-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Form title */
+.form-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+/* Form subtitle */
+.form-subtitle {
+  font-size: 0.875rem;
+}
+
+/* Input group custom styling */
+.custom-input-group {
+  display: flex;
+  align-items: center;
+}
+
+.custom-input-group-text {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-right: none;
+  padding: 5px 10px;
+  border-radius: 8px 0 0 8px;
+}
+
+.custom-form-control {
+  border-radius: 0 8px 8px 0;
+  border: 1px solid #ddd;
+  box-shadow: none;
+  padding: 5px 10px;
+}
+
+.custom-form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 5px rgba(13, 110, 253, 0.2);
+}
+
+/* File input styling */
+.custom-form-control-file {
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 5px;
+}
+
+.custom-form-label {
+  font-size: 0.875rem;
+}
+
+/* Submit button styling */
+.custom-submit-btn {
+  font-weight: 600;
+  letter-spacing: 0.025em;
+  transition: all 0.2s;
+}
+
+.custom-submit-btn:hover {
+  background-color: #0056b3;
+  box-shadow: 0 0 8px rgba(0, 86, 179, 0.5);
+}
+.search-bar {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.search-input {
+  height: 50px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.search-btn {
+  height: 50px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.search-btn:hover {
+  background-color: #0056b3;
+  color: #fff;
+}
+.custom-search-bar {
+  background-color: #f9fafc;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.custom-input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.custom-input:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.custom-btn {
+  padding: 10px 20px;
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: #fff;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.custom-btn:hover {
+  background-color: #2563eb;
+  box-shadow: 0px 6px 14px rgba(37, 99, 235, 0.3);
+}
+.btn-block{
+  margin-top: 20px;
+}
+.course-price-value {
+  color: #000000; /* Màu đen */
+  font-size: 20px; /* Phóng to để dễ nhìn */
+  font-weight: bold; /* Chữ đậm */
+  font-family: 'Arial', sans-serif; /* Font chữ dễ nhìn */
+}
+
+.course-price strong {
+  color: #555555; /* Màu xám đậm cho chữ 'Price:' để tạo sự cân đối */
+}

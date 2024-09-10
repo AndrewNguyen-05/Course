@@ -4,11 +4,14 @@ import com.spring.dlearning.dto.request.CourseRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.CourseResponse;
 import com.spring.dlearning.dto.response.PageResponse;
+import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.service.CourseService;
+import com.turkraft.springfilter.boot.Filter;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,17 +28,20 @@ public class CourseController {
     CourseService courseService;
 
     @GetMapping("/courses")
-    ApiResponse<PageResponse<CourseResponse>> getAllCourse(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                           @RequestParam(value = "size", required = false, defaultValue = "4") int size) {
-        // page: currentPage, size: tổng element của currentPage
-        var result = courseService.getAllCourse(page, size);
+    ApiResponse<PageResponse<CourseResponse>> getAllCourses(
+            @Filter Specification<Course> spec,
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "6") int size) {
+
+        PageResponse<CourseResponse> result = courseService.getAllCourses(spec, page, size);
 
         return ApiResponse.<PageResponse<CourseResponse>>builder()
                 .code(HttpStatus.OK.value())
-                .message("Get ALl Course Successfully")
+                .message("Get All Courses Successfully")
                 .result(result)
                 .build();
     }
+
 
     @GetMapping("/course/{id}")
     ApiResponse<CourseResponse> getCourseById(@PathVariable Long id){

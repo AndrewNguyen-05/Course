@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export const HandleLogout = ({ setLoggedOut }) => {
@@ -14,9 +13,8 @@ export const HandleLogout = ({ setLoggedOut }) => {
             return;
         }
 
-        // Xóa token ngay lập tức trước khi gửi yêu cầu
         localStorage.clear();
-        setLoggedOut(true); // Cập nhật trạng thái logout
+        setLoggedOut(true); 
 
         try {
             const response = await fetch('http://localhost:8080/api/v1/auth/logout', {

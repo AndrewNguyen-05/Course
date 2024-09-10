@@ -1,11 +1,12 @@
 import React from "react";
-import { FaBuilding, FaChalkboardTeacher, FaRegCalendarAlt, FaUserGraduate, FaUserPlus, FaUsers } from "react-icons/fa";
+import { FaBook, FaBuilding, FaChalkboardTeacher, FaLayerGroup, FaRegCalendarAlt, FaUserGraduate, FaUsers } from "react-icons/fa";
 import { IoSchoolSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
+import { Footer } from "../../layouts/Footer";
 
 export const SidebarAdmim = () => {
     return (
-        <div className="sidebar-container d-flex flex-column bg-light p-4 shadow-sm">
+        <div className="d-flex flex-column bg-light p-4">
             <div className="sidebar-header mb-4">
                 <Link to="/" className="d-flex align-items-center">
                     <IoSchoolSharp size={70} className="me-2 text-primary" />
@@ -33,12 +34,6 @@ export const SidebarAdmim = () => {
                 </li>
 
                 <li className="nav-item">
-                    <Link to="/admin/list-registes-teacher" className="nav-link d-flex align-items-center">
-                        <FaUserPlus className="me-2" /> Register Teacher
-                    </Link>
-                </li>
-
-                <li className="nav-item">
                     <Link to="/manager-courses" className="nav-link d-flex align-items-center">
                         <FaChalkboardTeacher className="me-2" /> Manager Course
                     </Link>
@@ -51,6 +46,7 @@ export const SidebarAdmim = () => {
                 </li>
 
             </ul>
+            
         </div>
     );
 };

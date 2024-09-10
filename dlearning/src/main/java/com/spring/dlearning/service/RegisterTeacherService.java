@@ -1,11 +1,14 @@
 package com.spring.dlearning.service;
 
+import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.UserRegisterTeacherRequest;
 import com.spring.dlearning.dto.response.UserRegisterTeacherResponse;
+import com.spring.dlearning.entity.Role;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.RegisterTeacherMapper;
+import com.spring.dlearning.repository.RoleRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.utils.RegistrationStatus;
 import com.spring.dlearning.utils.SecurityUtils;
@@ -25,6 +28,7 @@ public class RegisterTeacherService {
 
     RegisterTeacherMapper registerTeacherMapper;
     UserRepository userRepository;
+    RoleRepository roleRepository;
 
     @Transactional
     @PreAuthorize("hasAuthority('USER') and isAuthenticated()")
@@ -48,4 +52,49 @@ public class RegisterTeacherService {
 
     }
 
+    @Transactional
+    @PreAuthorize("hasAuthority('ADMIN') and isAuthenticated()")
+    public UserRegisterTeacherResponse saveTeacher(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        String roleName = user.getRole().getName();
+
+        Role role = roleRepository.findByName(PredefinedRole.TEACHER_ROLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+
+        if(user.getRegistrationStatus().equals(RegistrationStatus.PENDING)
+                && roleName.equals(PredefinedRole.USER_ROLE)){
+            user.setRegistrationStatus(RegistrationStatus.APPROVED);
+            user.setRole(role);
+            userRepository.save(user);
+            return registerTeacherMapper.toTeacherResponse(user);
+        }
+
+        throw new AppException(ErrorCode.REGISTER_TEACHER_INVALID);
+    }
+
+    @Transactional
+    @PreAuthorize("hasAuthority('ADMIN') and isAuthenticated()")
+    public UserRegisterTeacherResponse rejectTeacher(Long id){
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        String roleName = user.getRole().getName();
+        log.info("Role {}", user.getRole().getName());
+
+        Role role = roleRepository.findByName(PredefinedRole.USER_ROLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+
+
+        if(user.getRegistrationStatus().equals(RegistrationStatus.PENDING)
+                && roleName.equals(PredefinedRole.USER_ROLE)){
+            user.setRegistrationStatus(RegistrationStatus.REJECTED);
+            user.setRole(role);
+            userRepository.save(user);
+            log.info("RegistrationStatus {}", user.getRegistrationStatus());
+        }
+
+        return registerTeacherMapper.toTeacherResponse(user);
+    }
 }

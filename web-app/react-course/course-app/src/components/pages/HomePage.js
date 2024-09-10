@@ -12,22 +12,23 @@ import instructor3Image from './../../img/team-3.jpg';
 import instructor4Image from './../../img/team-4.jpg';
 import testimonial1Image from './../../img/testimonial-1.jpg';
 import testimonial2Image from './../../img/testimonial-2.jpg';
+import videoSource from './../../img/2-9.mp4'
 
 
 export const HomePage = () => {
-    
+
     const [selectedCourse, setSelectedCourse] = useState('');
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);  // State để hiển thị loading
-    const [error, setError] = useState(null); 
-    const [currentPage, setCurrentPage] = useState(1); 
-    const [pageSize] = useState(4); 
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize] = useState(4);
     const [hasMore, setHasMore] = useState(true); // Trạng thái có còn dữ liệu không
 
-    
+
     const handleChange = (event) => {
         setSelectedCourse(event.target.value);
-    };  
+    };
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -35,26 +36,26 @@ export const HomePage = () => {
                 const response = await fetch(`http://localhost:8080/api/v1/courses?page=${currentPage}&size=${pageSize}`, {
                     method: 'GET',
                 });
-    
+
                 if (!response.ok) {
                     throw new Error(`${response.status}`);
                 }
-    
+
                 const result = await response.json();
-    
+
                 const { data, totalPages } = result.result;
-    
+
                 // Nếu là trang đầu tiên thì không cần nối thêm dữ liệu
                 if (currentPage === 1) {
-                    setCourses(data); 
+                    setCourses(data);
                 } else {
                     setCourses(prevCourses => {
                         // Kiểm tra xem các khóa học mới có khác với các khóa học hiện tại không
                         const newCourses = data.filter(course => !prevCourses.some(prev => prev.id === course.id));
-                        return [...prevCourses, ...newCourses]; 
+                        return [...prevCourses, ...newCourses];
                     });
                 }
-    
+
                 if (currentPage >= totalPages) {
                     setHasMore(false); // Nếu đã tải hết các trang, không còn dữ liệu nữa
                 }
@@ -67,7 +68,7 @@ export const HomePage = () => {
 
         fetchCourses();
     }, [currentPage, pageSize]); // useEffect chạy lại mỗi khi currentPage hoặc pageSize thay đổi
-    
+
 
     const loadMoreCourses = () => {
         if (hasMore) {
@@ -88,11 +89,28 @@ export const HomePage = () => {
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     <div className="row">
+
                         <div className="col-lg-5 mb-5 mb-lg-0" style={{ minHeight: '500px' }}>
+                            <div className="position-relative h-100">
+                                <video
+                                    className="position-absolute w-100 h-100"
+                                    style={{ objectFit: 'cover' }}
+                                    src={videoSource}
+                                    autoPlay
+                                    loop
+                                    controls
+                                    playsInline
+                                >
+                                    Your browser does not support the video tag.
+                                </video>
+                            </div>
+                        </div>
+                        
+                        {/* <div className="col-lg-5 mb-5 mb-lg-0" style={{ minHeight: '500px' }}>
                             <div className="position-relative h-100">
                                 <img className="position-absolute w-100 h-100" src={aboutImage} style={{ objectFit: 'cover' }} alt="About Us" />
                             </div>
-                        </div>
+                        </div> */}
                         <div className="col-lg-7">
                             <div className="section-title position-relative mb-4">
                                 <h6 className="d-inline-block position-relative text-secondary text-uppercase pb-2">About Us</h6>

@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,7 +26,29 @@ public class RegisterTeacherController {
         var result = registerTeacherService.registerTeacher(request);
 
         return ApiResponse.<UserRegisterTeacherResponse>builder()
+                .code(HttpStatus.OK.value())
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/save-teacher/{id}")
+    ApiResponse<UserRegisterTeacherResponse> saveTeacher (@PathVariable Long id) {
+        var result = registerTeacherService.saveTeacher(id);
+
+        return ApiResponse.<UserRegisterTeacherResponse>builder()
                 .code(HttpStatus.CREATED.value())
+                .message("Approve Teacher Successfully")
+                .result(result)
+                .build();
+    }
+
+    @PostMapping("/reject-teacher/{id}")
+    ApiResponse<UserRegisterTeacherResponse> rejectTeacher(@PathVariable Long id) {
+        var result = registerTeacherService.rejectTeacher(id);
+
+        return ApiResponse.<UserRegisterTeacherResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("Reject Successfully")
                 .result(result)
                 .build();
     }

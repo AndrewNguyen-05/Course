@@ -60,20 +60,6 @@ export const CourseDetail = () => {
                                         </div>
                                     </a>
                                 </Carousel.Item>
-                                <Carousel.Item>
-                                    <div className="courses-list-item position-relative d-block overflow-hidden mb-2">
-                                        <img className="img-fluid" src={require('./../../img/courses-1.jpg')} alt="Course 1" />
-                                        <div className="courses-text">
-                                            <h4 className="text-center text-white px-3">Web design & development courses for beginners</h4>
-                                            <div className="border-top w-100 mt-3">
-                                                <div className="d-flex justify-content-between p-4">
-                                                    <span className="text-white"><i className="fa fa-user mr-2"></i>Jhon Doe</span>
-                                                    <span className="text-white"><i className="fa fa-star mr-2"></i>4.5 <small>(250)</small></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Carousel.Item>
 
                                 <Carousel.Item>
                                     <div className="courses-list-item position-relative d-block overflow-hidden mb-2">
@@ -189,26 +175,8 @@ export const CourseDetail = () => {
 
                             <div className="mb-5">
                                 <h2 className="mb-4">Recent Courses</h2>
-                                <a className="d-flex align-items-center text-decoration-none mb-4" href="">
-                                    <img className="img-fluid rounded" src={require('./../../img/courses-80x80.jpg')} alt="Recent Course 1" />
-                                    <div className="pl-3">
-                                        <h6>Web design & development courses for beginners</h6>
-                                        <div className="d-flex">
-                                            <small className="text-body mr-3"><i className="fa fa-user text-primary mr-2"></i>Jhon Doe</small>
-                                            <small className="text-body"><i className="fa fa-star text-primary mr-2"></i>4.5 (250)</small>
-                                        </div>
-                                    </div>
-                                </a>
-                                <a className="d-flex align-items-center text-decoration-none mb-4" href="">
-                                    <img className="img-fluid rounded" src={require('./../../img/courses-80x80.jpg')} alt="Recent Course 2" />
-                                    <div className="pl-3">
-                                        <h6>Web design & development courses for beginners</h6>
-                                        <div className="d-flex">
-                                            <small className="text-body mr-3"><i className="fa fa-user text-primary mr-2"></i>Jhon Doe</small>
-                                            <small className="text-body"><i className="fa fa-star text-primary mr-2"></i>4.5 (250)</small>
-                                        </div>
-                                    </div>
-                                </a>
+                              
+                               
                                 <a className="d-flex align-items-center text-decoration-none mb-4" href="">
                                     <img className="img-fluid rounded" src={require('./../../img/courses-80x80.jpg')} alt="Recent Course 3" />
                                     <div className="pl-3">

@@ -20,5 +20,5 @@ public class OutboundUserResponse {
     String givenName;
     String familyName;
     String picture;
-    String hd;
+    String locale;
 }

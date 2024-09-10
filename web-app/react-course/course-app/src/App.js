@@ -21,6 +21,7 @@ import { Register } from './components/UserComponents/Register';
 import { Authorization } from './components/authorization/Authorization';
 import { Accessdenied } from './components/error/Accessdenied';
 import { RegisterTeacher } from './components/UserComponents/RegisterTeacher';
+import { Dashboard } from './components/admin/components/Dashboard';
 
 
 function App() {
@@ -109,13 +110,7 @@ function App() {
             </>
           } />
 
-          <Route path='/courses' element={
-            <>
-              <Header />
-              <Courses />
-              <Footer />
-            </>
-          } />
+          <Route path='/courses' element={<Courses />} />
 
           <Route path='/course-detail/:id' element={
             <>
@@ -156,6 +151,15 @@ function App() {
               </LayoutWithoutHeaderFooter>
             </Authorization>
           } />
+
+          <Route path="/admin" element={
+            <Authorization requiredRole={["ADMIN"]}>
+              <LayoutWithoutHeaderFooter>
+                <Dashboard/>
+              </LayoutWithoutHeaderFooter>
+            </Authorization>
+          } />
+
 
           <Route path='/accessdenied' element={
             <>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./../assets/style.css";
 import { Navbar } from "../layouts/Navbar";
 import { Footer } from "../layouts/Footer";
 import { ToastContainer, toast } from 'react-toastify';

@@ -8,7 +8,7 @@ const Sidebar = () => {
         <div className="d-flex flex-column bg-light p-4">
             <div className="sidebar-header mb-4">
                 <Link to="/" className="d-flex align-items-center">
-                    <IoSchoolSharp size={30} className="me-2 text-primary" /> {/* Thay thế bằng biểu tượng mới */}
+                    <IoSchoolSharp size={70} className="me-2 text-primary" /> {/* Thay thế bằng biểu tượng mới */}
                     <span className="text-primary h4">KIAALAP</span>
                 </Link>
             </div>
