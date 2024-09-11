@@ -9,6 +9,9 @@ import { Message } from '../common/Message.js';
 import { Card } from '../common/Cart.js';
 import { NavigationMenu } from '../common/NavigationMenu.js';
 import { TopBar } from '../common/TopBar.js';
+import SockJS from 'sockjs-client'; // Import SockJS
+import { Client } from '@stomp/stompjs';
+
 
 export const Header = () => {
 
@@ -21,9 +24,46 @@ export const Header = () => {
     const [avatar, setAvatar] = useState('');
     const [loading, setLoading] = useState(true);
 
+    const [notifications, setNotifications] = useState([]); // Danh sách thông báo
+    const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
+
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
 
+    useEffect(() => {
+        const socket = new SockJS(`http://localhost:8080/ws`);
+        
+        const stompClient = new Client({
+          webSocketFactory: () => socket,
+          onConnect: () => {
+            console.log("Connected to WebSocket");
+      
+            stompClient.subscribe('/user/queue/notifications', (message) => {
+              const notification = JSON.parse(message.body);
+              console.log("Received notification: ", notification); 
+              setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+              setUnreadCount((prevCount) => prevCount + 1);
+            });
+          },
+          onStompError: (frame) => {
+            console.error("STOMP error:", frame);
+          },
+          onWebSocketError: (event) => {
+            console.error("WebSocket error:", event);
+          },
+          onDisconnect: () => {
+            console.log("Disconnected from WebSocket");
+          }
+        });
+      
+        stompClient.activate();
+      
+        return () => {
+          stompClient.deactivate();
+        };
+      }, []);
+      
+      
     useEffect(() => {
         if (!role && !token) {
             setLoading(false);
@@ -46,6 +86,52 @@ export const Header = () => {
         }
     }, [token])
 
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+          fetch(`http://localhost:8080/api/v1/notification-current`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            setNotifications(data.result);
+            setUnreadCount(data.result.filter(n => !n.isRead).length);
+          })
+          .catch(error => console.log(error));
+        }, 1000); 
+      
+        return () => clearInterval(interval);
+      }, []);
+      
+
+
+    const markAsRead = (notificationId) => {
+        fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to mark as read');
+                }
+                return response.json();
+            })
+            .then(() => {
+                setUnreadCount((prevCount) => prevCount - 1);
+                setNotifications((prevNotifications) =>
+                    prevNotifications.map((n) =>
+                        n.id === notificationId ? { ...n, isRead: true } : n
+                    )
+                );
+            })
+            .catch((error) => console.error('Error marking notification as read:', error));
+    };
+
     useEffect(() => {
         if (!token) {
             setLoading(false);
@@ -65,6 +151,7 @@ export const Header = () => {
             setAvatar(urlAvatar);
         }).catch(error => console.log(error))
     }, [token]);
+
 
     useEffect(() => {
         const activeLink = document.querySelector(`.nav-item.active`);
@@ -93,7 +180,11 @@ export const Header = () => {
                         <NavigationMenu isActive={isActive} underlineRef={underlineRef} />
 
                         <div className="navbar-nav ml-auto d-flex align-items-center">
-                            <NotificationDropdown />
+                            <NotificationDropdown
+                                notifications={notifications}
+                                unreadCount={unreadCount}
+                                markAsRead={markAsRead}
+                            />
                             <Card />
                             <Message />
                             <Favorites />
@@ -132,7 +223,7 @@ export const Header = () => {
                                 <button style={{ backgroundColor: '#F14D5D', borderColor: '#F14D5D', color: '#FFFFFF' }}
                                     className="btn btn-secondary px-4 px-lg-5">
                                     Search
-                                    
+
                                 </button>
                             </div>
                         </div>

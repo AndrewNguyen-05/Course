@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { UseAuth } from '../../authentication/UseAuth';
 import { HandleLogout } from '../../authentication/HandleLogout';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
+import { NotificationDropdown } from '../../common/NotificationDropdown';
 
 export const AdminHeader = () => {
 
@@ -16,6 +19,65 @@ export const AdminHeader = () => {
 
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
+
+    const [notifications, setNotifications] = useState([]); // Danh sách thông báo
+    const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/v1/notification-current`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(response => response.json())
+            .then(data => {
+                setNotifications(data.result);
+                setUnreadCount(data.result.filter(n => !n.isRead).length);
+            }).catch(error => console.log(error));
+    }, []);
+
+
+    useEffect(() => {
+        const socket = new SockJS('http://localhost:8080/ws'); // Tạo kết nối SockJS
+
+        const stompClient = new Client({
+            webSocketFactory: () => socket,
+            onConnect: () => {
+                console.log("Connected to WebSocket");
+                stompClient.subscribe('/user/queue/notifications', (message) => {
+                    const notification = JSON.parse(message.body);
+                    setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+                    setUnreadCount((prevCount) => prevCount + 1);
+                });
+            },
+            onDisconnect: () => {
+                console.log("Disconnected from WebSocket");
+            }
+        });
+
+        stompClient.activate();
+
+        return () => {
+            stompClient.deactivate();
+        };
+    }, []);
+
+    const markAsRead = (notificationId) => {
+        fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        }).then(() => {
+            setUnreadCount((prevCount) => prevCount - 1);
+            setNotifications((prevNotifications) =>
+                prevNotifications.map(n =>
+                    n.id === notificationId ? { ...n, isRead: true } : n
+                )
+            );
+        });
+    };
+
 
     useEffect(() => {
         if (!role && !token) {
@@ -93,29 +155,11 @@ export const AdminHeader = () => {
 
                         <div className="navbar-nav ml-auto d-flex align-items-center">
                             {/* Nút thông báo */}
-                            <div className="nav-item dropdown mx-2">
-                                <button className="btn btn-light rounded-circle d-flex align-items-center justify-content-center" style={{ width: '40px', height: '40px' }} data-bs-toggle="dropdown">
-                                    <i className="fa-solid fa-bell"></i>
-                                </button>
-                                <ul className="dropdown-menu dropdown-menu-end p-3" style={{ minWidth: '300px', maxWidth: '350px' }}>
-                                    <li className="dropdown-item d-flex align-items-start">
-                                        <img src="https://via.placeholder.com/50" alt="Notification 1" className="rounded me-2" style={{ width: '50px', height: '50px' }} />
-                                        <div>
-                                            <h6 className="mb-0">New Assignment Posted</h6>
-                                            <small className="text-muted">10 minutes ago</small>
-                                        </div>
-                                    </li>
-
-                                    <li className="dropdown-item d-flex align-items-start">
-                                        <img src="https://via.placeholder.com/50" alt="Notification 2" className="rounded me-2" style={{ width: '50px', height: '50px' }} />
-                                        <div>
-                                            <h6 className="mb-0">Course Updated</h6>
-                                            <small className="text-muted">30 minutes ago</small>
-                                        </div>
-                                    </li>
-
-                                </ul>
-                            </div>
+                            <NotificationDropdown
+                                notifications={notifications}
+                                unreadCount={unreadCount}
+                                markAsRead={markAsRead}
+                            />
 
                             {/* Nút tin nhắn */}
                             <div className="nav-item dropdown mx-2">

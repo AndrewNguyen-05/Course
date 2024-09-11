@@ -19,6 +19,20 @@ export const RegisterTeacher = () => {
         certificate: null,
     });
 
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
+
+    const handleFileChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.files[0],
+        });
+    };
+
     const [loadingRegister, setLoadingRegister] = useState(false);
 
     useEffect(() => {
@@ -37,20 +51,6 @@ export const RegisterTeacher = () => {
                 }));
             }).catch(error => console.log(error));
     }, []);
-
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
-
-    const handleFileChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.files[0],
-        });
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();

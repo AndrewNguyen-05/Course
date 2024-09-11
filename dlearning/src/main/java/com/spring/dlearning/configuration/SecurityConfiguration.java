@@ -36,7 +36,8 @@ public class SecurityConfiguration {
             "/api/v1/check-exists-user",
             "/api/v1/send-otp-register",
             "/api/v1/courses",
-            "/api/v1/course/{id}"
+            "/api/v1/course/{id}",
+            "/ws/**",
     };
 
     @Bean

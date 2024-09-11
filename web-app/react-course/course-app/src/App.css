@@ -10664,3 +10664,86 @@ h6,
 .course-price strong {
   color: #555555; /* Màu xám đậm cho chữ 'Price:' để tạo sự cân đối */
 }
+.notification-badge {
+  font-size: 12px;
+  background-color: red;
+  color: white;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  padding: 2px 5px;
+  border-radius: 50%;
+}
+
+.notification-btn i {
+  color: #333; /* Giữ nguyên màu của icon chuông */
+}
+/* Phong cách cho danh sách thông báo */
+.notification-dropdown {
+    min-width: 300px;
+    max-width: 350px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.notification-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.2s ease;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-item:hover {
+    background-color: #f0f0f0;
+}
+
+.notification-item img {
+    width: 45px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.notification-item h6 {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.notification-item small {
+    font-size: 12px;
+    color: #888;
+}
+
+.notification-item button {
+    background-color: transparent;
+    color: #007bff;
+    padding: 0;
+    border: none;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.notification-item button:hover {
+    text-decoration: none;
+}
+.notification-item.unread {
+  background-color: #fff3cd;
+  font-weight: bold;
+}
+
+.notification-item.read {
+  background-color: white;
+  font-weight: normal;
+}
+

@@ -46,10 +46,11 @@ public class NotificationService {
 
         for(Notification notification : notifications) {
             simpMessagingTemplate.convertAndSendToUser(
-                    email,
-                    "/topic/notifications",
+                    user.getEmail(),
+                    "/queue/notifications",
                     notification
             );
+
         }
         return notifications;
     }
@@ -65,6 +66,8 @@ public class NotificationService {
                 .build();
         notificationRepository.save(notification);
         simpMessagingTemplate.convertAndSendToUser(receiver.getEmail(), "/queue/notifications", notification);
+        log.info("Sending notification to user: {}", receiver.getEmail());
+
     }
 
     public void deleteNotification(Long notificationId) {
@@ -75,22 +78,12 @@ public class NotificationService {
     }
 
 
-    public boolean markAllAsReadForCurrentUser() {
-        String email = SecurityUtils.getCurrentUserLogin()
-                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+    public void markAsRead(Long notificationId) {
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_EXISTED));
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        List<Notification> notifications = notificationRepository.findByUserIdOrderByIdDesc(user.getId());
-
-        if (notifications == null || notifications.isEmpty()) {
-            return false;
-        }
-        notifications.forEach(notification -> notification.setIsRead(true));
-        notificationRepository.saveAll(notifications);
-
-        return true;
+        notification.setIsRead(true);
+        notificationRepository.save(notification);
     }
 
 }

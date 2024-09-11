@@ -5,9 +5,12 @@ import { HandleLogout } from '../authentication/HandleLogout';
 import { useEffect } from 'react';
 import { ProfileDropdown } from '../common/ProfileDropdown';
 import { TopBar } from '../common/TopBar';
+import { NotificationDropdown } from '../common/NotificationDropdown';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 
 export const Navbar = () => {
-  
+
   const [loggedOut, setLoggedOut] = useState(false);
   const { isTokenValid } = UseAuth({ loggedOut });
   const { handleLogout } = HandleLogout({ setLoggedOut });
@@ -16,6 +19,89 @@ export const Navbar = () => {
   const [loading, setLoading] = useState(true);
   const role = localStorage.getItem('role');
   const token = localStorage.getItem('token');
+
+  const [notifications, setNotifications] = useState([]); // Giá trị mặc định là một mảng rỗng
+
+  const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
+
+  useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/ws');
+    const stompClient = new Client({
+      webSocketFactory: () => socket,
+      connectHeaders: {
+        Authorization: `Bearer ${token}`, // Gửi token trong headers để xác thực WebSocket
+      },
+      onConnect: () => {
+        console.log("Connected to WebSocket");
+
+        stompClient.subscribe('/user/queue/notifications', (message) => {
+          const notification = JSON.parse(message.body);
+          setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+          setUnreadCount((prevCount) => prevCount + 1);
+        });
+      },
+      onStompError: (frame) => {
+        console.error("STOMP error:", frame);
+      },
+      onWebSocketError: (event) => {
+        console.error("WebSocket error:", event);
+      },
+      onDisconnect: () => {
+        console.log("Disconnected from WebSocket");
+      }
+    });
+
+    stompClient.activate();
+
+    return () => {
+      stompClient.deactivate();
+    };
+  }, [token]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch(`http://localhost:8080/api/v1/notification-current`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        setNotifications(data.result);
+        setUnreadCount(data.result.filter(n => !n.isRead).length);
+      })
+      .catch(error => console.log(error));
+    }, 1000); 
+  
+    return () => clearInterval(interval);
+  }, []);
+
+
+  const markAsRead = (notificationId) => {
+    fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to mark as read');
+        }
+        return response.json();
+      })
+      .then(() => {
+        setUnreadCount((prevCount) => prevCount - 1);
+        setNotifications((prevNotifications) =>
+          prevNotifications.map((n) =>
+            n.id === notificationId ? { ...n, isRead: true } : n
+          )
+        );
+      })
+      .catch((error) => console.error('Error marking notification as read:', error));
+  };
+
 
   useEffect(() => {
     if (!token || !isTokenValid) {
@@ -74,6 +160,13 @@ export const Navbar = () => {
               </div>
               <Link to="/contact" className="nav-item nav-link rounded">Contact</Link>
             </div>
+
+
+            <NotificationDropdown
+              notifications={notifications}
+              unreadCount={unreadCount}
+              markAsRead={markAsRead}
+            />
 
             <ProfileDropdown
               avatar={avatar}

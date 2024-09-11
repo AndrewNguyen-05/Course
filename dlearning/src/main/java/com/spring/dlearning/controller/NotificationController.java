@@ -48,19 +48,17 @@ public class NotificationController {
         }
     }
 
-    @PostMapping("/mark-all-as-read")
-    ApiResponse<Boolean> markAllAsRead() {
+    @PostMapping("/is-read/{id}")
+    ApiResponse<Boolean> markAllAsRead(@PathVariable Long id) {
         try {
-            boolean success = notificationService.markAllAsReadForCurrentUser();
+            notificationService.markAsRead(id);
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.OK.value())
-                    .result(success)
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
-                    .result(false)
                     .build();
         }
     }

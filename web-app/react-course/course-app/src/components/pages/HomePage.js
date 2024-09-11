@@ -90,7 +90,7 @@ export const HomePage = () => {
                 <div className="container py-5">
                     <div className="row">
 
-                        <div className="col-lg-5 mb-5 mb-lg-0" style={{ minHeight: '500px' }}>
+                        {/* <div className="col-lg-5 mb-5 mb-lg-0" style={{ minHeight: '500px' }}>
                             <div className="position-relative h-100">
                                 <video
                                     className="position-absolute w-100 h-100"
@@ -104,13 +104,13 @@ export const HomePage = () => {
                                     Your browser does not support the video tag.
                                 </video>
                             </div>
-                        </div>
+                        </div> */}
                         
-                        {/* <div className="col-lg-5 mb-5 mb-lg-0" style={{ minHeight: '500px' }}>
+                        <div className="col-lg-5 mb-5 mb-lg-0" style={{ minHeight: '500px' }}>
                             <div className="position-relative h-100">
                                 <img className="position-absolute w-100 h-100" src={aboutImage} style={{ objectFit: 'cover' }} alt="About Us" />
                             </div>
-                        </div> */}
+                        </div>
                         <div className="col-lg-7">
                             <div className="section-title position-relative mb-4">
                                 <h6 className="d-inline-block position-relative text-secondary text-uppercase pb-2">About Us</h6>

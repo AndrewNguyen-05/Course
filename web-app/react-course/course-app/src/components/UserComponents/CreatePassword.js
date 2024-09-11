@@ -82,6 +82,7 @@ export const CreatePassword = () => {
                 </div>
             </div>
             <Footer/>
+            
         </div>
     );
 }
