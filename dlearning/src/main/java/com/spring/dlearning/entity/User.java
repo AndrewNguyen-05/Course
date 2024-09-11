@@ -111,10 +111,16 @@ public class User extends AbstractEntity<Long>{
 
     @JsonManagedReference
     @OneToMany(mappedBy = "author", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    private Set<Course> authoredCourses;
+    Set<Course> authoredCourses;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    private Set<Wishlist> wishlists;
+    Set<Wishlist> wishlists;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.REFRESH, CascadeType.DETACH})
+    Set<Notification> notifications;
+
 
     @PrePersist
     protected void onCreate() {

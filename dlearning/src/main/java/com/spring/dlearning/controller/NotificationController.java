@@ -3,13 +3,13 @@ package com.spring.dlearning.controller;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.entity.Notification;
 import com.spring.dlearning.service.NotificationService;
-import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -32,7 +32,7 @@ public class NotificationController {
     }
 
     @DeleteMapping("/notification/{id}")
-    ApiResponse<Boolean> deleteNotification(@PathVariable @Min(1) Long id) {
+    ApiResponse<Boolean> deleteNotification(@PathVariable Long id) {
         try {
             notificationService.deleteNotification(id);
             return ApiResponse.<Boolean>builder()
@@ -48,17 +48,19 @@ public class NotificationController {
         }
     }
 
-    @PutMapping("/is-read/{id}")
-    ApiResponse<Boolean> markAllAsRead(@PathVariable @Min(1) Long id) {
+    @PostMapping("/mark-all-as-read")
+    ApiResponse<Boolean> markAllAsRead() {
         try {
-            notificationService.markAsRead(id);
+            boolean success = notificationService.markAllAsReadForCurrentUser();
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.OK.value())
+                    .result(success)
                     .build();
         } catch (Exception e) {
             log.error(e.getMessage());
             return ApiResponse.<Boolean>builder()
                     .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                    .result(false)
                     .build();
         }
     }

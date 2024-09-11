@@ -25,6 +25,7 @@ public enum ErrorCode {
     EMAIL_INVALID(400, "Email not existed", HttpStatus.BAD_REQUEST),
     REGISTER_TEACHER_INVALID(400, "Your request is pending review, please do not resubmit.", HttpStatus.BAD_REQUEST),
     FILE_INVALID_FORMAT(400, "Invalid file format", HttpStatus.BAD_REQUEST),
+    NOTIFICATION_NOT_EXISTED(400, "Notification not existed", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

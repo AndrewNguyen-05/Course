@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    @Query("SELECT n FROM Notification n WHERE n.user.id = :userId ORDER BY n.createdAt DESC")
+    @Query("SELECT n FROM Notification n WHERE n.user.id = :userId ORDER BY n.createdAt ASC")
     List<Notification> findByUserIdOrderByIdDesc(Long userId);
 
 }

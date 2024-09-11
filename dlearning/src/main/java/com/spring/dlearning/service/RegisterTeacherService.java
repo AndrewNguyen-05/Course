@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,7 @@ public class RegisterTeacherService {
     UserRepository userRepository;
     RoleRepository roleRepository;
     CloudinaryService cloudinaryService;
+    NotificationService notificationService;
 
     @Transactional
     @PreAuthorize("hasAuthority('USER') and isAuthenticated()")
@@ -43,20 +45,28 @@ public class RegisterTeacherService {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
-        User user = userRepository.findByEmail(email)
+        User userCurrent = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if(user.getRegistrationStatus() == null || user.getRegistrationStatus().equals(RegistrationStatus.REJECTED)){
+        if(userCurrent.getRegistrationStatus() == null || userCurrent.getRegistrationStatus().equals(RegistrationStatus.REJECTED)){
 
             request.setCvUrl(cloudinaryService.uploadPDF(cv));
             request.setCertificate(cloudinaryService.uploadPDF(certificate));
 
-            registerTeacherMapper.toUpdateTeacher(request, user);
-            user.setRegistrationStatus(RegistrationStatus.PENDING);
+            registerTeacherMapper.toUpdateTeacher(request, userCurrent);
+            userCurrent.setRegistrationStatus(RegistrationStatus.PENDING);
+            userRepository.save(userCurrent);
 
-            userRepository.save(user);
+            String message = "A new teacher application has been submitted.";
+            String title = "New Teacher Registration";
+            String url = "/admin/teacher-applications";
 
-            return registerTeacherMapper.toTeacherResponse(user);
+            List<User> userAdmin = userRepository.findByRoleName(PredefinedRole.ADMIN_ROLE);
+            for (User usersAdmin : userAdmin){
+                notificationService.createNotification(usersAdmin, userCurrent, message, title, url);
+            }
+
+            return registerTeacherMapper.toTeacherResponse(userCurrent);
         }
         throw new AppException(ErrorCode.REGISTER_TEACHER_INVALID);
     }
@@ -77,6 +87,15 @@ public class RegisterTeacherService {
             user.setRegistrationStatus(RegistrationStatus.APPROVED);
             user.setRole(role);
             userRepository.save(user);
+
+            String message = "Your application to become a teacher has been approved.";
+            String title = "Teacher Registration Approved";
+            String url = "/teacher";
+
+            List<User> userAdmin = userRepository.findByRoleName(PredefinedRole.ADMIN_ROLE);
+            for (User usersAdmin : userAdmin){
+                notificationService.createNotification(user, usersAdmin, message, title, url);
+            }
             return registerTeacherMapper.toTeacherResponse(user);
         }
         throw new AppException(ErrorCode.REGISTER_TEACHER_INVALID);
@@ -99,11 +118,21 @@ public class RegisterTeacherService {
                 && roleName.equals(PredefinedRole.USER_ROLE)){
             user.setRegistrationStatus(RegistrationStatus.REJECTED);
             user.setRole(role);
+            user.setBio(null);
             user.setCertificate(null);
             user.setCvUrl(null);
             user.setFacebookLink(null);
             userRepository.save(user);
             log.info("RegistrationStatus {}", user.getRegistrationStatus());
+
+            String message = "Your application to become a teacher has been rejected.";
+            String title = "Teacher Registration Rejected";
+            String url = "/support";
+
+            List<User> userAdmin = userRepository.findByRoleName(PredefinedRole.ADMIN_ROLE);
+            for (User usersAdmin : userAdmin){
+                notificationService.createNotification(user, usersAdmin, message, title, url);
+            }
         }
         return registerTeacherMapper.toTeacherResponse(user);
     }

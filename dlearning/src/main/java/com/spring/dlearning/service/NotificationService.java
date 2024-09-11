@@ -1,5 +1,6 @@
 package com.spring.dlearning.service;
 
+
 import com.spring.dlearning.entity.Notification;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
@@ -14,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +28,7 @@ public class NotificationService {
     NotificationRepository notificationRepository;
     SimpMessagingTemplate simpMessagingTemplate;
     UserRepository userRepository;
+
 
     @PreAuthorize("isAuthenticated()")
     public List<Notification> getNotificationsForCurrentUser() {
@@ -43,10 +44,16 @@ public class NotificationService {
             return Collections.emptyList();
         }
 
+        for(Notification notification : notifications) {
+            simpMessagingTemplate.convertAndSendToUser(
+                    email,
+                    "/topic/notifications",
+                    notification
+            );
+        }
         return notifications;
     }
 
-    @Transactional
     public void createNotification(User receiver, User sender, String message, String title, String url){
         Notification notification = Notification.builder()
                 .user(receiver)
@@ -58,11 +65,8 @@ public class NotificationService {
                 .build();
         notificationRepository.save(notification);
         simpMessagingTemplate.convertAndSendToUser(receiver.getEmail(), "/queue/notifications", notification);
-        log.info("Sending notification to user: {}", receiver.getEmail());
-
     }
 
-    @Transactional
     public void deleteNotification(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_EXISTED));
@@ -70,12 +74,23 @@ public class NotificationService {
         notificationRepository.delete(notification);
     }
 
-    public void markAsRead(Long notificationId) {
-        Notification notification = notificationRepository.findById(notificationId)
-                .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_EXISTED));
 
-        notification.setIsRead(true);
-        notificationRepository.save(notification);
+    public boolean markAllAsReadForCurrentUser() {
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        List<Notification> notifications = notificationRepository.findByUserIdOrderByIdDesc(user.getId());
+
+        if (notifications == null || notifications.isEmpty()) {
+            return false;
+        }
+        notifications.forEach(notification -> notification.setIsRead(true));
+        notificationRepository.saveAll(notifications);
+
+        return true;
     }
 
 }
