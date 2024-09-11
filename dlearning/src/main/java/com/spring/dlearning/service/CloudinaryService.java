@@ -12,10 +12,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -62,8 +64,6 @@ public class CloudinaryService {
         User user = userRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        System.out.println(user.getEmail());
-
         user.setAvatar(url);
         userRepository.save(user);
 
@@ -85,5 +85,36 @@ public class CloudinaryService {
         log.info("Avatar deleted successfully for user with email: {}", currentUserEmail);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    public String uploadPDF(MultipartFile file) throws IOException {
+        if(!Objects.equals(file.getContentType(), MediaType.APPLICATION_PDF_VALUE)){
+            throw new AppException(ErrorCode.FILE_INVALID_FORMAT);
+        }
+        var result = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                "folder", "/cv",
+                "use_filename", true,
+                "unique_filename", true,
+                "resource_type", "auto"
+
+        ));
+
+        return result.get("secure_url").toString();
+    }
+
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
+    public void updateInfoTeacher(String urlCv, String urlCertificate, String email) {
+        var currentUserEmail = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        user.setCvUrl(urlCv);
+        user.setCertificate(urlCertificate);
+        userRepository.save(user);
+
+        log.info("Cv and Certificate updated successfully for user with email: {}", email);
+    }
 
 }

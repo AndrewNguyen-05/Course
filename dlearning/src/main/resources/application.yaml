@@ -34,8 +34,8 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 50MB
-      max-request-size: 50MB
+      max-file-size: 70MB
+      max-request-size: 70MB
       file-size-threshold: 2KB
 
 jwt:
@@ -48,7 +48,6 @@ outbound:
     client-id: "1063674841920-mtlapuiv2d8gc3rgf6b4oi4vlaa31pah.apps.googleusercontent.com"
     client-secret: "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"
     redirect-uri: "http://localhost:3000/authenticate"
-    grant-type: "authorization_code"
 
 #  facebook:
 #    client-id: "1184572409447891"

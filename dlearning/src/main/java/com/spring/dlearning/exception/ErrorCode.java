@@ -13,7 +13,7 @@ public enum ErrorCode {
     USER_EXISTED(400, "User existed", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(400, "Username must be at least {min} characters", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(400, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
-    USER_NOT_EXISTED(400, "User not existed", HttpStatus.NOT_FOUND),
+    USER_NOT_EXISTED(404, "User not existed", HttpStatus.NOT_FOUND),
     UNAUTHENTICATED(401, "Username or Password wrong", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(403, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(400, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
@@ -24,6 +24,7 @@ public enum ErrorCode {
     COURSER_NOT_EXISTED(400, "Course not existed", HttpStatus.BAD_REQUEST),
     EMAIL_INVALID(400, "Email not existed", HttpStatus.BAD_REQUEST),
     REGISTER_TEACHER_INVALID(400, "Your request is pending review, please do not resubmit.", HttpStatus.BAD_REQUEST),
+    FILE_INVALID_FORMAT(400, "Invalid file format", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

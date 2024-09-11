@@ -6539,6 +6539,10 @@ a.close.disabled {
   }
 }
 
+.custom-submit-btn .fa-spin {
+  animation: spin 1s linear infinite;
+}
+
 .spinner-border {
   display: inline-block;
   width: 2rem;

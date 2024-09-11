@@ -4,6 +4,7 @@ package com.spring.dlearning.controller;
 import com.spring.dlearning.dto.request.UserRegisterTeacherRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.UserRegisterTeacherResponse;
+import com.spring.dlearning.service.CloudinaryService;
 import com.spring.dlearning.service.RegisterTeacherService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,8 +26,13 @@ public class RegisterTeacherController {
     RegisterTeacherService registerTeacherService;
 
     @PostMapping("/register-teacher")
-    ApiResponse<UserRegisterTeacherResponse> registerTeacher (@RequestBody UserRegisterTeacherRequest request) {
-        var result = registerTeacherService.registerTeacher(request);
+    public ApiResponse<UserRegisterTeacherResponse> registerTeacher(
+            @RequestPart("request") UserRegisterTeacherRequest request,
+            @RequestPart("cv") MultipartFile cv,
+            @RequestPart("certificate") MultipartFile certificate
+    ) throws IOException {
+
+        var result = registerTeacherService.registerTeacher(request, cv, certificate);
 
         return ApiResponse.<UserRegisterTeacherResponse>builder()
                 .code(HttpStatus.OK.value())
@@ -52,4 +61,5 @@ public class RegisterTeacherController {
                 .result(result)
                 .build();
     }
+
 }

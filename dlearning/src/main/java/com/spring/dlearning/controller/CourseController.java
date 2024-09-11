@@ -42,7 +42,6 @@ public class CourseController {
                 .build();
     }
 
-
     @GetMapping("/course/{id}")
     ApiResponse<CourseResponse> getCourseById(@PathVariable Long id){
         var result = courseService.getCourseById(id);

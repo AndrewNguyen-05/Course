@@ -118,6 +118,7 @@ export const Search = ({ onSearch }) => {
     };
 
     // Components Search này chỉ có nhiệm vụ: thu thập giá trị mà người dùng nhập vào sau đó truyền lên component Courses thông qua hàm OnSearch
+    // Khi người dùng nhấn nút Search, dữ liệu này sẽ được truyền ngược lên Courses thông qua hàm onSearch.
 
     return (
         <div>

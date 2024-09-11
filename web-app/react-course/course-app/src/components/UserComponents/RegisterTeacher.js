@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar } from "../layouts/Navbar";
 import { Footer } from "../layouts/Footer";
 import { ToastContainer, toast } from 'react-toastify';
 
-
 export const RegisterTeacher = () => {
+
+    const token = localStorage.getItem('token');
+
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -13,11 +15,28 @@ export const RegisterTeacher = () => {
         experience: "",
         bio: "",
         facebook: "",
-        password: "",
-        confirmPassword: "",
         cv: null,
         certificate: null,
     });
+
+    const [loadingRegister, setLoadingRegister] = useState(false);
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/v1/my-info`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(response => response.json())
+            .then(data => {
+                setFormData((prevData) => ({
+                    ...prevData,
+                    fullName: `${data.result.firstName} ${data.result.lastName}`,
+                    email: data.result.email,
+                }));
+            }).catch(error => console.log(error));
+    }, []);
 
     const handleChange = (e) => {
         setFormData({
@@ -35,7 +54,51 @@ export const RegisterTeacher = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(formData);
+
+        setLoadingRegister(true);
+        const formDataToSend = new FormData();
+
+        //  Tại sao dùng Blob trong trường hợp này? Trong trường hợp này, chúng ta cần gửi một yêu cầu multipart/form-data, trong đó bao gồm cả:
+        //  Dữ liệu JSON: thông tin giáo viên(họ tên, email, số điện thoại, v.v.).
+        //  File: CV và chứng chỉ.
+        //  Cú pháp Blob : new Blob([dữ liệu], {type: 'loại dữ liệu'})
+
+        const jsonBlob = new Blob([JSON.stringify({
+            name: formData.fullName,
+            email: formData.email,
+            phone: formData.phone,
+            subject: formData.subject,
+            experience: formData.experience,
+            bio: formData.bio,
+            facebook: formData.facebook,
+        })], { type: 'application/json' });
+
+        formDataToSend.append('request', jsonBlob);
+
+        formDataToSend.append('cv', formData.cv);
+        formDataToSend.append('certificate', formData.certificate);
+
+        fetch(`http://localhost:8080/api/v1/register-teacher`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formDataToSend
+        }).then((response) => {
+            return response.json().then(data => {
+                if (response.ok) {
+                    toast.success('Registration successful! Please await our notification.');
+                } else {
+                    toast.error('Your request is pending review, please do not resubmit.');
+                }
+                setLoadingRegister(false);
+                return data;
+            });
+        }).catch(error => {
+            console.error(error);
+            toast.error('An error occurred during registration');
+            setLoadingRegister(false)
+        });
     };
 
     return (
@@ -64,7 +127,7 @@ export const RegisterTeacher = () => {
                                             value={formData.fullName}
                                             onChange={handleChange}
                                             required
-                                            placeholder="Full Name"
+                                            readOnly
                                         />
                                     </div>
                                 </div>
@@ -83,7 +146,7 @@ export const RegisterTeacher = () => {
                                             value={formData.email}
                                             onChange={handleChange}
                                             required
-                                            placeholder="Email Address"
+                                            readOnly
                                         />
                                     </div>
                                 </div>
@@ -95,7 +158,7 @@ export const RegisterTeacher = () => {
                                             <i className="fas fa-phone text-primary"></i>
                                         </span>
                                         <input
-                                            type="text"
+                                            type="number"
                                             className="form-control custom-form-control"
                                             id="phone"
                                             name="phone"
@@ -212,12 +275,25 @@ export const RegisterTeacher = () => {
                                 </div>
 
                                 {/* Submit button */}
-                                <button
-                                    type="submit"
-                                    className="btn btn-primary w-100 py-2 rounded-pill mt-3 custom-submit-btn"
-                                >
-                                    <i className="fas fa-user-plus me-2"></i> Register as Teacher
-                                </button>
+
+                                {loadingRegister ? (
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary w-100 py-2 rounded-pill mt-3 custom-submit-btn"
+                                    >
+                                        <i className="fas fa-spinner fa-spin me-2"></i>
+                                        Updating...
+                                    </button>
+                                ) : (
+                                    <button
+                                        type="submit"
+                                        className="btn btn-primary w-100 py-2 rounded-pill mt-3 custom-submit-btn"
+                                    >
+                                        <i className="fas fa-user-plus me-2"></i>
+                                        Register as Teacher
+                                    </button>
+                                )}
+
                             </form>
                         </div>
                     </div>

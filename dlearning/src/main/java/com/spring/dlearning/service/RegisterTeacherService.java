@@ -19,6 +19,9 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
@@ -29,27 +32,33 @@ public class RegisterTeacherService {
     RegisterTeacherMapper registerTeacherMapper;
     UserRepository userRepository;
     RoleRepository roleRepository;
+    CloudinaryService cloudinaryService;
 
     @Transactional
     @PreAuthorize("hasAuthority('USER') and isAuthenticated()")
-    public UserRegisterTeacherResponse registerTeacher(UserRegisterTeacherRequest userRegisterTeacherRequest) {
+    public UserRegisterTeacherResponse registerTeacher(UserRegisterTeacherRequest request,
+                                                       MultipartFile cv,
+                                                       MultipartFile certificate)
+            throws IOException {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if(user.getRegistrationStatus() == null){
-            registerTeacherMapper.toUpdateTeacher(userRegisterTeacherRequest, user);
+        if(user.getRegistrationStatus() == null || user.getRegistrationStatus().equals(RegistrationStatus.REJECTED)){
 
+            request.setCvUrl(cloudinaryService.uploadPDF(cv));
+            request.setCertificate(cloudinaryService.uploadPDF(certificate));
+
+            registerTeacherMapper.toUpdateTeacher(request, user);
             user.setRegistrationStatus(RegistrationStatus.PENDING);
+
             userRepository.save(user);
 
             return registerTeacherMapper.toTeacherResponse(user);
         }
-
         throw new AppException(ErrorCode.REGISTER_TEACHER_INVALID);
-
     }
 
     @Transactional
@@ -70,13 +79,12 @@ public class RegisterTeacherService {
             userRepository.save(user);
             return registerTeacherMapper.toTeacherResponse(user);
         }
-
         throw new AppException(ErrorCode.REGISTER_TEACHER_INVALID);
     }
 
     @Transactional
     @PreAuthorize("hasAuthority('ADMIN') and isAuthenticated()")
-    public UserRegisterTeacherResponse rejectTeacher(Long id){
+    public UserRegisterTeacherResponse rejectTeacher(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -91,10 +99,13 @@ public class RegisterTeacherService {
                 && roleName.equals(PredefinedRole.USER_ROLE)){
             user.setRegistrationStatus(RegistrationStatus.REJECTED);
             user.setRole(role);
+            user.setCertificate(null);
+            user.setCvUrl(null);
+            user.setFacebookLink(null);
             userRepository.save(user);
             log.info("RegistrationStatus {}", user.getRegistrationStatus());
         }
-
         return registerTeacherMapper.toTeacherResponse(user);
     }
+
 }

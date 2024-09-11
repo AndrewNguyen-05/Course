@@ -60,14 +60,15 @@ export const Courses = () => {
 
     return (
         <div>
-            {/* Gọi Search với hàm onSearch */}
+            {/* Gọi Search với hàm onSearch 
+            setFilterQuery được truyền xuống Search dưới cái tên onSearch để lấy giá trị
+            */}
             <Search onSearch={setFilterQuery} />
             <div className="container-fluid">
                 <div className="container py-3">
                     <div className="row mx-0 justify-content-center">
                         <div className="col-lg-8">
                             <div className="section-title text-center position-relative mb-5">
-                                <h6 className="d-inline-block position-relative text-secondary text-uppercase pb-2">Our Courses</h6>
                                 <h1 className="display-4">Explore Our Latest Courses</h1>
                             </div>
                         </div>
