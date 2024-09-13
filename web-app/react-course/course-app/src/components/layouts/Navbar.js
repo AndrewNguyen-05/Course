@@ -6,8 +6,7 @@ import { useEffect } from 'react';
 import { ProfileDropdown } from '../common/ProfileDropdown';
 import { TopBar } from '../common/TopBar';
 import { NotificationDropdown } from '../common/NotificationDropdown';
-import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs';
+
 
 export const Navbar = () => {
 
@@ -25,58 +24,22 @@ export const Navbar = () => {
   const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
 
   useEffect(() => {
-    const socket = new SockJS('http://localhost:8080/ws');
-    const stompClient = new Client({
-      webSocketFactory: () => socket,
-      connectHeaders: {
-        Authorization: `Bearer ${token}`, // Gửi token trong headers để xác thực WebSocket
-      },
-      onConnect: () => {
-        console.log("Connected to WebSocket");
-
-        stompClient.subscribe('/user/queue/notifications', (message) => {
-          const notification = JSON.parse(message.body);
-          setNotifications((prevNotifications) => [notification, ...prevNotifications]);
-          setUnreadCount((prevCount) => prevCount + 1);
-        });
-      },
-      onStompError: (frame) => {
-        console.error("STOMP error:", frame);
-      },
-      onWebSocketError: (event) => {
-        console.error("WebSocket error:", event);
-      },
-      onDisconnect: () => {
-        console.log("Disconnected from WebSocket");
+    if (!token || isTokenValid) {
+      return;
+    }
+    fetch(`http://localhost:8080/api/v1/notification-current`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
-    });
-
-    stompClient.activate();
-
-    return () => {
-      stompClient.deactivate();
-    };
-  }, [token]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetch(`http://localhost:8080/api/v1/notification-current`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+    })
       .then(response => response.json())
       .then(data => {
-        setNotifications(data.result);
-        setUnreadCount(data.result.filter(n => !n.isRead).length);
+        setNotifications(data.result || []);
+        setUnreadCount(data.result.filter(n => !n.isRead).length || []);
       })
       .catch(error => console.log(error));
-    }, 1000); 
-  
-    return () => clearInterval(interval);
-  }, []);
-
+  }, [token, isTokenValid]);
 
   const markAsRead = (notificationId) => {
     fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
