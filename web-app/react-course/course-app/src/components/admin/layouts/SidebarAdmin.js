@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 export const SidebarAdmim = () => {
     return (
-        <div className="d-flex flex-column bg-light p-4">
+        <div className="sidebar-container d-flex flex-column bg-light p-4 shadow-sm">
             <div className="sidebar-header mb-4">
                 <Link to="/" className="d-flex align-items-center">
                     <IoSchoolSharp size={70} className="me-2 text-primary" />
@@ -51,7 +51,6 @@ export const SidebarAdmim = () => {
                 </li>
 
             </ul>
-            
         </div>
     );
 };

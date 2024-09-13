@@ -1,14 +1,19 @@
 package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.request.CommentRequest;
+import com.spring.dlearning.dto.request.UpdateCommentRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.CommentResponse;
+import com.spring.dlearning.dto.response.DeleteCommentResponse;
+import com.spring.dlearning.dto.response.UpdateCommentResponse;
 import com.spring.dlearning.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,12 +36,29 @@ public class CommentController {
     }
 
     @PostMapping("/add-comment")
-    ApiResponse<CommentResponse> addComment(@RequestBody CommentRequest commentRequest, @RequestParam Long id){
-        System.out.println("Parent Comment ID: " + commentRequest.getParentCommentId());
-        System.out.println("Content: " + commentRequest.getContent());
+    ApiResponse<CommentResponse> addComment(@RequestBody @Valid CommentRequest commentRequest, @RequestParam Long id){
         return ApiResponse.<CommentResponse>builder()
                 .code(HttpStatus.CREATED.value())
                 .result(commentService.addComment(commentRequest, id))
+                .build();
+    }
+
+    @DeleteMapping("/delete-comment/{id}")
+    ApiResponse<DeleteCommentResponse> deleteComment(@PathVariable Long id) {
+        System.out.println(id);
+        return ApiResponse.<DeleteCommentResponse>builder()
+                .code(HttpStatus.OK.value())
+                .result(commentService.deleteCommentById(id))
+                .build();
+    }
+
+    @PutMapping("/update-comment/{id}")
+    ApiResponse<UpdateCommentResponse> updateComment(@PathVariable Long id, @RequestBody UpdateCommentRequest request) {
+        System.out.println(id);
+        System.out.println(request);
+        return ApiResponse.<UpdateCommentResponse>builder()
+                .code(HttpStatus.OK.value())
+                .result(commentService.updateComment(id, request))
                 .build();
     }
 
