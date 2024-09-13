@@ -42,6 +42,16 @@ public class CourseController {
                 .build();
     }
 
+    @GetMapping("/title")
+    public ApiResponse<List<String>> getTitleSuggestions(@RequestParam("query") String query) {
+        List<String> suggestions = courseService.getTitleSuggestions(query);
+        return ApiResponse.<List<String>>builder()
+                .code(HttpStatus.OK.value())
+                .message("Suggestions fetched successfully")
+                .result(suggestions)
+                .build();
+    }
+
     @GetMapping("/course/{id}")
     ApiResponse<CourseResponse> getCourseById(@PathVariable Long id){
         var result = courseService.getCourseById(id);

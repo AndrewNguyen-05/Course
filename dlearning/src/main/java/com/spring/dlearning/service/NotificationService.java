@@ -29,7 +29,6 @@ public class NotificationService {
     SimpMessagingTemplate simpMessagingTemplate;
     UserRepository userRepository;
 
-
     @PreAuthorize("isAuthenticated()")
     public List<Notification> getNotificationsForCurrentUser() {
         String email = SecurityUtils.getCurrentUserLogin()

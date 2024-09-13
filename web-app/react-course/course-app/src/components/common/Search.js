@@ -23,6 +23,54 @@ export const Search = ({ onSearch }) => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
 
+    const [notifications, setNotifications] = useState([]); // Giá trị mặc định là một mảng rỗng
+    const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
+    
+      useEffect(() => {
+        const interval = setInterval(() => {
+          fetch(`http://localhost:8080/api/v1/notification-current`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            setNotifications(data.result);
+            setUnreadCount(data.result.filter(n => !n.isRead).length);
+          })
+          .catch(error => console.log(error));
+        }, 1000); 
+      
+        return () => clearInterval(interval);
+      }, []);
+    
+    
+      const markAsRead = (notificationId) => {
+        fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Failed to mark as read');
+            }
+            return response.json();
+          })
+          .then(() => {
+            setUnreadCount((prevCount) => prevCount - 1);
+            setNotifications((prevNotifications) =>
+              prevNotifications.map((n) =>
+                n.id === notificationId ? { ...n, isRead: true } : n
+              )
+            );
+          })
+          .catch((error) => console.error('Error marking notification as read:', error));
+      };
+    
+
     useEffect(() => {
         const activeLink = document.querySelector(`.nav-item.active`);
         if (activeLink && underlineRef.current) {
@@ -137,7 +185,11 @@ export const Search = ({ onSearch }) => {
                         <NavigationMenu isActive={isActive} underlineRef={underlineRef} />
 
                         <div className="navbar-nav ml-auto d-flex align-items-center">
-                            <NotificationDropdown />
+                            <NotificationDropdown
+                                notifications={notifications}
+                                unreadCount={unreadCount}
+                                markAsRead={markAsRead}
+                            />
                             <Card />
                             <Message />
                             <Favorites />

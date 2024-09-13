@@ -26,6 +26,7 @@ public enum ErrorCode {
     REGISTER_TEACHER_INVALID(400, "Your request is pending review, please do not resubmit.", HttpStatus.BAD_REQUEST),
     FILE_INVALID_FORMAT(400, "Invalid file format", HttpStatus.BAD_REQUEST),
     NOTIFICATION_NOT_EXISTED(400, "Notification not existed", HttpStatus.BAD_REQUEST),
+    FAVORITE_NOT_EXISTED(400, "Favorite not existed", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

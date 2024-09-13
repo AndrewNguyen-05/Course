@@ -65,5 +65,8 @@ cloudinary:
 #    com.spring.dlearning.exception.GlobalExceptionHandler: OFF
 #    com.spring.dlearning.exception.AppException: OFF
 
+---
+upload-file:
+  base-uri: file:///C:/D-Learning/upload/
 
 

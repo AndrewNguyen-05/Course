@@ -10747,3 +10747,193 @@ h6,
   font-weight: normal;
 }
 
+/* Style chung cho cả 2 nút */
+.course-card-custom-btn, 
+.course-card-custom-btn-favorite {
+    display: inline-block;
+    padding: 12px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 30px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    text-decoration: none;
+}
+
+/* Nút Course Detail */
+.course-card-custom-btn {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.course-card-custom-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-3px); /* Nổi lên khi hover */
+}
+
+/* Nút Add to Favorite */
+.course-card-custom-btn-favorite {
+    background-color: #fff;
+    color: #dc3545;
+    border: 2px solid #dc3545;
+    margin-top: 10px;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.course-card-custom-btn-favorite:hover {
+    background-color: #dc3545;
+    color: #fff;
+    transform: translateY(-3px); /* Nổi lên khi hover */
+}
+
+.course-card-custom-btn-favorite i {
+    margin-right: 8px;
+    transition: transform 0.3s ease;
+}
+
+.course-card-custom-btn-favorite:hover i {
+    transform: scale(1.2); /* Phóng to icon khi hover */
+}
+
+/* Hiệu ứng chuyển động mượt khi hover cho cả 2 nút */
+.course-card-custom-btn:hover, 
+.course-card-custom-btn-favorite:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+/* Giảm khoảng cách giữa các thẻ khóa học */
+
+
+/* Có thể điều chỉnh khoảng cách giữa các cột nếu cần */
+.col-lg-3, .col-md-6 {
+  padding-left: 10px; 
+  padding-right: 10px; /* Giảm padding giữa các cột */
+}
+/* Thiết kế nút Course Detail */
+.course-card-custom-btn {
+  background-color: #007bff; /* Màu nền */
+  color: #fff; /* Màu chữ trắng */
+  padding: 10px 22px; 
+  font-size: 16px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-right: 10px;
+}
+
+/* Màu sắc khi hover vào nút */
+.course-card-custom-btn:hover {
+  background-color: #0056b3; /* Đổi màu nền khi hover */
+  color: #fff; /* Đảm bảo màu chữ vẫn là trắng khi hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-3px);
+}
+
+@media (max-width: 768px) {
+  .course-card-custom-btn
+   {
+      flex: 1 1 100%; /* Đặt chiều rộng của nút là 100% */
+      margin: 5px 5px; /* Khoảng cách giữa các nút */
+      font-size: 14px; /* Kích thước chữ nhỏ hơn */
+  }
+}
+
+@media (max-width: 768px) {
+  .course-card-custom-btn-favorite
+   {
+      flex: 1 1 100%; /* Đặt chiều rộng của nút là 100% */
+      margin: 5px 5px; /* Khoảng cách giữa các nút */
+      font-size: 11px; /* Kích thước chữ nhỏ hơn */
+  }
+}
+.course-card-custom-footer {
+  display: flex; /* Sử dụng Flexbox */
+  flex-direction: row; /* Hàng ngang */
+  justify-content: center; /* Căn giữa */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  flex-wrap: wrap; /* Cho phép các nút xếp chồng khi không đủ không gian */
+  padding: 10px; /* Padding cho toàn bộ footer */
+}
+
+.course-card-custom-btn,
+.course-card-custom-btn-favorite {
+  margin: 5px; /* Khoảng cách giữa các nút */
+  padding: 10px 22px; /* Padding cho nút */
+  border-radius: 50px; /* Bo tròn góc nút */
+  text-align: center; /* Căn giữa chữ trong nút */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển động */
+}
+
+/* Nút Course Detail */
+.course-card-custom-btn {
+  background-color: #007bff; /* Màu nền */
+  color: #fff; /* Màu chữ trắng */
+}
+
+/* Nút Add to Favorite */
+.course-card-custom-btn-favorite {
+  background-color: #fff; /* Màu nền */
+  color: #dc3545; /* Màu chữ */
+  border: 2px solid #dc3545; /* Viền cho nút */
+}
+
+/* Media Queries cho các kích thước màn hình nhỏ hơn */
+@media (max-width: 768px) {
+  .course-card-custom-btn,
+  .course-card-custom-btn-favorite {
+      flex: 1 1 100%; /* Đặt chiều rộng của nút là 100% */
+      font-size: 14px; /* Kích thước chữ nhỏ hơn */
+      margin: 5px 0; /* Khoảng cách giữa các nút */
+  }
+}
+
+.table-custom {
+    margin-top: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.table-custom th, .table-custom td {
+    padding: 12px;
+    vertical-align: middle;
+}
+
+.table-custom th {
+    background-color: #343a40;
+    color: white;
+}
+
+.table-custom td a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.table-custom td a:hover {
+    text-decoration: underline;
+}
+
+.btn-custom {
+    padding: 8px 12px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+}
+
+.text-primary {
+    color: #007bff;
+}
+
+.text-danger {
+    color: #dc3545;
+}
+
+.btn-success .icon, .btn-danger .icon {
+    margin-right: 5px;
+}
+  

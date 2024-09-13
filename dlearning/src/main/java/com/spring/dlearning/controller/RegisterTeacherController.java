@@ -4,7 +4,6 @@ package com.spring.dlearning.controller;
 import com.spring.dlearning.dto.request.UserRegisterTeacherRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.UserRegisterTeacherResponse;
-import com.spring.dlearning.service.CloudinaryService;
 import com.spring.dlearning.service.RegisterTeacherService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,12 +26,20 @@ public class RegisterTeacherController {
 
     RegisterTeacherService registerTeacherService;
 
+    @GetMapping("/registration-teachers")
+    ApiResponse<List<UserRegisterTeacherResponse>> getAll(){
+        return ApiResponse.<List<UserRegisterTeacherResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .result(registerTeacherService.getAll())
+                .build();
+    }
+
     @PostMapping("/register-teacher")
-    public ApiResponse<UserRegisterTeacherResponse> registerTeacher(
+    ApiResponse<UserRegisterTeacherResponse> registerTeacher(
             @RequestPart("request") UserRegisterTeacherRequest request,
             @RequestPart("cv") MultipartFile cv,
             @RequestPart("certificate") MultipartFile certificate
-    ) throws IOException {
+    ) throws IOException, URISyntaxException {
 
         var result = registerTeacherService.registerTeacher(request, cv, certificate);
 

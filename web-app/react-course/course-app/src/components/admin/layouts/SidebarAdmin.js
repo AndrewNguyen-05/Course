@@ -1,8 +1,7 @@
 import React from "react";
-import { FaBook, FaBuilding, FaChalkboardTeacher, FaLayerGroup, FaRegCalendarAlt, FaUserGraduate, FaUsers } from "react-icons/fa";
+import { FaBuilding, FaChalkboardTeacher, FaRegCalendarAlt, FaUserGraduate, FaUserPlus, FaUsers } from "react-icons/fa";
 import { IoSchoolSharp } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import { Footer } from "../../layouts/Footer";
 
 export const SidebarAdmim = () => {
     return (
@@ -30,6 +29,12 @@ export const SidebarAdmim = () => {
                 <li className="nav-item">
                     <Link to="/students" className="nav-link d-flex align-items-center">
                         <FaUsers className="me-2" /> Students
+                    </Link>
+                </li>
+
+                <li className="nav-item">
+                    <Link to="/admin/list-registes-teacher" className="nav-link d-flex align-items-center">
+                        <FaUserPlus className="me-2" /> Register Teacher
                     </Link>
                 </li>
 

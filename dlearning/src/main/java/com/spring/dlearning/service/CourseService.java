@@ -50,6 +50,9 @@ public class CourseService {
                 .build();
     }
 
+    public List<String> getTitleSuggestions(String query) {
+        return courseRepository.findTitleSuggestions(query);
+    }
 
     public CourseResponse getCourseById(Long id){
         return courseRepository.findById(id).map(courseMapper::toCourseResponse)

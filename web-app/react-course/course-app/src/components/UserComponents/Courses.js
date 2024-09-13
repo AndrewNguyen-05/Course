@@ -60,9 +60,6 @@ export const Courses = () => {
 
     return (
         <div>
-            {/* Gọi Search với hàm onSearch 
-            setFilterQuery được truyền xuống Search dưới cái tên onSearch để lấy giá trị
-            */}
             <Search onSearch={setFilterQuery} />
             <div className="container-fluid">
                 <div className="container py-3">

@@ -38,6 +38,7 @@ public class SecurityConfiguration {
             "/api/v1/courses",
             "/api/v1/course/{id}",
             "/ws/**",
+            "/upload/**"
     };
 
     @Bean
@@ -57,6 +58,7 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+        
         return httpSecurity.build();
     }
 

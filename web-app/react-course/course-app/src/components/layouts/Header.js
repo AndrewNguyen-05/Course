@@ -9,8 +9,6 @@ import { Message } from '../common/Message.js';
 import { Card } from '../common/Cart.js';
 import { NavigationMenu } from '../common/NavigationMenu.js';
 import { TopBar } from '../common/TopBar.js';
-import SockJS from 'sockjs-client'; // Import SockJS
-import { Client } from '@stomp/stompjs';
 
 
 export const Header = () => {
@@ -30,38 +28,38 @@ export const Header = () => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
 
-    useEffect(() => {
-        const socket = new SockJS(`http://localhost:8080/ws`);
+    // useEffect(() => {
+    //     const socket = new SockJS(`http://localhost:8080/ws`);
         
-        const stompClient = new Client({
-          webSocketFactory: () => socket,
-          onConnect: () => {
-            console.log("Connected to WebSocket");
+    //     const stompClient = new Client({
+    //       webSocketFactory: () => socket,
+    //       onConnect: () => {
+    //         console.log("Connected to WebSocket");
       
-            stompClient.subscribe('/user/queue/notifications', (message) => {
-              const notification = JSON.parse(message.body);
-              console.log("Received notification: ", notification); 
-              setNotifications((prevNotifications) => [notification, ...prevNotifications]);
-              setUnreadCount((prevCount) => prevCount + 1);
-            });
-          },
-          onStompError: (frame) => {
-            console.error("STOMP error:", frame);
-          },
-          onWebSocketError: (event) => {
-            console.error("WebSocket error:", event);
-          },
-          onDisconnect: () => {
-            console.log("Disconnected from WebSocket");
-          }
-        });
+    //         stompClient.subscribe('/user/queue/notifications', (message) => {
+    //           const notification = JSON.parse(message.body);
+    //           console.log("Received notification: ", notification); 
+    //           setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+    //           setUnreadCount((prevCount) => prevCount + 1);
+    //         });
+    //       },
+    //       onStompError: (frame) => {
+    //         console.error("STOMP error:", frame);
+    //       },
+    //       onWebSocketError: (event) => {
+    //         console.error("WebSocket error:", event);
+    //       },
+    //       onDisconnect: () => {
+    //         console.log("Disconnected from WebSocket");
+    //       }
+    //     });
       
-        stompClient.activate();
+    //     stompClient.activate();
       
-        return () => {
-          stompClient.deactivate();
-        };
-      }, []);
+    //     return () => {
+    //       stompClient.deactivate();
+    //     };
+    //   }, []);
       
       
     useEffect(() => {
@@ -88,26 +86,24 @@ export const Header = () => {
 
 
     useEffect(() => {
-        const interval = setInterval(() => {
-          fetch(`http://localhost:8080/api/v1/notification-current`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          })
+        if (!token || isTokenValid) {
+          return;
+        }
+        fetch(`http://localhost:8080/api/v1/notification-current`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        })
           .then(response => response.json())
           .then(data => {
-            setNotifications(data.result);
-            setUnreadCount(data.result.filter(n => !n.isRead).length);
+            setNotifications(data.result || []);
+            setUnreadCount(data.result.filter(n => !n.isRead).length || []);
           })
           .catch(error => console.log(error));
-        }, 1000); 
+      }, [token, isTokenValid]);
       
-        return () => clearInterval(interval);
-      }, []);
       
-
-
     const markAsRead = (notificationId) => {
         fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
             method: 'POST',
@@ -146,7 +142,6 @@ export const Header = () => {
             }
         }).then(response => response.json()
         ).then(data => {
-            console.log(data.result);
             const urlAvatar = data.result;
             setAvatar(urlAvatar);
         }).catch(error => console.log(error))

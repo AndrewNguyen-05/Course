@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.List;
 
 @Service
@@ -33,25 +34,45 @@ public class RegisterTeacherService {
     RegisterTeacherMapper registerTeacherMapper;
     UserRepository userRepository;
     RoleRepository roleRepository;
-    CloudinaryService cloudinaryService;
     NotificationService notificationService;
+    FileService fileService;
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<UserRegisterTeacherResponse> getAll() {
+        return userRepository.findAll()
+                .stream()
+                .filter(user ->
+                        user.getRegistrationStatus() != null &&
+                                user.getRegistrationStatus().equals(RegistrationStatus.PENDING) &&
+                                user.getRole() != null &&
+                                user.getRole().getName() != null &&
+                                user.getRole().getName().equals(PredefinedRole.USER_ROLE))
+                .map(registerTeacherMapper::toTeacherResponse)
+                .toList();
+    }
 
     @Transactional
     @PreAuthorize("hasAuthority('USER') and isAuthenticated()")
     public UserRegisterTeacherResponse registerTeacher(UserRegisterTeacherRequest request,
                                                        MultipartFile cv,
                                                        MultipartFile certificate)
-            throws IOException {
+            throws IOException, URISyntaxException {
+
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User userCurrent = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if(userCurrent.getRegistrationStatus() == null || userCurrent.getRegistrationStatus().equals(RegistrationStatus.REJECTED)){
+        if (userCurrent.getRegistrationStatus() == null || userCurrent.getRegistrationStatus().equals(RegistrationStatus.REJECTED)) {
 
-            request.setCvUrl(cloudinaryService.uploadPDF(cv));
-            request.setCertificate(cloudinaryService.uploadPDF(certificate));
+            String cvFileName = fileService.store(cv, "upload");
+            String certificateFileName = fileService.store(certificate, "upload");
+            log.info("cv {}", cvFileName);
+            log.info("certificateFileName{}", certificateFileName);
+
+            request.setCvUrl("/upload/" + cvFileName);
+            request.setCertificate("/upload/" + certificateFileName);
 
             registerTeacherMapper.toUpdateTeacher(request, userCurrent);
             userCurrent.setRegistrationStatus(RegistrationStatus.PENDING);
@@ -62,7 +83,7 @@ public class RegisterTeacherService {
             String url = "/admin/teacher-applications";
 
             List<User> userAdmin = userRepository.findByRoleName(PredefinedRole.ADMIN_ROLE);
-            for (User usersAdmin : userAdmin){
+            for (User usersAdmin : userAdmin) {
                 notificationService.createNotification(usersAdmin, userCurrent, message, title, url);
             }
 
@@ -70,6 +91,7 @@ public class RegisterTeacherService {
         }
         throw new AppException(ErrorCode.REGISTER_TEACHER_INVALID);
     }
+
 
     @Transactional
     @PreAuthorize("hasAuthority('ADMIN') and isAuthenticated()")

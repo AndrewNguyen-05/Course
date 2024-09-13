@@ -8,7 +8,6 @@ export const Favorites = () => {
             <i className="fa-solid fa-heart"></i>
         </button>
         <ul className="dropdown-menu dropdown-menu-end">
-            <li className="dropdown-item">Favorited Course 1</li>
             <li className="dropdown-item">Favorited Course 2</li>
         </ul>
     </div>

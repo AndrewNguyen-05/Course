@@ -22,6 +22,11 @@ import { Authorization } from './components/authorization/Authorization';
 import { Accessdenied } from './components/error/Accessdenied';
 import { RegisterTeacher } from './components/UserComponents/RegisterTeacher';
 import { Dashboard } from './components/admin/components/Dashboard';
+import { RegistrationList } from './components/admin/components/RegistrationList';
+import { pdfjs } from 'react-pdf';
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+
 
 
 function App() {
@@ -155,12 +160,19 @@ function App() {
           <Route path="/admin" element={
             <Authorization requiredRole={["ADMIN"]}>
               <LayoutWithoutHeaderFooter>
-                <Dashboard/>
+                <Dashboard />
               </LayoutWithoutHeaderFooter>
             </Authorization>
           } />
 
-
+          <Route path="/admin/list-registes-teacher" element={
+            <Authorization requiredRole={["ADMIN"]}>
+              <LayoutWithoutHeaderFooter>
+                <RegistrationList />
+              </LayoutWithoutHeaderFooter>
+            </Authorization>
+          } />
+          
           <Route path='/accessdenied' element={
             <>
               <LayoutWithoutHeaderFooter>

@@ -105,7 +105,7 @@ export const HomePage = () => {
                                 </video>
                             </div>
                         </div> */}
-                        
+
                         <div className="col-lg-5 mb-5 mb-lg-0" style={{ minHeight: '500px' }}>
                             <div className="position-relative h-100">
                                 <img className="position-absolute w-100 h-100" src={aboutImage} style={{ objectFit: 'cover' }} alt="About Us" />
@@ -224,16 +224,26 @@ export const HomePage = () => {
                                     </p>
                                 </div>
 
-                                {/* Nút "Course Detail" */}
+                                {/* Nút "Course Detail" và "Thêm vào khóa học yêu thích" */}
                                 <div className="course-card-custom-footer text-center">
                                     <Link className="course-card-custom-btn" to={`/course-detail/${course.id}`}>
                                         Course Detail
                                     </Link>
+
+                                    {/* Nút thêm vào khóa học yêu thích với icon trái tim */}
+                                    <button
+                                        className="course-card-custom-btn-favorite mt-2"
+                                        // onClick={() => addToFavorites(course)}
+                                    >
+                                        <i className="fas fa-heart mr-2"></i>Add to Favorite
+                                    </button>
                                 </div>
+
                             </div>
                         </div>
                     ))}
                 </div>
+
 
                 {/* Xem thêm */}
                 <div className="row justify-content-center mt-4">
