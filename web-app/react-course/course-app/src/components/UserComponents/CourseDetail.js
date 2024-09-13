@@ -7,13 +7,13 @@ import "react-toastify/dist/ReactToastify.css";
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
     const { id } = useParams();
-    const [course, setCourse] = useState(null);
+    const [course, setCourse] = useState(null);  // thông tin chi tiết về khóa học
     const [loading, setLoading] = useState(true);
-    const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState("");
-    const [replyContent, setReplyContent] = useState({});
-    const [editContent, setEditContent] = useState({});
-    const [editingCommentId, setEditingCommentId] = useState(null); // Track the comment being edited
+    const [comments, setComments] = useState([]); // list comment
+    const [newComment, setNewComment] = useState(""); // add comment
+    const [replyContent, setReplyContent] = useState({}); // update nội dung cmt
+    const [editContent, setEditContent] = useState({}); // cập nhật nội dung chỉnh sửa của bình luận.
+    const [editingCommentId, setEditingCommentId] = useState(null); // lưu ID của bình luận đang được chỉnh sửa
 
     // Fetch course details
     useEffect(() => {
@@ -147,9 +147,10 @@ export const CourseDetail = () => {
 
     // Edit comment
     const handleEditComment = (commentId) => {
-        const updatedContent = editContent[commentId];
-        if (!updatedContent.trim()) {
-            toast.error('Please enter content');
+        const updatedContent = (editContent[commentId] || "").trim();
+
+        if (!updatedContent) {
+            toast.error('Please enter new content');
             return;
         }
 
@@ -184,11 +185,12 @@ export const CourseDetail = () => {
 
                     setEditingCommentId(null); // Thoát khỏi chế độ chỉnh sửa
                     toast.success('Comment updated successfully');
+                } else {
+                    toast.error('You can only update or delete your own comments');
                 }
             })
             .catch(error => {
                 console.error(error);
-                toast.error('Failed to edit comment');
             });
     };
 
@@ -201,33 +203,37 @@ export const CourseDetail = () => {
                 'Authorization': `Bearer ${token}`
             }
         })
-        .then((response) => response.json())
-        .then(data => {
-            if (data.result) { // Kiểm tra xem việc xóa có thành công không
-                setComments((prevComments) => {
-                   
-                    const updatedComments = prevComments
-                        .map(comment => {
-                            if (comment.id === commentId) {
-                                return null; 
-                            }
-                            
-                            const updatedReplies = comment.replies.filter(reply => reply.id !== commentId);
-                            
-                            return { ...comment, replies: updatedReplies };
-                        })
-                        .filter(comment => comment !== null);
-                    
-                });
-                toast.success('Comment deleted successfully');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            toast.error('Failed to delete comment');
-        });
+            .then((response) => response.json())
+            .then(data => {
+                // prevComments đại diện cho giá trị hiện tại của state comments trước khi chúng ta cập nhật
+                if (data.result) {
+                    setComments((prevComments) => {
+
+                        const updatedComments = prevComments
+                            .map(comment => {
+                                if (comment.id === commentId) {
+                                    return null;
+                                }
+
+                                const updatedReplies = comment.replies.filter(reply => reply.id !== commentId);
+
+                                return { ...comment, replies: updatedReplies };
+                            })
+                            .filter(comment => comment !== null);  // Loại bỏ các comment cha đã được đánh dấu là null
+
+                        return updatedComments;  // Trả về mảng comment mới cho React để cập nhật state
+                    });
+                    toast.success('Comment deleted successfully');
+                } else {
+                    toast.error('You can only update or delete your own comments');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                toast.error('Failed to delete comment');
+            });
     };
-    
+
 
 
     return (
@@ -267,7 +273,7 @@ export const CourseDetail = () => {
                                         <div className="d-flex align-items-center justify-content-between">
                                             <div className="d-flex align-items-center">
                                                 <img
-                                                    src={comment.avatar || 'default-avatar-url'}
+                                                    src={comment.avatar || 'https://bootdey.com/img/Content/avatar/avatar7.png'}
                                                     alt="User Avatar"
                                                     className="rounded-circle mr-2"
                                                     style={{ width: '40px', height: '40px' }}
@@ -276,10 +282,10 @@ export const CourseDetail = () => {
                                             </div>
                                             <div>
                                                 <button className="btn btn-sm btn-outline-info mr-2" onClick={() => setEditingCommentId(comment.id)}>
-                                                    <FaEdit /> Edit
+                                                <i class="fa-solid fa-comment-dots"></i>
                                                 </button>
                                                 <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(comment.id)}>
-                                                    <FaTrash /> Delete
+                                                    <FaTrash />
                                                 </button>
                                             </div>
                                         </div>
@@ -320,13 +326,14 @@ export const CourseDetail = () => {
 
                                                             <div>
                                                                 <button className="btn btn-sm btn-outline-info mr-2" onClick={() => setEditingCommentId(reply.id)}>
-                                                                    <FaEdit /> Edit
+                                                                <i class="fa-solid fa-comment-dots"></i>
                                                                 </button>
 
                                                                 <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(reply.id)}>
-                                                                    <FaTrash /> Delete
+                                                                    <FaTrash />
                                                                 </button>
                                                             </div>
+
                                                         </div>
 
                                                         {editingCommentId === reply.id ? (
