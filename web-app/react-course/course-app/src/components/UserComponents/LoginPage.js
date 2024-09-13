@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Toast, ToastContainer } from 'react-bootstrap';
 import { Footer } from '../layouts/Footer';
 import { Navbar } from '../layouts/Navbar';
 import { OAuthConfig } from '../config/OAuthConfig';
+import { toast, ToastContainer } from 'react-toastify';
 
 export const LoginPage = () => {
 
@@ -31,14 +31,14 @@ export const LoginPage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    if(token){
+    if (token) {
       navigate('/home')
     }
   })
 
   const handleLogin = (event) => {
     event.preventDefault();
-  
+
     fetch('http://localhost:8080/api/v1/auth/token', {
       method: "POST",
       headers: {
@@ -48,26 +48,27 @@ export const LoginPage = () => {
     })
       .then(response => {
         if (!response.ok) {
+          toast.error('Email or Password incorrect');
           return response.json().then(errorData => {
             throw new Error(errorData.message || 'An error occurred.');
           });
-        } 
+        }
         return response.json();
       })
       .then(data => {
         const expiryTime = new Date().getTime() + 86400 * 1000;  // Token có thời hạn 1 ngày
-        const token = data.result.token; 
-        console.log(token); 
-  
+        const token = data.result.token;
+        console.log(token);
+
         localStorage.setItem('token', token);
         localStorage.setItem('expiryTime', expiryTime);
-  
+
         // Gọi API introspect để kiểm tra token, phân quyền
         fetch(`http://localhost:8080/api/v1/auth/introspect`, {
           method: 'POST',
-          headers: { 
+          headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}` 
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify({ token })
         })
@@ -80,10 +81,10 @@ export const LoginPage = () => {
             return response.json();
           })
           .then(introspectData => {
-            if (introspectData.result && introspectData.result.valid) { 
+            if (introspectData.result && introspectData.result.valid) {
               const role = introspectData.result.scope;  // Lấy role từ token
               localStorage.setItem('role', role);
-  
+
               if (role === 'USER') {
                 navigate('/home');
               } else if (role === 'ADMIN') {
@@ -97,7 +98,7 @@ export const LoginPage = () => {
             }
           })
           .catch(error => {
-            console.error('Error during introspect:', error); 
+            console.error('Error during introspect:', error);
             setError(error.message);
             setShowToast(true);
             setTimeout(() => setShowToast(false), 4000);
@@ -110,7 +111,7 @@ export const LoginPage = () => {
         setTimeout(() => setShowToast(false), 4000);
       });
   };
-  
+
   useEffect(() => {
     if (showToast) {
       const timer = setTimeout(() => setShowToast(false), 3000);
@@ -222,23 +223,11 @@ export const LoginPage = () => {
           </div>
         </div>
 
-        <ToastContainer position="bottom-start" className="p-3">
-          <Toast
-            show={showToast}
-            onClose={() => setShowToast(false)}
-            className="toast-custom"
-            style={{
-              backgroundColor: '#f8d7da',
-              color: '#721c24',
-              position: 'absolute',
-              bottom: '790px',
-              left: '1430px',
-              zIndex: 9999
-            }}
-          >
-            <Toast.Body>{error}</Toast.Body>
-          </Toast>
-        </ToastContainer>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          className="custom-toast-container"
+        />
       </section>
       <Footer />
     </div>
