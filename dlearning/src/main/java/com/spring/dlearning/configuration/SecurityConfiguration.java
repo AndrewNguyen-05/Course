@@ -38,7 +38,8 @@ public class SecurityConfiguration {
             "/api/v1/courses",
             "/api/v1/course/{id}",
             "/ws/**",
-            "/upload/**"
+            "/upload/**",
+            "/api/v1/courses-comment/{courseId}",
     };
 
     @Bean

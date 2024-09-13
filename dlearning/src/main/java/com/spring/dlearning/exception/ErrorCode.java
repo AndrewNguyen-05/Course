@@ -27,6 +27,8 @@ public enum ErrorCode {
     FILE_INVALID_FORMAT(400, "Invalid file format", HttpStatus.BAD_REQUEST),
     NOTIFICATION_NOT_EXISTED(400, "Notification not existed", HttpStatus.BAD_REQUEST),
     FAVORITE_NOT_EXISTED(400, "Favorite not existed", HttpStatus.BAD_REQUEST),
+    PARENT_COMMENT_NOT_EXISTED(400, "ParentComment not existed", HttpStatus.BAD_REQUEST),
+    FORBIDDEN(403, "Insufficient rights", HttpStatus.FORBIDDEN),
     ;
 
     private int code;

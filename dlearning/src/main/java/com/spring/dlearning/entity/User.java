@@ -1,34 +1,28 @@
 package com.spring.dlearning.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.spring.dlearning.utils.CourseLevel;
 import com.spring.dlearning.utils.Gender;
 import com.spring.dlearning.utils.RegistrationStatus;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
 
+@Entity
+@Table(name = "users")
 @Setter
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Entity
-@Table(name = "users")
-public class User extends AbstractEntity<Long>{
+public class User extends AbstractEntity<Long> {
 
     @Column(name = "email", nullable = false, unique = true)
     @NotNull
@@ -109,18 +103,9 @@ public class User extends AbstractEntity<Long>{
     @JoinColumn(name = "role_id", nullable = false)
     Role role;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "author", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    Set<Course> authoredCourses;
-
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    Set<Wishlist> wishlists;
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.REFRESH, CascadeType.DETACH})
-    Set<Notification> notifications;
-
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "comments"})
+    Set<Comment> comments;
 
     @PrePersist
     protected void onCreate() {
@@ -128,8 +113,4 @@ public class User extends AbstractEntity<Long>{
             enabled = Boolean.TRUE;
         }
     }
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority(role.getName()));
-    }
-
 }

@@ -3,12 +3,18 @@ package com.spring.dlearning.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.dlearning.utils.CourseLevel;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -20,7 +26,12 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "wishlists"})
-public class Course extends AbstractEntity<Long>{
+public class Course  {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    Long id;
 
     @Column(name = "title", nullable = false)
     String title;
@@ -52,7 +63,26 @@ public class Course extends AbstractEntity<Long>{
     @JsonBackReference
     User author;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    Set<Comment> comments;
+
     @OneToMany(mappedBy = "course", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     Set<Wishlist> wishlists;
 
+    @Column(name = "created_by")
+    @CreatedBy
+    String createdBy;
+
+    @Column(name = "updated_by")
+    @LastModifiedBy
+    String updateBy;
+
+    @Column(name = "create_at")
+    @CreationTimestamp
+    LocalDateTime createdAt;
+
+    @Column(name = "update_at")
+    @UpdateTimestamp
+    LocalDateTime updatedAt;
 }
