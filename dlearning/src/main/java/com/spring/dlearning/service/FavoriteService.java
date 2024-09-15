@@ -1,10 +1,17 @@
 package com.spring.dlearning.service;
 
+import com.spring.dlearning.dto.response.FavoriteResponse;
 import com.spring.dlearning.dto.response.PageResponse;
+import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.Favorite;
+import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
+import com.spring.dlearning.mapper.FavoriteMapper;
+import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.FavoriteRepository;
+import com.spring.dlearning.repository.UserRepository;
+import com.spring.dlearning.utils.SecurityUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,10 +30,32 @@ import org.springframework.stereotype.Service;
 public class FavoriteService {
 
     FavoriteRepository favoriteRepository;
+    UserRepository userRepository;
+    CourseRepository courseRepository;
+    FavoriteMapper favoriteMapper;
 
     @PreAuthorize("isAuthenticated()")
-    public Favorite save (Favorite favorite) {
-        return favoriteRepository.save(favorite);
+    public void createFavorite (Long id) {
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+
+        boolean isAlreadyFavorite = favoriteRepository.existsByUserAndCourse(user, course);
+        if (isAlreadyFavorite) {
+            throw new AppException(ErrorCode.ALREADY_IN_FAVORITES);
+        }
+
+        Favorite favorite = Favorite.builder()
+                .user(user)
+                .course(course)
+                .build();
+
+        favoriteRepository.save(favorite);
     }
 
     public Favorite findById(Integer id) {
@@ -35,15 +64,24 @@ public class FavoriteService {
     }
 
     @PreAuthorize("isAuthenticated()")
-    public PageResponse<Favorite> findAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Favorite> favorites = favoriteRepository.findAll(pageable);
+    public PageResponse<FavoriteResponse> findAllByUserCurrent(int page, int size) {
 
-        return PageResponse.<Favorite>builder()
-                .totalElements(favorites.getTotalElements())
-                .totalPages(favorites.getTotalPages())
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Favorite> favorites = favoriteRepository.findByUser(user, pageable);
+
+        return PageResponse.<FavoriteResponse>builder()
+                .currentPage(page)
                 .pageSize(favorites.getSize())
-                .data(favorites.getContent().stream().toList())
+                .totalPages(favorites.getTotalPages())
+                .totalElements(favorites.getTotalElements())
+                .data(favorites.getContent().stream().map(favoriteMapper::toFavoriteResponse).toList())
                 .build();
     }
+
 }

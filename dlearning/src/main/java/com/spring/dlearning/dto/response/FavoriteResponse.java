@@ -1,7 +1,11 @@
 package com.spring.dlearning.dto.response;
 
+import com.spring.dlearning.utils.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
+
 
 @Setter
 @Getter
@@ -10,11 +14,13 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FavoriteResponse {
-    Integer favoriteId;
+
+    Integer id;
     String name;
+
+    Long courseId;
     String author;
     String title;
     String thumbnail;
-    Long points;
-    Long courseId;
+    BigDecimal price;
 }

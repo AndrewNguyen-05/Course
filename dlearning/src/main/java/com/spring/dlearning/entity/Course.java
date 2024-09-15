@@ -64,11 +64,18 @@ public class Course  {
     User author;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "course"})
+    Set<Enrollment> enrollments;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     Set<Comment> comments;
 
     @OneToMany(mappedBy = "course", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     Set<Wishlist> wishlists;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Set<Favorite> favorites;
 
     @Column(name = "created_by")
     @CreatedBy

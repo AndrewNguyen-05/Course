@@ -11,7 +11,6 @@ import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.CommentMapper;
-import com.spring.dlearning.mapper.ProfileMapper;
 import com.spring.dlearning.repository.CommentRepository;
 import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.UserRepository;
@@ -20,6 +19,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
@@ -43,6 +43,7 @@ public class CommentService {
                 .toList();
     }
 
+    @PreAuthorize("isAuthenticated()")
     public CommentResponse addComment(CommentRequest commentRequest, Long courseId) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -71,6 +72,7 @@ public class CommentService {
         return commentMapper.toCommentResponse(newComment);
     }
 
+    @PreAuthorize("isAuthenticated()")
     public DeleteCommentResponse deleteCommentById(Long id) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -92,6 +94,7 @@ public class CommentService {
         throw new AppException(ErrorCode.DELETE_COMMENT_ISVALID);
     }
 
+    @PreAuthorize("isAuthenticated()")
     public UpdateCommentResponse updateComment(Long id, UpdateCommentRequest request){
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));

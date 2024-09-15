@@ -107,6 +107,13 @@ public class User extends AbstractEntity<Long> {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "comments"})
     Set<Comment> comments;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "user"})
+    Set<Enrollment> enrollments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Set<Favorite> favorites;
+
     @PrePersist
     protected void onCreate() {
         if (enabled == null) {

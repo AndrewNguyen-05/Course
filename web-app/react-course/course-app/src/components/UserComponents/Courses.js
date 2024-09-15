@@ -1,21 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from "react";
 import { Footer } from "../layouts/Footer";
 import { Search } from "../common/Search";
+import Pagination from '../common/Pagination';
 
 export const Courses = () => {
-
     const [loading, setLoading] = useState(true);
     const [courses, setCourses] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(6);
     const [totalPages, setTotalPages] = useState(0);
-
     const [filterQuery, setFilterQuery] = useState('');
 
     // Hàm lấy dữ liệu từ API
     const fetchCourses = async () => {
+        setLoading(true);
         try {
             let apiUrl = `http://localhost:8080/api/v1/courses?page=${currentPage}&size=${pageSize}`;
             if (filterQuery) {
@@ -24,9 +23,7 @@ export const Courses = () => {
                 console.log("API URL:", apiUrl);
             }
 
-            const response = await fetch(apiUrl, {
-                method: 'GET',
-            });
+            const response = await fetch(apiUrl, { method: 'GET' });
 
             if (!response.ok) {
                 throw new Error(`${response.status}`);
@@ -34,17 +31,13 @@ export const Courses = () => {
             const result = await response.json();
             const { data, totalPages } = result.result;
             setTotalPages(totalPages);
-
             setCourses(data);
-
         } catch (err) {
             console.log(err);
-            setLoading(false);
+        } finally {
+            setLoading(false); // Kết thúc trạng thái loading
         }
-        finally {
-            setLoading(false);
-        }
-    }
+    };
 
     // Hàm thay đổi trang
     const changePage = (page) => {
@@ -53,7 +46,12 @@ export const Courses = () => {
         }
     };
 
-    // Gọi fetchCourses mỗi khi `currentPage`, `pageSize` hoặc `filterQuery` thay đổi
+    // Reset `currentPage` khi `filterQuery` thay đổi
+    useEffect(() => {
+        setCurrentPage(1); // Đặt lại về trang đầu tiên mỗi khi `filterQuery` thay đổi
+    }, [filterQuery]);
+
+    // Gọi `fetchCourses` mỗi khi `currentPage`, `pageSize` hoặc `filterQuery` thay đổi
     useEffect(() => {
         fetchCourses();
     }, [currentPage, pageSize, filterQuery]);
@@ -71,6 +69,7 @@ export const Courses = () => {
                         </div>
                     </div>
 
+                    {/* Lưới hiển thị khóa học */}
                     <div className="row">
                         {courses.map((course) => (
                             <div className="col-lg-4 col-md-6 pb-4" key={course.id}>
@@ -80,9 +79,7 @@ export const Courses = () => {
                                         <div className="courses-author">
                                             <span><i className="fa fa-user mr-2"></i>{course.author}</span>
                                         </div>
-                                        <div className="courses-title">
-                                            {course.title}
-                                        </div>
+                                        <div className="courses-title">{course.title}</div>
                                         <div className="course-meta">
                                             <span><i className="fa fa-star mr-2"></i>4.5 (250)</span>
                                         </div>
@@ -90,46 +87,22 @@ export const Courses = () => {
                                             <strong>Price: </strong>
                                             <span className="course-price-value">${course.price.toFixed(2)}</span>
                                         </div>
-                                        </div>
+                                    </div>
                                 </Link>
                             </div>
                         ))}
                     </div>
 
-
-                    <div className="col-12">
-                        <nav aria-label="Page navigation">
-                            <ul className="pagination pagination-lg justify-content-center mb-0">
-                                {/* Previous button */}
-                                <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                                    <button className="page-link rounded-0" onClick={() => changePage(currentPage - 1)} aria-label="Previous">
-                                        <span aria-hidden="true">&laquo;</span>
-                                    </button>
-                                </li>
-
-                                {/* Render dynamic page numbers */}
-                                {Array.from({ length: totalPages }, (_, index) => (
-                                    <li key={index + 1} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
-                                        <button className="page-link" onClick={() => changePage(index + 1)}>
-                                            {index + 1}
-                                        </button>
-                                    </li>
-                                ))}
-
-                                {/* Next button */}
-                                <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
-                                    <button className="page-link rounded-0" onClick={() => changePage(currentPage + 1)} aria-label="Next">
-                                        <span aria-hidden="true">&raquo;</span>
-                                    </button>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-
+                    {/* Phân trang */}
+                    <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        changePage={changePage}
+                    />
+                    
                 </div>
             </div>
             <Footer />
         </div>
-
     );
-}
+};

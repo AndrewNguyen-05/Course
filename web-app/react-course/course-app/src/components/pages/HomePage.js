@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-// Import các hình ảnh
+
 import aboutImage from './../../img/about.jpg';
 import featureImage from './../../img/feature.jpg';
 
-import instructor1Image from './../../img/team-1.jpg';
-import instructor2Image from './../../img/team-2.jpg';
-import instructor3Image from './../../img/team-3.jpg';
-import instructor4Image from './../../img/team-4.jpg';
+import instructor1Image from './../../img/duc.jpg';
+import instructor2Image from './../../img/duc1.jpg';
+import instructor3Image from './../../img/vu.jpg';
+import instructor4Image from './../../img/nam.jpg';
 import testimonial1Image from './../../img/testimonial-1.jpg';
 import testimonial2Image from './../../img/testimonial-2.jpg';
-import videoSource from './../../img/2-9.mp4'
+import { ToastContainer } from 'react-toastify';
 
 
 export const HomePage = () => {
+
+    const token = localStorage.getItem('token');
+
+    const navigate = useNavigate();
 
     const [selectedCourse, setSelectedCourse] = useState('');
     const [courses, setCourses] = useState([]);
@@ -83,6 +89,38 @@ export const HomePage = () => {
     if (error) {
         return <div>Error: {error.message}</div>;
     }
+
+    const addToFavorites = (courseId) => {
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+    
+        fetch(`http://localhost:8080/api/v1/save-favorite?id=${courseId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Failed to add to favorites');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.code === 201) {
+                toast.success('Course added to favorites successfully!');
+            } else {
+                throw new Error('Failed to add to favorites');
+            }
+        })
+        .catch(error => {
+            console.log(error)
+            toast.error('Course is already in the favorites list.');
+        });
+    };
 
     return (
         <div>
@@ -233,7 +271,7 @@ export const HomePage = () => {
                                     {/* Nút thêm vào khóa học yêu thích với icon trái tim */}
                                     <button
                                         className="course-card-custom-btn-favorite mt-2"
-                                        // onClick={() => addToFavorites(course)}
+                                        onClick={() => addToFavorites(course.id)}
                                     >
                                         <i className="fas fa-heart mr-2"></i>Add to Favorite
                                     </button>
@@ -254,50 +292,6 @@ export const HomePage = () => {
                     ) : (
                         <p className="text-center">Đã tải hết các khóa học</p>
                     )}
-                </div>
-
-                <div className="row justify-content-center bg-image mx-0 mb-5">
-                    <div className="col-lg-6 py-5">
-                        <div className="bg-white p-5 my-5">
-                            <h1 className="text-center mb-4">30% Off For New Students</h1>
-                            <form>
-                                <div className="form-row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <input type="text" className="form-control bg-light border-0" placeholder="Your Name" style={{ padding: '30px 20px' }} />
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <input type="email" className="form-control bg-light border-0" placeholder="Your Email" style={{ padding: '30px 20px' }} />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="form-row">
-                                    <div className="col-sm-6">
-                                        <div className="form-group">
-                                            <select
-                                                className="custom-select bg-light border-0 px-3"
-                                                style={{ height: '60px' }}
-                                                value={selectedCourse}
-                                                onChange={handleChange}
-                                            >
-                                                <option value="" disabled>Select A course</option>
-                                                <option value="1">Course 1</option>
-                                                <option value="2">Course 2</option>
-                                                <option value="3">Course 3</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className="col-sm-6">
-                                        <button className="btn btn-primary btn-block" type="submit" style={{ height: '60px' }}>
-                                            Sign Up Now
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -483,6 +477,13 @@ export const HomePage = () => {
                     </div>
                 </div>
             </div>
+
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                className="custom-toast-container"
+            />
+
         </div>
     );
 };
