@@ -30,9 +30,11 @@ public enum ErrorCode {
     PARENT_COMMENT_NOT_EXISTED(400, "ParentComment not existed", HttpStatus.BAD_REQUEST),
     FORBIDDEN(403, "Insufficient rights", HttpStatus.FORBIDDEN),
     COMMENT_NOT_EXISTED(400, "Comment not existed", HttpStatus.BAD_REQUEST),
-    DELETE_COMMENT_ISVALID(403, "You can only delete your own comments.", HttpStatus.FORBIDDEN),
-    UPDATE_COMMENT_ISVALID(403, "You can only update your own comments.", HttpStatus.FORBIDDEN),
+    DELETE_COMMENT_INVALID(403, "You can only delete your own comments.", HttpStatus.FORBIDDEN),
+    UPDATE_COMMENT_INVALID(403, "You can only update your own comments.", HttpStatus.FORBIDDEN),
     ALREADY_IN_FAVORITES(400, "Course is already in the favorites list.", HttpStatus.BAD_REQUEST),
+    CURRENT_PASSWORD_INVALID(400, "Current password is incorrect", HttpStatus.BAD_REQUEST),
+    CONFIRM_PASSWORD_INVALID(400, "Confirmed password is incorrect", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

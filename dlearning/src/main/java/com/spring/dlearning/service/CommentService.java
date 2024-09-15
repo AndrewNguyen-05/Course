@@ -91,7 +91,7 @@ public class CommentService {
                     .build();
         }
 
-        throw new AppException(ErrorCode.DELETE_COMMENT_ISVALID);
+        throw new AppException(ErrorCode.DELETE_COMMENT_INVALID);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -113,7 +113,7 @@ public class CommentService {
                     .content(comment.getContent())
                     .build();
         }
-        throw new AppException(ErrorCode.UPDATE_COMMENT_ISVALID);
+        throw new AppException(ErrorCode.UPDATE_COMMENT_INVALID);
 
     }
 }

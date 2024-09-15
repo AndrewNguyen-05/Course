@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { ProfileDropdown } from '../common/ProfileDropdown';
 import { TopBar } from '../common/TopBar';
 import { NotificationDropdown } from '../common/NotificationDropdown';
+import { Favorites } from '../common/Favorites';
 
 
 export const Navbar = () => {
@@ -130,6 +131,7 @@ export const Navbar = () => {
               unreadCount={unreadCount}
               markAsRead={markAsRead}
             />
+             <Favorites />
 
             <ProfileDropdown
               avatar={avatar}

@@ -60,14 +60,14 @@ public class GlobalExceptionHandler {
             errorCode = ErrorCode.valueOf(enumKey);
 
             var constraintViolation =
-                    exception.getBindingResult().getAllErrors().get(0).unwrap(ConstraintViolation.class);
+                    exception.getBindingResult().getFieldError().unwrap(ConstraintViolation.class);
 
             attributes = constraintViolation.getConstraintDescriptor().getAttributes();
 
-            log.info(attributes.toString());
+            log.info("Attributes: " + attributes.toString());
 
-        } catch (IllegalArgumentException ignored) {
-
+        } catch (IllegalArgumentException | NullPointerException ignored) {
+            log.error("Error in extracting attributes: ", ignored);
         }
 
         ApiResponse apiResponse = new ApiResponse();
