@@ -19,7 +19,6 @@ import com.spring.dlearning.repository.RoleRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.repository.http_client.OutboundIdentityClient;
 import com.spring.dlearning.repository.http_client.OutboundUserClient;
-import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,6 +28,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

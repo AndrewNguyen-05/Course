@@ -21,6 +21,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -44,6 +46,7 @@ public class CommentService {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @Transactional
     public CommentResponse addComment(CommentRequest commentRequest, Long courseId) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -85,6 +88,7 @@ public class CommentService {
 
 
     @PreAuthorize("isAuthenticated()")
+    @Transactional
     public DeleteCommentResponse deleteCommentById(Long id) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -107,6 +111,7 @@ public class CommentService {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @Transactional
     public UpdateCommentResponse updateComment(Long id, UpdateCommentRequest request) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
