@@ -238,9 +238,8 @@ public class AuthenticationService {
         Optional.ofNullable(user.getRole()).ifPresent(role -> {
             stringJoiner.add(role.getName());
 
-            Optional.ofNullable(role.getPermissions()).ifPresent(permissions -> {
-                permissions.forEach(permission -> stringJoiner.add(permission.getName()));
-            });
+            Optional.ofNullable(role.getPermissions()).ifPresent(permissions ->
+                    permissions.forEach(permission -> stringJoiner.add(permission.getName())));
         });
         return stringJoiner.toString();
     }
