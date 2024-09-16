@@ -31,4 +31,5 @@ public class ChangePasswordController {
                 .result(changePasswordService.changePassword(request))
                 .build();
     }
+    
 }

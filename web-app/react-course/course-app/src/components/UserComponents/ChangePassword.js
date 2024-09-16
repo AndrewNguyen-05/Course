@@ -2,15 +2,54 @@ import React, { useState } from 'react';
 import { FaEye, FaEyeSlash, FaLock, FaKey, FaUser, FaShieldAlt } from 'react-icons/fa';
 import { Navbar } from '../layouts/Navbar';
 import { Footer } from '../layouts/Footer';
+import { ToastContainer, toast } from 'react-toastify';
 
 export const ChangePassword = () => {
+
+  const token = localStorage.getItem('token')
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const [isSnipping, setIsSnipping] = useState(false);
+
   const togglePasswordVisibility = (setter) => {
     setter((prev) => !prev);
   };
+
+  const submitChangePassword = (event) => {
+    event.preventDefault();
+    setIsSnipping(true);
+
+    setTimeout(() => {
+      setIsSnipping(false);
+    }, 1000);
+
+    fetch(`http://localhost:8080/api/v1/change-password`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ currentPassword, newPassword, confirmPassword }),
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          toast.success('Password changed successfully.');
+        } else {
+          const errorData = await response.json();
+          toast.error(errorData.message);
+        }
+      })
+      .catch((error) => {
+        toast.error('An error occurred. Please try again.');
+      });
+  };
+  
 
   return (
     <div>
@@ -25,7 +64,7 @@ export const ChangePassword = () => {
                 </h3>
               </div>
               <div className="card-body p-5">
-                <form>
+                <form onSubmit={submitChangePassword}>
                   {/* Current Password Field */}
                   <div className="mb-4 position-relative">
                     <label htmlFor="currentPassword" className="form-label">Current Password</label>
@@ -36,6 +75,8 @@ export const ChangePassword = () => {
                         className="form-control form-control-lg border-start-0 shadow-sm"
                         id="currentPassword"
                         placeholder="Enter your current password"
+                         autoComplete="current-password"
+                        onChange={(event) => setCurrentPassword(event.target.value)}
                       />
                       <button
                         type="button"
@@ -57,6 +98,8 @@ export const ChangePassword = () => {
                         className="form-control form-control-lg border-start-0 shadow-sm"
                         id="newPassword"
                         placeholder="Enter your new password"
+                         autoComplete="new-password"
+                        onChange={(event) => setNewPassword(event.target.value)}
                       />
                       <button
                         type="button"
@@ -77,7 +120,9 @@ export const ChangePassword = () => {
                         type={showConfirmPassword ? 'text' : 'password'}
                         className="form-control form-control-lg border-start-0 shadow-sm"
                         id="confirmPassword"
+                         autoComplete="confirm-password"
                         placeholder="Confirm your new password"
+                        onChange={(event) => setConfirmPassword(event.target.value)}
                       />
                       <button
                         type="button"
@@ -91,8 +136,10 @@ export const ChangePassword = () => {
 
                   {/* Submit Button */}
                   <div className="d-grid mt-4">
-                    <button type="submit" className="btn btn-primary btn-lg rounded-pill shadow">
-                      <FaShieldAlt className="me-2" /> Change Password
+                    <button type="submit"
+                    className="btn btn-primary btn-lg rounded-pill shadow">
+                      <FaShieldAlt className="me-2" 
+                      /> Change Password
                     </button>
                   </div>
                 </form>
@@ -101,6 +148,13 @@ export const ChangePassword = () => {
           </div>
         </div>
       </div>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        className="custom-toast-container"
+      />
+
       <Footer />
     </div>
   );
