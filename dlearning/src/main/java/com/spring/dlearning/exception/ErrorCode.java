@@ -35,6 +35,8 @@ public enum ErrorCode {
     ALREADY_IN_FAVORITES(400, "Course is already in the favorites list.", HttpStatus.BAD_REQUEST),
     CURRENT_PASSWORD_INVALID(400, "Current password is incorrect", HttpStatus.BAD_REQUEST),
     CONFIRM_PASSWORD_INVALID(400, "Confirmed password is incorrect", HttpStatus.BAD_REQUEST),
+    INVALID_RATING(400, "Only ratings greater than 0 and less than 5", HttpStatus.BAD_REQUEST),
+    INVALID_COMMENT_OR_RATING(400, "Please provide at least a comment or a rating.", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;
@@ -46,4 +48,5 @@ public enum ErrorCode {
         this.message = message;
         this.statusCode = statusCode;
     }
+
 }

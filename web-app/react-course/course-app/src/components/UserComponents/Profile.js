@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { UseAuth } from "../authentication/UseAuth";
 import { Footer } from "../layouts/Footer";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Navbar } from "../layouts/Navbar";
 
 export const Profile = () => {
-    const [loggedOut, setLoggedOut] = useState(false); 
-    const { isTokenValid } = UseAuth({ loggedOut });
-
+    
     const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
     const [isRemovingAvatar, setIsRemovingAvatar] = useState(false);
-
 
     const [selectedImage, setSelectedImage] = useState(null);
     const [profileData, setProfileData] = useState({

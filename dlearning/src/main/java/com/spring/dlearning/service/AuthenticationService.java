@@ -8,9 +8,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.*;
-import com.spring.dlearning.dto.response.AuthenticationResponse;
-import com.spring.dlearning.dto.response.ExchangeTokenResponse;
-import com.spring.dlearning.dto.response.IntrospectResponse;
+import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.entity.InvalidatedToken;
 import com.spring.dlearning.entity.Role;
 import com.spring.dlearning.entity.User;
@@ -74,6 +72,7 @@ public class AuthenticationService {
     InvalidatedTokenRepository invalidatedTokenRepository;
     OutboundIdentityClient outboundIdentityClient;
     OutboundUserClient outboundUserClient;
+
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

@@ -29,6 +29,7 @@ public class SecurityConfiguration {
             "/api/v1/auth/introspect",
             "/api/v1/auth/refresh",
             "/api/v1/auth/outbound/authentication",
+            "/api/v1/auth/facebook",
             "/api/v1/create-password",
             "/api/v1/send-otp",
             "/api/v1/reset-password",

@@ -18,8 +18,11 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Comment extends AbstractEntity<Long> {
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content")
     String content;
+
+    @Column(name = "rating")
+    Integer rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id")

@@ -60,9 +60,20 @@ public class CommentService {
                     .orElseThrow(() -> new AppException(ErrorCode.PARENT_COMMENT_NOT_EXISTED));
         }
 
+        if ((commentRequest.getContent() == null || commentRequest.getContent().isEmpty()) && commentRequest.getRating() == null) {
+            throw new AppException(ErrorCode.INVALID_COMMENT_OR_RATING);
+        }
+
+        if (commentRequest.getRating() != null && (commentRequest.getRating() < 1 || commentRequest.getRating() > 5)) {
+            throw new AppException(ErrorCode.INVALID_RATING);
+        }
+
         Comment newComment = Comment.builder()
                 .user(user)
-                .content(commentRequest.getContent())
+                .content(commentRequest.getContent() != null && !commentRequest.getContent().isEmpty()
+                        ? commentRequest.getContent()
+                        : "")
+                .rating(commentRequest.getRating())
                 .course(course)
                 .parentComment(parentComment)
                 .build();
@@ -71,6 +82,7 @@ public class CommentService {
 
         return commentMapper.toCommentResponse(newComment);
     }
+
 
     @PreAuthorize("isAuthenticated()")
     public DeleteCommentResponse deleteCommentById(Long id) {
@@ -95,7 +107,7 @@ public class CommentService {
     }
 
     @PreAuthorize("isAuthenticated()")
-    public UpdateCommentResponse updateComment(Long id, UpdateCommentRequest request){
+    public UpdateCommentResponse updateComment(Long id, UpdateCommentRequest request) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
@@ -105,15 +117,20 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXISTED));
 
-        if(Objects.equals(user.getId(), comment.getUser().getId())) {
-            commentMapper.toComment(request,comment);
+        if (Objects.equals(user.getId(), comment.getUser().getId())) {
+            if (request.getContent() != null) {
+                comment.setContent(request.getContent());
+            }
+
             commentRepository.save(comment);
+
             return UpdateCommentResponse.builder()
                     .id(comment.getId())
                     .content(comment.getContent())
                     .build();
         }
-        throw new AppException(ErrorCode.UPDATE_COMMENT_INVALID);
 
+        throw new AppException(ErrorCode.UPDATE_COMMENT_INVALID);
     }
+
 }

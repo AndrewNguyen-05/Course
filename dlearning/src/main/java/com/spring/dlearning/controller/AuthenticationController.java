@@ -1,11 +1,7 @@
 package com.spring.dlearning.controller;
 
-
 import com.nimbusds.jose.JOSEException;
-import com.spring.dlearning.dto.request.AuthenticationRequest;
-import com.spring.dlearning.dto.request.IntrospectRequest;
-import com.spring.dlearning.dto.request.LogoutRequest;
-import com.spring.dlearning.dto.request.RefreshTokenRequest;
+import com.spring.dlearning.dto.request.*;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.AuthenticationResponse;
 import com.spring.dlearning.dto.response.IntrospectResponse;
@@ -31,7 +27,6 @@ public class AuthenticationController {
     @PostMapping("/outbound/authentication")
     public ApiResponse<AuthenticationResponse> outboundAuthenticateGoogle(@RequestParam("code") String code) {
         var result = authenticationService.outboundAuthenticate(code);
-
         return ApiResponse.<AuthenticationResponse>builder().result(result).build();
     }
 
@@ -66,7 +61,6 @@ public class AuthenticationController {
                 .message("Logout Successfully")
                 .build();
     }
-
 
     @PostMapping("/refresh")
     public ApiResponse<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request)

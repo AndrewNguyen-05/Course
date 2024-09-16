@@ -48,13 +48,12 @@ outbound:
     client-id: "1063674841920-mtlapuiv2d8gc3rgf6b4oi4vlaa31pah.apps.googleusercontent.com"
     client-secret: "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"
     redirect-uri: "http://localhost:3000/authenticate"
-
-#  facebook:
-#    client-id: "1184572409447891"
-#    client-secret: "bcf09ccad760216ccae41807e1a82d1f"
-#    redirect-uri: "http://localhost:8080/authenticate-fb"
-#    grant-type: "authorization_code"
-
+---
+#facebook:
+#  client-id: "1184572409447891"
+#  client-secret: "bcf09ccad760216ccae41807e1a82d1f"
+#  redirect-uri: "http://localhost:3000/authenticate-fb"
+---
 cloudinary:
   cloud-name: "dznef2sae"
   api-key: "537285485346489"

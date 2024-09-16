@@ -29,6 +29,15 @@ export const LoginPage = () => {
 
   };
 
+  const handleFacebookLogin = () => {
+    const facebookAppId = OAuthConfig.facebookClientId; 
+    const redirectUri = OAuthConfig.facebookRedirectUri; 
+    const authUrl = `https://www.facebook.com/v10.0/dialog/oauth?client_id=${facebookAppId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=email,public_profile`;
+  
+    window.location.href = authUrl;
+  };
+  
+
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
@@ -170,7 +179,7 @@ export const LoginPage = () => {
                         <div className="row justify-content-between">
                           <div className="col-6">
                             <div className="form-check">
-                              <input className="form-check-input" type="checkbox" id="remember_me" />
+                              <input className="form-check-input" type="checkbox" id="remember_me"/>
                               <label className="form-check-label text-secondary" htmlFor="remember_me">
                                 Remember me
                               </label>
@@ -206,7 +215,9 @@ export const LoginPage = () => {
                       <span className="ms-2 fs-6 flex-grow-1">Continue with Google</span>
                     </button>
 
-                    <button className="btn bsb-btn-2xl btn-outline-dark rounded-0 d-flex align-items-center">
+                    <button className="btn bsb-btn-2xl btn-outline-dark rounded-0 d-flex align-items-center"
+                    onClick={handleFacebookLogin}
+                    >
                       <i className="bi bi-facebook text-primary"></i>
                       <span className="ms-2 fs-6 flex-grow-1">Continue with Facebook</span>
                     </button>

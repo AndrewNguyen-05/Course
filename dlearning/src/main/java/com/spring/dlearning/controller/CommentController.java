@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -45,7 +43,6 @@ public class CommentController {
 
     @DeleteMapping("/delete-comment/{id}")
     ApiResponse<DeleteCommentResponse> deleteComment(@PathVariable Long id) {
-        System.out.println(id);
         return ApiResponse.<DeleteCommentResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(commentService.deleteCommentById(id))
@@ -54,8 +51,6 @@ public class CommentController {
 
     @PutMapping("/update-comment/{id}")
     ApiResponse<UpdateCommentResponse> updateComment(@PathVariable Long id, @RequestBody UpdateCommentRequest request) {
-        System.out.println(id);
-        System.out.println(request);
         return ApiResponse.<UpdateCommentResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(commentService.updateComment(id, request))

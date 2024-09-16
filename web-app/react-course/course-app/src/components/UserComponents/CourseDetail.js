@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FaClock, FaCommentDots, FaHeart, FaReply, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaClock, FaCommentDots, FaHeart, FaReply, FaEdit, FaTrash, FaStar } from 'react-icons/fa';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -14,6 +14,7 @@ export const CourseDetail = () => {
     const [replyContent, setReplyContent] = useState({}); // update nội dung cmt
     const [editContent, setEditContent] = useState({}); // cập nhật nội dung chỉnh sửa của bình luận.
     const [editingCommentId, setEditingCommentId] = useState(null); // lưu ID của bình luận đang được chỉnh sửa
+    const [newRating, setNewRating] = useState(0);
 
     // Fetch course details
     useEffect(() => {
@@ -53,17 +54,44 @@ export const CourseDetail = () => {
     if (loading) return <div>Loading...</div>;
 
     // Add a new comment
+
+    const renderStars = (rating, handleRating) => {
+        return (
+            <div className="star-rating">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                        key={star}
+                        size={25}
+                        color={star <= rating ? "#ffc107" : "#e4e5e9"} // Nếu giá trị của star (ngôi sao hiện tại trong vòng lặp) nhỏ hơn hoặc bằng rating, thì ngôi sao sẽ có màu vàng (#ffc107).
+                        onClick={() => handleRating(star)}
+                        style={{ cursor: "pointer" }}
+                    />
+                ))}
+            </div>
+        );
+    };
+
+    const handleRatingChange = (rating) => {
+        if (newRating === rating) {
+            setNewRating(rating -1);
+        } else {
+            setNewRating(rating);
+        }
+    };
+
     const handleAddComment = () => {
-        if (!newComment.trim()) {
-            toast.error('Please enter a comment');
+        if (!newComment.trim() && newRating === 0) {
+            toast.error('Please enter a comment or select a rating');
             return;
         }
 
         const commentData = {
             content: newComment.trim(),
+            rating: newRating, 
             parentCommentId: null,
             courseId: id
         };
+    
 
         fetch(`http://localhost:8080/api/v1/add-comment?id=${id}`, {
             method: 'POST',
@@ -81,6 +109,7 @@ export const CourseDetail = () => {
                         replies: []
                     }, ...comments]);
                     setNewComment("");
+                    setNewRating(0);
                     toast.success('Comment added successfully');
                 }
             })
@@ -235,7 +264,6 @@ export const CourseDetail = () => {
     };
 
 
-
     return (
         <div className="container-fluid py-5">
             <div className="container py-5">
@@ -261,7 +289,12 @@ export const CourseDetail = () => {
                                     value={newComment}
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
-                                <button className="btn btn-primary px-4" onClick={handleAddComment}>
+
+                                 {/* Rating Stars */}
+                                 {renderStars(newRating, handleRatingChange)}
+
+
+                                <button className="btn btn-primary px-4 mt-3" onClick={handleAddComment}>
                                     Submit Comment
                                 </button>
                             </div>
@@ -288,6 +321,11 @@ export const CourseDetail = () => {
                                                     <FaTrash />
                                                 </button>
                                             </div>
+                                        </div>
+
+                                         {/* Display Rating */}
+                                         <div className="mt-2">
+                                            {renderStars(comment.rating || 0, () => {})}
                                         </div>
 
                                         {/* Comment Content */}
