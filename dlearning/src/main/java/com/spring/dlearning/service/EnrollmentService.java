@@ -16,7 +16,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,10 +33,7 @@ public class EnrollmentService {
     UserRepository userRepository;
     EnrollmentMapper enrollmentMapper;
 
-    public boolean existsByUserAndCourse(User user, Course course) {
-        return enrollmentRepository.existsByUserAndCourse(user, course);
-    }
-
+    @PreAuthorize("isAuthenticated()")
     public List<BuyCourseResponse> getCourseByUserCurrent(){
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -47,6 +46,8 @@ public class EnrollmentService {
         return enrollments.stream().map(enrollmentMapper::toBuyCourseResponse).toList();
     }
 
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
     public BuyCourseResponse buyCourse(BuyCourseRequest request){
 
         String email = SecurityUtils.getCurrentUserLogin()
