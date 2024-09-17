@@ -14,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 @Entity
 public class Permission extends AbstractEntity<Long> {
 
-
     @Column(name = "name", nullable = false, unique = true)
     String name;
 

@@ -67,7 +67,7 @@ public class CommentService {
             throw new AppException(ErrorCode.INVALID_COMMENT_OR_RATING);
         }
 
-        if (commentRequest.getRating() != null && (commentRequest.getRating() < 1 || commentRequest.getRating() > 5)) {
+        if (commentRequest.getRating() != null && (commentRequest.getRating() < 0 || commentRequest.getRating() > 5)) {
             throw new AppException(ErrorCode.INVALID_RATING);
         }
 

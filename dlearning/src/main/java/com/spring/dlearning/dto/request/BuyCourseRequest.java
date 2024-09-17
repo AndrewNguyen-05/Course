@@ -1,8 +1,10 @@
 package com.spring.dlearning.dto.request;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -12,6 +14,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BuyCourseRequest {
 
-    @NotNull(message = "COURSE_ID_INVALID")
-    Long courseId;
+    String title;
+    BigDecimal price;
+    LocalDateTime createAt;
+
 }

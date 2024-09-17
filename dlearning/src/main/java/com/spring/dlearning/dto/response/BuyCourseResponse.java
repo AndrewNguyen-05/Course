@@ -1,8 +1,9 @@
 package com.spring.dlearning.dto.response;
 
-import com.spring.dlearning.common.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Setter
@@ -12,11 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BuyCourseResponse {
+    Long userId;
     Long courseId;
     String title;
-    String author;
-    CourseLevel courseLevel;
-    String thumbnail;
-    Long points;
+    BigDecimal price;
     LocalDateTime createAt;
 }

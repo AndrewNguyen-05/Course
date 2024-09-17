@@ -58,10 +58,6 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "gender")
     Gender gender;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "courseLevel")
-    CourseLevel courseLevel;
-
     @Column(name = "phone")
     String phone;
 
