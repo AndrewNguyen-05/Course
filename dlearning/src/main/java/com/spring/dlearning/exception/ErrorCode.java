@@ -37,6 +37,7 @@ public enum ErrorCode {
     CONFIRM_PASSWORD_INVALID(400, "Confirmed password is incorrect", HttpStatus.BAD_REQUEST),
     INVALID_RATING(400, "Only rating greater than or equal to 0 and less than 5", HttpStatus.BAD_REQUEST),
     INVALID_COMMENT_OR_RATING(400, "Please provide at least a comment or a rating.", HttpStatus.BAD_REQUEST),
+    COURSE_ALREADY_PURCHASED(400, "You already own this course", HttpStatus.BAD_REQUEST)
     ;
 
     private int code;

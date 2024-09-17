@@ -3,8 +3,6 @@ package com.spring.dlearning.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -13,9 +11,5 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BuyCourseRequest {
-
-    String title;
-    BigDecimal price;
-    LocalDateTime createAt;
-
+    Long courseId;
 }

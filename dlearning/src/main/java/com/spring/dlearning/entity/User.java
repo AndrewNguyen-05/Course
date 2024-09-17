@@ -32,17 +32,8 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "password")
     String password;
 
-    @Column(name = "otp")
-    String otp;
-
-    @Column(name = "otp_expiry_date")
-    LocalDateTime otpExpiryDate;
-
     @Column(name = "name", nullable = false)
     String name;
-
-    @Column(name = "avatar")
-    String avatar;
 
     @Column(name = "first_name", nullable = false)
     String firstName;
@@ -50,9 +41,8 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "last_name", nullable = false)
     String lastName;
 
-    @Column(name = "dob")
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
-    LocalDate dob;
+    @Column(name = "avatar")
+    String avatar;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gender")
@@ -60,6 +50,16 @@ public class User extends AbstractEntity<Long> {
 
     @Column(name = "phone")
     String phone;
+
+    @Column(name = "dob")
+    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    LocalDate dob;
+
+    @Column(name = "otp")
+    String otp;
+
+    @Column(name = "otp_expiry_date")
+    LocalDateTime otpExpiryDate;
 
     @Column(name = "address")
     String address;

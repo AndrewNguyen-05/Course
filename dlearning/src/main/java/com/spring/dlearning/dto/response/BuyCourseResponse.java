@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class BuyCourseResponse {
     Long userId;
     Long courseId;
+    String author;
     String title;
     BigDecimal price;
     LocalDateTime createAt;
