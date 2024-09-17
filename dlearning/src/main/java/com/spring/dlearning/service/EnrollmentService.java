@@ -61,9 +61,10 @@ public class EnrollmentService {
         if(enrollmentRepository.existsByUserAndCourse(user, course))
             throw new AppException(ErrorCode.COURSE_ALREADY_PURCHASED);
 
-        Enrollment enrollment = enrollmentMapper.toEnrollment(request);
-        enrollment.setUser(user);
-        enrollment.setCourse(course);
+        Enrollment enrollment = Enrollment.builder()
+                .user(user)
+                .course(course)
+                .build();
 
         enrollmentRepository.save(enrollment);
 
