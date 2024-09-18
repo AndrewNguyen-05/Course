@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 import java.util.List;
 
 @Entity
@@ -24,11 +25,11 @@ public class Review extends AbstractEntity<Long> {
     Integer rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_review_id")
+    @JoinColumn(name = "parent_comment_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    Review parentReview;
+    Review parentComment;
 
-    @OneToMany(mappedBy = "parentReview", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Review> replies;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {
@@ -42,27 +43,6 @@ public class Review extends AbstractEntity<Long> {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "course_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "comments"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     Course course;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "chapter_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    Chapter chapter;
-
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {
-            CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinColumn(name = "lesson_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    Lesson lesson;
-
-    @PrePersist
-    public void prePersist(){
-        if(this.rating == null){
-            this.rating = 0;
-        }
-    }
 }

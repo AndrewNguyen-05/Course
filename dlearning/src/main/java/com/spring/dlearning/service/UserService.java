@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
@@ -121,7 +122,7 @@ public class UserService {
     }
 
     @Transactional
-    public void sendOtp(String email) throws MessagingException {
+    public void sendOtp(String email) throws MessagingException, UnsupportedEncodingException {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -143,7 +144,7 @@ public class UserService {
         emailService.sendEmail(subject, content, List.of(email));
     }
 
-    public void sendOtpRegister(String email) throws MessagingException {
+    public void sendOtpRegister(String email) throws MessagingException, UnsupportedEncodingException {
         String otp = generateOtp();
 
         otpService.saveOtp(email, otp);

@@ -1,7 +1,6 @@
 package com.spring.dlearning.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.spring.dlearning.utils.CourseLevel;
 import com.spring.dlearning.utils.Gender;
 import com.spring.dlearning.utils.RegistrationStatus;
 import jakarta.persistence.*;
@@ -91,6 +90,9 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "facebookLink")
     String facebookLink;
 
+    @Column(name = "points")
+    Long points;
+
     @Column(name = "registrationStatus")
     @Enumerated(EnumType.STRING)
     RegistrationStatus registrationStatus;
@@ -100,8 +102,8 @@ public class User extends AbstractEntity<Long> {
     Role role;
 
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "comments"})
-    Set<Comment> comments;
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "reviews"})
+    Set<Review> reviews;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "user"})

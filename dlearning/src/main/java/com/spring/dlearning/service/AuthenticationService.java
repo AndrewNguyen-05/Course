@@ -122,28 +122,33 @@ public class AuthenticationService {
                 .token(token)
                 .build();
     }
-    
-    private String generateToken(User user) {
 
-        JWSHeader jwsHeader = new JWSHeader(JWSAlgorithm.HS512);
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+    private String generateToken(User user) {
+        JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
+
+        JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getEmail())
+                .issuer("learning.com")
                 .issueTime(new Date())
-                .expirationTime(new Date(Instant.now().plus(VALID_DURATION, ChronoUnit.HOURS).toEpochMilli()))
+                .expirationTime(new Date(
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.HOURS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();
 
-        Payload payload = new Payload(claimsSet.toJSONObject());
-        JWSObject jwsObject = new JWSObject(jwsHeader, payload);
+        Payload payload = new Payload(jwtClaimsSet.toJSONObject());
+
+        JWSObject jwsObject = new JWSObject(header, payload);
 
         try {
             jwsObject.sign(new MACSigner(SIGNER_KEY.getBytes()));
             return jwsObject.serialize();
         } catch (JOSEException e) {
+            log.error("Cannot create token", e);
             throw new RuntimeException(e);
         }
     }
+
 
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         try {
@@ -166,10 +171,13 @@ public class AuthenticationService {
         }
     }
 
-    public SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
+    private SignedJWT verifyToken(String token, boolean isRefresh) throws JOSEException, ParseException {
 
-        JWSVerifier verifier =
-                new MACVerifier(SIGNER_KEY.getBytes());
+        if (token == null || token.trim().isEmpty()) {
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+
+        JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
 
         SignedJWT signedJWT = SignedJWT.parse(token);
 
@@ -191,7 +199,6 @@ public class AuthenticationService {
 
         return signedJWT;
     }
-
     public AuthenticationResponse refreshToken(RefreshTokenRequest request) throws ParseException, JOSEException {
 
         var signJWT = verifyToken(request.getToken(), true);
@@ -207,7 +214,6 @@ public class AuthenticationService {
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
 
         var token = generateToken(user);
-
 
         return AuthenticationResponse.builder()
                 .token(token)

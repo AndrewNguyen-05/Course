@@ -68,7 +68,7 @@ public class Course  {
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    Set<Comment> comments;
+    Set<Review> comments;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Favorite> favorites;

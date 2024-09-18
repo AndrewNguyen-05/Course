@@ -6,7 +6,7 @@ import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.CommentResponse;
 import com.spring.dlearning.dto.response.DeleteCommentResponse;
 import com.spring.dlearning.dto.response.UpdateCommentResponse;
-import com.spring.dlearning.service.CommentService;
+import com.spring.dlearning.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +23,13 @@ import java.util.List;
 @Slf4j
 public class CommentController {
 
-    CommentService commentService;
+    ReviewService reviewService;
 
     @GetMapping("/courses-comment/{courseId}")
     ApiResponse<List<CommentResponse>> getCommentByCourseId(@PathVariable Long courseId){
         return ApiResponse.<List<CommentResponse>>builder()
                 .code(HttpStatus.OK.value())
-                .result(commentService.getCommentByCourse(courseId))
+                .result(reviewService.getCommentByCourse(courseId))
                 .build();
     }
 
@@ -37,7 +37,7 @@ public class CommentController {
     ApiResponse<CommentResponse> addComment(@RequestBody @Valid CommentRequest commentRequest, @RequestParam Long id){
         return ApiResponse.<CommentResponse>builder()
                 .code(HttpStatus.CREATED.value())
-                .result(commentService.addComment(commentRequest, id))
+                .result(reviewService.addComment(commentRequest, id))
                 .build();
     }
 
@@ -45,7 +45,7 @@ public class CommentController {
     ApiResponse<DeleteCommentResponse> deleteComment(@PathVariable Long id) {
         return ApiResponse.<DeleteCommentResponse>builder()
                 .code(HttpStatus.OK.value())
-                .result(commentService.deleteCommentById(id))
+                .result(reviewService.deleteCommentById(id))
                 .build();
     }
 
@@ -53,7 +53,7 @@ public class CommentController {
     ApiResponse<UpdateCommentResponse> updateComment(@PathVariable Long id, @RequestBody UpdateCommentRequest request) {
         return ApiResponse.<UpdateCommentResponse>builder()
                 .code(HttpStatus.OK.value())
-                .result(commentService.updateComment(id, request))
+                .result(reviewService.updateComment(id, request))
                 .build();
     }
 

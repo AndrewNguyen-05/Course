@@ -43,7 +43,7 @@ export const Profile = () => {
                         description: data.result.description || '',
                         courseLevel: data.result.courseLevel || '',
                     });
-                    setSelectedImage(data.result.avatar || "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-vector-260nw-1725655669.jpg");
+                    setSelectedImage(data.result.avatar || "https://bootdey.com/img/Content/avatar/avatar7.png");
                 }
             })
             .catch(error => {

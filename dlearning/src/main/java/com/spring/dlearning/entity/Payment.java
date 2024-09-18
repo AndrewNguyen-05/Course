@@ -1,9 +1,10 @@
 package com.spring.dlearning.entity;
 
-import com.spring.dlearning.common.PaymentStatus;
+import com.spring.dlearning.utils.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
 import java.math.BigDecimal;
 
 @Getter
@@ -20,14 +21,11 @@ public class Payment extends AbstractEntity<Long> {
     User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id", nullable = false)
     Course course;
 
-    @Column(name = "transaction_id")
-    String transactionId;
-
-    @JoinColumn(name = "payment_method_id")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_method_id", nullable = false)
     PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
@@ -36,8 +34,5 @@ public class Payment extends AbstractEntity<Long> {
 
     @Column(name = "price", nullable = false)
     BigDecimal price;
-
-    @Column(name = "points")
-    BigDecimal points;
 
 }

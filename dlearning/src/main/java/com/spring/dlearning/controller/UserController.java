@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 @RestController
@@ -61,7 +62,7 @@ public class UserController {
 
     @PostMapping("/send-otp")
     ApiResponse<Void> sendOtp(@RequestParam String email)
-            throws MessagingException {
+            throws MessagingException, UnsupportedEncodingException {
 
         userService.sendOtp(email);
 
@@ -73,7 +74,7 @@ public class UserController {
 
     @PostMapping("/send-otp-register")
     ApiResponse<Void> sendOtpRegister(@RequestParam String email)
-            throws MessagingException {
+            throws MessagingException, UnsupportedEncodingException {
         userService.sendOtpRegister(email);
         return ApiResponse.<Void>builder()
                 .code(HttpStatus.OK.value())

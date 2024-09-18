@@ -169,6 +169,7 @@ export const LoginPage = () => {
                             id="password"
                             placeholder="Password"
                             required
+                            autoComplete='password'
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                           />
