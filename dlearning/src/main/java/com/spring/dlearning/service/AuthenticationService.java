@@ -131,7 +131,7 @@ public class AuthenticationService {
                 .issuer("learning.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(
-                        Instant.now().plus(VALID_DURATION, ChronoUnit.HOURS).toEpochMilli()))
+                        Instant.now().plus(VALID_DURATION, ChronoUnit.DAYS).toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();
@@ -186,7 +186,7 @@ public class AuthenticationService {
                 .getJWTClaimsSet()
                 .getIssueTime()
                 .toInstant()
-                .plus(REFRESHABLE_DURATION, ChronoUnit.HOURS)
+                .plus(REFRESHABLE_DURATION, ChronoUnit.DAYS)
                 .toEpochMilli())
                 : signedJWT.getJWTClaimsSet().getExpirationTime();
 

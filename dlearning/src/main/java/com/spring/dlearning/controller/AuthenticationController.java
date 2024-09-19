@@ -41,7 +41,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/introspect")
-    public ApiResponse<?> introspect(@RequestBody IntrospectRequest request)
+    public ApiResponse<IntrospectResponse> introspect(@RequestBody IntrospectRequest request)
             throws ParseException, JOSEException {
 
         var result = authenticationService.introspect(request);
@@ -65,7 +65,6 @@ public class AuthenticationController {
     @PostMapping("/refresh")
     public ApiResponse<AuthenticationResponse> refreshToken(@RequestBody RefreshTokenRequest request)
             throws ParseException, JOSEException {
-        System.out.println(request.getToken());
         var result = authenticationService.refreshToken(request);
         return ApiResponse.<AuthenticationResponse>builder()
                 .code(HttpStatus.OK.value())
