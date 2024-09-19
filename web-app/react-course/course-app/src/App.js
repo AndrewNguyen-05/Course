@@ -24,12 +24,10 @@ import { RegisterTeacher } from './components/UserComponents/RegisterTeacher';
 import { Dashboard } from './components/admin/components/Dashboard';
 import { RegistrationList } from './components/admin/components/RegistrationList';
 import { pdfjs } from 'react-pdf';
-import { Favorites } from './components/common/Favorites';
 import FavoriteCourses from './components/UserComponents/Favorite';
 import { Oauth2LoginFacebook } from './components/authentication/Oauth2LoginFacebook';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
 
 
 function App() {

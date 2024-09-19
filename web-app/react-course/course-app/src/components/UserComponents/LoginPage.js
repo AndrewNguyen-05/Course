@@ -65,13 +65,8 @@ export const LoginPage = () => {
         return response.json();
       })
       .then(data => {
-        const expiryTime = new Date().getTime() + 86400 * 1000;  // Token có thời hạn 1 ngày
         const token = data.result.token;
-        console.log(token);
-
         localStorage.setItem('token', token);
-        localStorage.setItem('expiryTime', expiryTime);
-
         // Gọi API introspect để kiểm tra token, phân quyền
         fetch(`http://localhost:8080/api/v1/auth/introspect`, {
           method: 'POST',

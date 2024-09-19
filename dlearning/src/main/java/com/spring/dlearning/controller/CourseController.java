@@ -1,12 +1,15 @@
 package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.request.CourseRequest;
+import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.CourseResponse;
 import com.spring.dlearning.dto.response.PageResponse;
+import com.spring.dlearning.dto.response.UploadCourseResponse;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.service.CourseService;
 import com.turkraft.springfilter.boot.Filter;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -14,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -81,6 +86,18 @@ public class CourseController {
         return ApiResponse.<List<CourseResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .result(result)
+                .build();
+    }
+
+    @PostMapping("/upload-course")
+    public ApiResponse<UploadCourseResponse> uploadCourse(
+            @RequestPart("course") @Valid UploadCourseRequest request,
+            @RequestPart("file") MultipartFile courseFile) throws IOException {
+
+        return ApiResponse.<UploadCourseResponse>builder()
+                .code(HttpStatus.CREATED.value())
+                .message("Upload Course Successfully")
+                .result(courseService.uploadCourse(request, courseFile))
                 .build();
     }
 

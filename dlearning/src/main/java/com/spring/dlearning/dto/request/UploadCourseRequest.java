@@ -1,6 +1,6 @@
 package com.spring.dlearning.dto.request;
 
-import com.spring.dlearning.common.CourseLevel;
+import com.spring.dlearning.utils.CourseLevel;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

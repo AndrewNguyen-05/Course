@@ -15,7 +15,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +72,6 @@ public class CloudinaryService {
         log.info("Avatar updated successfully for user with email: {}", email);
     }
 
-
     @Transactional
     public void deleteAvatar() {
         String currentUserEmail = SecurityUtils.getCurrentUserLogin()
@@ -81,6 +84,22 @@ public class CloudinaryService {
         userRepository.save(user);
 
         log.info("Avatar deleted successfully for user with email: {}", currentUserEmail);
+    }
+
+    public Map<String, Object> uploadVideoChunked(MultipartFile file, String folderName) throws IOException {
+        File tempFile = convertMultipartFileToFile(file);
+        Map<String, Object> uploadResult = cloudinary.uploader().uploadLarge(tempFile, ObjectUtils.asMap(
+                "resource_type", "video",
+                "folder", folderName,
+                "chunk_size", 6000000
+        ));
+        tempFile.delete(); // Xóa file tạm sau khi tải lên
+        return uploadResult;
+    }
+    private File convertMultipartFileToFile(MultipartFile file) throws IOException {
+        File tempFile = File.createTempFile("upload", file.getOriginalFilename());
+        file.transferTo(tempFile);
+        return tempFile;
     }
 
 }

@@ -1,8 +1,10 @@
 package com.spring.dlearning.service;
 
 import com.spring.dlearning.dto.request.CourseRequest;
+import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.CourseResponse;
 import com.spring.dlearning.dto.response.PageResponse;
+import com.spring.dlearning.dto.response.UploadCourseResponse;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
@@ -22,6 +24,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -32,6 +37,7 @@ public class CourseService {
 
     UserRepository userRepository;
     CourseRepository courseRepository;
+    CloudinaryService cloudinaryService;
     CourseMapper courseMapper;
 
     public PageResponse<CourseResponse> getAllCourses(Specification<Course> spec, int page, int size) {
@@ -86,6 +92,26 @@ public class CourseService {
         List<Course> myCourse = courseRepository.findByAuthor(user);
 
         return myCourse.stream().map(courseMapper::toCourseResponse).toList();
+    }
+
+    public UploadCourseResponse uploadCourse(UploadCourseRequest request, MultipartFile file)
+            throws IOException {
+
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        String videoUrl = cloudinaryService.uploadVideoChunked(file, "courses").get("url").toString();
+
+        Course course = courseMapper.updateCourse(request);
+        course.setVideoUrl(videoUrl);
+        course.setAuthor(user);
+
+        courseRepository.save(course);
+
+        return courseMapper.toUploadCourseResponse(course);
     }
 
 }

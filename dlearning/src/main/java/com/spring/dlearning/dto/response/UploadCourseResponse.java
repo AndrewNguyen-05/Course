@@ -1,6 +1,6 @@
 package com.spring.dlearning.dto.response;
 
-import com.spring.dlearning.common.CourseLevel;
+import com.spring.dlearning.utils.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;
@@ -19,6 +19,5 @@ public class UploadCourseResponse {
     CourseLevel courseLevel;
     Integer duration;
     BigDecimal price;
-    String thumbnail;
     String videoUrl;
 }
