@@ -72,7 +72,7 @@ public class ReviewService {
             throw new AppException(ErrorCode.INVALID_RATING);
         }
 
-        if (bannedWordsService.containsBannedWords(commentRequest.getContent())) {
+        if ( commentRequest.getContent()!= null && bannedWordsService.containsBannedWords(commentRequest.getContent())) {
             throw new AppException(ErrorCode.INVALID_COMMENT_CONTENT);
         }
 
