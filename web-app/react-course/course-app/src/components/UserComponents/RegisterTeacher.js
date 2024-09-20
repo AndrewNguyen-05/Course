@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Navbar } from "../layouts/Navbar";
 import { Footer } from "../layouts/Footer";
 import { ToastContainer, toast } from 'react-toastify';
+import { TopBar } from "../layouts/TopBar";
 
 export const RegisterTeacher = () => {
 
@@ -103,6 +104,7 @@ export const RegisterTeacher = () => {
 
     return (
         <div>
+            <TopBar />
             <Navbar />
             <div className="container mt-5">
                 <div className="row justify-content-center">

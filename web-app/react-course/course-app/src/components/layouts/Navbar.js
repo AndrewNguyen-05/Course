@@ -4,7 +4,6 @@ import { UseAuth } from '../authentication/UseAuth';
 import { HandleLogout } from '../authentication/HandleLogout';
 import { useEffect } from 'react';
 import { ProfileDropdown } from '../common/ProfileDropdown';
-import { TopBar } from '../common/TopBar';
 import { NotificationDropdown } from '../common/NotificationDropdown';
 import { Favorites } from '../common/Favorites';
 import SockJS from 'sockjs-client';
@@ -132,7 +131,6 @@ export const Navbar = () => {
 
   return (
     <div>
-      <TopBar />
       <div className="container-fluid p-0">
         <nav className="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
           <Link to="/" className="navbar-brand ml-lg-3">

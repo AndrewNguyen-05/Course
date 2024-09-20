@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaUpload, FaBook, FaTags, FaDollarSign, FaFileAlt, FaClock } from 'react-icons/fa'; // Import thêm FaClock icon
 import { Footer } from '../layouts/Footer';
 import { Navbar } from '../layouts/Navbar';
+import { TopBar } from '../layouts/TopBar';
 
 export const UploadCourse = () => {
     const [courseTitle, setCourseTitle] = useState('');
@@ -18,6 +19,7 @@ export const UploadCourse = () => {
 
     return (
         <div className="upload-course-container">
+            <TopBar/>
             <Navbar />
             <div className="container upload-container my-5">
                 <div className="row justify-content-center">

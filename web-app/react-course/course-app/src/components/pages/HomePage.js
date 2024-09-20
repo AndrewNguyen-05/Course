@@ -15,6 +15,10 @@ import instructor4Image from './../../img/nam.jpg';
 import testimonial1Image from './../../img/testimonial-1.jpg';
 import testimonial2Image from './../../img/testimonial-2.jpg';
 import { ToastContainer } from 'react-toastify';
+import { TopBar } from '../layouts/TopBar';
+import { Header } from '../layouts/Header';
+import { Footer } from '../layouts/Footer';
+import { Banner } from '../layouts/Banner';
 
 
 export const HomePage = () => {
@@ -124,25 +128,12 @@ export const HomePage = () => {
 
     return (
         <div>
+            <TopBar/>
+            <Header/>
+            <Banner/>
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     <div className="row">
-
-                        {/* <div className="col-lg-5 mb-5 mb-lg-0" style={{ minHeight: '500px' }}>
-                            <div className="position-relative h-100">
-                                <video
-                                    className="position-absolute w-100 h-100"
-                                    style={{ objectFit: 'cover' }}
-                                    src={videoSource}
-                                    autoPlay
-                                    loop
-                                    controls
-                                    playsInline
-                                >
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
-                        </div> */}
 
                         <div className="col-lg-5 mb-5 mb-lg-0" style={{ minHeight: '500px' }}>
                             <div className="position-relative h-100">
@@ -483,7 +474,7 @@ export const HomePage = () => {
                 autoClose={3000}
                 className="custom-toast-container"
             />
-
+            <Footer/>
         </div>
     );
 };

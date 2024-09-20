@@ -3,6 +3,7 @@ import { FaEye, FaEyeSlash, FaLock, FaKey, FaUser, FaShieldAlt } from 'react-ico
 import { Navbar } from '../layouts/Navbar';
 import { Footer } from '../layouts/Footer';
 import { ToastContainer, toast } from 'react-toastify';
+import { TopBar } from '../layouts/TopBar';
 
 export const ChangePassword = () => {
 
@@ -53,6 +54,7 @@ export const ChangePassword = () => {
 
   return (
     <div>
+      <TopBar/>
       <Navbar />
       <div className="container py-5">
         <div className="row justify-content-center">

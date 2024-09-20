@@ -3,9 +3,10 @@ import { Footer } from "../layouts/Footer";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Navbar } from "../layouts/Navbar";
+import { TopBar } from "../layouts/TopBar";
 
 export const Profile = () => {
-    
+
     const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
     const [isRemovingAvatar, setIsRemovingAvatar] = useState(false);
 
@@ -132,7 +133,7 @@ export const Profile = () => {
         });
     };
 
-    
+
     const handleUpdateProfile = () => {
         const filteredData = {};
         Object.keys(profileData).forEach(key => {
@@ -164,7 +165,8 @@ export const Profile = () => {
 
     return (
         <div>
-          <Navbar/>
+            <TopBar />
+            <Navbar />
             {/* FORM INFO AND UPDATE PROFILE */}
             <div className="container">
                 <div className="row gutters">

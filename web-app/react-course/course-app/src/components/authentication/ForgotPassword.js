@@ -3,6 +3,7 @@ import { FaEnvelope, FaKey, FaCheckCircle } from 'react-icons/fa';
 import { Navbar } from '../layouts/Navbar';
 import { Footer } from '../layouts/Footer';
 import { useNavigate } from 'react-router-dom';
+import { TopBar } from '../layouts/TopBar';
 
 export const ForgotPassword = () => {
     const [email, setEmail] = useState('');
@@ -110,6 +111,7 @@ export const ForgotPassword = () => {
 
     return (
         <div className="d-flex flex-column min-vh-100">
+            <TopBar/>
             <Navbar />
             <div className="flex-grow-1 d-flex justify-content-center align-items-center" style={{ paddingTop: '70px', paddingBottom: '50px' }}>
                 <div className="card shadow-lg p-4 w-100" style={{ maxWidth: '500px', border: 'none', borderRadius: '15px' }}>

@@ -8,10 +8,6 @@ import { Favorites } from '../common/Favorites.js';
 import { Message } from '../common/Message.js';
 import { Card } from '../common/Cart.js';
 import { NavigationMenu } from '../common/NavigationMenu.js';
-import { TopBar } from '../common/TopBar.js';
-import SockJS from 'sockjs-client';
-import { Client } from '@stomp/stompjs';
-
 
 export const Header = () => {
 
@@ -30,45 +26,7 @@ export const Header = () => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
 
-    useEffect(() => {
-        const socket = new SockJS("http://localhost:8080/ws");
-        const stompClient = new Client({
-            webSocketFactory: () => socket,
-            beforeConnect: () => {
-                stompClient.connectHeaders = {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                };
-            },
-            onConnect: () => {
-                console.log("Connected to WebSocket");
-                stompClient.subscribe('/user/queue/notifications', (message) => {
-                    console.log("Received notification: ", message); 
-                    const notification = JSON.parse(message.body);
-                    setNotifications((prevNotifications) => [notification, ...prevNotifications]);
-                    setUnreadCount((prevCount) => prevCount + 1);
-                });
-                console.log("Subscribed to /user/queue/notifications");
-            },
-            onStompError: (frame) => {
-                console.error("STOMP error:", frame);
-            },
-            onWebSocketError: (event) => {
-                console.error("WebSocket error:", event);
-            },
-            onDisconnect: () => {
-                console.log("Disconnected from WebSocket");
-            },
-        });
-    
-        stompClient.activate();
-    
-        return () => {
-            stompClient.deactivate();
-        };
-    }, []);
-    
-    
-
+   
     useEffect(() => {
         if (!role && !token) {
             setLoading(false);
@@ -166,8 +124,6 @@ export const Header = () => {
     const isActive = (path) => location.pathname === path;
 
     return (
-        <div>
-            <TopBar />
             <div className="container-fluid p-0">
                 <nav className="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
                     <Link to="/home" className="navbar-brand ml-lg-3">
@@ -201,38 +157,5 @@ export const Header = () => {
                     </div>
                 </nav>
             </div>
-            {/* Navbar End */}
-
-            {/* Header Start */}
-            <div className="jumbotron jumbotron-fluid position-relative overlay-bottom" style={{ marginBottom: '90px' }}>
-                <div className="container text-center my-5 py-5">
-                    <h1 className="text-white mt-4 mb-4">Learn From Home</h1>
-                    <h1 className="text-white display-1 mb-5">Education Courses</h1>
-                    <div className="mx-auto mb-5" style={{ width: '100%', maxWidth: '600px' }}>
-                        <div className="input-group">
-                            <div className="input-group-prepend">
-                                <button className="btn btn-outline-light bg-white text-body px-4 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Courses
-                                </button>
-                                <div className="dropdown-menu">
-                                    <a className="dropdown-item" href="#">Courses 1</a>
-                                    <a className="dropdown-item" href="#">Courses 2</a>
-                                    <a className="dropdown-item" href="#">Courses 3</a>
-                                </div>
-                            </div>
-                            <input type="text" className="form-control border-light" style={{ padding: '30px 25px' }} placeholder="Keyword" />
-                            <div className="input-group-append">
-                                <button style={{ backgroundColor: '#F14D5D', borderColor: '#F14D5D', color: '#FFFFFF' }}
-                                    className="btn btn-secondary px-4 px-lg-5">
-                                    Search
-
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {/* Header End */}
-        </div>
     );
 };

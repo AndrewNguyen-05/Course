@@ -4,6 +4,7 @@ import { Footer } from '../layouts/Footer';
 import { Navbar } from '../layouts/Navbar';
 import { OAuthConfig } from '../config/OAuthConfig';
 import { toast, ToastContainer } from 'react-toastify';
+import { TopBar } from '../layouts/TopBar';
 
 export const LoginPage = () => {
 
@@ -125,6 +126,7 @@ export const LoginPage = () => {
 
   return (
     <div>
+      <TopBar/>
       <Navbar />
       <section className="py-3 py-md-5 py-xl-8">
         <div className="container">

@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { UseAuth } from "../authentication/UseAuth";
 import { HandleLogout } from "../authentication/HandleLogout";
 import { useLocation, Link } from "react-router-dom";
-import { TopBar } from "./TopBar";
 import { NavigationMenu } from "./NavigationMenu";
 import { NotificationDropdown } from "./NotificationDropdown";
 import { Card } from "./Cart";
 import { Message } from "./Message";
 import { Favorites } from "./Favorites";
 import { ProfileDropdown } from "./ProfileDropdown";
+import { TopBar } from "../layouts/TopBar";
 
 export const Search = ({ onSearch }) => {
     const [loggedOut, setLoggedOut] = useState(false);

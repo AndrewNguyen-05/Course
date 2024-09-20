@@ -39,7 +39,6 @@ export const MyCourses = () => {
             <Sidebar />
             <div className="content-wrapper w-100">
                 <Navbar />
-
                 <div className="container-fluid my-courses-container my-5">
                     <div className="row justify-content-center">
                         {courses.map(course => (

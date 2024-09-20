@@ -1,8 +1,15 @@
 import React from 'react';
+import { TopBar } from '../layouts/TopBar';
+import { Header } from '../layouts/Header';
+import { Footer } from '../layouts/Footer';
+import { Banner } from '../layouts/Banner';
 
 export const About = () => {
   return (
     <div>
+      <TopBar/>
+      <Header/>
+      <Banner/>
       <div className="container-fluid py-5">
         <div className="container py-5">
           <div className="row">
@@ -95,7 +102,7 @@ export const About = () => {
           </div>
         </div>
       </div>
-      {/* Feature End */}
+      <Footer/>
     </div>
   );
 };
