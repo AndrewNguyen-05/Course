@@ -23,7 +23,7 @@ public class Payment extends AbstractEntity<Long> {
     String transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_method_id", nullable = false)
+    @JoinColumn(name = "payment_method_id")
     PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)

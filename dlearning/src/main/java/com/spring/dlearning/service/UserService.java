@@ -52,8 +52,6 @@ public class UserService {
     public UserResponse createUser(UserCreationRequest request, String otp) throws MessagingException {
         if(userRepository.findByEmail(request.getEmail()).isPresent())
             throw new AppException(ErrorCode.USER_EXISTED);
-
-
         // Xác thực otp
         String storedOtp = otpService.getOtp(request.getEmail());
         if (storedOtp == null || !storedOtp.equals(otp)) {
@@ -61,6 +59,7 @@ public class UserService {
         }
 
         User user = userMapper.toUser(request);
+
         Role role = roleRepository.findByName(PredefinedRole.USER_ROLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 

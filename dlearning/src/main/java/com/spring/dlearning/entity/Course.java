@@ -1,6 +1,7 @@
 package com.spring.dlearning.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.dlearning.utils.CourseLevel;
@@ -72,6 +73,10 @@ public class Course  {
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Favorite> favorites;
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    Set<Lesson> lessons;
 
     @Column(name = "created_by")
     @CreatedBy

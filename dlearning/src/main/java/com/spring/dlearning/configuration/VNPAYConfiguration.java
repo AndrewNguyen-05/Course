@@ -1,5 +1,6 @@
 package com.spring.dlearning.configuration;
 
+import com.spring.dlearning.utils.SecurityUtils;
 import com.spring.dlearning.utils.VNPayUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,7 +40,7 @@ public class VNPAYConfiguration {
 
     @Value("${payment.vnPay.orderType}")
     private String orderType;
-    
+
     public Map<String, String> getVNPayConfig() {
         Map<String, String> vnpParamsMap = new HashMap<>();
         vnpParamsMap.put("vnp_Version", this.vnp_Version);
@@ -47,7 +48,6 @@ public class VNPAYConfiguration {
         vnpParamsMap.put("vnp_TmnCode", this.vnp_TmnCode);
         vnpParamsMap.put("vnp_CurrCode", "VND");
         vnpParamsMap.put("vnp_TxnRef", VNPayUtil.getRandomNumber(8));
-        vnpParamsMap.put("vnp_OrderInfo", "Thanh toan don hang:" + VNPayUtil.getRandomNumber(8));
         vnpParamsMap.put("vnp_OrderType", this.orderType);
         vnpParamsMap.put("vnp_Locale", "vn");
         vnpParamsMap.put("vnp_ReturnUrl", this.vnp_ReturnUrl);

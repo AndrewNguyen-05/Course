@@ -27,7 +27,6 @@ export const HomePage = () => {
 
     const navigate = useNavigate();
 
-    const [selectedCourse, setSelectedCourse] = useState('');
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);  // State để hiển thị loading
     const [error, setError] = useState(null);
@@ -35,10 +34,6 @@ export const HomePage = () => {
     const [pageSize] = useState(4);
     const [hasMore, setHasMore] = useState(true); // Trạng thái có còn dữ liệu không
 
-
-    const handleChange = (event) => {
-        setSelectedCourse(event.target.value);
-    };
 
     useEffect(() => {
         const fetchCourses = async () => {

@@ -4,6 +4,7 @@ import { Navbar } from '../layouts/Navbar';
 import { Spinner } from 'react-bootstrap'; 
 import { Footer } from '../layouts/Footer';
 import Pagination from '../common/Pagination'; // Import component Pagination
+import { TopBar } from '../layouts/TopBar';
 
 const FavoriteCourses = () => {
     const token = localStorage.getItem('token');
@@ -62,6 +63,7 @@ const FavoriteCourses = () => {
 
     return (
         <div>
+            <TopBar/>
             <Navbar />
             <div className="container">
                 <h2>Your Favorite Courses</h2><br />

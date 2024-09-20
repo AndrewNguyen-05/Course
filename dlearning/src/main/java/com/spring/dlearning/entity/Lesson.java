@@ -1,10 +1,12 @@
 package com.spring.dlearning.entity;
 
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 @Entity
 @Table(name = "lessons")
@@ -16,23 +18,11 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Lesson extends AbstractEntity<Long> {
 
-    @Column(name = "lesson_name")
-    String lessonName;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "chapter_id", nullable = false)
-    Chapter chapter;
-
-    @Column(name = "content_type")
-    String contentType; // "video", "document", etc.
-
-    @Column(name = "content_url")
+    String title;
+    String content;
     String videoUrl;
-
-    @Column(name = "description", columnDefinition = "MEDIUMTEXT")
-    String description; // Mô tả nội dung nếu cần
-
-    @OneToMany(mappedBy = "lesson", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    List<Review> reviews;
-
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaUpload, FaBook, FaTags, FaDollarSign, FaFileAlt, FaClock } from 'react-icons/fa'; // Import thêm FaClock icon
+import { FaUpload, FaBook, FaTags, FaDollarSign, FaFileAlt, FaClock, FaImage } from 'react-icons/fa';
 import { Footer } from '../layouts/Footer';
 import { Navbar } from '../layouts/Navbar';
 import { TopBar } from '../layouts/TopBar';
@@ -10,16 +10,17 @@ export const UploadCourse = () => {
     const [level, setLevel] = useState('');
     const [duration, setDuration] = useState('');
     const [coursePrice, setCoursePrice] = useState('');
+    const [courseThumbnail, setCourseThumbnail] = useState(null);
     const [courseFile, setCourseFile] = useState(null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log({ courseTitle, courseDescription, level, duration, coursePrice, courseFile });
+        console.log({ courseTitle, courseDescription, level, duration, coursePrice, courseThumbnail, courseFile });
     };
 
     return (
         <div className="upload-course-container">
-            <TopBar/>
+            <TopBar />
             <Navbar />
             <div className="container upload-container my-5">
                 <div className="row justify-content-center">
@@ -103,6 +104,19 @@ export const UploadCourse = () => {
                                             min="0"
                                         />
                                     </div>
+
+                                    <div className="mb-4">
+                                        <label htmlFor="courseThumbnail" className="form-label fs-5 text-dark fw-semibold">
+                                            <FaImage className="me-2 text-primary" /> Upload Course Thumbnail
+                                        </label>
+                                        <input
+                                            className="form-control rounded-pill shadow-sm"
+                                            type="file"
+                                            id="courseThumbnail"
+                                            onChange={(e) => setCourseThumbnail(e.target.files[0])}
+                                        />
+                                    </div>
+
                                     <div className="mb-4">
                                         <label htmlFor="courseFile" className="form-label fs-5 text-dark fw-semibold">
                                             <FaFileAlt className="me-2 text-primary" /> Upload Course File
