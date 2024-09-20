@@ -40,8 +40,19 @@ public class BannedWordsService {
     }
 
     public boolean containsBannedWords(String content) {
+
         List<AhoCorasickDoubleArrayTrie.Hit<String>> hits = ahoCorasickTrie.parseText(content.toLowerCase());
-        return !hits.isEmpty();
+
+        for (AhoCorasickDoubleArrayTrie.Hit<String> hit : hits) {
+            String word = hit.value; // Từ bị phát hiện
+            String regex = "\\b" + word + "\\b";  // Sử dụng ranh giới từ với regex
+
+            if (content.matches(".*" + regex + ".*")) {
+                return true;
+            }
+        }
+
+        return false;  // Không tìm thấy từ cấm
     }
 }
   /*@PostConstruct trong trường hợp này giúp bạn chuẩn bị dữ liệu ngay khi ứng dụng khởi động và tránh
