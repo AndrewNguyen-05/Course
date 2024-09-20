@@ -7,6 +7,8 @@ import { ProfileDropdown } from '../common/ProfileDropdown';
 import { TopBar } from '../common/TopBar';
 import { NotificationDropdown } from '../common/NotificationDropdown';
 import { Favorites } from '../common/Favorites';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 
 
 export const Navbar = () => {
@@ -23,6 +25,39 @@ export const Navbar = () => {
   const [notifications, setNotifications] = useState([]); // Giá trị mặc định là một mảng rỗng
 
   const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
+
+  useEffect(() => {
+    const socket = new SockJS(`http://localhost:8080/ws`);
+    
+    const stompClient = new Client({
+      webSocketFactory: () => socket,
+      onConnect: () => {
+        console.log("Connected to WebSocket");
+  
+        stompClient.subscribe('/user/queue/notifications', (message) => {
+          const notification = JSON.parse(message.body);
+          console.log("Received notification: ", notification); 
+          setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+          setUnreadCount((prevCount) => prevCount + 1);
+        });
+      },
+      onStompError: (frame) => {
+        console.error("STOMP error:", frame);
+      },
+      onWebSocketError: (event) => {
+        console.error("WebSocket error:", event);
+      },
+      onDisconnect: () => {
+        console.log("Disconnected from WebSocket");
+      }
+    });
+  
+    stompClient.activate();
+  
+    return () => {
+      stompClient.deactivate();
+    };
+  }, []);
 
   useEffect(() => {
     if (!token || isTokenValid) {

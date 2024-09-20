@@ -92,7 +92,6 @@ public class RegisterTeacherService {
         throw new AppException(ErrorCode.REGISTER_TEACHER_INVALID);
     }
 
-
     @Transactional
     @PreAuthorize("hasAuthority('ADMIN') and isAuthenticated()")
     public UserRegisterTeacherResponse saveTeacher(Long id){

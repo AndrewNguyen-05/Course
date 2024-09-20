@@ -9,6 +9,8 @@ import { Message } from '../common/Message.js';
 import { Card } from '../common/Cart.js';
 import { NavigationMenu } from '../common/NavigationMenu.js';
 import { TopBar } from '../common/TopBar.js';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 
 
 export const Header = () => {
@@ -28,40 +30,45 @@ export const Header = () => {
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
 
-    // useEffect(() => {
-    //     const socket = new SockJS(`http://localhost:8080/ws`);
-        
-    //     const stompClient = new Client({
-    //       webSocketFactory: () => socket,
-    //       onConnect: () => {
-    //         console.log("Connected to WebSocket");
-      
-    //         stompClient.subscribe('/user/queue/notifications', (message) => {
-    //           const notification = JSON.parse(message.body);
-    //           console.log("Received notification: ", notification); 
-    //           setNotifications((prevNotifications) => [notification, ...prevNotifications]);
-    //           setUnreadCount((prevCount) => prevCount + 1);
-    //         });
-    //       },
-    //       onStompError: (frame) => {
-    //         console.error("STOMP error:", frame);
-    //       },
-    //       onWebSocketError: (event) => {
-    //         console.error("WebSocket error:", event);
-    //       },
-    //       onDisconnect: () => {
-    //         console.log("Disconnected from WebSocket");
-    //       }
-    //     });
-      
-    //     stompClient.activate();
-      
-    //     return () => {
-    //       stompClient.deactivate();
-    //     };
-    //   }, []);
-      
-      
+    useEffect(() => {
+        const socket = new SockJS("http://localhost:8080/ws");
+        const stompClient = new Client({
+            webSocketFactory: () => socket,
+            beforeConnect: () => {
+                stompClient.connectHeaders = {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                };
+            },
+            onConnect: () => {
+                console.log("Connected to WebSocket");
+                stompClient.subscribe('/user/queue/notifications', (message) => {
+                    console.log("Received notification: ", message); 
+                    const notification = JSON.parse(message.body);
+                    setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+                    setUnreadCount((prevCount) => prevCount + 1);
+                });
+                console.log("Subscribed to /user/queue/notifications");
+            },
+            onStompError: (frame) => {
+                console.error("STOMP error:", frame);
+            },
+            onWebSocketError: (event) => {
+                console.error("WebSocket error:", event);
+            },
+            onDisconnect: () => {
+                console.log("Disconnected from WebSocket");
+            },
+        });
+    
+        stompClient.activate();
+    
+        return () => {
+            stompClient.deactivate();
+        };
+    }, []);
+    
+    
+
     useEffect(() => {
         if (!role && !token) {
             setLoading(false);

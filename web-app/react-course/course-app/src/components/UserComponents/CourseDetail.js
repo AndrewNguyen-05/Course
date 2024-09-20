@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FaClock, FaCommentDots, FaHeart, FaReply, FaEdit, FaTrash, FaStar } from 'react-icons/fa';
+import { FaCommentDots, FaReply, FaTrash, FaStar } from 'react-icons/fa';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -73,7 +73,7 @@ export const CourseDetail = () => {
 
     const handleRatingChange = (rating) => {
         if (newRating === rating) {
-            setNewRating(rating -1);
+            setNewRating(rating - 1);
         } else {
             setNewRating(rating);
         }
@@ -87,11 +87,11 @@ export const CourseDetail = () => {
 
         const commentData = {
             content: newComment.trim(),
-            rating: newRating, 
+            rating: newRating,
             parentCommentId: null,
             courseId: id
         };
-    
+
 
         fetch(`http://localhost:8080/api/v1/add-comment?id=${id}`, {
             method: 'POST',
@@ -263,6 +263,37 @@ export const CourseDetail = () => {
             });
     };
 
+    const handleEnrollNow = () => {
+        const paymentData = {
+            amount: course.price,
+            bankCode: "NCB",
+            courseId: id
+        }
+        
+        const query = new URLSearchParams(paymentData).toString();  // Chuyển object thành query string
+        
+        fetch(`http://localhost:8080/api/v1/payment/vn-pay?${query}`, {
+            method: 'GET',  // Sử dụng GET khi gửi query parameters
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })        
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data)
+            if (data.result && data.result.paymentUrl) {
+                window.location.href = data.result.paymentUrl;
+            } else {
+                toast.error("Failed to create payment.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            toast.error("Failed to create payment.");
+        });
+    }
+
+    console.log(course.price);
 
     return (
         <div className="container-fluid py-5">
@@ -290,8 +321,8 @@ export const CourseDetail = () => {
                                     onChange={(e) => setNewComment(e.target.value)}
                                 />
 
-                                 {/* Rating Stars */}
-                                 {renderStars(newRating, handleRatingChange)}
+                                {/* Rating Stars */}
+                                {renderStars(newRating, handleRatingChange)}
 
 
                                 <button className="btn btn-primary px-4 mt-3" onClick={handleAddComment}>
@@ -315,7 +346,7 @@ export const CourseDetail = () => {
                                             </div>
                                             <div>
                                                 <button className="btn btn-sm btn-outline-info mr-2" onClick={() => setEditingCommentId(comment.id)}>
-                                                <i class="fa-solid fa-comment-dots"></i>
+                                                    <i class="fa-solid fa-comment-dots"></i>
                                                 </button>
                                                 <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(comment.id)}>
                                                     <FaTrash />
@@ -323,9 +354,9 @@ export const CourseDetail = () => {
                                             </div>
                                         </div>
 
-                                         {/* Display Rating */}
-                                         <div className="mt-2">
-                                            {renderStars(comment.rating || 0, () => {})}
+                                        {/* Display Rating */}
+                                        <div className="mt-2">
+                                            {renderStars(comment.rating || 0, () => { })}
                                         </div>
 
                                         {/* Comment Content */}
@@ -364,7 +395,7 @@ export const CourseDetail = () => {
 
                                                             <div>
                                                                 <button className="btn btn-sm btn-outline-info mr-2" onClick={() => setEditingCommentId(reply.id)}>
-                                                                <i class="fa-solid fa-comment-dots"></i>
+                                                                    <i class="fa-solid fa-comment-dots"></i>
                                                                 </button>
 
                                                                 <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(reply.id)}>
@@ -485,33 +516,35 @@ export const CourseDetail = () => {
 
                             {/* Enroll Now Button */}
                             <div className="py-3 px-4">
-                                <a className="btn enroll-now-btn btn-block py-3 px-5" href="">Enroll Now</a>
+                                <button
+                                    className="btn enroll-now-btn btn-block py-3 px-5"
+                                    onClick={handleEnrollNow}  // Thêm sự kiện onClick để gọi hàm handleEnrollNow
+                                >
+                                    Enroll Now
+                                </button>
                             </div>
+
                         </div>
 
                         <div className="mb-5">
                             <h2 className="mb-3">Categories</h2>
                             <ul className="list-group list-group-flush">
+
                                 <li className="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <a href="" className="text-decoration-none h6 m-0">Web Design</a>
                                     <span className="badge badge-primary badge-pill">150</span>
                                 </li>
+
                                 <li className="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <a href="" className="text-decoration-none h6 m-0">Web Development</a>
                                     <span className="badge badge-primary badge-pill">131</span>
                                 </li>
+
                                 <li className="list-group-item d-flex justify-content-between align-items-center px-0">
                                     <a href="" className="text-decoration-none h6 m-0">Online Marketing</a>
                                     <span className="badge badge-primary badge-pill">78</span>
                                 </li>
-                                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <a href="" className="text-decoration-none h6 m-0">Keyword Research</a>
-                                    <span className="badge badge-primary badge-pill">56</span>
-                                </li>
-                                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <a href="" className="text-decoration-none h6 m-0">Email Marketing</a>
-                                    <span className="badge badge-primary badge-pill">98</span>
-                                </li>
+
                             </ul>
                         </div>
 
