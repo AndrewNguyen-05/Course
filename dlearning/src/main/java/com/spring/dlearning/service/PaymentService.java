@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpServletRequest;
-
-
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -17,6 +15,7 @@ import java.util.*;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PaymentService {
+
     VNPAYConfiguration vnPayConfig;
 
     public VNPAYResponse createVnPayPayment(HttpServletRequest request) {
@@ -41,4 +40,5 @@ public class PaymentService {
                 .message("success")
                 .paymentUrl(paymentUrl).build();
     }
+
 }

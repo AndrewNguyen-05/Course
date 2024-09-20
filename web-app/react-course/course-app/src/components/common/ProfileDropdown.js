@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 export const ProfileDropdown = ({ avatar, isTokenValid, role, handleLogout }) => {
-    
+
     return (
         <div className="nav-item dropdown mx-2">
             <button className="btn btn-primary rounded-circle d-flex align-items-center justify-content-center p-0" style={{ width: '50px', height: '50px', overflow: 'hidden' }} data-bs-toggle="dropdown" aria-expanded="false">
@@ -22,13 +22,24 @@ export const ProfileDropdown = ({ avatar, isTokenValid, role, handleLogout }) =>
                         {role === 'TEACHER' && (
                             <li><Link to="/manager-courses" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-book me-2"></i>My Course</Link></li>
                         )}
+
                         {role === 'USER' && (
                             <li><Link to="/register-teacher" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-user-graduate me-2"></i>Teach Now</Link></li>
                         )}
+
                         {role === 'ADMIN' && (
                             <li><Link to="/admin" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-user-tie me-2"></i>Admin</Link></li>
                         )}
-                        <li><Link to="/deposit" className="dropdown-item d-flex align-items-center"><i className="fa-brands fa-bitcoin me-2"></i>Deposit</Link></li>
+
+                        {(role === 'USER' || role === 'TEACHER') && (
+                            <li>
+                                <Link to="/deposit" className="dropdown-item d-flex align-items-center">
+                                    <i className="fa-brands fa-bitcoin me-2"></i>
+                                    Deposit
+                                </Link>
+                            </li>
+                        )}
+
                         <li><Link to="/change-password" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-key me-2"></i>Password</Link></li>
                         <li>
                             <Link to="/logout" className="dropdown-item d-flex align-items-center" id="logout" onClick={handleLogout}>

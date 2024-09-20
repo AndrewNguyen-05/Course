@@ -22,13 +22,13 @@ public class EnrollmentController {
 
     EnrollmentService enrollmentService;
 
-    @PostMapping("/buy-course")
-    ApiResponse<BuyCourseResponse> buyCourse(@RequestBody BuyCourseRequest request) {
-        return ApiResponse.<BuyCourseResponse>builder()
-                .code(HttpStatus.OK.value())
-                .result(enrollmentService.buyCourse(request))
-                .build();
-    }
+//    @PostMapping("/buy-course")
+//    ApiResponse<BuyCourseResponse> buyCourse(@RequestBody BuyCourseRequest request) {
+//        return ApiResponse.<BuyCourseResponse>builder()
+//                .code(HttpStatus.OK.value())
+//                .result(enrollmentService.buyCourse(request))
+//                .build();
+//    }
 
     @GetMapping("/users/me/courses")
     ApiResponse<List<BuyCourseResponse>> getCourseByCurrentUser() {

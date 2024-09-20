@@ -1,7 +1,5 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Header } from './components/layouts/Header';
-import { Footer } from './components/layouts/Footer';
 import { LoginPage } from './components/UserComponents/LoginPage';
 import { HomePage } from './components/pages/HomePage';
 import { About } from './components/UserComponents/About';
@@ -25,7 +23,7 @@ import { Dashboard } from './components/admin/components/Dashboard';
 import { RegistrationList } from './components/admin/components/RegistrationList';
 import { pdfjs } from 'react-pdf';
 import FavoriteCourses from './components/UserComponents/Favorite';
-import { Oauth2LoginFacebook } from './components/authentication/Oauth2LoginFacebook';
+import DepositPage from './components/UserComponents/DepositPage';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -35,22 +33,8 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-
-          <Route path="/" element={
-            <>
-              <Header />
-              <HomePage />
-              <Footer />
-            </>
-          } />
-
-          <Route path="/home" element={
-            <>
-              <Header />
-              <HomePage />
-              <Footer />
-            </>
-          } />
+          <Route path="/" element={<HomePage/> } />
+          <Route path="/home" element={ <HomePage/> }/>
 
           <Route path="/login" element={
             <LayoutWithoutHeaderFooter>
@@ -61,12 +45,6 @@ function App() {
           <Route path="/authenticate" element={
             <LayoutWithoutHeaderFooter>
               <ProcessLoginOAuth2 />
-            </LayoutWithoutHeaderFooter>
-          } />
-
-          <Route path="/authenticate-fb" element={
-            <LayoutWithoutHeaderFooter>
-              <Oauth2LoginFacebook />
             </LayoutWithoutHeaderFooter>
           } />
 
@@ -105,42 +83,19 @@ function App() {
           } />
 
           <Route path='/profile' element={
-            <>
               <PrivateRoute>
                 <LayoutWithoutHeaderFooter>
                   <Profile />
                 </LayoutWithoutHeaderFooter>
               </PrivateRoute>
-            </>
           } />
 
           <Route path='/favorite' element={<FavoriteCourses />} />
-
-          <Route path='/about' element={
-            <>
-              <Header />
-              <About />
-              <Footer />
-            </>
-          } />
-
+          <Route path='/about' element={<About />} />
           <Route path='/courses' element={<Courses />} />
-
-          <Route path='/course-detail/:id' element={
-            <>
-              <Header />
-              <CourseDetail />
-              <Footer />
-            </>
-          } />
-
-          <Route path='/contact' element={
-            <>
-              <Header />
-              <Contact />
-              <Footer />
-            </>
-          } />
+          <Route path='/course-detail/:id' element={<CourseDetail />} />
+          <Route path='/contact' element={<Contact />} />
+          <Route path='/deposit' element={<DepositPage />} />
 
           <Route path="/teacher-add-courses" element={
             <Authorization requiredRole={["TEACHER"]}>
@@ -192,7 +147,6 @@ function App() {
 
         </Routes>
       </div>
-
     </Router>
   );
 }

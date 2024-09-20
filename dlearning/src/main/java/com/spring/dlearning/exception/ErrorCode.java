@@ -43,7 +43,8 @@ public enum ErrorCode {
     COURSES_LEVEL_INVALID(400, "Course level is mandatory", HttpStatus.BAD_REQUEST),
     DURATION_INVALID(400, "Duration must be greater than or equal to 0", HttpStatus.BAD_REQUEST),
     PRICE_INVALID(400, "Price must be greater than or equal to 0", HttpStatus.BAD_REQUEST),
-    VIDEO_URL_INVALID(400, "Video URL is mandatory", HttpStatus.BAD_REQUEST)
+    VIDEO_URL_INVALID(400, "Video URL is mandatory", HttpStatus.BAD_REQUEST),
+    PAYMENT_NOT_FOUND(404, "Payment not found", HttpStatus.NOT_FOUND),
     ;
 
     private int code;

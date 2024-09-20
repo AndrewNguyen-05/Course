@@ -2,16 +2,21 @@ package com.spring.dlearning.service;
 
 import com.spring.dlearning.dto.request.BuyCourseRequest;
 import com.spring.dlearning.dto.response.BuyCourseResponse;
+import com.spring.dlearning.dto.response.VNPAYResponse;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.Enrollment;
+import com.spring.dlearning.entity.Payment;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.EnrollmentMapper;
 import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.EnrollmentRepository;
+import com.spring.dlearning.repository.PaymentRepository;
 import com.spring.dlearning.repository.UserRepository;
+import com.spring.dlearning.utils.PaymentStatus;
 import com.spring.dlearning.utils.SecurityUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,6 +37,8 @@ public class EnrollmentService {
     CourseRepository courseRepository;
     UserRepository userRepository;
     EnrollmentMapper enrollmentMapper;
+    PaymentService paymentService;
+    PaymentRepository paymentRepository;
 
     @PreAuthorize("isAuthenticated()")
     public List<BuyCourseResponse> getCourseByUserCurrent(){
@@ -48,7 +55,7 @@ public class EnrollmentService {
 
     @Transactional
     @PreAuthorize("isAuthenticated()")
-    public BuyCourseResponse buyCourse(BuyCourseRequest request){
+    public VNPAYResponse buyCourse(HttpServletRequest httpRequest, BuyCourseRequest request) {
 
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -59,17 +66,19 @@ public class EnrollmentService {
         Course course = courseRepository.findById(request.getCourseId())
                 .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
 
-        if(enrollmentRepository.existsByUserAndCourse(user, course))
+        if (enrollmentRepository.existsByUserAndCourse(user, course)) {
             throw new AppException(ErrorCode.COURSE_ALREADY_PURCHASED);
+        }
 
-        Enrollment enrollment = Enrollment.builder()
+        Payment payment = Payment.builder()
                 .user(user)
-                .course(course)
+                .price(course.getPrice())
+                .status(PaymentStatus.PENDING)
                 .build();
+        paymentRepository.save(payment);
 
-        enrollmentRepository.save(enrollment);
-
-        return enrollmentMapper.toBuyCourseResponse(enrollment);
+        return paymentService.createVnPayPayment(httpRequest);
     }
+
 
 }

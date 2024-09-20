@@ -3,6 +3,10 @@ import { useParams } from "react-router-dom";
 import { FaCommentDots, FaReply, FaTrash, FaStar } from 'react-icons/fa';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { TopBar } from "../layouts/TopBar";
+import { Header } from "../layouts/Header";
+import { Banner } from "../layouts/Banner";
+import { Footer } from "../layouts/Footer";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
@@ -269,318 +273,324 @@ export const CourseDetail = () => {
             bankCode: "NCB",
             courseId: id
         }
-        
+
         const query = new URLSearchParams(paymentData).toString();  // Chuyển object thành query string
-        
+
         fetch(`http://localhost:8080/api/v1/payment/vn-pay?${query}`, {
-            method: 'GET',  // Sử dụng GET khi gửi query parameters
+            method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
             }
-        })        
-        .then((response) => response.json())
-        .then((data) => {
-            console.log(data)
-            if (data.result && data.result.paymentUrl) {
-                window.location.href = data.result.paymentUrl;
-            } else {
-                toast.error("Failed to create payment.");
-            }
         })
-        .catch((error) => {
-            console.error("Error:", error);
-            toast.error("Failed to create payment.");
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data)
+                if (data.result && data.result.paymentUrl) {
+                    window.location.href = data.result.paymentUrl;
+                } else {
+                    toast.error("Failed to create payment.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                toast.error("Failed to create payment.");
+            });
     }
 
     console.log(course.price);
 
     return (
-        <div className="container-fluid py-5">
-            <div className="container py-5">
-                <div className="row">
-                    <div className="col-lg-8">
-                        <div className="mb-5">
-                            <h6 className="text-secondary text-uppercase pb-2">Course Detail</h6>
-                            <h1 className="display-4">{course.title}</h1>
-                            <img className="img-fluid rounded w-100 mb-4" src={course.thumbnail} alt="Course" />
-                            <p>{course.description}</p>
-                        </div>
-
-                        {/* Comment Section */}
-                        <div className="comments-section mt-5">
-                            <h2 className="mb-4 text-secondary"><FaCommentDots className="mr-2" /> Comments</h2>
-
-                            {/* Add Comment */}
-                            <div className="comment-form mb-5">
-                                <textarea
-                                    className="form-control mb-3"
-                                    rows="3"
-                                    placeholder="Write your comment..."
-                                    value={newComment}
-                                    onChange={(e) => setNewComment(e.target.value)}
-                                />
-
-                                {/* Rating Stars */}
-                                {renderStars(newRating, handleRatingChange)}
-
-
-                                <button className="btn btn-primary px-4 mt-3" onClick={handleAddComment}>
-                                    Submit Comment
-                                </button>
+        <div>
+            <TopBar/>
+            <Header/>
+            <Banner/>
+            <div className="container-fluid py-5">
+                <div className="container py-5">
+                    <div className="row">
+                        <div className="col-lg-8">
+                            <div className="mb-5">
+                                <h6 className="text-secondary text-uppercase pb-2">Course Detail</h6>
+                                <h1 className="display-4">{course.title}</h1>
+                                <img className="img-fluid rounded w-100 mb-4" src={course.thumbnail} alt="Course" />
+                                <p>{course.description}</p>
                             </div>
 
-                            {/* Comment List */}
-                            <div className="comments-list">
-                                {comments.map((comment, index) => (
-                                    <div key={index} className="comment-item mb-4 p-3 bg-light rounded shadow-sm">
-                                        <div className="d-flex align-items-center justify-content-between">
-                                            <div className="d-flex align-items-center">
-                                                <img
-                                                    src={comment.avatar || 'https://bootdey.com/img/Content/avatar/avatar7.png'}
-                                                    alt="User Avatar"
-                                                    className="rounded-circle mr-2"
-                                                    style={{ width: '40px', height: '40px' }}
-                                                />
-                                                <h6 className="m-0">{comment.name}</h6>
+                            {/* Comment Section */}
+                            <div className="comments-section mt-5">
+                                <h2 className="mb-4 text-secondary"><FaCommentDots className="mr-2" /> Comments</h2>
+
+                                {/* Add Comment */}
+                                <div className="comment-form mb-5">
+                                    <textarea
+                                        className="form-control mb-3"
+                                        rows="3"
+                                        placeholder="Write your comment..."
+                                        value={newComment}
+                                        onChange={(e) => setNewComment(e.target.value)}
+                                    />
+
+                                    {/* Rating Stars */}
+                                    {renderStars(newRating, handleRatingChange)}
+
+
+                                    <button className="btn btn-primary px-4 mt-3" onClick={handleAddComment}>
+                                        Submit Comment
+                                    </button>
+                                </div>
+
+                                {/* Comment List */}
+                                <div className="comments-list">
+                                    {comments.map((comment, index) => (
+                                        <div key={index} className="comment-item mb-4 p-3 bg-light rounded shadow-sm">
+                                            <div className="d-flex align-items-center justify-content-between">
+                                                <div className="d-flex align-items-center">
+                                                    <img
+                                                        src={comment.avatar || 'https://bootdey.com/img/Content/avatar/avatar7.png'}
+                                                        alt="User Avatar"
+                                                        className="rounded-circle mr-2"
+                                                        style={{ width: '40px', height: '40px' }}
+                                                    />
+                                                    <h6 className="m-0">{comment.name}</h6>
+                                                </div>
+                                                <div>
+                                                    <button className="btn btn-sm btn-outline-info mr-2" onClick={() => setEditingCommentId(comment.id)}>
+                                                        <i class="fa-solid fa-comment-dots"></i>
+                                                    </button>
+                                                    <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(comment.id)}>
+                                                        <FaTrash />
+                                                    </button>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <button className="btn btn-sm btn-outline-info mr-2" onClick={() => setEditingCommentId(comment.id)}>
-                                                    <i class="fa-solid fa-comment-dots"></i>
-                                                </button>
-                                                <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(comment.id)}>
-                                                    <FaTrash />
-                                                </button>
+
+                                            {/* Display Rating */}
+                                            <div className="mt-2">
+                                                {renderStars(comment.rating || 0, () => { })}
                                             </div>
-                                        </div>
 
-                                        {/* Display Rating */}
-                                        <div className="mt-2">
-                                            {renderStars(comment.rating || 0, () => { })}
-                                        </div>
-
-                                        {/* Comment Content */}
-                                        {editingCommentId === comment.id ? (
-                                            <div>
-                                                <textarea
-                                                    className="form-control mt-3"
-                                                    rows="3"
-                                                    value={editContent[comment.id] !== undefined ? editContent[comment.id] : comment.content}
-                                                    onChange={(e) => setEditContent({ ...editContent, [comment.id]: e.target.value })}
-                                                />
-                                                <button className="btn btn-success mt-2" onClick={() => handleEditComment(comment.id)}>
-                                                    Save
-                                                </button>
-                                            </div>
-                                        ) : (
-                                            <p className="mt-2">{comment.content}</p>
-                                        )}
+                                            {/* Comment Content */}
+                                            {editingCommentId === comment.id ? (
+                                                <div>
+                                                    <textarea
+                                                        className="form-control mt-3"
+                                                        rows="3"
+                                                        value={editContent[comment.id] !== undefined ? editContent[comment.id] : comment.content}
+                                                        onChange={(e) => setEditContent({ ...editContent, [comment.id]: e.target.value })}
+                                                    />
+                                                    <button className="btn btn-success mt-2" onClick={() => handleEditComment(comment.id)}>
+                                                        Save
+                                                    </button>
+                                                </div>
+                                            ) : (
+                                                <p className="mt-2">{comment.content}</p>
+                                            )}
 
 
-                                        {/* Replies Section */}
-                                        {comment.replies.length > 0 && (
-                                            <div className="replies mt-3 pl-5">
-                                                {comment.replies.map((reply, replyIndex) => (
-                                                    <div key={replyIndex} className="reply-item mb-2 pl-3">
-                                                        <div className="d-flex align-items-center justify-content-between">
-                                                            <div className="d-flex align-items-center">
-                                                                <img
-                                                                    src={reply.avatar || 'default-avatar-url'}
-                                                                    alt="User Avatar"
-                                                                    className="rounded-circle mr-2"
-                                                                    style={{ width: '30px', height: '30px' }}
-                                                                />
-                                                                <h6 className="m-0">{reply.name}</h6>
+                                            {/* Replies Section */}
+                                            {comment.replies.length > 0 && (
+                                                <div className="replies mt-3 pl-5">
+                                                    {comment.replies.map((reply, replyIndex) => (
+                                                        <div key={replyIndex} className="reply-item mb-2 pl-3">
+                                                            <div className="d-flex align-items-center justify-content-between">
+                                                                <div className="d-flex align-items-center">
+                                                                    <img
+                                                                        src={reply.avatar || 'default-avatar-url'}
+                                                                        alt="User Avatar"
+                                                                        className="rounded-circle mr-2"
+                                                                        style={{ width: '30px', height: '30px' }}
+                                                                    />
+                                                                    <h6 className="m-0">{reply.name}</h6>
+                                                                </div>
+
+                                                                <div>
+                                                                    <button className="btn btn-sm btn-outline-info mr-2" onClick={() => setEditingCommentId(reply.id)}>
+                                                                        <i class="fa-solid fa-comment-dots"></i>
+                                                                    </button>
+
+                                                                    <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(reply.id)}>
+                                                                        <FaTrash />
+                                                                    </button>
+                                                                </div>
+
                                                             </div>
 
-                                                            <div>
-                                                                <button className="btn btn-sm btn-outline-info mr-2" onClick={() => setEditingCommentId(reply.id)}>
-                                                                    <i class="fa-solid fa-comment-dots"></i>
-                                                                </button>
-
-                                                                <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(reply.id)}>
-                                                                    <FaTrash />
-                                                                </button>
-                                                            </div>
+                                                            {editingCommentId === reply.id ? (
+                                                                <div>
+                                                                    <textarea
+                                                                        className="form-control mt-3"
+                                                                        rows="3"
+                                                                        value={editContent[reply.id] !== undefined ? editContent[reply.id] : reply.content}
+                                                                        onChange={(e) => setEditContent({ ...editContent, [reply.id]: e.target.value })}
+                                                                    />
+                                                                    <button className="btn btn-success mt-2" onClick={() => handleEditComment(reply.id)}>
+                                                                        Save
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <p className="mt-2">{reply.content}</p>
+                                                            )}
 
                                                         </div>
+                                                    ))}
+                                                </div>
+                                            )}
 
-                                                        {editingCommentId === reply.id ? (
-                                                            <div>
-                                                                <textarea
-                                                                    className="form-control mt-3"
-                                                                    rows="3"
-                                                                    value={editContent[reply.id] !== undefined ? editContent[reply.id] : reply.content}
-                                                                    onChange={(e) => setEditContent({ ...editContent, [reply.id]: e.target.value })}
-                                                                />
-                                                                <button className="btn btn-success mt-2" onClick={() => handleEditComment(reply.id)}>
-                                                                    Save
-                                                                </button>
-                                                            </div>
-                                                        ) : (
-                                                            <p className="mt-2">{reply.content}</p>
-                                                        )}
+                                            {/* Reply Form */}
+                                            {comment.replying && (
+                                                <div className="comment-reply-form mt-4">
+                                                    <textarea
+                                                        className="form-control mb-3"
+                                                        rows="3"
+                                                        placeholder="Write your reply..."
+                                                        value={replyContent[comment.id] || ""}
+                                                        onChange={(e) => setReplyContent({ ...replyContent, [comment.id]: e.target.value })}
+                                                    />
+                                                    <button className="btn btn-primary px-4" onClick={() => handleAddReply(comment.id)}>
+                                                        Submit Reply
+                                                    </button>
+                                                </div>
+                                            )}
 
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        {/* Reply Form */}
-                                        {comment.replying && (
-                                            <div className="comment-reply-form mt-4">
-                                                <textarea
-                                                    className="form-control mb-3"
-                                                    rows="3"
-                                                    placeholder="Write your reply..."
-                                                    value={replyContent[comment.id] || ""}
-                                                    onChange={(e) => setReplyContent({ ...replyContent, [comment.id]: e.target.value })}
-                                                />
-                                                <button className="btn btn-primary px-4" onClick={() => handleAddReply(comment.id)}>
-                                                    Submit Reply
+                                            {/* Reply button after replies */}
+                                            <div className="comment-actions d-flex justify-content-end mt-2">
+                                                <button className="btn btn-sm btn-outline-info" onClick={() => handleReplyToggle(comment.id)}>
+                                                    <FaReply className="mr-1" /> Reply
                                                 </button>
                                             </div>
-                                        )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
 
-                                        {/* Reply button after replies */}
-                                        <div className="comment-actions d-flex justify-content-end mt-2">
-                                            <button className="btn btn-sm btn-outline-info" onClick={() => handleReplyToggle(comment.id)}>
-                                                <FaReply className="mr-1" /> Reply
-                                            </button>
+                        {/* Other course details */}
+                        <div className="col-lg-4 mt-5 mt-lg-0">
+                            <div className="course-features-container mb-5 py-4 px-4 shadow-lg">
+                                <h3 className="course-features-title text-white py-3 px-4 m-0">Course Features</h3>
+
+                                {/* Instructor */}
+                                <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-user mr-2 text-info"></i> Instructor
+                                    </h6>
+                                    <h6 className="text-white my-2">{course.author}</h6>
+                                </div>
+
+                                {/* Rating */}
+                                <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-star mr-2 text-warning"></i> Rating
+                                    </h6>
+                                    <h6 className="text-white my-2">4.5 <small>(250)</small></h6>
+                                </div>
+
+                                {/* Lectures */}
+                                <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-book mr-2 text-success"></i> Lectures
+                                    </h6>
+                                    <h6 className="text-white my-2">15</h6>
+                                </div>
+
+                                {/* Duration */}
+                                <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-clock mr-2 text-danger"></i> Duration
+                                    </h6>
+                                    <h6 className="text-white my-2">{course.duration} hours</h6>
+                                </div>
+
+                                {/* Skill Level */}
+                                <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-signal mr-2 text-warning"></i> Skill level
+                                    </h6>
+                                    <h6 className="text-white my-2">{course.courseLevel}</h6>
+                                </div>
+
+                                {/* Language */}
+                                <div className="course-feature-item d-flex justify-content-between px-4 py-2">
+                                    <h6 className="text-white my-2">
+                                        <i className="fa fa-language mr-2 text-purple"></i> Language
+                                    </h6>
+                                    <h6 className="text-white my-2">{course.language}</h6>
+                                </div>
+
+                                {/* Course Price */}
+                                <h5 className="course-price text-white py-3 px-4 m-0">
+                                    <i className="fa fa-money mr-2 text-warning"></i>
+                                    Course Price: {new Intl.NumberFormat('vi-VN').format(course.price)}
+                                    <span className="currency">₫</span>
+                                </h5>
+
+                                {/* Enroll Now Button */}
+                                <div className="py-3 px-4">
+                                    <button
+                                        className="btn enroll-now-btn btn-block py-3 px-5"
+                                        onClick={handleEnrollNow}  // Thêm sự kiện onClick để gọi hàm handleEnrollNow
+                                    >
+                                        Enroll Now
+                                    </button>
+                                </div>
+
+                            </div>
+
+                            <div className="mb-5">
+                                <h2 className="mb-3">Categories</h2>
+                                <ul className="list-group list-group-flush">
+
+                                    <li className="list-group-item d-flex justify-content-between align-items-center px-0">
+                                        <a href="" className="text-decoration-none h6 m-0">Web Design</a>
+                                        <span className="badge badge-primary badge-pill">150</span>
+                                    </li>
+
+                                    <li className="list-group-item d-flex justify-content-between align-items-center px-0">
+                                        <a href="" className="text-decoration-none h6 m-0">Web Development</a>
+                                        <span className="badge badge-primary badge-pill">131</span>
+                                    </li>
+
+                                    <li className="list-group-item d-flex justify-content-between align-items-center px-0">
+                                        <a href="" className="text-decoration-none h6 m-0">Online Marketing</a>
+                                        <span className="badge badge-primary badge-pill">78</span>
+                                    </li>
+
+                                </ul>
+                            </div>
+
+                            <div className="mb-5">
+                                <h2 className="mb-4">Recent Courses</h2>
+
+                                <a className="d-flex align-items-center text-decoration-none mb-4" href="">
+                                    <img className="img-fluid rounded" src={require('./../../img/courses-80x80.jpg')} alt="Recent Course 3" />
+                                    <div className="pl-3">
+                                        <h6>Web design & development courses for beginners</h6>
+                                        <div className="d-flex">
+                                            <small className="text-body mr-3"><i className="fa fa-user text-primary mr-2"></i>Jhon Doe</small>
+                                            <small className="text-body"><i className="fa fa-star text-primary mr-2"></i>4.5 (250)</small>
                                         </div>
                                     </div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
+                                </a>
 
-                    {/* Other course details */}
-                    <div className="col-lg-4 mt-5 mt-lg-0">
-                        <div className="course-features-container mb-5 py-4 px-4 shadow-lg">
-                            <h3 className="course-features-title text-white py-3 px-4 m-0">Course Features</h3>
-
-                            {/* Instructor */}
-                            <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
-                                <h6 className="text-white my-2">
-                                    <i className="fa fa-user mr-2 text-info"></i> Instructor
-                                </h6>
-                                <h6 className="text-white my-2">{course.author}</h6>
-                            </div>
-
-                            {/* Rating */}
-                            <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
-                                <h6 className="text-white my-2">
-                                    <i className="fa fa-star mr-2 text-warning"></i> Rating
-                                </h6>
-                                <h6 className="text-white my-2">4.5 <small>(250)</small></h6>
-                            </div>
-
-                            {/* Lectures */}
-                            <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
-                                <h6 className="text-white my-2">
-                                    <i className="fa fa-book mr-2 text-success"></i> Lectures
-                                </h6>
-                                <h6 className="text-white my-2">15</h6>
-                            </div>
-
-                            {/* Duration */}
-                            <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
-                                <h6 className="text-white my-2">
-                                    <i className="fa fa-clock mr-2 text-danger"></i> Duration
-                                </h6>
-                                <h6 className="text-white my-2">{course.duration} hours</h6>
-                            </div>
-
-                            {/* Skill Level */}
-                            <div className="course-feature-item d-flex justify-content-between border-bottom px-4 py-2">
-                                <h6 className="text-white my-2">
-                                    <i className="fa fa-signal mr-2 text-warning"></i> Skill level
-                                </h6>
-                                <h6 className="text-white my-2">{course.courseLevel}</h6>
-                            </div>
-
-                            {/* Language */}
-                            <div className="course-feature-item d-flex justify-content-between px-4 py-2">
-                                <h6 className="text-white my-2">
-                                    <i className="fa fa-language mr-2 text-purple"></i> Language
-                                </h6>
-                                <h6 className="text-white my-2">{course.language}</h6>
-                            </div>
-
-                            {/* Course Price */}
-                            <h5 className="course-price text-white py-3 px-4 m-0">
-                                <i className="fa fa-money mr-2 text-warning"></i>
-                                Course Price: {new Intl.NumberFormat('vi-VN').format(course.price)}
-                                <span className="currency">₫</span>
-                            </h5>
-
-                            {/* Enroll Now Button */}
-                            <div className="py-3 px-4">
-                                <button
-                                    className="btn enroll-now-btn btn-block py-3 px-5"
-                                    onClick={handleEnrollNow}  // Thêm sự kiện onClick để gọi hàm handleEnrollNow
-                                >
-                                    Enroll Now
-                                </button>
-                            </div>
-
-                        </div>
-
-                        <div className="mb-5">
-                            <h2 className="mb-3">Categories</h2>
-                            <ul className="list-group list-group-flush">
-
-                                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <a href="" className="text-decoration-none h6 m-0">Web Design</a>
-                                    <span className="badge badge-primary badge-pill">150</span>
-                                </li>
-
-                                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <a href="" className="text-decoration-none h6 m-0">Web Development</a>
-                                    <span className="badge badge-primary badge-pill">131</span>
-                                </li>
-
-                                <li className="list-group-item d-flex justify-content-between align-items-center px-0">
-                                    <a href="" className="text-decoration-none h6 m-0">Online Marketing</a>
-                                    <span className="badge badge-primary badge-pill">78</span>
-                                </li>
-
-                            </ul>
-                        </div>
-
-                        <div className="mb-5">
-                            <h2 className="mb-4">Recent Courses</h2>
-
-                            <a className="d-flex align-items-center text-decoration-none mb-4" href="">
-                                <img className="img-fluid rounded" src={require('./../../img/courses-80x80.jpg')} alt="Recent Course 3" />
-                                <div className="pl-3">
-                                    <h6>Web design & development courses for beginners</h6>
-                                    <div className="d-flex">
-                                        <small className="text-body mr-3"><i className="fa fa-user text-primary mr-2"></i>Jhon Doe</small>
-                                        <small className="text-body"><i className="fa fa-star text-primary mr-2"></i>4.5 (250)</small>
+                                <a className="d-flex align-items-center text-decoration-none" href="">
+                                    <img className="img-fluid rounded" src={require('./../../img/courses-80x80.jpg')} alt="Recent Course 4" />
+                                    <div className="pl-3">
+                                        <h6>Web design & development courses for beginners</h6>
+                                        <div className="d-flex">
+                                            <small className="text-body mr-3"><i className="fa fa-user text-primary mr-2"></i>Jhon Doe</small>
+                                            <small className="text-body"><i className="fa fa-star text-primary mr-2"></i>4.5 (250)</small>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-
-                            <a className="d-flex align-items-center text-decoration-none" href="">
-                                <img className="img-fluid rounded" src={require('./../../img/courses-80x80.jpg')} alt="Recent Course 4" />
-                                <div className="pl-3">
-                                    <h6>Web design & development courses for beginners</h6>
-                                    <div className="d-flex">
-                                        <small className="text-body mr-3"><i className="fa fa-user text-primary mr-2"></i>Jhon Doe</small>
-                                        <small className="text-body"><i className="fa fa-star text-primary mr-2"></i>4.5 (250)</small>
-                                    </div>
-                                </div>
-                            </a>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={3000}
+                    className="custom-toast-container"
+                />
             </div>
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                className="custom-toast-container"
-            />
+            <Footer/>
         </div>
     );
 };

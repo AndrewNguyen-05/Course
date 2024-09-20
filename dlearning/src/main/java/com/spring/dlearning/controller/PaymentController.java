@@ -2,7 +2,16 @@ package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.VNPAYResponse;
+import com.spring.dlearning.entity.Course;
+import com.spring.dlearning.entity.Enrollment;
+import com.spring.dlearning.entity.Payment;
+import com.spring.dlearning.entity.User;
+import com.spring.dlearning.exception.AppException;
+import com.spring.dlearning.exception.ErrorCode;
+import com.spring.dlearning.repository.EnrollmentRepository;
+import com.spring.dlearning.repository.PaymentRepository;
 import com.spring.dlearning.service.PaymentService;
+import com.spring.dlearning.utils.PaymentStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -28,19 +37,23 @@ public class PaymentController {
                 .result(paymentService.createVnPayPayment(request))
                 .build();
     }
+
     @GetMapping("/vn-pay-callback")
-    public ApiResponse<VNPAYResponse> payCallbackHandler(HttpServletRequest request) {
-        String status = request.getParameter("vnp_ResponseCode");
-        if (status.equals("00")) {
-            return ApiResponse.<VNPAYResponse>builder()
+    public ApiResponse<String> handleVnPayCallback(HttpServletRequest request) {
+        String transactionStatus = request.getParameter("vnp_ResponseCode");
+        if ("00".equals(transactionStatus)) {
+            Payment payment = Payment.builder().build();
+
+            return ApiResponse.<String>builder()
                     .code(HttpStatus.OK.value())
-                    .message("Successfully")
+                    .message("Payment and enrollment successful")
                     .build();
         } else {
-            return ApiResponse.<VNPAYResponse>builder()
-                    .code(HttpStatus.CONFLICT.value())
-                    .message("Failed")
+            return ApiResponse.<String>builder()
+                    .code(HttpStatus.PAYMENT_REQUIRED.value())
+                    .message("Payment failed")
                     .build();
         }
     }
+
 }

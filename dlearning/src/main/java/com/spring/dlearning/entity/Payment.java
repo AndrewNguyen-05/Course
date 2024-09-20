@@ -4,7 +4,6 @@ import com.spring.dlearning.utils.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import java.math.BigDecimal;
 
 @Getter
@@ -20,9 +19,8 @@ public class Payment extends AbstractEntity<Long> {
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id", nullable = false)
-    Course course;
+    @Column(name = "transaction_id")
+    String transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_method_id", nullable = false)
