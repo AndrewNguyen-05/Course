@@ -60,7 +60,6 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        
         return httpSecurity.build();
     }
 

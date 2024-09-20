@@ -106,6 +106,7 @@ export const CourseDetail = () => {
             body: JSON.stringify(commentData)
         }).then(response => response.json())
             .then(data => {
+                console.log(data)
                 if (data.result) {
                     setComments([{
                         ...data.result,
@@ -115,11 +116,13 @@ export const CourseDetail = () => {
                     setNewComment("");
                     setNewRating(0);
                     toast.success('Comment added successfully');
+                }else {
+                    toast.error(data.message)
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                toast.error('Failed to add comment');
+                toast.error(error.message)
             });
     };
 
@@ -159,6 +162,8 @@ export const CourseDetail = () => {
                     setComments(updatedComments);
                     setReplyContent({ ...replyContent, [commentId]: '' });
                     toast.success('Reply added successfully');
+                } else {
+                    toast.error(data.message);
                 }
             })
             .catch(error => {
@@ -219,7 +224,7 @@ export const CourseDetail = () => {
                     setEditingCommentId(null); // Thoát khỏi chế độ chỉnh sửa
                     toast.success('Comment updated successfully');
                 } else {
-                    toast.error('You can only update or delete your own comments');
+                    toast.error(data.message);
                 }
             })
             .catch(error => {

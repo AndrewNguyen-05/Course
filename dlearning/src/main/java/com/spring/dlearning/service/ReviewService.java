@@ -36,6 +36,7 @@ public class ReviewService {
     ReviewRepository reviewRepository;
     CommentMapper commentMapper;
     CourseRepository courseRepository;
+    BannedWordsService bannedWordsService;
 
     public List<CommentResponse> getCommentByCourse(Long id) {
         List<Review> allReviews = reviewRepository.findByCourseId(id);
@@ -69,6 +70,10 @@ public class ReviewService {
 
         if (commentRequest.getRating() != null && (commentRequest.getRating() < 0 || commentRequest.getRating() > 5)) {
             throw new AppException(ErrorCode.INVALID_RATING);
+        }
+
+        if (bannedWordsService.containsBannedWords(commentRequest.getContent())) {
+            throw new AppException(ErrorCode.INVALID_COMMENT_CONTENT);
         }
 
         Review newComment = Review.builder()
@@ -123,10 +128,13 @@ public class ReviewService {
                 .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXISTED));
 
         if (Objects.equals(user.getId(), comment.getUser().getId())) {
+            if (request.getContent() != null && bannedWordsService.containsBannedWords(request.getContent())) {
+                throw new AppException(ErrorCode.INVALID_COMMENT_CONTENT);
+            }
+
             if (request.getContent() != null) {
                 comment.setContent(request.getContent());
             }
-
             reviewRepository.save(comment);
 
             return UpdateCommentResponse.builder()

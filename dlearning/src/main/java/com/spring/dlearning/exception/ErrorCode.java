@@ -45,6 +45,7 @@ public enum ErrorCode {
     PRICE_INVALID(400, "Price must be greater than or equal to 0", HttpStatus.BAD_REQUEST),
     VIDEO_URL_INVALID(400, "Video URL is mandatory", HttpStatus.BAD_REQUEST),
     PAYMENT_NOT_FOUND(404, "Payment not found", HttpStatus.NOT_FOUND),
+    INVALID_COMMENT_CONTENT(404, "Invalid comment", HttpStatus.BAD_REQUEST)
     ;
 
     private int code;

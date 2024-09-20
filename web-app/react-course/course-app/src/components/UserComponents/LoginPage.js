@@ -126,7 +126,7 @@ export const LoginPage = () => {
 
   return (
     <div>
-      <TopBar/>
+      <TopBar />
       <Navbar />
       <section className="py-3 py-md-5 py-xl-8">
         <div className="container">

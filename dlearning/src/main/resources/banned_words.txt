@@ -378,5 +378,3 @@ KMR
 VCB
 *DKM
 MBN
-lol
-ngu

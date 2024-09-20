@@ -118,4 +118,5 @@ public class User extends AbstractEntity<Long> {
             enabled = Boolean.TRUE;
         }
     }
+
 }
