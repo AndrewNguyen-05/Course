@@ -85,7 +85,13 @@ public class AuthenticationService {
 
         var token = generateToken(user);
 
-        return AuthenticationResponse.builder().token(token).authenticated(true).build();
+        String role = user.getRole().getName();
+
+        return AuthenticationResponse.builder()
+                .token(token)
+                .role(role)
+                .authenticated(true)
+                .build();
     }
 
     @Transactional

@@ -11247,3 +11247,20 @@ h6,
       transform: scale(1);
   }
 }
+
+.points-display {
+  font-size: 1rem;
+  font-weight: 500;
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #f0f8ff;
+  border-radius: 20px;
+  color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.points-display:hover {
+  cursor: pointer;
+}

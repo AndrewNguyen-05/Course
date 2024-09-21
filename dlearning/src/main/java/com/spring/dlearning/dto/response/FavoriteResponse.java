@@ -1,11 +1,8 @@
 package com.spring.dlearning.dto.response;
 
-import com.spring.dlearning.utils.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import java.math.BigDecimal;
-
 
 @Setter
 @Getter

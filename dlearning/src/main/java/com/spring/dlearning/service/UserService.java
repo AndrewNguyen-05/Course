@@ -1,10 +1,10 @@
 package com.spring.dlearning.service;
 
-
 import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.PasswordCreationRequest;
 import com.spring.dlearning.dto.request.UserCreationRequest;
 import com.spring.dlearning.dto.request.VerifyOtpRequest;
+import com.spring.dlearning.dto.response.GetPointsCurrentLogin;
 import com.spring.dlearning.dto.response.UserResponse;
 import com.spring.dlearning.dto.response.VerifyOtpResponse;
 import com.spring.dlearning.entity.Role;
@@ -14,6 +14,7 @@ import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.UserMapper;
 import com.spring.dlearning.repository.RoleRepository;
 import com.spring.dlearning.repository.UserRepository;
+import com.spring.dlearning.utils.SecurityUtils;
 import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -90,12 +91,6 @@ public class UserService {
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.save(user);
-    }
-
-    public UserResponse getUserById(Long id){
-        return userRepository.findById(id)
-                .map(userMapper::toUserResponse)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -212,6 +207,19 @@ public class UserService {
         user.setOtp(null);
         user.setOtpExpiryDate(null);
         userRepository.save(user);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public GetPointsCurrentLogin getPointsCurrentLogin(){
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return GetPointsCurrentLogin.builder()
+                .points(user.getPoints())
+                .build();
     }
 
     private static String generateOtp(){

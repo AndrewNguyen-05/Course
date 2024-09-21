@@ -10,88 +10,18 @@ import { Card } from '../common/Cart.js';
 import { NavigationMenu } from '../common/NavigationMenu.js';
 
 export const Header = () => {
-
     const [loggedOut, setLoggedOut] = useState(false);
     const { isTokenValid } = UseAuth({ loggedOut });
     const { handleLogout } = HandleLogout({ setLoggedOut });
-
     const location = useLocation();
     const underlineRef = useRef(null);
     const [avatar, setAvatar] = useState('');
     const [loading, setLoading] = useState(true);
-
     const [notifications, setNotifications] = useState([]); // Danh sách thông báo
     const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
-
+    const [points, setPoints] = useState(0);
+    const [role, setRole] = useState(null); 
     const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-
-   
-    useEffect(() => {
-        if (!role && !token) {
-            setLoading(false);
-            return;
-        }
-
-        if (token && !role) {
-            fetch(`http://localhost:8080/api/v1/auth/introspect`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ token })
-            }).then((response) => response.json()
-            ).then(data => {
-                console.log(data)
-                localStorage.setItem('role', data.result.scope);
-            }).catch(error => console.log(error))
-        }
-    }, [token])
-
-
-    useEffect(() => {
-        if (!token || isTokenValid) {
-          return;
-        }
-        fetch(`http://localhost:8080/api/v1/notification-current`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        })
-          .then(response => response.json())
-          .then(data => {
-            setNotifications(data.result || []);
-            setUnreadCount(data.result.filter(n => !n.isRead).length || []);
-          })
-          .catch(error => console.log(error));
-      }, [token, isTokenValid]);
-      
-      
-    const markAsRead = (notificationId) => {
-        fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to mark as read');
-                }
-                return response.json();
-            })
-            .then(() => {
-                setUnreadCount((prevCount) => prevCount - 1);
-                setNotifications((prevNotifications) =>
-                    prevNotifications.map((n) =>
-                        n.id === notificationId ? { ...n, isRead: true } : n
-                    )
-                );
-            })
-            .catch((error) => console.error('Error marking notification as read:', error));
-    };
 
     useEffect(() => {
         if (!token) {
@@ -99,19 +29,89 @@ export const Header = () => {
             return;
         }
 
+        // Gọi API introspect để lấy thông tin role mỗi khi tải trang
+        fetch(`http://localhost:8080/api/v1/auth/introspect`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ token })
+        })
+        .then((response) => response.json())
+        .then(data => {
+            if (data.result.valid) {
+                setRole(data.result.scope); // Thiết lập role sau khi kiểm tra token
+            } else {
+                console.error("Token không hợp lệ");
+            }
+        })
+        .catch(error => console.log(error))
+        .finally(() => setLoading(false));
+    }, [token]);
+
+    // Fetch avatar và points
+    useEffect(() => {
+        if (!token) return;
+
         fetch(`http://localhost:8080/api/v1/get-avatar`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
-        }).then(response => response.json()
-        ).then(data => {
-            const urlAvatar = data.result;
-            setAvatar(urlAvatar);
-        }).catch(error => console.log(error))
+        })
+        .then(response => response.json())
+        .then(data => setAvatar(data.result))
+        .catch(error => console.log(error));
+
+        fetch(`http://localhost:8080/api/v1/get-points`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => setPoints(data.result))
+        .catch(error => console.log(error));
     }, [token]);
 
+    useEffect(() => {
+        if (!token || !isTokenValid) return;
+
+        fetch(`http://localhost:8080/api/v1/notification-current`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            setNotifications(data.result || []);
+            setUnreadCount(data.result.filter(n => !n.isRead).length || []);
+        })
+        .catch(error => console.log(error));
+    }, [token, isTokenValid]);
+
+    const markAsRead = (notificationId) => {
+        fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => response.json())
+        .then(() => {
+            setUnreadCount(prevCount => prevCount - 1);
+            setNotifications(prevNotifications =>
+                prevNotifications.map(n =>
+                    n.id === notificationId ? { ...n, isRead: true } : n
+                )
+            );
+        })
+        .catch((error) => console.error('Error marking notification as read:', error));
+    };
 
     useEffect(() => {
         const activeLink = document.querySelector(`.nav-item.active`);
@@ -124,38 +124,44 @@ export const Header = () => {
     const isActive = (path) => location.pathname === path;
 
     return (
-            <div className="container-fluid p-0">
-                <nav className="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
-                    <Link to="/home" className="navbar-brand ml-lg-3">
-                        <h1 className="m-0 text-uppercase text-primary rounded">
-                            <i className="fa fa-book-reader mr-3"></i>D-LEARNING
-                        </h1>
-                    </Link>
-                    <button type="button" className="navbar-toggler rounded" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
-                        <NavigationMenu isActive={isActive} underlineRef={underlineRef} />
+        <div className="container-fluid p-0">
+            <nav className="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
+                <Link to="/home" className="navbar-brand ml-lg-3">
+                    <h1 className="m-0 text-uppercase text-primary rounded">
+                        <i className="fa fa-book-reader mr-3"></i>D-LEARNING
+                    </h1>
+                </Link>
+                <button type="button" className="navbar-toggler rounded" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
+                    <NavigationMenu isActive={isActive} underlineRef={underlineRef} />
 
-                        <div className="navbar-nav ml-auto d-flex align-items-center">
-                            <NotificationDropdown
-                                notifications={notifications}
-                                unreadCount={unreadCount}
-                                markAsRead={markAsRead}
-                            />
-                            <Card />
-                            <Message />
-                            <Favorites />
-                            <ProfileDropdown
-                                avatar={avatar}
-                                isTokenValid={isTokenValid}
-                                role={role}
-                                handleLogout={handleLogout}
-                            />
+                    <div className="navbar-nav ml-auto d-flex align-items-center">
+                        {/* Hiển thị số điểm (Points) */}
+                        <div className="nav-item d-flex align-items-center mx-3">
+                            <span className="points-display text-primary">
+                                <i className="fa fa-coins"></i> {points} Points
+                            </span>
                         </div>
 
+                        <NotificationDropdown
+                            notifications={notifications}
+                            unreadCount={unreadCount}
+                            markAsRead={markAsRead}
+                        />
+                        <Message />
+                        <Favorites />
+                        {/* Điều hướng dựa trên vai trò người dùng */}
+                        <ProfileDropdown
+                            avatar={avatar}
+                            isTokenValid={isTokenValid}
+                            role={role}
+                            handleLogout={handleLogout}
+                        />
                     </div>
-                </nav>
-            </div>
+                </div>
+            </nav>
+        </div>
     );
 };

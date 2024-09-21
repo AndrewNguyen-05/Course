@@ -4,6 +4,7 @@ import com.spring.dlearning.dto.request.PasswordCreationRequest;
 import com.spring.dlearning.dto.request.UserCreationRequest;
 import com.spring.dlearning.dto.request.VerifyOtpRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
+import com.spring.dlearning.dto.response.GetPointsCurrentLogin;
 import com.spring.dlearning.dto.response.UserResponse;
 import com.spring.dlearning.dto.response.VerifyOtpResponse;
 import com.spring.dlearning.service.CloudinaryService;
@@ -132,4 +133,13 @@ public class UserController {
                 .result(urlAvatar)
                 .build();
     }
+
+    @GetMapping("/get-points-user-current")
+    ApiResponse<GetPointsCurrentLogin> getPointsUserLogin(){
+        return ApiResponse.<GetPointsCurrentLogin>builder()
+                .code(HttpStatus.OK.value())
+                .result(userService.getPointsCurrentLogin())
+                .build();
+    }
+
 }

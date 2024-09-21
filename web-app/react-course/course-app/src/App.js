@@ -34,12 +34,12 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<HomePage /> } />
-          <Route path="/home" element={ <HomePage/> }/>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
 
-          <Route path="/payment-success" element={<PaymentSuccess/> } />
-          <Route path="/payment-failed" element={<PaymentFail/> } />
-          <Route path="/payment-cancle" element={<PaymentCancel/> } />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
+          <Route path="/payment-failed" element={<PaymentFail />} />
+          <Route path="/payment-cancle" element={<PaymentCancel />} />
 
           <Route path="/login" element={
             <LayoutWithoutHeaderFooter>
@@ -88,11 +88,11 @@ function App() {
           } />
 
           <Route path='/profile' element={
-              <PrivateRoute>
-                <LayoutWithoutHeaderFooter>
-                  <Profile />
-                </LayoutWithoutHeaderFooter>
-              </PrivateRoute>
+            <PrivateRoute>
+              <LayoutWithoutHeaderFooter>
+                <Profile />
+              </LayoutWithoutHeaderFooter>
+            </PrivateRoute>
           } />
 
           <Route path='/favorite' element={<FavoriteCourses />} />
@@ -110,13 +110,12 @@ function App() {
             </Authorization>
           } />
 
-          <Route path="/manager-courses" element={
-            <Authorization requiredRole={["TEACHER"]}>
+          <Route path="/my-courses" element={
+            <PrivateRoute>
               <LayoutWithoutHeaderFooter>
                 <MyCourses />
-                
               </LayoutWithoutHeaderFooter>
-            </Authorization>
+            </PrivateRoute>
           } />
 
           <Route path="/register-teacher" element={
