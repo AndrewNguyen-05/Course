@@ -4,8 +4,6 @@ import com.spring.dlearning.utils.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +15,7 @@ public class CourseRequest {
     Integer duration;
     String language;
     CourseLevel courseLevel;
-    BigDecimal price;
+    Long price;
     String thumbnail;
     String videoUrl;
 

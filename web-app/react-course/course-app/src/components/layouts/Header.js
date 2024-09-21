@@ -6,7 +6,6 @@ import { NotificationDropdown } from '../common/NotificationDropdown.js';
 import { ProfileDropdown } from '../common/ProfileDropdown.js';
 import { Favorites } from '../common/Favorites.js';
 import { Message } from '../common/Message.js';
-import { Card } from '../common/Cart.js';
 import { NavigationMenu } from '../common/NavigationMenu.js';
 
 export const Header = () => {
@@ -20,7 +19,7 @@ export const Header = () => {
     const [notifications, setNotifications] = useState([]); // Danh sách thông báo
     const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
     const [points, setPoints] = useState(0);
-    const [role, setRole] = useState(null); 
+    const [role, setRole] = useState(null);
     const token = localStorage.getItem('token');
 
     useEffect(() => {
@@ -28,7 +27,6 @@ export const Header = () => {
             setLoading(false);
             return;
         }
-
         // Gọi API introspect để lấy thông tin role mỗi khi tải trang
         fetch(`http://localhost:8080/api/v1/auth/introspect`, {
             method: 'POST',
@@ -38,44 +36,18 @@ export const Header = () => {
             },
             body: JSON.stringify({ token })
         })
-        .then((response) => response.json())
-        .then(data => {
-            if (data.result.valid) {
-                setRole(data.result.scope); // Thiết lập role sau khi kiểm tra token
-            } else {
-                console.error("Token không hợp lệ");
-            }
-        })
-        .catch(error => console.log(error))
-        .finally(() => setLoading(false));
+            .then((response) => response.json())
+            .then(data => {
+                if (data.result.valid) {
+                    setRole(data.result.scope); // Thiết lập role sau khi kiểm tra token
+                } else {
+                    console.error("Token không hợp lệ");
+                }
+            })
+            .catch(error => console.log(error))
+            .finally(() => setLoading(false));
     }, [token]);
 
-    // Fetch avatar và points
-    useEffect(() => {
-        if (!token) return;
-
-        fetch(`http://localhost:8080/api/v1/get-avatar`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => response.json())
-        .then(data => setAvatar(data.result))
-        .catch(error => console.log(error));
-
-        fetch(`http://localhost:8080/api/v1/get-points`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => response.json())
-        .then(data => setPoints(data.result))
-        .catch(error => console.log(error));
-    }, [token]);
 
     useEffect(() => {
         if (!token || !isTokenValid) return;
@@ -86,12 +58,12 @@ export const Header = () => {
                 'Authorization': `Bearer ${token}`
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            setNotifications(data.result || []);
-            setUnreadCount(data.result.filter(n => !n.isRead).length || []);
-        })
-        .catch(error => console.log(error));
+            .then(response => response.json())
+            .then(data => {
+                setNotifications(data.result || []);
+                setUnreadCount(data.result.filter(n => !n.isRead).length || []);
+            })
+            .catch(error => console.log(error));
     }, [token, isTokenValid]);
 
     const markAsRead = (notificationId) => {
@@ -101,17 +73,35 @@ export const Header = () => {
                 'Authorization': `Bearer ${token}`
             }
         })
-        .then(response => response.json())
-        .then(() => {
-            setUnreadCount(prevCount => prevCount - 1);
-            setNotifications(prevNotifications =>
-                prevNotifications.map(n =>
-                    n.id === notificationId ? { ...n, isRead: true } : n
-                )
-            );
-        })
-        .catch((error) => console.error('Error marking notification as read:', error));
+            .then(response => response.json())
+            .then(() => {
+                setUnreadCount(prevCount => prevCount - 1);
+                setNotifications(prevNotifications =>
+                    prevNotifications.map(n =>
+                        n.id === notificationId ? { ...n, isRead: true } : n
+                    )
+                );
+            })
+            .catch((error) => console.error('Error marking notification as read:', error));
     };
+
+    useEffect(() => {
+        if (!token) {
+            setLoading(false);
+            return;
+        }
+
+        fetch(`http://localhost:8080/api/v1/get-avatar`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => response.json())
+            .then(data => setAvatar(data.result))
+            .catch(error => console.log(error));
+    }, [token]);
 
     useEffect(() => {
         const activeLink = document.querySelector(`.nav-item.active`);
@@ -122,6 +112,28 @@ export const Header = () => {
     }, [location.pathname]);
 
     const isActive = (path) => location.pathname === path;
+
+    useEffect(() => {
+        const fetchPoints = async () => {
+            try {
+                const response = await fetch(`http://localhost:8080/api/v1/get-points-user-current`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                if (!response.ok) {
+                    throw new Error('Failed to get points');
+                }
+                const data = await response.json();
+                setPoints(data.result.points)
+            } catch (error) {
+                console.log(error)
+            }
+        };
+        fetchPoints();
+    }, [token])
+
 
     return (
         <div className="container-fluid p-0">

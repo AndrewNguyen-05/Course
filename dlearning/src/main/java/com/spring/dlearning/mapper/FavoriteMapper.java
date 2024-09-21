@@ -13,6 +13,6 @@ public interface FavoriteMapper {
     @Mapping(source = "course.author.name", target = "author")
     @Mapping(source = "course.title", target = "title")
     @Mapping(source = "course.thumbnail", target = "thumbnail")
-    @Mapping(source = "course.price", target = "price")
+    @Mapping(source = "course.point", target = "points")
     FavoriteResponse toFavoriteResponse(Favorite favorite);
 }

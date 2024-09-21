@@ -1,7 +1,9 @@
 package com.spring.dlearning.service;
 
+import com.spring.dlearning.dto.request.BuyCourseRequest;
 import com.spring.dlearning.dto.request.CourseRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
+import com.spring.dlearning.dto.response.BuyCourseResponse;
 import com.spring.dlearning.dto.response.CourseResponse;
 import com.spring.dlearning.dto.response.PageResponse;
 import com.spring.dlearning.dto.response.UploadCourseResponse;

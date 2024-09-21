@@ -2,8 +2,6 @@ package com.spring.dlearning.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Setter
@@ -17,6 +15,6 @@ public class BuyCourseResponse {
     Long courseId;
     String author;
     String title;
-    BigDecimal price;
+    Long points;
     LocalDateTime createAt;
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap'; 
+import { Spinner } from 'react-bootstrap';
 import { Footer } from '../layouts/Footer';
 import Pagination from '../common/Pagination'; // Import component Pagination
 import { TopBar } from '../layouts/TopBar';
@@ -63,7 +63,7 @@ const FavoriteCourses = () => {
 
     return (
         <div>
-            <TopBar/>
+            <TopBar />
             <Header />
             <div className="container">
                 <h2>Your Favorite Courses</h2><br />
@@ -92,9 +92,10 @@ const FavoriteCourses = () => {
                                             <div className="course-meta">
                                                 <span><i className="fa fa-star mr-2"></i>4.5 (250)</span>
                                             </div>
+
                                             <div className="course-price mt-2">
                                                 <strong>Price: </strong>
-                                                <span className="course-price-value">${favorite.price ? favorite.price.toFixed(2) : 'N/A'}</span>
+                                                <span className="course-price-value">{favorite.points} <i class="fa-solid fa-coins coins-course-favorite"></i></span>
                                             </div>
                                         </div>
                                     </Link>

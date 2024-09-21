@@ -11264,3 +11264,10 @@ h6,
 .points-display:hover {
   cursor: pointer;
 }
+.coins-course{
+  color: #FFD700;
+}
+
+.coins-course-favorite{
+  color: #C0C0C0;
+}

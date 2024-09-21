@@ -1,11 +1,8 @@
 package com.spring.dlearning.dto.response;
 
-
 import com.spring.dlearning.utils.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.math.BigDecimal;
 
 @Data
 @NoArgsConstructor
@@ -23,5 +20,5 @@ public class CourseResponse {
     CourseLevel courseLevel;
     String thumbnail;
     String videoUrl;
-    BigDecimal price;
+    Long points;
 }

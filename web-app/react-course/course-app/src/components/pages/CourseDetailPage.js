@@ -7,6 +7,7 @@ import { TopBar } from "../layouts/TopBar";
 import { Header } from "../layouts/Header";
 import { Banner } from "../layouts/Banner";
 import { Footer } from "../layouts/Footer";
+import Swal from "sweetalert2";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
@@ -272,38 +273,51 @@ export const CourseDetail = () => {
             });
     };
 
-    const handleEnrollNow = () => {
-        const paymentData = {
-            amount: course.price,
-            bankCode: "NCB",
-            courseId: id
-        }
-
-        const query = new URLSearchParams(paymentData).toString();  // Chuyển object thành query string
-
-        fetch(`http://localhost:8080/api/v1/payment/vn-pay?${query}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data)
-                if (data.result && data.result.paymentUrl) {
-                    window.location.href = data.result.paymentUrl;
-                } else {
-                    toast.error("Failed to create payment.");
+    
+    const handleEnrollNow = async () => {
+        Swal.fire({
+            title: 'Bạn có chắc chắn?',
+            text: 'Bạn có muốn mua khóa học này?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Có, mua ngay!',
+            cancelButtonText: 'Không, hủy'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`http://localhost:8080/api/v1/buy-course`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(id) 
+                    });
+    
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message);
+                    }
+    
+                    const data = await response.json();
+    
+                    Swal.fire({
+                        title: 'Mua thành công!',
+                        text: `Bạn đã mua khóa học: ${data.result.title}`,
+                        icon: 'success'
+                    });
+                } catch (error) {
+                    Swal.fire({
+                        title: 'Lỗi!',
+                        text: error.message || 'Đã xảy ra lỗi trong quá trình mua khóa học. Vui lòng thử lại sau.',
+                        icon: 'error'
+                    });
+                    console.error(error);
                 }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                toast.error("Failed to create payment.");
-            });
-    }
-
-    console.log(course.price);
-
+            }
+        });
+    };
+    
     return (
         <div>
             <TopBar/>
@@ -523,8 +537,8 @@ export const CourseDetail = () => {
                                 {/* Course Price */}
                                 <h5 className="course-price text-white py-3 px-4 m-0">
                                     <i className="fa fa-money mr-2 text-warning"></i>
-                                    Course Price: {new Intl.NumberFormat('vi-VN').format(course.price)}
-                                    <span className="currency">₫</span>
+                                    Course Price: {course.points}
+                                    <span className="currency"><i class="fa-solid fa-coins coins-course"></i></span>
                                 </h5>
 
                                 {/* Enroll Now Button */}
