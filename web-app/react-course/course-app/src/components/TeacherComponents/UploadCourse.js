@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { FaUpload, FaBook, FaTags, FaDollarSign, FaFileAlt, FaClock, FaImage } from 'react-icons/fa';
 import { Footer } from '../layouts/Footer';
-import { Navbar } from '../layouts/Navbar';
 import { TopBar } from '../layouts/TopBar';
+import { Header } from '../layouts/Header';
 
 export const UploadCourse = () => {
     const [courseTitle, setCourseTitle] = useState('');
@@ -21,7 +21,7 @@ export const UploadCourse = () => {
     return (
         <div className="upload-course-container">
             <TopBar />
-            <Navbar />
+            <Header />
             <div className="container upload-container my-5">
                 <div className="row justify-content-center">
                     <div className="col-lg-7 col-md-9">

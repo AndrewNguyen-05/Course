@@ -11079,13 +11079,6 @@ h6,
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
 
-body {
-    font-family: 'Montserrat', sans-serif;
-    background: #f8f9fa;
-    margin: 0;
-    padding: 0;
-}
-
 .payment-container {
     background: #fff;
     padding: 50px;

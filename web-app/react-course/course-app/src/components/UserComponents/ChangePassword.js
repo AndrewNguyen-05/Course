@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash, FaLock, FaKey, FaUser, FaShieldAlt } from 'react-icons/fa';
-import { Navbar } from '../layouts/Navbar';
 import { Footer } from '../layouts/Footer';
 import { ToastContainer, toast } from 'react-toastify';
 import { TopBar } from '../layouts/TopBar';
+import { Header } from '../layouts/Header';
 
 export const ChangePassword = () => {
 
@@ -55,7 +55,7 @@ export const ChangePassword = () => {
   return (
     <div>
       <TopBar/>
-      <Navbar />
+      <Header />
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">

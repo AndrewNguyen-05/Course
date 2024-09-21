@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Footer } from "../layouts/Footer";
-import { Navbar } from "../layouts/Navbar";
 import { TopBar } from "../layouts/TopBar";
+import { Header } from "../layouts/Header";
 
 export const Register = () => {
     const [formData, setFormData] = useState({
@@ -156,7 +156,7 @@ export const Register = () => {
     return (
         <div>
             <TopBar/>
-            <Navbar />
+            <Header />
             <section className="py-3 py-md-5 py-xl-8">
                 <div className="container">
                     <div className="row">

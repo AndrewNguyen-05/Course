@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { FaEdit, FaTrash } from 'react-icons/fa';
 import Sidebar from '../layouts/Sidebar';
 import { Footer } from '../layouts/Footer';
-import { Navbar } from '../layouts/Navbar';
-import { UseAuth } from '../authentication/UseAuth';
-import { HandleLogout } from '../authentication/HandleLogout';
+import { TopBar } from '../layouts/TopBar';
+import { Header } from '../layouts/Header';
 
 export const MyCourses = () => {
 
@@ -38,7 +36,8 @@ export const MyCourses = () => {
         <div className="d-flex">
             <Sidebar />
             <div className="content-wrapper w-100">
-                <Navbar />
+                <TopBar />
+                <Header/>
                 <div className="container-fluid my-courses-container my-5">
                     <div className="row justify-content-center">
                         {courses.map(course => (

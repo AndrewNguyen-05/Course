@@ -90,7 +90,7 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "facebookLink")
     String facebookLink;
 
-    @Column(name = "points")
+    @Column(name = "points", columnDefinition = "BIGINT DEFAULT 0")
     Long points;
 
     @Column(name = "registrationStatus")

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Navbar } from "../layouts/Navbar";
 import { Footer } from "../layouts/Footer";
 import { ToastContainer, toast } from 'react-toastify';
 import { TopBar } from "../layouts/TopBar";
+import { Header } from "../layouts/Header";
 
 export const RegisterTeacher = () => {
 
@@ -105,7 +105,7 @@ export const RegisterTeacher = () => {
     return (
         <div>
             <TopBar />
-            <Navbar />
+            <Header />
             <div className="container mt-5">
                 <div className="row justify-content-center">
                     <div className="col-md-8">

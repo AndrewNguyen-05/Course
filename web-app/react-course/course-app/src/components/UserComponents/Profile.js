@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Footer } from "../layouts/Footer";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Navbar } from "../layouts/Navbar";
 import { TopBar } from "../layouts/TopBar";
+import { Header } from "../layouts/Header";
 
 export const Profile = () => {
 
@@ -166,7 +166,7 @@ export const Profile = () => {
     return (
         <div>
             <TopBar />
-            <Navbar />
+            <Header />
             {/* FORM INFO AND UPDATE PROFILE */}
             <div className="container">
                 <div className="row gutters">

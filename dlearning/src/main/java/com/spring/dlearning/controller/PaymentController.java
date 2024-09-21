@@ -48,7 +48,9 @@ public class PaymentController {
         String redirectUrl;
 
         String transactionStatus = request.getParameter("vnp_ResponseCode");
-        BigDecimal amount = new BigDecimal(request.getParameter("vnp_Amount"));
+
+        BigDecimal amountInVNPay = new BigDecimal(request.getParameter("vnp_Amount"));
+        BigDecimal actualAmount = amountInVNPay.divide(new BigDecimal(100));
 
         String orderInfo = request.getParameter("vnp_OrderInfo");
         String email = orderInfo.replace("Thanh toan don hang cho email: ", "").trim();
@@ -57,15 +59,29 @@ public class PaymentController {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         if ("00".equals(transactionStatus)) {
-            recordPaymentTransaction(user, amount, PaymentStatus.COMPLETED);
+            recordPaymentTransaction(user, actualAmount, PaymentStatus.COMPLETED);
+
+            BigDecimal pointsPer1000VND = new BigDecimal(10); // 1000VND = 10 points
+            BigDecimal numberOfThousands = actualAmount.divide(new BigDecimal(1000)); //
+            BigDecimal totalPoints = numberOfThousands.multiply(pointsPer1000VND);
+
+            long pointsToAdd = totalPoints.longValue();
+
+            if (user.getPoints() == null) {
+                user.setPoints(pointsToAdd);
+            } else {
+                user.setPoints(user.getPoints() + pointsToAdd);
+            }
+            userRepository.save(user);
             redirectUrl = "http://localhost:3000/payment-success";
 
-        }else if("24".equals(transactionStatus)) {
-            recordPaymentTransaction(user, amount, PaymentStatus.CANCELED);
-            redirectUrl = "http://localhost:3000/payment-cancle";
+        } else if ("24".equals(transactionStatus)) {
+
+            recordPaymentTransaction(user, actualAmount, PaymentStatus.CANCELED);
+            redirectUrl = "http://localhost:3000/payment-cancel";
 
         } else {
-            recordPaymentTransaction(user, amount, PaymentStatus.FAILED);
+            recordPaymentTransaction(user, actualAmount, PaymentStatus.FAILED);
             redirectUrl = "http://localhost:3000/payment-failed";
         }
         response.sendRedirect(redirectUrl);

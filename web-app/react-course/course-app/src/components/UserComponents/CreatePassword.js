@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Navbar } from "../layouts/Navbar";
 import { Footer } from "../layouts/Footer";
 import { useNavigate } from "react-router-dom";
 import { TopBar } from "../layouts/TopBar";
+import { Header } from "../layouts/Header";
 
 export const CreatePassword = () => {
 
@@ -51,7 +51,7 @@ export const CreatePassword = () => {
     return (
         <div>
             <TopBar/>
-            <Navbar/>
+            <Header/>
             <div className="container d-flex justify-content-center">
                 <div className="card p-4 shadow-lg" style={{ maxWidth: '500px', width: '100%', marginTop: '50px' }}>
                     <div className="card-body text-center">

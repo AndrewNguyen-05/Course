@@ -56,4 +56,7 @@ public class BannedWordsService {
     }
 }
   /*@PostConstruct trong trường hợp này giúp bạn chuẩn bị dữ liệu ngay khi ứng dụng khởi động và tránh
-    việc phải đọc file mỗi khi có yêu cầu từ người dùng, giúp ứng dụng phản hồi nhanh hơn và đảm bảo tính nhất quán */
+    việc phải đọc file mỗi khi có yêu cầu từ người dùng, giúp ứng dụng phản hồi nhanh hơn và đảm bảo tính nhất quán
+    return !hits.isEmpty();
+    */
+
