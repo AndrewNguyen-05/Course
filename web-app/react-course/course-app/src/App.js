@@ -1,31 +1,32 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { LoginPage } from './components/UserComponents/LoginPage';
+import { PaymentSuccess } from './components/pages/PaymentSuccess';
 import { HomePage } from './components/pages/HomePage';
-import { About } from './components/UserComponents/About';
-import { Courses } from './components/UserComponents/Courses';
-import { CourseDetail } from './components/UserComponents/CourseDetail';
-import { Contact } from './components/UserComponents/Contact';
-import { Profile } from './components/UserComponents/Profile';
-import { PrivateRoute } from './components/router/PrivateRoute';
-import { ChangePassword } from './components/UserComponents/ChangePassword';
-import { ProcessLoginOAuth2 } from './components/authentication/OAuth2';
-import { CreatePassword } from './components/UserComponents/CreatePassword';
-import { UploadCourse } from './components/TeacherComponents/UploadCourse';
-import { MyCourses } from './components/TeacherComponents/ManagerCourse';
 import { LayoutWithoutHeaderFooter } from './components/UserComponents/LayoutWithoutHeaderFooter';
-import { ForgotPassword } from './components/authentication/ForgotPassword';
-import { Register } from './components/UserComponents/Register';
+import { ProcessLoginOAuth2 } from './components/authentication/OAuth2';
+import { Register } from './components/pages/RegisterPage';
+import { LoginPage } from './components/pages/LoginPage';
+import { CreatePassword } from './components/UserComponents/CreatePassword';
+import { ChangePassword } from './components/UserComponents/ChangePassword';
+import { Profile } from './components/UserComponents/Profile';
+import FavoriteCourses from './components/UserComponents/Favorite';
+import DepositPage from './components/pages/DepositPage';
 import { Authorization } from './components/authorization/Authorization';
-import { Accessdenied } from './components/error/Accessdenied';
+import { PrivateRoute } from './components/router/PrivateRoute';
+import { ForgotPassword } from './components/pages/ForgotPasswordPage';
+import { MyCourses } from './components/TeacherComponents/MyCourse';
 import { RegisterTeacher } from './components/UserComponents/RegisterTeacher';
 import { Dashboard } from './components/admin/components/Dashboard';
 import { RegistrationList } from './components/admin/components/RegistrationList';
-import { pdfjs } from 'react-pdf';
-import FavoriteCourses from './components/UserComponents/Favorite';
-import DepositPage from './components/UserComponents/DepositPage';
+import { Accessdenied } from './components/error/Accessdenied';
+import { About } from './components/pages/AboutPage';
+import { Courses } from './components/pages/CoursesPage';
+import { CourseDetail } from './components/pages/CourseDetailPage';
+import { Contact } from './components/pages/ContactPage';
+import { UploadCourse } from './components/TeacherComponents/UploadCourse';
+import { PaymentFail } from './components/pages/PaymentFailed';
+import { PaymentCancel } from './components/pages/PaymentCancle';
 
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
 
 function App() {
@@ -33,8 +34,12 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<HomePage/> } />
+          <Route path="/" element={<HomePage /> } />
           <Route path="/home" element={ <HomePage/> }/>
+
+          <Route path="/payment-success" element={<PaymentSuccess/> } />
+          <Route path="/payment-failed" element={<PaymentFail/> } />
+          <Route path="/payment-cancle" element={<PaymentCancel/> } />
 
           <Route path="/login" element={
             <LayoutWithoutHeaderFooter>
@@ -109,6 +114,7 @@ function App() {
             <Authorization requiredRole={["TEACHER"]}>
               <LayoutWithoutHeaderFooter>
                 <MyCourses />
+                
               </LayoutWithoutHeaderFooter>
             </Authorization>
           } />
