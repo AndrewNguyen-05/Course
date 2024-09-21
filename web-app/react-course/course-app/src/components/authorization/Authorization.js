@@ -1,17 +1,14 @@
-import React from "react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 export const Authorization = ({ children, requiredRole }) => {
 
     const navigate = useNavigate();
 
-    const [isLoading, setIsLoading] = useState(true); // kiểm soát quá trình kiểm tra role
+    const [isLoading, setIsLoading] = useState(true); 
     const [isAuthorized, setIsAuthorized] = useState(false); // kiểm soát quá trình authorization
 
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
+    const token = localStorage.getItem('token'); 
 
     useEffect(() => {
         if (!token) {
@@ -21,62 +18,51 @@ export const Authorization = ({ children, requiredRole }) => {
 
         const roles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
 
-        if (role) {
-            if (roles.includes(role)) {
-                setIsAuthorized(true);
-                setIsLoading(false);
-            } else {
-                navigate("/accessdenied");
-            }
-            // Kiểm tra thêm như khi login google, hoặc 1 số trường hợp sẽ không lưu role trên UI
-        } else {
-
-            fetch('http://localhost:8080/api/v1/auth/introspect', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ token })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(errorData => {
-                            throw new Error(errorData.message || 'An error occurred.');
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.result && data.result.valid) {
-                        const userRole = data.result.scope;
-                        localStorage.setItem('role', userRole);
-                        if (userRole === requiredRole) {
-                            setIsAuthorized(true);
-                        } else {
-                            navigate('/accessdenied');
-                        }
-                    } else {
-                        throw new Error('Invalid token.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error during introspect:', error);
-                    navigate('/login');
-                })
-                .finally(() => {
-                    setIsLoading(false); // Kết thúc trạng thái tải
+        fetch('http://localhost:8080/api/v1/auth/introspect', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ token })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(errorData => {
+                    throw new Error(errorData.message);
                 });
-        }
-    }, [navigate, token, requiredRole, role]);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.result && data.result.valid) {
+                const userRole = data.result.scope; 
+                if (roles.includes(userRole)) {
+                    setIsAuthorized(true);
+                } else {
+                    navigate('/accessdenied'); 
+                }
+            } else {
+                throw new Error('Invalid token.');
+            }
+        })
+        .catch(error => {
+            console.error('Error during introspect:', error);
+            navigate('/login');
+        })
+        .finally(() => {
+            setIsLoading(false); // Kết thúc trạng thái kiem tra
+        });
+
+    }, [navigate, token, requiredRole]);
 
     if (isLoading) {
-        return <div>Loading...</div>; // isLoading === true =>  khi đang kiểm tra quyền 
+        return <div>Loading...</div>; // Hiển thị khi đang kiểm tra quyền
     }
 
     if (!isAuthorized) {
-        return null; // isAuthorized === false => không đủ quyền
+        return null; // Không đủ quyền, không render gì cả
     }
 
-    return children; // Render nội dung con nếu người dùng được phép truy cập
+    return children; // Nếu người dùng được phân quyền, render nội dung bên trong
 };
