@@ -2,18 +2,14 @@ package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.VNPAYResponse;
-import com.spring.dlearning.entity.Course;
-import com.spring.dlearning.entity.Enrollment;
 import com.spring.dlearning.entity.Payment;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
-import com.spring.dlearning.repository.EnrollmentRepository;
 import com.spring.dlearning.repository.PaymentRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.service.PaymentService;
 import com.spring.dlearning.utils.PaymentStatus;
-import com.spring.dlearning.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;

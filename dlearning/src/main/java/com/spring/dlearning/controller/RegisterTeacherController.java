@@ -1,6 +1,5 @@
 package com.spring.dlearning.controller;
 
-
 import com.spring.dlearning.dto.request.UserRegisterTeacherRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.UserRegisterTeacherResponse;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;

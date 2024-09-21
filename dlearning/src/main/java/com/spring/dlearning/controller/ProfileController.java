@@ -1,6 +1,5 @@
 package com.spring.dlearning.controller;
 
-
 import com.spring.dlearning.dto.request.UserProfileRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.UserProfileResponse;
@@ -15,7 +14,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 
 @RestController
 @RequiredArgsConstructor

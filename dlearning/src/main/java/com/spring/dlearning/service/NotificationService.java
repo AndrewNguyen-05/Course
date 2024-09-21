@@ -1,6 +1,5 @@
 package com.spring.dlearning.service;
 
-
 import com.spring.dlearning.entity.Notification;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
@@ -15,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.List;
 
