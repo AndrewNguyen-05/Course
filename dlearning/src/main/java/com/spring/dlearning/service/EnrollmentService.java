@@ -59,6 +59,9 @@ public class EnrollmentService {
         Course course = courseRepository.findById(request.getCourseId())
                 .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
 
+        boolean existedEnrollment = enrollmentRepository.existsByUserAndCourse(user, course);
+        if(existedEnrollment) throw new AppException(ErrorCode.COURSE_ALREADY_PURCHASED);
+
         Long pointsCourse = Objects.requireNonNull(course.getPoint(), "Course points cannot be null");
         Long pointsUser = Objects.requireNonNull(user.getPoints(), "User points cannot be null");
 
