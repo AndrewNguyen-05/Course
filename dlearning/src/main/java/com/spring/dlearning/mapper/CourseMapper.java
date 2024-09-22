@@ -20,6 +20,7 @@ public interface CourseMapper {
     Course updateCourse(UploadCourseRequest request);
 
     @Mapping(source = "author.name", target = "author")
+    @Mapping(source = "thumbnail", target = "thumbnail")
     UploadCourseResponse toUploadCourseResponse(Course course);
 
 }

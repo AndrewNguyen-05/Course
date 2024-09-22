@@ -95,7 +95,7 @@ public class CourseService {
         return myCourse.stream().map(courseMapper::toCourseResponse).toList();
     }
 
-    public UploadCourseResponse uploadCourse(UploadCourseRequest request, MultipartFile file)
+    public UploadCourseResponse uploadCourse(UploadCourseRequest request, MultipartFile file, MultipartFile thumbnail)
             throws IOException {
 
         String email = SecurityUtils.getCurrentUserLogin()
@@ -105,9 +105,11 @@ public class CourseService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         String videoUrl = cloudinaryService.uploadVideoChunked(file, "courses").get("url").toString();
+        String thumbnailUrl = cloudinaryService.uploadImage(thumbnail);
 
         Course course = courseMapper.updateCourse(request);
         course.setVideoUrl(videoUrl);
+        course.setThumbnail(thumbnailUrl);
         course.setAuthor(user);
 
         courseRepository.save(course);

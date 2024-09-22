@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -59,8 +58,9 @@ public class EnrollmentService {
         Course course = courseRepository.findById(request.getCourseId())
                 .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
 
-        boolean existedEnrollment = enrollmentRepository.existsByUserAndCourse(user, course);
-        if(existedEnrollment) throw new AppException(ErrorCode.COURSE_ALREADY_PURCHASED);
+        if (enrollmentRepository.existsByUserAndCourse(user, course)) {
+            throw new AppException(ErrorCode.COURSE_ALREADY_PURCHASED);
+        }
 
         Long pointsCourse = Objects.requireNonNull(course.getPoint(), "Course points cannot be null");
         Long pointsUser = Objects.requireNonNull(user.getPoints(), "User points cannot be null");

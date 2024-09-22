@@ -1,10 +1,6 @@
 package com.spring.dlearning.entity;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,9 +16,15 @@ public class Lesson extends AbstractEntity<Long> {
 
     @ManyToOne
     @JoinColumn(name = "course_id")
-    private Course course;
+    Course course;
 
-    String title;
-    String content;
+    @Column(name = "title", nullable = false)
+    String lessonName;
+
+    @Column(name = "description", columnDefinition = "MEDIUMTEXT")
+    String description;
+
+    @Column(name = "videoUrl")
     String videoUrl;
+
 }

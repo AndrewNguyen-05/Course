@@ -26,6 +26,7 @@ import { Contact } from './components/pages/ContactPage';
 import { UploadCourse } from './components/TeacherComponents/UploadCourse';
 import { PaymentFail } from './components/pages/PaymentFailed';
 import { PaymentCancel } from './components/pages/PaymentCancle';
+import { LearningPage } from './components/pages/LearningPage';
 
 
 
@@ -36,6 +37,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
+
+          <Route path="/learning" element={<LearningPage />} />
 
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-failed" element={<PaymentFail />} />

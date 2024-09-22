@@ -1,9 +1,7 @@
 package com.spring.dlearning.dto.response;
 
-import com.spring.dlearning.utils.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import java.math.BigDecimal;
 
 @Setter
 @Getter
@@ -11,14 +9,13 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UploadCourseResponse {
+public class UploadLessonResponse {
 
-    String author;
-    String title;
+    Long userId;
+    Long courseId;
+    String courseTitle;
+    Long lessonId;
+    String lessonName;
     String description;
-    CourseLevel courseLevel;
-    Integer duration;
-    BigDecimal price;
-    String thumbnail;
     String videoUrl;
 }

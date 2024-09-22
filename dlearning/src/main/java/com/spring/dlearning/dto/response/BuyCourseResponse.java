@@ -1,5 +1,6 @@
 package com.spring.dlearning.dto.response;
 
+import com.spring.dlearning.utils.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.time.LocalDateTime;
@@ -11,10 +12,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BuyCourseResponse {
-    Long userId;
     Long courseId;
-    String author;
     String title;
+    String author;
+    CourseLevel courseLevel;
+    String thumbnail;
     Long points;
     LocalDateTime createAt;
 }

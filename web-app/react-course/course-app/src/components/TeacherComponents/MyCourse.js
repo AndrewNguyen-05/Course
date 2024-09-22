@@ -1,106 +1,100 @@
 import React, { useEffect, useState } from 'react';
-import Sidebar from '../layouts/Sidebar';
+import { useNavigate } from 'react-router-dom'; 
 import { Footer } from '../layouts/Footer';
 import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
 
 export const MyCourses = () => {
-
     const [loading, setLoading] = useState(true);
     const [courses, setCourses] = useState([]);
-
+    const navigate = useNavigate();
 
     const token = localStorage.getItem('token');
 
     useEffect(() => {
-
         if (!token) {
             setLoading(false);
             return;
         }
 
-        fetch(`http://localhost:8080/api/v1/my-courses`, {
+        fetch(`http://localhost:8080/api/v1/users/me/courses`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             },
-        }).then((response) => response.json()
-        ).then(data => {
+        }).then((response) => response.json())
+        .then(data => {
             setCourses(data.result);
+            setLoading(false);
         }).catch(error => console.log(error));
+    }, [token]);
 
-    }, []);
+    const handleLearnNow = (courseId) => {
+        navigate(`/learn/${courseId}`); // Điều hướng tới trang học với ID của khóa học
+    };
 
     return (
-        <div className="d-flex">
-            <Sidebar />
-            <div className="content-wrapper w-100">
-                <TopBar />
-                <Header/>
-                <div className="container-fluid my-courses-container my-5">
-                    <div className="row justify-content-center">
-                        {courses.map(course => (
-                            <div key={course.id} className="col-lg-3 col-md-6 mb-4">
-                                <div className="card h-100 shadow-sm border-0">
-                                    {/* Hình ảnh khóa học */}
-                                    <img src={course.thumbnail} className="card-img-top" alt={course.title} />
-
-                                    <div className="card-body">
-                                        {/* Tiêu đề khóa học */}
-                                        <h5 className="card-title text-primary">
-                                            <span className="icon-text">
-                                                <i className="fa fa-book text-warning"></i> {course.title}
-                                            </span>
-                                        </h5>
-
-                                        {/* Mô tả khóa học */}
-                                        <p className="card-text text-muted">
-                                            <span className="icon-text">
-                                                <i className="fa fa-info-circle text-info"></i> {course.description}
-                                            </span>
-                                        </p>
-
-                                        {/* Level của khóa học */}
-                                        <p className="card-text">
-                                            <span className="icon-text">
-                                                <i className="fa fa-level-up-alt text-success"></i>
-                                                <strong> Level:</strong> {course.courseLevel}
-                                            </span>
-                                        </p>
-
-                                        {/* Giá khóa học */}
-                                        <p className="course-price">
-                                            <span className="d-flex align-items-center">
-                                                <i className="fa fa-money-bill-wave text-success mr-2"></i>
-                                                <strong className="text-dark">Price:</strong>
-                                                <span className="ml-1 text-muted">
-                                                    {new Intl.NumberFormat('vi-VN').format(course.price)}
-                                                    <span> ₫</span>
-                                                </span>
-                                            </span>
-                                        </p>
-
-                                    </div>
-
-                                    {/* Các nút chức năng */}
-                                    <div className="card-footer d-flex justify-content-between align-items-center bg-light border-0">
-                                        <button className="btn btn-outline-primary btn-sm">
-                                            <i className="fa fa-edit me-1"></i> Edit
-                                        </button>
-                                        <button className="btn btn-outline-danger btn-sm">
-                                            <i className="fa fa-trash me-1"></i> Delete
+        <>
+            <TopBar />
+            <Header />
+            <div className="container-fluid my-course-container my-5">
+                <div className="my-course-grid">
+                    {courses.map(course => (
+                        <div key={course.id} className="my-course-item">
+                            <div className="card h-100 shadow-sm border-0 my-course-card">
+                                {/* Hình ảnh khóa học */}
+                                <div className="my-course-thumbnail-wrapper">
+                                    <img 
+                                        src={course.thumbnail} 
+                                        className="card-img-top img-fluid my-course-thumbnail" 
+                                        alt={course.title} 
+                                    />
+                                    {/* Nút "Học ngay" hiển thị khi hover */}
+                                    <div className="my-course-hover-overlay">
+                                        <button
+                                            className="btn btn-primary my-course-start-learning-btn"
+                                            onClick={() => handleLearnNow(course.id)} // Gọi hàm điều hướng
+                                        >
+                                            Học ngay
                                         </button>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
 
-                <Footer />
+                                <div className="card-body">
+                                    {/* Tiêu đề khóa học */}
+                                    <h5 className="card-title text-primary font-weight-bold my-course-title">
+                                        {course.title}
+                                    </h5>
+
+                                    {/* Tác giả khóa học */}
+                                    <p className="card-text text-dark my-course-author">
+                                        <strong>Author:</strong> {course.author}
+                                    </p>
+
+                                    {/* Level của khóa học */}
+                                    <p className="card-text my-course-level">
+                                        <span className="d-flex align-items-center">
+                                            <i className="fa fa-signal text-success mr-2"></i>
+                                            <strong>Level:</strong> {course.courseLevel}
+                                        </span>
+                                    </p>
+
+                                    {/* Giá khóa học */}
+                                    <p className="my-course-price text-dark">
+                                        <span className="d-flex align-items-center">
+                                            <i className="fa fa-coins text-warning mr-2"></i>
+                                            <strong>Points:</strong>
+                                            <span className="ml-1">{course.points}</span>
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
-        </div>
+            <Footer />
+        </>
     );
 };
-

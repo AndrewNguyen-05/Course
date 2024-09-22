@@ -1,26 +1,23 @@
 package com.spring.dlearning.mapper;
 
-import com.spring.dlearning.dto.request.UpdateLessonRequest;
-import com.spring.dlearning.dto.response.CommentLessonResponse;
+import com.spring.dlearning.dto.request.UploadLessonRequest;
+import com.spring.dlearning.dto.response.UploadLessonResponse;
 import com.spring.dlearning.entity.Lesson;
-import com.spring.dlearning.entity.Review;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface LessonMapper {
 
+
+    @Mapping(source = "courseId", target = "course.id")
+    @Mapping(source = "lessonName", target = "lessonName")
+    @Mapping(source = "description", target = "description")
+    Lesson toLesson(UploadLessonRequest request);
+
+    @Mapping(target = "userId", source = "course.author.id")
     @Mapping(target = "courseId", source = "course.id")
-    @Mapping(target = "chapterId", source = "chapter.id")
-    @Mapping(target = "lessonId", source = "lesson.id")
-    @Mapping(target = "content", source = "content")
-    @Mapping(target = "name", source = "user.name")
-    @Mapping(target = "avatar", source = "user.avatar")
-    @Mapping(target = "reviewId", source = "id")
-    CommentLessonResponse toCommentLessonResponse(Review review);
-
-
-    void updateLesson (UpdateLessonRequest request, @MappingTarget Lesson lesson);
-
+    @Mapping(target = "courseTitle", source = "course.title")
+    @Mapping(target = "lessonId", source = "id")
+    UploadLessonResponse toUploadLessonResponse(Lesson lesson);
 }

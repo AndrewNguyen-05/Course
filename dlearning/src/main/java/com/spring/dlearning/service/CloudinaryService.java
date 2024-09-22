@@ -48,7 +48,6 @@ public class CloudinaryService {
                     "unique_filename", true,
                     "resource_type","auto"
             ));
-
             return  result.get("secure_url").toString();
         } catch (IOException io){
             throw new RuntimeException("Image upload fail");

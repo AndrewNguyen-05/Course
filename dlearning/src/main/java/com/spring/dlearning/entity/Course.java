@@ -34,7 +34,7 @@ public class Course  {
     @Column(name = "title", nullable = false)
     String title;
 
-    @Column(columnDefinition = "MEDIUMTEXT")
+    @Column(name = "description", columnDefinition = "MEDIUMTEXT")
     String description;
 
     @Column(name = "point", columnDefinition = "BIGINT DEFAULT 0")
@@ -43,7 +43,7 @@ public class Course  {
     @Column(name = "duration")
     Integer duration; // in hours
 
-    @Column(name = "language", nullable = false)
+    @Column(name = "language")
     String language;
 
     @Enumerated(EnumType.STRING)

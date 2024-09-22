@@ -90,13 +90,15 @@ public class CourseController {
     @PostMapping("/upload-course")
     public ApiResponse<UploadCourseResponse> uploadCourse(
             @RequestPart("course") @Valid UploadCourseRequest request,
-            @RequestPart("file") MultipartFile courseFile) throws IOException {
+            @RequestPart("file") MultipartFile courseFile,
+            @RequestPart("thumbnail") MultipartFile thumbnail) throws IOException {
 
         return ApiResponse.<UploadCourseResponse>builder()
                 .code(HttpStatus.CREATED.value())
                 .message("Upload Course Successfully")
-                .result(courseService.uploadCourse(request, courseFile))
+                .result(courseService.uploadCourse(request, courseFile, thumbnail))
                 .build();
     }
+
 
 }
