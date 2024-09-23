@@ -12,7 +12,6 @@ import org.mapstruct.Mapping;
 public interface CourseMapper {
 
     @Mapping(source = "author.name", target = "author")
-    @Mapping(source = "point", target = "points")
     CourseResponse toCourseResponse(Course course);
 
     Course toCourse(CourseRequest courseRequest);

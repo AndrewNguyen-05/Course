@@ -38,7 +38,7 @@ public class Course  {
     String description;
 
     @Column(name = "point", columnDefinition = "BIGINT DEFAULT 0")
-    Long point;
+    Long points;
 
     @Column(name = "duration")
     Integer duration; // in hours
@@ -72,7 +72,7 @@ public class Course  {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Favorite> favorites;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonIgnore
     Set<Lesson> lessons;
 

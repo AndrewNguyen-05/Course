@@ -48,6 +48,8 @@ public enum ErrorCode {
     INVALID_COMMENT_CONTENT(404, "Invalid comment", HttpStatus.BAD_REQUEST),
     BUY_COURSE_INVALID(400, "Current points is not enough", HttpStatus.BAD_REQUEST),
     COURSE_ID_INVALID(400, "Course ID cannot be null", HttpStatus.BAD_REQUEST),
+    LESSON_ID_INVALID(400, "Lesson Id cannot be null", HttpStatus.BAD_REQUEST),
+    LESSON_NAME_INVALID(400, "Lesson Name cannot be null", HttpStatus.BAD_REQUEST),
     ;
 
     private int code;

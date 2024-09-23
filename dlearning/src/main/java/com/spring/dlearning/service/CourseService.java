@@ -1,16 +1,15 @@
 package com.spring.dlearning.service;
 
 import com.spring.dlearning.dto.request.BuyCourseRequest;
+import com.spring.dlearning.dto.request.CourseLessonRequest;
 import com.spring.dlearning.dto.request.CourseRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
-import com.spring.dlearning.dto.response.BuyCourseResponse;
-import com.spring.dlearning.dto.response.CourseResponse;
-import com.spring.dlearning.dto.response.PageResponse;
-import com.spring.dlearning.dto.response.UploadCourseResponse;
+import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
+import com.spring.dlearning.mapper.CourseLessonAndLessonContentMapper;
 import com.spring.dlearning.mapper.CourseMapper;
 import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.UserRepository;
@@ -40,6 +39,7 @@ public class CourseService {
     CourseRepository courseRepository;
     CloudinaryService cloudinaryService;
     CourseMapper courseMapper;
+    CourseLessonAndLessonContentMapper courseLessonAndLessonContentMapper;
 
     public PageResponse<CourseResponse> getAllCourses(Specification<Course> spec, int page, int size) {
 
@@ -115,6 +115,15 @@ public class CourseService {
         courseRepository.save(course);
 
         return courseMapper.toUploadCourseResponse(course);
+    }
+
+    public CourseLessonResponse getAllInfoCourse (Long courseId){
+
+        courseRepository.findById(courseId)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+
+        return courseLessonAndLessonContentMapper
+                .getCourserLessonAndLessonContent(courseId);
     }
 
 }

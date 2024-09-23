@@ -2,7 +2,6 @@ package com.spring.dlearning.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,17 +12,29 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UploadLessonResponse {
+public class CourseLessonResponse {
 
-    Long userId;
     Long courseId;
     String courseTitle;
-    Long lessonId;
-    String lessonName;
-    String description;
+    String courseDescription;
 
     @Builder.Default
-    Set<LessonContentDto> lessonContents = new HashSet<>();
+    Set<LessonDto> lessons = new HashSet<>();
+
+    @Setter
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @FieldDefaults(level = AccessLevel.PRIVATE)
+    public static class LessonDto{
+        Long lessonId;
+        String lessonName;
+        String lessonDescription;
+
+        @Builder.Default
+        Set<LessonContentDto> lessonContentDto = new HashSet<>();
+    }
 
     @Setter
     @Getter
@@ -33,8 +44,10 @@ public class UploadLessonResponse {
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class LessonContentDto{
         Long contentId;
-        String contentType;   // Ví dụ: "video", "document"
+        String contentType;
         String contentUrl;
         String contentDescription;
+
     }
+
 }

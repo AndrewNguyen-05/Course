@@ -2,10 +2,7 @@ package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.request.CourseRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
-import com.spring.dlearning.dto.response.ApiResponse;
-import com.spring.dlearning.dto.response.CourseResponse;
-import com.spring.dlearning.dto.response.PageResponse;
-import com.spring.dlearning.dto.response.UploadCourseResponse;
+import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.service.CourseService;
 import com.turkraft.springfilter.boot.Filter;
@@ -100,5 +97,12 @@ public class CourseController {
                 .build();
     }
 
+    @GetMapping("/info-course/{id}")
+    ApiResponse<CourseLessonResponse> infoCourse(@PathVariable Long id){
+        return ApiResponse.<CourseLessonResponse>builder()
+                .code(HttpStatus.OK.value())
+                .result(courseService.getAllInfoCourse(id))
+                .build();
+    }
 
 }

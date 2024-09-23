@@ -62,7 +62,7 @@ public class EnrollmentService {
             throw new AppException(ErrorCode.COURSE_ALREADY_PURCHASED);
         }
 
-        Long pointsCourse = Objects.requireNonNull(course.getPoint(), "Course points cannot be null");
+        Long pointsCourse = Objects.requireNonNull(course.getPoints(), "Course points cannot be null");
         Long pointsUser = Objects.requireNonNull(user.getPoints(), "User points cannot be null");
 
         if(pointsUser < pointsCourse){
