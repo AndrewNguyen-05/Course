@@ -6,6 +6,7 @@ import com.spring.dlearning.dto.request.CourseRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.entity.Course;
+import com.spring.dlearning.entity.Lesson;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
@@ -28,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -60,8 +62,24 @@ public class CourseService {
     }
 
     public CourseResponse getCourseById(Long id){
-        return courseRepository.findById(id).map(courseMapper::toCourseResponse)
+
+        Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+
+        return CourseResponse.builder()
+                .id(course.getId())
+                .author(course.getAuthor().getName())
+                .title(course.getTitle())
+                .description(course.getDescription())
+                .duration(course.getDuration())
+                .language(course.getLanguage())
+                .courseLevel(course.getCourseLevel())
+                .thumbnail(course.getThumbnail())
+                .videoUrl(course.getVideoUrl())
+                .points(course.getPoints())
+                .lessonName(course.getLessons().stream().map(Lesson::getLessonName).collect(Collectors.toSet()))
+                .build();
+
     }
 
     @Transactional

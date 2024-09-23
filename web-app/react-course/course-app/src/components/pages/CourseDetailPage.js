@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FaCommentDots, FaReply, FaTrash, FaStar } from 'react-icons/fa';
+import { FaCommentDots, FaReply, FaTrash, FaStar, FaBook } from 'react-icons/fa';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { TopBar } from "../layouts/TopBar";
@@ -117,7 +117,7 @@ export const CourseDetail = () => {
                     setNewComment("");
                     setNewRating(0);
                     toast.success('Comment added successfully');
-                }else {
+                } else {
                     toast.error(data.message)
                 }
             })
@@ -273,7 +273,7 @@ export const CourseDetail = () => {
             });
     };
 
-    
+
     const handleEnrollNow = async () => {
         Swal.fire({
             title: 'Bạn có chắc chắn?',
@@ -291,16 +291,16 @@ export const CourseDetail = () => {
                             'Content-Type': 'application/json',
                             'Authorization': `Bearer ${token}`
                         },
-                        body: JSON.stringify(id) 
+                        body: JSON.stringify(id)
                     });
-    
+
                     if (!response.ok) {
                         const errorData = await response.json();
                         throw new Error(errorData.message);
                     }
-    
+
                     const data = await response.json();
-    
+
                     Swal.fire({
                         title: 'Mua thành công!',
                         text: `Bạn đã mua khóa học: ${data.result.title}`,
@@ -317,12 +317,21 @@ export const CourseDetail = () => {
             }
         });
     };
-    
+
+    // useState[lesson, setLesson] = useState(null);
+
+
+    const lessons = [
+        { id: 1, title: 'Introduction to JavaScript', duration: '30 min' },
+        { id: 2, title: 'Variables and Data Types', duration: '45 min' },
+        { id: 3, title: 'Functions and Scope', duration: '60 min' }
+    ];
+
     return (
         <div>
-            <TopBar/>
-            <Header/>
-            <Banner/>
+            <TopBar />
+            <Header />
+            <Banner />
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     <div className="row">
@@ -333,6 +342,23 @@ export const CourseDetail = () => {
                                 <img className="img-fluid rounded w-100 mb-4" src={course.thumbnail} alt="Course" />
                                 <p>{course.description}</p>
                             </div>
+
+                            <h2 className="lesson-header mb-4 d-flex align-items-center">
+                                <FaBook style={{ color: "#2c3e50", marginRight: "15px", fontSize: "1.5em" }} />
+                                Course Lessons
+                            </h2>
+                            <ul className="lesson-list">
+                                {lessons.map((lesson) => (
+                                    <li key={lesson.id} className="lesson-item">
+                                        <div className="d-flex align-items-center">
+                                            <i className="fa fa-file-alt lesson-icon"></i>
+                                            <span className="lesson-title">{lesson.title}</span>
+                                        </div>
+                                        <span className="lesson-duration">{lesson.duration}</span>
+                                    </li>
+                                ))}
+                            </ul>
+
 
                             {/* Comment Section */}
                             <div className="comments-section mt-5">
@@ -609,7 +635,7 @@ export const CourseDetail = () => {
                     className="custom-toast-container"
                 />
             </div>
-            <Footer/>
+            <Footer />
         </div>
     );
 };
