@@ -85,7 +85,7 @@ export const Courses = () => {
                                         </div>
                                         <div className="course-price mt-2">
                                             <strong>Price: </strong>
-                                            <span className="course-price-value">${course.price.toFixed(2)}</span>
+                                            <span className="course-price-value">${course.points}</span>
                                         </div>
                                     </div>
                                 </Link>

@@ -129,8 +129,8 @@ export const Search = ({ onSearch }) => {
     const [courseLevel, setCourseLevel] = useState('');
     const [language, setLanguage] = useState('');
 
-    const [minPrice, setMinPrice] = useState('');
-    const [maxPrice, setMaxPrice] = useState('');
+    const [minPoints, setMinPoints] = useState('');
+    const [maxPoints, setMaxPoints] = useState('');
 
 
 
@@ -149,11 +149,11 @@ export const Search = ({ onSearch }) => {
         if (language) {
             filterQuery += (filterQuery ? ' and ' : '') + `language~~'*${language}*'`;
         }
-        if (minPrice) {
-            filterQuery += (filterQuery ? ' and ' : '') + `price>:${minPrice}`;
+        if (minPoints) {
+            filterQuery += (filterQuery ? ' and ' : '') + `points>:${minPoints}`;
         }
-        if (maxPrice) {
-            filterQuery += (filterQuery ? ' and ' : '') + `price<:${maxPrice}`;
+        if (maxPoints) {
+            filterQuery += (filterQuery ? ' and ' : '') + `points<:${maxPoints}`;
         }
 
         if (filterQuery) {
@@ -266,8 +266,8 @@ export const Search = ({ onSearch }) => {
                                 type="number"
                                 className="form-control search-input custom-input"
                                 placeholder="Min Price"
-                                value={minPrice}
-                                onChange={(e) => setMinPrice(e.target.value)}
+                                value={minPoints}
+                                onChange={(e) => setMinPoints(e.target.value)}
                             />
                         </div>
 
@@ -277,8 +277,8 @@ export const Search = ({ onSearch }) => {
                                 type="number"
                                 className="form-control search-input custom-input"
                                 placeholder="Max Price"
-                                value={maxPrice}
-                                onChange={(e) => setMaxPrice(e.target.value)}
+                                value={maxPoints}
+                                onChange={(e) => setMaxPoints(e.target.value)}
                             />
                         </div>
 

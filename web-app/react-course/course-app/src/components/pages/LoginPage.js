@@ -141,6 +141,7 @@ export const LoginPage = () => {
             <div className="col-12 col-lg-10 col-xl-8">
               <div className="row gy-5 justify-content-center">
                 <div className="col-12 col-lg-5">
+                  
                   <form id="login-form" onSubmit={handleLogin}>
                     <div className="row gy-3 overflow-hidden">
                       <div className="col-12">
@@ -196,6 +197,7 @@ export const LoginPage = () => {
                       </div>
                     </div>
                   </form>
+
                 </div>
                 <div className="col-12 col-lg-2 d-flex align-items-center justify-content-center gap-3 flex-lg-column">
                   <div className="bg-dark h-100 d-none d-lg-block" style={{ width: '1px', opacity: 0.1 }}></div>
