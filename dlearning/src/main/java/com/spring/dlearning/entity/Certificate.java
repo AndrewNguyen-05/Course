@@ -36,5 +36,4 @@ public class Certificate extends AbstractEntity<Long> {
     @Column(name = "description")
     String description;
 
-
 }
