@@ -7,17 +7,18 @@ import com.spring.dlearning.entity.LessonContent;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.repository.CourseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
 public final class CourseLessonAndLessonContentMapper {
 
-    @Autowired
     CourseRepository courseRepository;
+
+    public CourseLessonAndLessonContentMapper(CourseRepository courseRepository) {
+        this.courseRepository = courseRepository;
+    }
 
     public CourseLessonResponse getCourserLessonAndLessonContent(Long courseId){
         Course course =  courseRepository.findById(courseId)
@@ -48,7 +49,6 @@ public final class CourseLessonAndLessonContentMapper {
                 .lessonContentDto(lessonContentDtos)
                 .build();
     }
-
 
     // Chuyển đổi từng nội dung bài học(LessonContent) sang đối tượng trả về(LessonContentDto)
     private CourseLessonResponse.LessonContentDto mapToLessonContentDto(LessonContent lessonContent) {

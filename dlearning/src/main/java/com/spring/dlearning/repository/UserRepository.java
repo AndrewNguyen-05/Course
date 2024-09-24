@@ -1,6 +1,5 @@
 package com.spring.dlearning.repository;
 
-import com.spring.dlearning.entity.Role;
 import com.spring.dlearning.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
