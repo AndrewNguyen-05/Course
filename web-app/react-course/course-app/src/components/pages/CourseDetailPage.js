@@ -30,6 +30,7 @@ export const CourseDetail = () => {
             }
         }).then((response) => response.json())
             .then(data => {
+                console.log(data)
                 setCourse(data.result);
                 setLoading(false);
             }).catch(error => {
@@ -318,15 +319,6 @@ export const CourseDetail = () => {
         });
     };
 
-    // useState[lesson, setLesson] = useState(null);
-
-
-    const lessons = [
-        { id: 1, title: 'Introduction to JavaScript', duration: '30 min' },
-        { id: 2, title: 'Variables and Data Types', duration: '45 min' },
-        { id: 3, title: 'Functions and Scope', duration: '60 min' }
-    ];
-
     return (
         <div>
             <TopBar />
@@ -347,18 +339,17 @@ export const CourseDetail = () => {
                                 <FaBook style={{ color: "#2c3e50", marginRight: "15px", fontSize: "1.5em" }} />
                                 Course Lessons
                             </h2>
+
                             <ul className="lesson-list">
-                                {lessons.map((lesson) => (
-                                    <li key={lesson.id} className="lesson-item">
+                                {course && Array.isArray(course.lessonName) && course.lessonName.map((lesson, index) => (
+                                    <li key={index} className="lesson-item">
                                         <div className="d-flex align-items-center">
                                             <i className="fa fa-file-alt lesson-icon"></i>
-                                            <span className="lesson-title">{lesson.title}</span>
+                                            <span className="lesson-title">{lesson}</span> {/* lesson ở đây là một chuỗi */}
                                         </div>
-                                        <span className="lesson-duration">{lesson.duration}</span>
                                     </li>
                                 ))}
                             </ul>
-
 
                             {/* Comment Section */}
                             <div className="comments-section mt-5">
@@ -399,7 +390,7 @@ export const CourseDetail = () => {
                                                 </div>
                                                 <div>
                                                     <button className="btn btn-sm btn-outline-info mr-2" onClick={() => setEditingCommentId(comment.id)}>
-                                                        <i class="fa-solid fa-comment-dots"></i>
+                                                        <i className="fa-solid fa-comment-dots"></i>
                                                     </button>
                                                     <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(comment.id)}>
                                                         <FaTrash />
@@ -448,7 +439,7 @@ export const CourseDetail = () => {
 
                                                                 <div>
                                                                     <button className="btn btn-sm btn-outline-info mr-2" onClick={() => setEditingCommentId(reply.id)}>
-                                                                        <i class="fa-solid fa-comment-dots"></i>
+                                                                        <i className="fa-solid fa-comment-dots"></i>
                                                                     </button>
 
                                                                     <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(reply.id)}>
@@ -564,7 +555,7 @@ export const CourseDetail = () => {
                                 <h5 className="course-price text-white py-3 px-4 m-0">
                                     <i className="fa fa-money mr-2 text-warning"></i>
                                     Course Price: {course.points}
-                                    <span className="currency"><i class="fa-solid fa-coins coins-course"></i></span>
+                                    <span className="currency"><i className="fa-solid fa-coins coins-course"></i></span>
                                 </h5>
 
                                 {/* Enroll Now Button */}
