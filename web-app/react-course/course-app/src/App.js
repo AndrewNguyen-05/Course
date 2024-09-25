@@ -25,9 +25,8 @@ import { CourseDetail } from './components/pages/CourseDetailPage';
 import { Contact } from './components/pages/ContactPage';
 import { UploadCourse } from './components/TeacherComponents/UploadCourse';
 import { PaymentFail } from './components/pages/PaymentFailed';
-import { PaymentCancel } from './components/pages/PaymentCancel'; // Đổi tên đúng
+import { PaymentCancel } from './components/pages/PaymentCancel';
 import { LearningPage } from './components/pages/LearningPage';
-
 
 function App() {
   return (
@@ -39,7 +38,7 @@ function App() {
 
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFail />} />
-        <Route path="/payment-cancel" element={<PaymentCancel />} /> {/* Sửa lại "cancle" thành "cancel" */}
+        <Route path="/payment-cancel" element={<PaymentCancel />} />
 
         <Route path='/lesson-detail/:id' element={<LearningPage />} />
 
