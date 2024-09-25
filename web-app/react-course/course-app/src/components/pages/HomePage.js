@@ -3,11 +3,8 @@ import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
-
 import aboutImage from './../../img/about.jpg';
 import featureImage from './../../img/feature.jpg';
-
 import instructor1Image from './../../img/duc.jpg';
 import instructor2Image from './../../img/duc1.jpg';
 import instructor3Image from './../../img/vu.jpg';
@@ -15,11 +12,6 @@ import instructor4Image from './../../img/nam.jpg';
 import testimonial1Image from './../../img/testimonial-1.jpg';
 import testimonial2Image from './../../img/testimonial-2.jpg';
 import { ToastContainer } from 'react-toastify';
-import { TopBar } from '../layouts/TopBar';
-import { Header } from '../layouts/Header';
-import { Footer } from '../layouts/Footer';
-import { Banner } from '../layouts/Banner';
-
 
 export const HomePage = () => {
 
@@ -124,9 +116,7 @@ export const HomePage = () => {
 
     return (
         <div>
-            <TopBar/>
-            <Header/>
-            <Banner/>
+          
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     <div className="row">
@@ -470,7 +460,8 @@ export const HomePage = () => {
                 autoClose={3000}
                 className="custom-toast-container"
             />
-            <Footer/>
+          
+
         </div>
     );
 };

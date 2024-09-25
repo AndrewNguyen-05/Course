@@ -1,8 +1,4 @@
 import React, { useEffect } from "react";
-import { TopBar } from "../layouts/TopBar";
-import { Header } from "../layouts/Header";
-import { Banner } from "../layouts/Banner";
-import { Footer } from "../layouts/Footer";
 
 export const Contact = () => {
     useEffect(() => {
@@ -10,9 +6,7 @@ export const Contact = () => {
     })
     return (
         <div>
-            <TopBar/>
-            <Header/>
-            <Banner/>
+
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     <div className="row align-items-center">
@@ -77,7 +71,7 @@ export const Contact = () => {
                     </div>
                 </div>
             </div>
-            <Footer/>
+
         </div>
     );
 }

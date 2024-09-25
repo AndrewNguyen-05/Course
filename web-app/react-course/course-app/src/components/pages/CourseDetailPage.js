@@ -3,10 +3,6 @@ import { useParams } from "react-router-dom";
 import { FaCommentDots, FaReply, FaTrash, FaStar, FaBook } from 'react-icons/fa';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { TopBar } from "../layouts/TopBar";
-import { Header } from "../layouts/Header";
-import { Banner } from "../layouts/Banner";
-import { Footer } from "../layouts/Footer";
 import Swal from "sweetalert2";
 
 export const CourseDetail = () => {
@@ -325,9 +321,7 @@ export const CourseDetail = () => {
 
     return (
         <div>
-            <TopBar />
-            <Header />
-            <Banner />
+         
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     <div className="row">
@@ -630,7 +624,7 @@ export const CourseDetail = () => {
                     className="custom-toast-container"
                 />
             </div>
-            <Footer />
+
         </div>
     );
 };

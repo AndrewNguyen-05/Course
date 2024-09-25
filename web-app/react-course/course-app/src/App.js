@@ -27,18 +27,20 @@ import { UploadCourse } from './components/TeacherComponents/UploadCourse';
 import { PaymentFail } from './components/pages/PaymentFailed';
 import { PaymentCancel } from './components/pages/PaymentCancel';
 import { LearningPage } from './components/pages/LearningPage';
+import { MainLayout } from './components/router/MainLayout';
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        
-        <Route path="/" element={<HomePage />} />
-        <Route path="/home" element={<HomePage />} />
 
-        <Route path="/payment-success" element={<PaymentSuccess />} />
-        <Route path="/payment-failed" element={<PaymentFail />} />
-        <Route path="/payment-cancel" element={<PaymentCancel />} />
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path='/course-detail/:id' element={<CourseDetail />} />
+        </Route>
 
         <Route path='/lesson-detail/:id' element={<LearningPage />} />
 
@@ -99,7 +101,7 @@ function App() {
         <Route path='/favorite' element={<FavoriteCourses />} />
         <Route path='/about' element={<About />} />
         <Route path='/courses' element={<Courses />} />
-        <Route path='/course-detail/:id' element={<CourseDetail />} />
+       
         <Route path='/contact' element={<Contact />} />
         <Route path='/deposit' element={<DepositPage />} />
 
@@ -148,6 +150,10 @@ function App() {
             <Accessdenied />
           </LayoutWithoutHeaderFooter>
         } />
+
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-failed" element={<PaymentFail />} />
+        <Route path="/payment-cancel" element={<PaymentCancel />} />
 
       </Routes>
     </div>
