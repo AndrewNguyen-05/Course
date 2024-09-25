@@ -21,6 +21,10 @@ export const CourseDetail = () => {
     const [editingCommentId, setEditingCommentId] = useState(null); // lưu ID của bình luận đang được chỉnh sửa
     const [newRating, setNewRating] = useState(0);
 
+    useEffect(() => {
+        document.title = 'Courses Detail'
+    })
+
     // Fetch course details
     useEffect(() => {
         fetch(`http://localhost:8080/api/v1/course/${id}`, {

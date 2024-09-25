@@ -1,5 +1,5 @@
 import { error } from 'jquery';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Footer } from '../layouts/Footer';
@@ -7,6 +7,11 @@ import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
 
 const DepositPage = () => {
+
+    useEffect(() => {
+        document.title = 'Deposit'
+    })
+
     const token = localStorage.getItem('token');
     const [selectedAmount, setSelectedAmount] = useState(null); // Giá trị được chọn
     const [customAmount, setCustomAmount] = useState(''); // Số tiền nhập thủ công

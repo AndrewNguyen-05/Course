@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { PaymentSuccess } from './components/pages/PaymentSuccess';
 import { HomePage } from './components/pages/HomePage';
 import { LayoutWithoutHeaderFooter } from './components/UserComponents/LayoutWithoutHeaderFooter';
@@ -25,138 +25,133 @@ import { CourseDetail } from './components/pages/CourseDetailPage';
 import { Contact } from './components/pages/ContactPage';
 import { UploadCourse } from './components/TeacherComponents/UploadCourse';
 import { PaymentFail } from './components/pages/PaymentFailed';
-import { PaymentCancel } from './components/pages/PaymentCancle';
+import { PaymentCancel } from './components/pages/PaymentCancel'; // Đổi tên đúng
 import { LearningPage } from './components/pages/LearningPage';
-
 
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/home" element={<HomePage />} />
+    <div className="App">
+      <Routes>
+        
+        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
 
+        <Route path="/payment-success" element={<PaymentSuccess />} />
+        <Route path="/payment-failed" element={<PaymentFail />} />
+        <Route path="/payment-cancel" element={<PaymentCancel />} /> {/* Sửa lại "cancle" thành "cancel" */}
 
-          <Route path="/payment-success" element={<PaymentSuccess />} />
-          <Route path="/payment-failed" element={<PaymentFail />} />
-          <Route path="/payment-cancle" element={<PaymentCancel />} />
+        <Route path='/lesson-detail/:id' element={<LearningPage />} />
 
-          <Route path='/lesson-detail/:id' element={<LearningPage />} />
+        <Route path="/login" element={
+          <LayoutWithoutHeaderFooter>
+            <LoginPage />
+          </LayoutWithoutHeaderFooter>
+        } />
 
-          <Route path="/login" element={
+        <Route path="/authenticate" element={
+          <LayoutWithoutHeaderFooter>
+            <ProcessLoginOAuth2 />
+          </LayoutWithoutHeaderFooter>
+        } />
+
+        <Route path="/register" element={
+          <LayoutWithoutHeaderFooter>
+            <Register />
+          </LayoutWithoutHeaderFooter>
+        } />
+
+        <Route path="/logout" element={
+          <LayoutWithoutHeaderFooter>
+            <LoginPage />
+          </LayoutWithoutHeaderFooter>
+        } />
+
+        <Route path="/create-password" element={
+          <PrivateRoute>
             <LayoutWithoutHeaderFooter>
-              <LoginPage />
+              <CreatePassword />
             </LayoutWithoutHeaderFooter>
-          } />
+          </PrivateRoute>
+        } />
 
-          <Route path="/authenticate" element={
+        <Route path="/forgot-password" element={
+          <LayoutWithoutHeaderFooter>
+            <ForgotPassword />
+          </LayoutWithoutHeaderFooter>
+        } />
+
+        <Route path="/change-password" element={
+          <PrivateRoute>
             <LayoutWithoutHeaderFooter>
-              <ProcessLoginOAuth2 />
+              <ChangePassword />
             </LayoutWithoutHeaderFooter>
-          } />
+          </PrivateRoute>
+        } />
 
-          <Route path="/register" element={
+        <Route path='/profile' element={
+          <PrivateRoute>
             <LayoutWithoutHeaderFooter>
-              <Register />
+              <Profile />
             </LayoutWithoutHeaderFooter>
-          } />
+          </PrivateRoute>
+        } />
 
-          <Route path="/logout" element={
+        <Route path='/favorite' element={<FavoriteCourses />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/courses' element={<Courses />} />
+        <Route path='/course-detail/:id' element={<CourseDetail />} />
+        <Route path='/contact' element={<Contact />} />
+        <Route path='/deposit' element={<DepositPage />} />
+
+        <Route path="/teacher-add-courses" element={
+          <Authorization requiredRole={["TEACHER"]}>
             <LayoutWithoutHeaderFooter>
-              <LoginPage />
+              <UploadCourse />
             </LayoutWithoutHeaderFooter>
-          } />
+          </Authorization>
+        } />
 
-          <Route path="/create-password" element={
-            <PrivateRoute>
-              <LayoutWithoutHeaderFooter>
-                <CreatePassword />
-              </LayoutWithoutHeaderFooter>
-            </PrivateRoute>
-          } />
-
-          <Route path="/forgot-password" element={
+        <Route path="/my-courses" element={
+          <PrivateRoute>
             <LayoutWithoutHeaderFooter>
-              <ForgotPassword />
+              <MyCourses />
             </LayoutWithoutHeaderFooter>
-          } />
+          </PrivateRoute>
+        } />
 
-          <Route path="/change-password" element={
-            <PrivateRoute>
-              <LayoutWithoutHeaderFooter>
-                <ChangePassword />
-              </LayoutWithoutHeaderFooter>
-            </PrivateRoute>
-          } />
+        <Route path="/register-teacher" element={
+          <Authorization requiredRole={["USER"]}>
+            <LayoutWithoutHeaderFooter>
+              <RegisterTeacher />
+            </LayoutWithoutHeaderFooter>
+          </Authorization>
+        } />
 
-          <Route path='/profile' element={
-            <PrivateRoute>
-              <LayoutWithoutHeaderFooter>
-                <Profile />
-              </LayoutWithoutHeaderFooter>
-            </PrivateRoute>
-          } />
+        <Route path="/admin" element={
+          <Authorization requiredRole={["ADMIN"]}>
+            <LayoutWithoutHeaderFooter>
+              <Dashboard />
+            </LayoutWithoutHeaderFooter>
+          </Authorization>
+        } />
 
-          <Route path='/favorite' element={<FavoriteCourses />} />
-          <Route path='/about' element={<About />} />
-          <Route path='/courses' element={<Courses />} />
-          <Route path='/course-detail/:id' element={<CourseDetail />} />
-          <Route path='/contact' element={<Contact />} />
-          <Route path='/deposit' element={<DepositPage />} />
+        <Route path="/admin/list-registes-teacher" element={
+          <Authorization requiredRole={["ADMIN"]}>
+            <LayoutWithoutHeaderFooter>
+              <RegistrationList />
+            </LayoutWithoutHeaderFooter>
+          </Authorization>
+        } />
 
-          <Route path="/teacher-add-courses" element={
-            <Authorization requiredRole={["TEACHER"]}>
-              <LayoutWithoutHeaderFooter>
-                <UploadCourse />
-              </LayoutWithoutHeaderFooter>
-            </Authorization>
-          } />
+        <Route path='/accessdenied' element={
+          <LayoutWithoutHeaderFooter>
+            <Accessdenied />
+          </LayoutWithoutHeaderFooter>
+        } />
 
-          <Route path="/my-courses" element={
-            <PrivateRoute>
-              <LayoutWithoutHeaderFooter>
-                <MyCourses />
-              </LayoutWithoutHeaderFooter>
-            </PrivateRoute>
-          } />
-
-          <Route path="/register-teacher" element={
-            <Authorization requiredRole={["USER"]}>
-              <LayoutWithoutHeaderFooter>
-                <RegisterTeacher />
-              </LayoutWithoutHeaderFooter>
-            </Authorization>
-          } />
-
-          <Route path="/admin" element={
-            <Authorization requiredRole={["ADMIN"]}>
-              <LayoutWithoutHeaderFooter>
-                <Dashboard />
-              </LayoutWithoutHeaderFooter>
-            </Authorization>
-          } />
-
-          <Route path="/admin/list-registes-teacher" element={
-            <Authorization requiredRole={["ADMIN"]}>
-              <LayoutWithoutHeaderFooter>
-                <RegistrationList />
-              </LayoutWithoutHeaderFooter>
-            </Authorization>
-          } />
-
-          <Route path='/accessdenied' element={
-            <>
-              <LayoutWithoutHeaderFooter>
-                <Accessdenied />
-              </LayoutWithoutHeaderFooter>
-            </>
-          } />
-
-        </Routes>
-      </div>
-    </Router>
+      </Routes>
+    </div>
   );
 }
 

@@ -12,6 +12,10 @@ export const Courses = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [filterQuery, setFilterQuery] = useState('');
 
+    useEffect(() => {
+        document.title = 'Courses'
+    })
+
     // Hàm lấy dữ liệu từ API
     const fetchCourses = async () => {
         setLoading(true);

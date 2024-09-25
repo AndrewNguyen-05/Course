@@ -6,6 +6,10 @@ import { Header } from "../layouts/Header";
 
 export const RegisterTeacher = () => {
 
+    useEffect(() => {
+        document.title = 'Register Teacher'
+    })
+
     const token = localStorage.getItem('token');
 
     const [formData, setFormData] = useState({

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaEye, FaEyeSlash, FaLock, FaKey, FaUser, FaShieldAlt } from 'react-icons/fa';
 import { Footer } from '../layouts/Footer';
 import { ToastContainer, toast } from 'react-toastify';
@@ -17,6 +17,10 @@ export const ChangePassword = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const [isSnipping, setIsSnipping] = useState(false);
+
+  useEffect(() => {
+    document.title = 'Change Password'
+  })
 
   const togglePasswordVisibility = (setter) => {
     setter((prev) => !prev);
@@ -50,11 +54,11 @@ export const ChangePassword = () => {
         toast.error('An error occurred. Please try again.');
       });
   };
-  
+
 
   return (
     <div>
-      <TopBar/>
+      <TopBar />
       <Header />
       <div className="container py-5">
         <div className="row justify-content-center">
@@ -77,7 +81,7 @@ export const ChangePassword = () => {
                         className="form-control form-control-lg border-start-0 shadow-sm"
                         id="currentPassword"
                         placeholder="Enter your current password"
-                         autoComplete="current-password"
+                        autoComplete="current-password"
                         onChange={(event) => setCurrentPassword(event.target.value)}
                       />
                       <button
@@ -100,7 +104,7 @@ export const ChangePassword = () => {
                         className="form-control form-control-lg border-start-0 shadow-sm"
                         id="newPassword"
                         placeholder="Enter your new password"
-                         autoComplete="new-password"
+                        autoComplete="new-password"
                         onChange={(event) => setNewPassword(event.target.value)}
                       />
                       <button
@@ -122,7 +126,7 @@ export const ChangePassword = () => {
                         type={showConfirmPassword ? 'text' : 'password'}
                         className="form-control form-control-lg border-start-0 shadow-sm"
                         id="confirmPassword"
-                         autoComplete="confirm-password"
+                        autoComplete="confirm-password"
                         placeholder="Confirm your new password"
                         onChange={(event) => setConfirmPassword(event.target.value)}
                       />
@@ -139,8 +143,8 @@ export const ChangePassword = () => {
                   {/* Submit Button */}
                   <div className="d-grid mt-4">
                     <button type="submit"
-                    className="btn btn-primary btn-lg rounded-pill shadow">
-                      <FaShieldAlt className="me-2" 
+                      className="btn btn-primary btn-lg rounded-pill shadow">
+                      <FaShieldAlt className="me-2"
                       /> Change Password
                     </button>
                   </div>

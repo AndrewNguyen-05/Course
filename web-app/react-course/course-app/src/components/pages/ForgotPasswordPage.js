@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaEnvelope, FaKey, FaCheckCircle } from 'react-icons/fa';
 import { Footer } from '../layouts/Footer';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,11 @@ import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
 
 export const ForgotPassword = () => {
+
+    useEffect(() => {
+        document.title = 'Forgot Password'
+    })
+
     const [email, setEmail] = useState('');
     const [emailError, setEmailError] = useState('');
     const [emailSent, setEmailSent] = useState(false);

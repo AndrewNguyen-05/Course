@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
 import { Footer } from '../layouts/Footer';
 import { Banner } from '../layouts/Banner';
 
 export const About = () => {
+  useEffect(() => {
+    document.title = 'About';
+  })
   return (
     <div>
       <TopBar/>

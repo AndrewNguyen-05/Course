@@ -1,10 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Footer } from "../layouts/Footer";
 import { TopBar } from "../layouts/TopBar";
 import { Header } from "../layouts/Header";
 
 export const Register = () => {
+
+    useEffect(() => {
+        document.title = 'Register Page'
+    })
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",

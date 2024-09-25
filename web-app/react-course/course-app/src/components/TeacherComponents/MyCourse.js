@@ -12,6 +12,10 @@ export const MyCourses = () => {
     const token = localStorage.getItem('token');
 
     useEffect(() => {
+        document.title = 'My Courses'
+    })
+
+    useEffect(() => {
         if (!token) {
             setLoading(false);
             return;

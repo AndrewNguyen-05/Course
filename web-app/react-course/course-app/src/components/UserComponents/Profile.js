@@ -23,6 +23,10 @@ export const Profile = () => {
     });
 
     useEffect(() => {
+        document.title = 'Frofile'
+    })
+
+    useEffect(() => {
         fetch(`http://localhost:8080/api/v1/info-user`, {
             method: 'GET',
             headers: {

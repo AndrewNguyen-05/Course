@@ -8,6 +8,10 @@ import { Header } from '../layouts/Header';
 
 export const LoginPage = () => {
 
+  useEffect(() => {
+    document.title = 'Login Page'
+  })
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -87,7 +91,7 @@ export const LoginPage = () => {
           })
           .then(introspectData => {
             if (introspectData.result && introspectData.result.valid) {
-              const role = introspectData.result.scope;  
+              const role = introspectData.result.scope;
 
               if (role === 'USER') {
                 navigate('/home');
@@ -141,7 +145,7 @@ export const LoginPage = () => {
             <div className="col-12 col-lg-10 col-xl-8">
               <div className="row gy-5 justify-content-center">
                 <div className="col-12 col-lg-5">
-                  
+
                   <form id="login-form" onSubmit={handleLogin}>
                     <div className="row gy-3 overflow-hidden">
                       <div className="col-12">

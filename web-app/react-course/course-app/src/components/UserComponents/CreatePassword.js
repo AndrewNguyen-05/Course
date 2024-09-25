@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Footer } from "../layouts/Footer";
 import { useNavigate } from "react-router-dom";
 import { TopBar } from "../layouts/TopBar";
@@ -9,6 +9,10 @@ export const CreatePassword = () => {
     const [createPassword, setCreatePassword] = useState("");
     const [passwordError, setPasswordError] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        document.title = 'Create Password'
+    })
 
     const handleCreatePassword = (event) => {
         event.preventDefault();

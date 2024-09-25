@@ -4,6 +4,11 @@ import { Header } from '../layouts/Header';
 import { useParams } from 'react-router-dom';
 
 export const LearningPage = () => {
+
+    useEffect(() => {
+        document.title = 'Learning'
+    })
+
     const { id } = useParams();
     const token = localStorage.getItem('token');
     const [loading, setLoading] = useState(true);

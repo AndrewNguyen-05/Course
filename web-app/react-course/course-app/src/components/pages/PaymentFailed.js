@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export const PaymentFail = () => {
+
+    useEffect(() => {
+        document.title = 'Payment Failed'
+    })
+
     return (
         <div className="payment-fail-container">
             <img

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaUpload, FaBook, FaTags, FaDollarSign, FaFileAlt, FaClock, FaImage } from 'react-icons/fa';
 import { Footer } from '../layouts/Footer';
 import { TopBar } from '../layouts/TopBar';
@@ -12,6 +12,10 @@ export const UploadCourse = () => {
     const [coursePrice, setCoursePrice] = useState('');
     const [courseThumbnail, setCourseThumbnail] = useState(null);
     const [courseFile, setCourseFile] = useState(null);
+
+    useEffect(() => {
+        document.title = 'Create a Course'
+    })
 
     const handleSubmit = (e) => {
         e.preventDefault();

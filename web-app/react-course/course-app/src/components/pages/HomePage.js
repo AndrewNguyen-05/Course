@@ -36,6 +36,7 @@ export const HomePage = () => {
 
 
     useEffect(() => {
+        document.title = 'HomePage';
         const fetchCourses = async () => {
             try {
                 const response = await fetch(`http://localhost:8080/api/v1/courses?page=${currentPage}&size=${pageSize}`, {
@@ -410,7 +411,7 @@ export const HomePage = () => {
                                     </div>
                                     <div className="mt-n1">
                                         <h4>Our Location</h4>
-                                        <p className="m-0">123 Street, New York, USA</p>
+                                        <p className="m-0">Ngu Hanh Son, Da Nang, VN</p>
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center mb-5">
@@ -419,7 +420,7 @@ export const HomePage = () => {
                                     </div>
                                     <div className="mt-n1">
                                         <h4>Call Us</h4>
-                                        <p className="m-0">+012 345 6789</p>
+                                        <p className="m-0">+03456789</p>
                                     </div>
                                 </div>
                                 <div className="d-flex align-items-center">
@@ -428,7 +429,7 @@ export const HomePage = () => {
                                     </div>
                                     <div className="mt-n1">
                                         <h4>Email Us</h4>
-                                        <p className="m-0">info@example.com</p>
+                                        <p className="m-0">duclkde170045@fpt.edu.vn</p>
                                     </div>
                                 </div>
                             </div>

@@ -15,6 +15,10 @@ const FavoriteCourses = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        document.title = 'Favorite'
+    })
+
+    useEffect(() => {
         const fetchFavorites = async () => {
             setLoading(true);
             setError(null);
