@@ -1,71 +1,115 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
+import { useParams } from 'react-router-dom';
 
 export const LearningPage = () => {
-    const [lessons, setLessons] = useState([
-        { id: 1, title: 'Introduction to the Specialization', duration: 1, videoUrl: 'https://res.cloudinary.com/dznef2sae/video/upload/v1726715425/courses/fwylx2hnym7zpqgbuzp3.mp4', description: 'This is an introduction to the specialization.' },
-        { id: 2, title: 'Introduction to the Course', duration: 2, videoUrl: 'https://res.cloudinary.com/dznef2sae/video/upload/v1726726234/courses/b15haqf71sae1vmw6phg.mp4', description: 'This video introduces the course.' },
-        { id: 3, title: 'Meet Your Instructor', duration: 1, videoUrl: 'https://sample-videos.com/video123/mp4/480/asdasdas.mp4', description: 'Meet your instructor for the course.' },
-        { id: 4, title: 'Syllabus Overview', duration: 15, videoUrl: 'https://sample-videos.com/video123/mp4/480/asdasdas.mp4', description: 'Here is the syllabus overview.' }
-    ]);
+    const { id } = useParams();
+    const token = localStorage.getItem('token');
+    const [loading, setLoading] = useState(true);
+    const [lessons, setLessons] = useState([]);
+    const [currentLesson, setCurrentLesson] = useState(null);  // Bài học hiện tại
+    const [openSections, setOpenSections] = useState({});  // Trạng thái mở của các chương
 
-    const [currentLesson, setCurrentLesson] = useState(lessons[0]);
+    const fetchLessonByCourseId = async () => {
+        if (!token) {
+            setLoading(false);
+            return;
+        }
+        try {
+            const response = await fetch(`http://localhost:8080/api/v1/info-course/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-    const handleLessonClick = (lesson) => {
-        setCurrentLesson(lesson);  // Chuyển bài học khi nhấp vào
-    };
-
-    const handleNextLesson = () => {
-        const currentIndex = lessons.findIndex((lesson) => lesson.id === currentLesson.id);
-        if (currentIndex < lessons.length - 1) {
-            setCurrentLesson(lessons[currentIndex + 1]);  // Chuyển đến bài học tiếp theo
+            if (!response.ok) {
+                throw new Error('Failed to fetch lessons');
+            }
+            const data = await response.json();
+            console.log(data)
+            setLessons(data.result.lessons || []);
+            setLoading(false);
+        } catch (error) {
+            console.log(error.message);
+        } finally {
+            setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchLessonByCourseId();
+    }, [id]);
+
+    const toggleSection = (sectionId) => {
+        setOpenSections(prevState => ({
+            ...prevState,
+            [sectionId]: !prevState[sectionId]
+        }));
+    };
+
+    const handleLessonClick = (lesson) => {
+        if (lesson.lessonContentDto && lesson.lessonContentDto.length > 0) {
+            const videoContent = lesson.lessonContentDto.find(content => content.contentType === "video"); 
+            if (videoContent) {
+                setCurrentLesson(videoContent); 
+            }
+        }
+    };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div>
             <TopBar />
             <Header />
             <div className="lp-learning-container">
-                {/* Bên trái: Danh sách bài học */}
+
+                {/* Bên trái: Danh sách phần và bài học */}
                 <div className="lp-lesson-list">
-                    <h3>Lessons</h3>
-                    <ul>
-                        {lessons.map((lesson) => (
-                            <li
-                                key={lesson.id}
-                                className={lesson.id === currentLesson?.id ? "active" : ""}
-                                onClick={() => handleLessonClick(lesson)}  // Gọi hàm để cập nhật bài học khi click
-                            >
-                                <i className="fa fa-play-circle"></i>
-                                <span>{lesson.title}</span>
-                                <small>{lesson.duration} min</small>
-                            </li>
-                        ))}
-                    </ul>
+                    <h3>Course content</h3>
+                    {lessons.map((lesson, index) => (
+                        <div key={index} className="lesson-section">
+                            <div className="section-title" onClick={() => toggleSection(index)}>
+                                <h4>
+                                    {lesson.lessonName} <span className="toggle-icon">
+                                        {openSections[index] ? <i className="fas fa-chevron-down"></i> : <i className="fas fa-chevron-right"></i>}
+                                    </span>
+                                </h4>
+                            </div>
+
+                            {openSections[index] && (
+                                <ul className="lesson-list">
+                                    <li key={lesson.lessonId} className="lesson-item" onClick={() => handleLessonClick(lesson)}>
+                                        <i className="fa fa-file"></i>
+                                        {/* Display the lesson description */}
+                                        <span>{lesson.lessonDescription}</span>
+                                    </li>
+                                </ul>
+                            )}
+
+                        </div>
+                    ))}
                 </div>
 
                 {/* Bên phải: Video và mô tả */}
                 <div className="lp-video-content">
-                    <div className="lp-video-header">
-                        <h3>{currentLesson?.title}</h3>
-                        <button className="lp-next-button" onClick={handleNextLesson}>
-                            Next
-                        </button>
-                    </div>
-                    <div className="lp-video-player">
-                        {currentLesson && (
-                            <video key={currentLesson.videoUrl} width="100%" controls>
-                                <source src={currentLesson.videoUrl} type="video/mp4" />
+                    {currentLesson ? (
+                        <div>
+                            <h3>{currentLesson.contentDescription}</h3>
+                            <video key={currentLesson.contentUrl} width="100%" height={500} controls>
+                                <source src={currentLesson.contentUrl} type="video/mp4" />
                                 Your browser does not support the video tag.
                             </video>
-                        )}
-                    </div>
-                    <p className="lp-description">{currentLesson?.description}</p>
+                        </div>
+                    ) : (
+                        <p>Chọn một bài học để xem nội dung</p>
+                    )}  
                 </div>
             </div>
-
         </div>
     );
 };

@@ -38,11 +38,12 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
 
-          <Route path="/learning" element={<LearningPage />} />
 
           <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/payment-failed" element={<PaymentFail />} />
           <Route path="/payment-cancle" element={<PaymentCancel />} />
+
+          <Route path='/lesson-detail/:id' element={<LearningPage />} />
 
           <Route path="/login" element={
             <LayoutWithoutHeaderFooter>

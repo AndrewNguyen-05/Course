@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, useParams } from 'react-router-dom'; 
 import { Footer } from '../layouts/Footer';
 import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
@@ -30,8 +30,8 @@ export const MyCourses = () => {
         }).catch(error => console.log(error));
     }, [token]);
 
-    const handleLearnNow = (courseId) => {
-        navigate(`/learn/${courseId}`); // Điều hướng tới trang học với ID của khóa học
+    const handleLearnNow = (id) => {
+        navigate(`/lesson-detail/${id}`);         
     };
 
     return (
@@ -54,7 +54,7 @@ export const MyCourses = () => {
                                     <div className="my-course-hover-overlay">
                                         <button
                                             className="btn btn-primary my-course-start-learning-btn"
-                                            onClick={() => handleLearnNow(course.id)} // Gọi hàm điều hướng
+                                            onClick={() => handleLearnNow(course.courseId)} // Gọi hàm điều hướng
                                         >
                                             Học ngay
                                         </button>
