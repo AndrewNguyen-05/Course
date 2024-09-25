@@ -49,7 +49,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse createUser(UserCreationRequest request, String otp) throws MessagingException {
+    public UserResponse createUser(UserCreationRequest request, String otp)  {
         if(userRepository.findByEmail(request.getEmail()).isPresent())
             throw new AppException(ErrorCode.USER_EXISTED);
         // Xác thực otp
@@ -75,7 +75,7 @@ public class UserService {
     }
 
     @Transactional
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
     public void createPassword(PasswordCreationRequest request){
 
         var context = SecurityContextHolder.getContext();

@@ -28,7 +28,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,7 +82,6 @@ public class CourseService {
                 .points(course.getPoints())
                 .lessonName(course.getLessons().stream().map(Lesson::getLessonName).collect(Collectors.toSet()))
                 .build();
-
     }
 
     @Transactional
@@ -100,7 +102,7 @@ public class CourseService {
         return courseMapper.toCourseResponse(course);
     }
 
-    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER', 'USER', 'ADMIN')")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('USER', 'TEACHER', 'ADMIN')")
     public List<CourseResponse> myCourses(){
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -113,6 +115,8 @@ public class CourseService {
         return myCourse.stream().map(courseMapper::toCourseResponse).toList();
     }
 
+    @Transactional
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN', 'TEACHER')")
     public UploadCourseResponse uploadCourse(UploadCourseRequest request, MultipartFile file, MultipartFile thumbnail)
             throws IOException {
 
@@ -135,13 +139,22 @@ public class CourseService {
         return courseMapper.toUploadCourseResponse(course);
     }
 
+    @PreAuthorize("isAuthenticated()")
     public CourseLessonResponse getAllInfoCourse (Long courseId){
 
         courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
 
-        return courseLessonAndLessonContentMapper
+        CourseLessonResponse courseLessonResponse =  courseLessonAndLessonContentMapper
                 .getCourserLessonAndLessonContent(courseId);
+
+        Set<CourseLessonResponse.LessonDto> sortedLessons = courseLessonResponse.getLessons().stream()
+                .sorted(Comparator.comparing(CourseLessonResponse.LessonDto::getLessonId))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        courseLessonResponse.setLessons(sortedLessons);
+
+        return courseLessonResponse;
     }
 
 }

@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -52,6 +54,7 @@ public class NotificationService {
         return notifications;
     }
 
+    @Transactional
     public void createNotification(User receiver, User sender, String message, String title, String url){
         Notification notification = Notification.builder()
                 .user(receiver)
@@ -67,13 +70,13 @@ public class NotificationService {
 
     }
 
+    @Transactional
     public void deleteNotification(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new AppException(ErrorCode.NOTIFICATION_NOT_EXISTED));
 
         notificationRepository.delete(notification);
     }
-
 
     public void markAsRead(Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)

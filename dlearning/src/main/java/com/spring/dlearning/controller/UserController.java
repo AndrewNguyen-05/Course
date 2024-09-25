@@ -30,7 +30,7 @@ public class UserController {
 
     @PostMapping("/register")
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request,
-                                                @RequestParam String otp) throws MessagingException {
+                                                @RequestParam String otp) {
         var result = userService.createUser(request, otp);
 
         return ApiResponse.<UserResponse>builder()

@@ -73,7 +73,7 @@ export const LearningPage = () => {
                     <h3>Course content</h3>
                     {lessons.map((lesson, index) => (
                         <div key={index} className="lesson-section">
-                            <div className="section-title" onClick={() => toggleSection(index)}>
+                            <div className="sections-title" onClick={() => toggleSection(index)}>
                                 <h4>
                                     {lesson.lessonName} <span className="toggle-icon">
                                         {openSections[index] ? <i className="fas fa-chevron-down"></i> : <i className="fas fa-chevron-right"></i>}
@@ -90,7 +90,6 @@ export const LearningPage = () => {
                                     </li>
                                 </ul>
                             )}
-
                         </div>
                     ))}
                 </div>
@@ -100,7 +99,7 @@ export const LearningPage = () => {
                     {currentLesson ? (
                         <div>
                             <h3>{currentLesson.contentDescription}</h3>
-                            <video key={currentLesson.contentUrl} width="100%" height={500} controls>
+                            <video key={currentLesson.contentUrl} width="100%" height={750} controls>
                                 <source src={currentLesson.contentUrl} type="video/mp4" />
                                 Your browser does not support the video tag.
                             </video>

@@ -154,7 +154,6 @@ public class AuthenticationService {
         }
     }
 
-
     public void logout(LogoutRequest request) throws ParseException, JOSEException {
         try {
             var signToken = verifyToken(request.getToken(), true);
@@ -204,6 +203,7 @@ public class AuthenticationService {
 
         return signedJWT;
     }
+
     public AuthenticationResponse refreshToken(RefreshTokenRequest request) throws ParseException, JOSEException {
 
         var signJWT = verifyToken(request.getToken(), true);

@@ -11564,7 +11564,7 @@ h6,
   margin-bottom: 15px;
 }
 
-.section-title {
+.sections-title {
   background-color: #e8e8e8;
   padding: 15px;
   cursor: pointer;
@@ -11577,7 +11577,7 @@ h6,
   transition: background-color 0.3s ease;
 }
 
-.section-title:hover {
+.sections-title:hover {
   background-color: #d4d4d4;
 }
 
