@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { UseAuth } from '../authentication/UseAuth.js';
 import { HandleLogout } from '../authentication/HandleLogout.js';
 import { NotificationDropdown } from '../common/NotificationDropdown.js';
@@ -23,11 +23,20 @@ export const Header = () => {
     const token = localStorage.getItem('token');
 
     useEffect(() => {
+        const activeLink = document.querySelector(`.nav-item.active`);
+        if (activeLink && underlineRef.current) {
+            underlineRef.current.style.left = `${activeLink.offsetLeft}px`;
+            underlineRef.current.style.width = `${activeLink.offsetWidth}px`;
+        }
+    }, [location.pathname]);
+
+    const isActive = (path) => location.pathname === path;
+
+    useEffect(() => {
         if (!token) {
             setLoading(false);
             return;
         }
-        // Gọi API introspect để lấy thông tin role mỗi khi tải trang
         fetch(`http://localhost:8080/api/v1/auth/introspect`, {
             method: 'POST',
             headers: {
@@ -39,7 +48,7 @@ export const Header = () => {
             .then((response) => response.json())
             .then(data => {
                 if (data.result.valid) {
-                    setRole(data.result.scope); // Thiết lập role sau khi kiểm tra token
+                    setRole(data.result.scope);
                 } else {
                     console.error("Token không hợp lệ");
                 }
@@ -47,7 +56,6 @@ export const Header = () => {
             .catch(error => console.log(error))
             .finally(() => setLoading(false));
     }, [token]);
-
 
     useEffect(() => {
         if (!token || !isTokenValid) return;
@@ -66,25 +74,6 @@ export const Header = () => {
             .catch(error => console.log(error));
     }, [token, isTokenValid]);
 
-    const markAsRead = (notificationId) => {
-        fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(response => response.json())
-            .then(() => {
-                setUnreadCount(prevCount => prevCount - 1);
-                setNotifications(prevNotifications =>
-                    prevNotifications.map(n =>
-                        n.id === notificationId ? { ...n, isRead: true } : n
-                    )
-                );
-            })
-            .catch((error) => console.error('Error marking notification as read:', error));
-    };
-
     useEffect(() => {
         if (!token) {
             setLoading(false);
@@ -102,16 +91,6 @@ export const Header = () => {
             .then(data => setAvatar(data.result))
             .catch(error => console.log(error));
     }, [token]);
-
-    useEffect(() => {
-        const activeLink = document.querySelector(`.nav-item.active`);
-        if (activeLink && underlineRef.current) {
-            underlineRef.current.style.left = `${activeLink.offsetLeft}px`;
-            underlineRef.current.style.width = `${activeLink.offsetWidth}px`;
-        }
-    }, [location.pathname]);
-
-    const isActive = (path) => location.pathname === path;
 
     useEffect(() => {
         const fetchPoints = async () => {
@@ -134,15 +113,33 @@ export const Header = () => {
         fetchPoints();
     }, [token])
 
+    const markAsRead = (notificationId) => {
+        fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+            .then(response => response.json())
+            .then(() => {
+                setUnreadCount(prevCount => prevCount - 1);
+                setNotifications(prevNotifications =>
+                    prevNotifications.map(n =>
+                        n.id === notificationId ? { ...n, isRead: true } : n
+                    )
+                );
+            })
+            .catch((error) => console.error('Error marking notification as read:', error));
+    };
 
     return (
         <div className="container-fluid p-0">
             <nav className="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
-                <Link to="/home" className="navbar-brand ml-lg-3">
+                <NavLink to="/home" className="navbar-brand ml-lg-3">
                     <h1 className="m-0 text-uppercase text-primary rounded">
                         <i className="fa fa-book-reader mr-3"></i>D-LEARNING
                     </h1>
-                </Link>
+                </NavLink>
                 <button type="button" className="navbar-toggler rounded" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span className="navbar-toggler-icon"></span>
                 </button>

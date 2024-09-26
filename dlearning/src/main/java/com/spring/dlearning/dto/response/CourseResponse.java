@@ -24,6 +24,7 @@ public class CourseResponse {
     CourseLevel courseLevel;
     String thumbnail;
     String videoUrl;
+    Double averageRating;
     Long points;
 
     Set<String> lessonName =  new HashSet<>();

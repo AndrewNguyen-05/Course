@@ -5,6 +5,7 @@ import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.Lesson;
+import com.spring.dlearning.entity.Review;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
@@ -49,12 +50,30 @@ public class CourseService {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Course> pageData = courseRepository.findAll(spec, pageable);
 
+        List<CourseResponse> courseResponses  = pageData.getContent()
+                .stream().map(course -> {
+
+            long totalRating = course.getComments().stream()
+                    .mapToLong(Review::getRating)
+                    .sum();
+
+            int numberOfReviews = course.getComments().size();
+            double averageRating = numberOfReviews > 0 ? (double) totalRating / numberOfReviews : 0;
+
+            log.info("averageRating {}", averageRating);
+
+            CourseResponse courseResponse = courseMapper.toCourseResponse(course);
+            courseResponse.setAverageRating(averageRating);
+            return courseResponse;
+
+        }).toList();
+
         return PageResponse.<CourseResponse>builder()
                 .currentPage(page)
                 .pageSize(pageable.getPageSize())
                 .totalPages(pageData.getTotalPages())
                 .totalElements(pageData.getTotalElements())
-                .data(pageData.getContent().stream().map(courseMapper::toCourseResponse).toList())
+                .data(courseResponses)
                 .build();
     }
 
