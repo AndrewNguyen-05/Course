@@ -4,6 +4,8 @@ import { FaCommentDots, FaReply, FaTrash, FaStar, FaBook } from 'react-icons/fa'
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
+import { getCommentByCourseId, getCourseById } from "../../service/CourseService";
+import { addComment, addReplyComment, deleteComment, editComment } from "../../service/ReviewService";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
@@ -23,12 +25,7 @@ export const CourseDetail = () => {
 
     // Fetch course details
     useEffect(() => {
-        fetch(`http://localhost:8080/api/v1/course/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => response.json())
+        getCourseById(id)
             .then(data => {
                 console.log(data)
                 setCourse(data.result);
@@ -41,12 +38,7 @@ export const CourseDetail = () => {
 
     // Fetch comments
     useEffect(() => {
-        fetch(`http://localhost:8080/api/v1/courses-comment/${id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        }).then(response => response.json())
+        getCommentByCourseId(id)
             .then(data => {
                 const updatedComments = data.result.map(comment => ({
                     ...comment,
@@ -59,33 +51,9 @@ export const CourseDetail = () => {
 
     if (loading) return <div>Loading...</div>;
 
+
     // Add a new comment
-
-    const renderStars = (rating, handleRating) => {
-        return (
-            <div className="star-rating">
-                {[1, 2, 3, 4, 5].map((star) => (
-                    <FaStar
-                        key={star}
-                        size={25}
-                        color={star <= rating ? "#ffc107" : "#e4e5e9"} // Nếu giá trị của star (ngôi sao hiện tại trong vòng lặp) nhỏ hơn hoặc bằng rating, thì ngôi sao sẽ có màu vàng (#ffc107).
-                        onClick={() => handleRating(star)}
-                        style={{ cursor: "pointer" }}
-                    />
-                ))}
-            </div>
-        );
-    };
-
-    const handleRatingChange = (rating) => {
-        if (newRating === rating) {
-            setNewRating(rating - 1);
-        } else {
-            setNewRating(rating);
-        }
-    };
-
-    const handleAddComment = () => {
+    const handleAddComment = async () => {
         if (!newComment.trim() && newRating === 0) {
             toast.error('Please enter a comment or select a rating');
             return;
@@ -98,39 +66,25 @@ export const CourseDetail = () => {
             courseId: id
         };
 
+        try {
+            const result = await addComment(commentData, token, id);
+            setComments([{
+                ...result,
+                replying: false,
+                replies: []
+            }, ...comments]);
 
-        fetch(`http://localhost:8080/api/v1/add-comment?id=${id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(commentData)
-        }).then(response => response.json())
-            .then(data => {
-                console.log(data)
-                if (data.result) {
-                    setComments([{
-                        ...data.result,
-                        replying: false,
-                        replies: []
-                    }, ...comments]);
-                    setNewComment("");
-                    setNewRating(0);
-                    toast.success('Comment added successfully');
-                } else {
-                    toast.error(data.message)
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toast.error(error.message)
-            });
+            setNewComment("");
+            setNewRating(0);
+        } catch (error) {
+            console.error('Error:', error);
+        }
     };
 
     // Handle adding a reply
-    const handleAddReply = (commentId) => {
+    const handleAddReply = async (commentId) => {
         const replyText = replyContent[commentId];
+
         if (!replyText.trim()) {
             toast.error('Please enter a reply');
             return;
@@ -142,37 +96,88 @@ export const CourseDetail = () => {
             courseId: id
         };
 
-        fetch(`http://localhost:8080/api/v1/add-comment?id=${id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(replyData)
-        }).then(response => response.json())
-            .then(data => {
-                if (data.result) {
-                    const updatedComments = comments.map(comment => {
-                        if (comment.id === commentId) {
-                            return {
-                                ...comment,
-                                replies: [...comment.replies, { ...data.result, replying: false }]
-                            };
-                        }
-                        return comment;
-                    });
-                    setComments(updatedComments);
-                    setReplyContent({ ...replyContent, [commentId]: '' });
-                    toast.success('Reply added successfully');
-                } else {
-                    toast.error(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toast.error('Failed to add reply');
-            });
+        try {
+            const result = await addReplyComment(replyData, token, id);
+
+            if (result) {
+                // Cập nhật lại danh sách comments với reply mới
+                const updatedComments = comments.map(comment => {
+                    if (comment.id === commentId) {
+                        return {
+                            ...comment,
+                            replies: [...comment.replies, { ...result, replying: false }]
+                        };
+                    }
+                    return comment;
+                });
+                setComments(updatedComments);
+                setReplyContent({ ...replyContent, [commentId]: '' });
+            }
+        } catch (error) {
+            console.error('Error in component:', error);
+        }
     };
+
+
+    // Edit comment
+    const handleEditComment = async (commentId) => {
+        const updatedContent = (editContent[commentId] || "").trim();
+    
+        if (!updatedContent) {
+            toast.error('Please enter new content');
+            return;
+        }
+        try {
+            const result = await editComment(commentId, updatedContent, token);
+    
+            if (result) {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.map(comment => {
+                        // Cập nhật comment cha nếu cần
+                        if (comment.id === commentId) {
+                            return { ...comment, content: result.content };
+                        }
+                        // Cập nhật replies nếu comment là trả lời
+                        const updatedReplies = comment.replies.map(reply => {
+                            if (reply.id === commentId) {
+                                return { ...reply, content: result.content };
+                            }
+                            return reply;
+                        });
+                        return { ...comment, replies: updatedReplies };
+                    });
+                    return [...updatedComments]; 
+                });
+    
+                setEditingCommentId(null); // Thoát khỏi chế độ chỉnh sửa
+            }
+        } catch (error) {
+            console.error('Error editing comment:', error);
+        }
+    };
+    
+
+    // Delete comment
+    const handleDeleteComment = async (commentId) => {
+        try {
+            const result = await deleteComment(commentId, token);
+            if (result) {
+                // Cập nhật lại danh sách comments sau khi xóa thành công
+                setComments((prevComments) => {
+                    const updatedComments = prevComments
+                        .filter(comment => comment.id !== commentId)  // Loại bỏ bình luận cha đã bị xoá
+                        .map(comment => ({
+                            ...comment,
+                            replies: comment.replies.filter(reply => reply.id !== commentId)  // Loại bỏ cả các replies nếu có
+                        }));
+    
+                    return updatedComments;
+                });
+            }
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+        }
+    };    
 
     // Toggle reply input
     const handleReplyToggle = (commentId) => {
@@ -183,95 +188,6 @@ export const CourseDetail = () => {
             return comment;
         });
         setComments(updatedComments);
-    };
-
-    // Edit comment
-    const handleEditComment = (commentId) => {
-        const updatedContent = (editContent[commentId] || "").trim();
-
-        if (!updatedContent) {
-            toast.error('Please enter new content');
-            return;
-        }
-
-        fetch(`http://localhost:8080/api/v1/update-comment/${commentId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ content: updatedContent.trim() })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.result) {
-                    setComments((prevComments) => {
-                        const updatedComments = prevComments.map(comment => {
-                            // Nếu là comment cha
-                            if (comment.id === commentId) {
-                                return { ...comment, content: data.result.content };
-                            }
-                            // Nếu comment cha chứa replies (comment con)
-                            const updatedReplies = comment.replies.map(reply => {
-                                if (reply.id === commentId) {
-                                    return { ...reply, content: data.result.content };
-                                }
-                                return reply;
-                            });
-                            return { ...comment, replies: updatedReplies }; // Cập nhật replies trong comment cha
-                        });
-                        return [...updatedComments]; // Trả về mảng mới để React nhận diện thay đổi
-                    });
-
-                    setEditingCommentId(null); // Thoát khỏi chế độ chỉnh sửa
-                    toast.success('Comment updated successfully');
-                } else {
-                    toast.error(data.message);
-                }
-            })
-            .catch(error => {
-                console.error(error);
-            });
-    };
-
-    // Delete comment
-    const handleDeleteComment = (commentId) => {
-        fetch(`http://localhost:8080/api/v1/delete-comment/${commentId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then((response) => response.json())
-            .then(data => {
-                // prevComments đại diện cho giá trị hiện tại của state comments trước khi chúng ta cập nhật
-                if (data.result) {
-                    setComments((prevComments) => {
-
-                        const updatedComments = prevComments
-                            .map(comment => {
-                                if (comment.id === commentId) {
-                                    return null;
-                                }
-
-                                const updatedReplies = comment.replies.filter(reply => reply.id !== commentId);
-
-                                return { ...comment, replies: updatedReplies };
-                            })
-                            .filter(comment => comment !== null);  // Loại bỏ các comment cha đã được đánh dấu là null
-
-                        return updatedComments;  // Trả về mảng comment mới cho React để cập nhật state
-                    });
-                    toast.success('Comment deleted successfully');
-                } else {
-                    toast.error('You can only update or delete your own comments');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                toast.error('Failed to delete comment');
-            });
     };
 
 
@@ -319,9 +235,34 @@ export const CourseDetail = () => {
         });
     };
 
+
+    const renderStars = (rating, handleRating) => {
+        return (
+            <div className="star-rating">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <FaStar
+                        key={star}
+                        size={25}
+                        color={star <= rating ? "#ffc107" : "#e4e5e9"} // Nếu giá trị của star (ngôi sao hiện tại trong vòng lặp) nhỏ hơn hoặc bằng rating, thì ngôi sao sẽ có màu vàng (#ffc107).
+                        onClick={() => handleRating(star)}
+                        style={{ cursor: "pointer" }}
+                    />
+                ))}
+            </div>
+        );
+    };
+
+    const handleRatingChange = (rating) => {
+        if (newRating === rating) {
+            setNewRating(rating - 1);
+        } else {
+            setNewRating(rating);
+        }
+    };
+
     return (
         <div>
-         
+
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     <div className="row">

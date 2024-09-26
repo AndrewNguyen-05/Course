@@ -12,6 +12,7 @@ import instructor4Image from './../../img/nam.jpg';
 import testimonial1Image from './../../img/testimonial-1.jpg';
 import testimonial2Image from './../../img/testimonial-2.jpg';
 import { ToastContainer } from 'react-toastify';
+import { getAllCourses, addFavorite } from '../../service/CourseService'
 
 export const HomePage = () => {
 
@@ -31,31 +32,20 @@ export const HomePage = () => {
         document.title = 'HomePage';
         const fetchCourses = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/v1/courses?page=${currentPage}&size=${pageSize}`, {
-                    method: 'GET',
-                });
-
-                if (!response.ok) {
-                    throw new Error(`${response.status}`);
-                }
-
-                const result = await response.json();
-
+                const result = await getAllCourses(currentPage, pageSize);
                 const { data, totalPages } = result.result;
 
-                // Nếu là trang đầu tiên thì không cần nối thêm dữ liệu
                 if (currentPage === 1) {
                     setCourses(data);
                 } else {
                     setCourses(prevCourses => {
-                        // Kiểm tra xem các khóa học mới có khác với các khóa học hiện tại không
                         const newCourses = data.filter(course => !prevCourses.some(prev => prev.id === course.id));
                         return [...prevCourses, ...newCourses];
                     });
                 }
 
                 if (currentPage >= totalPages) {
-                    setHasMore(false); // Nếu đã tải hết các trang, không còn dữ liệu nữa
+                    setHasMore(false);
                 }
             } catch (err) {
                 setError(err);
@@ -68,9 +58,28 @@ export const HomePage = () => {
     }, [currentPage, pageSize]); // useEffect chạy lại mỗi khi currentPage hoặc pageSize thay đổi
 
 
+    const addToFavorites = (courseId) => {
+        if (!token) {
+            navigate('/login');
+            return;
+        }
+        addFavorite(token, courseId)
+            .then(data => {
+                if (data.code === 201) {
+                    toast.success('Course added to favorites successfully!');
+                } else {
+                    throw new Error('Failed to add to favorites');
+                }
+            })
+            .catch(error => {
+                console.log(error)
+                toast.error('Course is already in the favorites list.');
+            });
+    };
+
     const loadMoreCourses = () => {
         if (hasMore) {
-            setCurrentPage(prevPage => prevPage + 1); // Tăng trang hiện tại để tải thêm dữ liệu
+            setCurrentPage(prevPage => prevPage + 1);
         }
     };
 
@@ -82,41 +91,9 @@ export const HomePage = () => {
         return <div>Error: {error.message}</div>;
     }
 
-    const addToFavorites = (courseId) => {
-        if (!token) {
-            navigate('/login');
-            return;
-        }
-    
-        fetch(`http://localhost:8080/api/v1/save-favorite?id=${courseId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error('Failed to add to favorites');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.code === 201) {
-                toast.success('Course added to favorites successfully!');
-            } else {
-                throw new Error('Failed to add to favorites');
-            }
-        })
-        .catch(error => {
-            console.log(error)
-            toast.error('Course is already in the favorites list.');
-        });
-    };
-
     return (
         <div>
-          
+
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     <div className="row">
@@ -460,7 +437,7 @@ export const HomePage = () => {
                 autoClose={3000}
                 className="custom-toast-container"
             />
-          
+
 
         </div>
     );

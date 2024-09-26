@@ -1,51 +1,39 @@
 import { toast } from "react-toastify";
-import axios from "../utils/CustomizeAxios";
 
 export const login = async (email, password) => {
-    try {
-        const response = await axios.post(`api/v1/auth/token`, {
-            email,
-            password
-        });
-        if (response.data.code === 401) {
-            toast.error('Email or Password incorrect');
-            return;
-        }
-        return response.data;
-    } catch (error) {
-        throw new Error(error);
+    const response = await fetch(`http://localhost:8080/api/v1/auth/token`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password })
+    });
+
+    if (!response.ok) {
+        toast.error('Email or Password incorrect');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'An error occurred.');
     }
+
+    return response.json();
 };
 
-export const introspect = async () => {
-    try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            throw new Error('Token is missing');
-        }
+export const introspect = async (token) => {
+    const response = await fetch(`http://localhost:8080/api/v1/auth/introspect`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ token })
+    })
 
-        const response = await axios.post(`api/v1/auth/introspect`, {
-            token: token
-        });
-
-        if (response.data && response.data.result) {
-            return response.data.result;
-        } else {
-            throw new Error('Invalid introspect response structure');
-        }
-    } catch (error) {
-        const errorMessage = error.response?.data?.message || 'Failed to introspect token';
-        throw new Error(errorMessage);
+    if(! response.ok){
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to introspect token');
     }
-};
 
-export const logout = async (token) => {
-    const response = await axios.post(`api/v1/auth/logout`, {token: token});
-    return response;
+    return response.json();
 }
-
-
-
-
 
 

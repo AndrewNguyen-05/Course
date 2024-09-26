@@ -4,12 +4,13 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { TopBar } from "../layouts/TopBar";
 import { Header } from "../layouts/Header";
+import { getProfileInfo, removeAvatar, updateAvatar, updateProfile } from "../../service/ProfileService";
 
 export const Profile = () => {
 
+    const token = localStorage.getItem('token');
     const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
     const [isRemovingAvatar, setIsRemovingAvatar] = useState(false);
-
     const [selectedImage, setSelectedImage] = useState(null);
     const [profileData, setProfileData] = useState({
         firstName: '',
@@ -27,14 +28,7 @@ export const Profile = () => {
     })
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/v1/info-user`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-        })
-            .then(response => response.json())
+        getProfileInfo(token)
             .then(data => {
                 if (data.result) {
                     setProfileData({
@@ -56,85 +50,55 @@ export const Profile = () => {
             });
     }, []);
 
-    const handleOnChangeAvatar = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSelectedImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
     const handleUpdateAvatar = (event) => {
         event.preventDefault();
-
-        if (!selectedImage) {
+    
+        const fileInput = document.getElementById("url-update-avatar");
+        const file = fileInput.files[0];
+    
+        if (!file) {
             toast.error('Please select an image first');
             return;
         }
-
+    
         const formData = new FormData();
-        formData.append("file", document.getElementById("url-update-avatar").files[0]);
-
+        formData.append("file", file);
+    
         setIsUpdatingAvatar(true);
-
-        fetch(`http://localhost:8080/api/v1/update-avatar`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: formData
-        }).then(response => {
-            if (response.ok) {
-                toast.success('Avatar updated successfully!');
-                return response.json();
+    
+        updateAvatar(formData, token)
+        .then(response => {
+            if (response && response.message === "Profile updated successfully") {
+                toast.success(response.message); 
             } else {
-                throw new Error("Failed to update avatar");
+                toast.error('Avatar update failed');
             }
-        }).then(data => {
-            if (data && data.avatarUrl) {
-                setSelectedImage(data.avatarUrl);
-                toast.success('Avatar updated successfully!');
-            }
-        }).catch(error => {
-            toast.error('Failed to update avatar');
+        })
+        .catch(error => {
             console.error(error);
-        }).finally(() => {
+            toast.error('Failed to update avatar');
+        })
+        .finally(() => {
             setIsUpdatingAvatar(false);
         });
     };
+        
 
     const handleRemoveAvatar = () => {
         setIsRemovingAvatar(true);
 
-        fetch(`http://localhost:8080/api/v1/remove-avatar`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        }).then(response => {
-            if (response.ok) {
-                setSelectedImage("https://bootdey.com/img/Content/avatar/avatar7.png");
+        removeAvatar(token)
+            .then(() => {
+                setSelectedImage("https://bootdey.com/img/Content/avatar/avatar7.png"); // Set lại avatar mặc định
                 toast.success('Avatar removed successfully!');
-            } else {
-                throw new Error("Failed to remove avatar");
-            }
-        }).catch(error => {
-            toast.error('Failed to remove avatar');
-            console.error(error);
-        }).finally(() => {
-            setIsRemovingAvatar(false);
-        });
-    };
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setProfileData({
-            ...profileData,
-            [name]: value
-        });
+            })
+            .catch(error => {
+                toast.error('Failed to remove avatar');
+                console.error(error);
+            })
+            .finally(() => {
+                setIsRemovingAvatar(false);
+            });
     };
 
 
@@ -146,26 +110,34 @@ export const Profile = () => {
             }
         });
 
-        fetch('http://localhost:8080/api/v1/update-profile', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify(filteredData)
-        })
-            .then(response => {
-                if (response.ok) {
-                    toast.success("Profile updated successfully");
-                } else {
-                    throw new Error("Failed to update profile");
-                }
+        updateProfile(filteredData, localStorage.getItem('token'))
+            .then(() => {
+                toast.success("Profile updated successfully");
             })
             .catch(error => {
                 toast.error('Error updating profile');
-                console.error('Error updating profile:', error);
-            });
+                console.error(error);
+            })
     };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setProfileData({
+            ...profileData,
+            [name]: value
+        });
+    };
+
+    const handleOnChangeAvatar = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSelectedImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };    
 
     return (
         <div>

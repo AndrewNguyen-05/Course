@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Footer } from '../layouts/Footer';
 import { OAuthConfig } from '../config/OAuthConfig';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
+import { introspect, login } from '../../service/AuthenticationService';
 
 export const LoginPage = () => {
 
@@ -53,42 +54,12 @@ export const LoginPage = () => {
   const handleLogin = (event) => {
     event.preventDefault();
 
-    fetch('http://localhost:8080/api/v1/auth/token', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
-    })
-      .then(response => {
-        if (!response.ok) {
-          toast.error('Email or Password incorrect');
-          return response.json().then(errorData => {
-            throw new Error(errorData.message || 'An error occurred.');
-          });
-        }
-        return response.json();
-      })
+    login(email, password)
       .then(data => {
         const token = data.result.token;
         localStorage.setItem('token', token);
-        // Gọi API introspect để kiểm tra token, phân quyền
-        fetch(`http://localhost:8080/api/v1/auth/introspect`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ token })
-        })
-          .then(response => {
-            if (!response.ok) {
-              return response.json().then(errorData => {
-                throw new Error(errorData.message);
-              });
-            }
-            return response.json();
-          })
+
+        introspect(token)
           .then(introspectData => {
             if (introspectData.result && introspectData.result.valid) {
               const role = introspectData.result.scope;
