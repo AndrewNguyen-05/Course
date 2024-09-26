@@ -4,7 +4,7 @@ import { FaCommentDots, FaReply, FaTrash, FaStar, FaBook } from 'react-icons/fa'
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
-import { getCommentByCourseId, getCourseById } from "../../service/CourseService";
+import { buyCourse, getCommentByCourseId, getCourseById } from "../../service/CourseService";
 import { addComment, addReplyComment, deleteComment, editComment } from "../../service/ReviewService";
 
 export const CourseDetail = () => {
@@ -69,10 +69,10 @@ export const CourseDetail = () => {
         try {
             const result = await addComment(commentData, token, id);
             setComments([{
-                ...result,
+                ...result, // sao chép toàn bộ thuộc tính trong result:  bình luận mới được trả về từ server.
                 replying: false,
                 replies: []
-            }, ...comments]);
+            }, ...comments]);  // sao chép toàn bộ các comment trước đó và bao gồm cả comment mới được thêm vào đầu danh sách
 
             setNewComment("");
             setNewRating(0);
@@ -193,34 +193,19 @@ export const CourseDetail = () => {
 
     const handleEnrollNow = async () => {
         Swal.fire({
-            title: 'Bạn có chắc chắn?',
-            text: 'Bạn có muốn mua khóa học này?',
+            title: 'Are you sure?',
+            text: 'Do you want to buy this course?',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Có, mua ngay!',
-            cancelButtonText: 'Không, hủy'
+            confirmButtonText: 'Yes, buy now!',
+            cancelButtonText: 'No, cancel.'
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch(`http://localhost:8080/api/v1/buy-course`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify(id)
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.message);
-                    }
-
-                    const data = await response.json();
-
+                    const data = await buyCourse(token, id);
                     Swal.fire({
-                        title: 'Mua thành công!',
-                        text: `Bạn đã mua khóa học: ${data.result.title}`,
+                        title: 'Purchase successful!',
+                        text: `You have purchased the course: ${data.result.title}`,
                         icon: 'success'
                     });
                 } catch (error) {
@@ -233,8 +218,7 @@ export const CourseDetail = () => {
                 }
             }
         });
-    };
-
+    };  
 
     const renderStars = (rating, handleRating) => {
         return (

@@ -1,30 +1,29 @@
-import { error } from 'jquery';
 import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Footer } from '../layouts/Footer';
 import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
+import { FaMoneyBillWave, FaPlusCircle } from 'react-icons/fa';
 
 const DepositPage = () => {
-
     useEffect(() => {
-        document.title = 'Deposit'
-    })
+        document.title = 'Deposit';
+    }, []);
 
     const token = localStorage.getItem('token');
-    const [selectedAmount, setSelectedAmount] = useState(null); // Giá trị được chọn
-    const [customAmount, setCustomAmount] = useState(''); // Số tiền nhập thủ công
+    const [selectedAmount, setSelectedAmount] = useState(null);
+    const [customAmount, setCustomAmount] = useState('');
 
-    const predefinedAmounts = [100000, 200000, 500000, 1000000]; // Các khoản tiền nạp cố định
+    const predefinedAmounts = [50000, 100000, 200000, 500000, 1000000, 2000000, 4000000, 5000000];
 
     const handleAmountClick = (amount) => {
         setSelectedAmount(amount);
-        setCustomAmount(''); // Xóa ô nhập nếu người dùng chọn một giá trị cố định
+        setCustomAmount('');
     };
 
     const handleCustomAmountChange = (e) => {
-        setSelectedAmount(null); // Hủy lựa chọn nếu người dùng nhập thủ công
+        setSelectedAmount(null);
         setCustomAmount(e.target.value);
     };
 
@@ -41,26 +40,28 @@ const DepositPage = () => {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }
-        }).then((response) => response.json()
-        ).then(data => {
+        })
+        .then(response => response.json())
+        .then(data => {
             window.location.href = data.result.paymentUrl;
-        }).catch(error => console.log(error))
-
+        })
+        .catch(error => console.log(error));
     };
 
     return (
         <div>
             <TopBar />
             <Header />
-            <div className="container mt-5">
-                <h2 className="mb-4">Deposit</h2>
+            <div className="container mt-5 deposit-container">
+                <h2 className="mb-4 text-center deposit-title">
+                    <FaMoneyBillWave className="mr-2" /> Deposit Funds
+                </h2>
 
                 <div className="row">
-                    {/* Hiển thị các tùy chọn nạp tiền */}
                     {predefinedAmounts.map((amount, index) => (
                         <div className="col-md-3 mb-3" key={index}>
                             <button
-                                className={`btn btn-lg btn-block ${selectedAmount === amount ? 'btn-primary' : 'btn-outline-primary'}`}
+                                className={`btn btn-lg btn-block deposit-button ${selectedAmount === amount ? 'btn-primary' : 'btn-outline-primary'}`}
                                 onClick={() => handleAmountClick(amount)}
                             >
                                 {new Intl.NumberFormat('vi-VN').format(amount)} VND
@@ -68,26 +69,23 @@ const DepositPage = () => {
                         </div>
                     ))}
 
-                    {/* Ô nhập tiền thủ công */}
                     <div className="col-md-3 mb-3">
                         <input
                             type="number"
-                            className="form-control form-control-lg"
+                            className="form-control form-control-lg deposit-input"
                             placeholder="Enter custom amount"
                             value={customAmount}
                             onChange={handleCustomAmountChange}
-                            min="1000" // Giới hạn tối thiểu
+                            min="1000"
                         />
                     </div>
                 </div>
 
-                <button className="btn btn-success btn-lg mt-4" onClick={handleDeposit}>
-                    Confirm Deposit
+                <button className="btn btn-success btn-lg mt-4 deposit-confirm-button" onClick={handleDeposit}>
+                    <FaPlusCircle className="mr-2" /> Confirm Deposit
                 </button>
 
-                <div>
-                    <ToastContainer />
-                </div>
+                <ToastContainer />
             </div>
             <Footer />
         </div>

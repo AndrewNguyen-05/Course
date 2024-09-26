@@ -4,6 +4,8 @@ import { Footer } from '../layouts/Footer';
 import { useNavigate } from 'react-router-dom';
 import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
+import { resetPassword, sendOtp, verifyOtp } from '../../service/UserService';
+import Swal from 'sweetalert2';
 
 export const ForgotPassword = () => {
 
@@ -22,101 +24,59 @@ export const ForgotPassword = () => {
     const [newPassword, setNewPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleEmailSubmit = (event) => {
+    const handleEmailSubmit = async (event) => {
         event.preventDefault();
-
-        fetch(`http://localhost:8080/api/v1/send-otp?email=${encodeURIComponent(email)}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((response) => {
-                if (response.ok) {
-                    setEmailSent(true);
-                    setEmailError('');
-                } else {
-                    response.json().then((errorData) => {
-                        setEmailSent(false);
-                        setEmailError(errorData.message);
-                    });
-                }
-            })
-            .catch((error) => {
-                setEmailSent(false);
-                setEmailError('Failed to send OTP. Please try again later.');
-            });
+        try {
+            await sendOtp(email);
+            setEmailSent(true);
+            setEmailError('');
+        } catch (error) {
+            setEmailSent(false);
+            setEmailError(error.message || 'Failed to send OTP. Please try again later.');
+        }
     };
 
-    const handleOtpSubmit = (event) => {
+    const handleOtpSubmit = async (event) => {
         event.preventDefault();
-
-        fetch(`http://localhost:8080/api/v1/verify-otp`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-                otp: otp,
-            }),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    return response.json().then((errorData) => {
-                        throw new Error(errorData.message || 'Failed to verify OTP');
-                    });
-                }
-            })
-            .then((data) => {
-                console.log(data);
-
-                if (data.result.valid) {
-                    setOtpVerified(true);
-                    setOtpError('');
-                } else {
-                    setOtpError('Invalid or expired OTP. Please try again.');
-                }
-            })
-            .catch((error) => {
-                setOtpError(error.message);
-            });
+        try {
+            const data = await verifyOtp(email, otp);
+            if (data.result.valid) {
+                setOtpVerified(true);
+                setOtpError('');
+            } else {
+                setOtpError('Invalid or expired OTP. Please try again.');
+            }
+        } catch (error) {
+            setOtpError(error.message);
+        }
     };
 
-    const handlePasswordSubmit = (event) => {
+    const showAlert = (isSuccess, message) => {
+        const alertOptions = {
+            title: isSuccess ? 'Success!' : 'Error!',
+            text: message,
+            icon: isSuccess ? 'success' : 'error',
+            confirmButtonText: 'OK',
+        };
+    
+        return Swal.fire(alertOptions); // Trả về promise(dùng return)
+    };
+
+    const handlePasswordSubmit = async (event) => {
         event.preventDefault();
-
-        const url = `http://localhost:8080/api/v1/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`;
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                password: newPassword,
-            }),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    alert('Password reset successfully!');
-                    navigate('/login');
-                } else {
-                    return response.json().then((errorData) => {
-                        throw new Error(errorData.message || 'Failed to reset password');
-                    });
-                }
-            })
-            .catch((error) => {
-                console.log(error.message);
+        try {
+            await resetPassword(email, otp, newPassword);
+            showAlert(true, 'Password reset successfully!').then(() => {
+                navigate('/login');
             });
+        } catch (error) {
+            showAlert(false, error.message);
+        }
     };
 
     return (
         <div className="d-flex flex-column min-vh-100">
-            <TopBar/>
+            <TopBar />
             <Header />
             <div className="flex-grow-1 d-flex justify-content-center align-items-center" style={{ paddingTop: '70px', paddingBottom: '50px' }}>
                 <div className="card shadow-lg p-4 w-100" style={{ maxWidth: '500px', border: 'none', borderRadius: '15px' }}>
@@ -146,7 +106,7 @@ export const ForgotPassword = () => {
                             <button type="button" className="btn btn-outline-secondary btn-lg w-100" onClick={() => navigate('/login')}>
                                 Back to Login
                             </button>
-                            
+
                         </form>
                     )}
 

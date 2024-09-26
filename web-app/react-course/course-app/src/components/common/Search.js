@@ -1,138 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import { UseAuth } from "../authentication/UseAuth";
-import { HandleLogout } from "../authentication/HandleLogout";
-import { useLocation, Link } from "react-router-dom";
-import { NavigationMenu } from "./NavigationMenu";
-import { NotificationDropdown } from "./NotificationDropdown";
-import { Card } from "./Cart";
-import { Message } from "./Message";
-import { Favorites } from "./Favorites";
-import { ProfileDropdown } from "./ProfileDropdown";
-import { TopBar } from "../layouts/TopBar";
+import React, {useState } from "react";
 
 export const Search = ({ onSearch }) => {
-    const [loggedOut, setLoggedOut] = useState(false);
-    const { isTokenValid } = UseAuth({ loggedOut });
-    const { handleLogout } = HandleLogout({ setLoggedOut });
-
-    const location = useLocation();
-    const underlineRef = useRef(null);
-    const [avatar, setAvatar] = useState('');
-    const [loading, setLoading] = useState(true);
-
-    const token = localStorage.getItem('token');
-    const role = localStorage.getItem('role');
-
-    const [notifications, setNotifications] = useState([]); // Giá trị mặc định là một mảng rỗng
-    const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
-    
-      useEffect(() => {
-        const interval = setInterval(() => {
-          fetch(`http://localhost:8080/api/v1/notification-current`, {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          })
-          .then(response => response.json())
-          .then(data => {
-            setNotifications(data.result);
-            setUnreadCount(data.result.filter(n => !n.isRead).length);
-          })
-          .catch(error => console.log(error));
-        }, 1000); 
-      
-        return () => clearInterval(interval);
-      }, []);
-    
-    
-      const markAsRead = (notificationId) => {
-        fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Failed to mark as read');
-            }
-            return response.json();
-          })
-          .then(() => {
-            setUnreadCount((prevCount) => prevCount - 1);
-            setNotifications((prevNotifications) =>
-              prevNotifications.map((n) =>
-                n.id === notificationId ? { ...n, isRead: true } : n
-              )
-            );
-          })
-          .catch((error) => console.error('Error marking notification as read:', error));
-      };
-    
-
-    useEffect(() => {
-        const activeLink = document.querySelector(`.nav-item.active`);
-        if (activeLink && underlineRef.current) {
-            underlineRef.current.style.left = `${activeLink.offsetLeft}px`;
-            underlineRef.current.style.width = `${activeLink.offsetWidth}px`;
-        }
-    }, [location.pathname]);
-
-    const isActive = (path) => location.pathname === path;
-
-    useEffect(() => {
-        if (!role && !token) {
-            setLoading(false);
-            return;
-        }
-
-        if (token && !role) {
-            fetch(`http://localhost:8080/api/v1/auth/introspect`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ token })
-            }).then((response) => response.json()
-            ).then(data => {
-                console.log(data)
-                localStorage.setItem('role', data.result.scope);
-            }).catch(error => console.log(error))
-        }
-    }, [token]);
-
-    useEffect(() => {
-        if (!token) {
-            setLoading(false);
-            return;
-        }
-
-        fetch(`http://localhost:8080/api/v1/get-avatar`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        }).then(response => response.json()
-        ).then(data => {
-            console.log(data.result);
-            const urlAvatar = data.result;
-            setAvatar(urlAvatar);
-        }).catch(error => console.log(error));
-    }, [token]);
-
 
     const [title, setTitle] = useState('');
     const [author, setAuthor] = useState('');
     const [courseLevel, setCourseLevel] = useState('');
     const [language, setLanguage] = useState('');
-
     const [minPoints, setMinPoints] = useState('');
     const [maxPoints, setMaxPoints] = useState('');
-
-
 
     const handleSearch = () => {
         let filterQuery = '';
@@ -170,40 +45,6 @@ export const Search = ({ onSearch }) => {
 
     return (
         <div>
-            <TopBar />
-            <div className="container-fluid p-0">
-                <nav className="navbar navbar-expand-lg bg-white navbar-light py-3 py-lg-0 px-lg-5">
-                    <Link to="/home" className="navbar-brand ml-lg-3">
-                        <h1 className="m-0 text-uppercase text-primary rounded">
-                            <i className="fa fa-book-reader mr-3"></i>D-LEARNING
-                        </h1>
-                    </Link>
-                    <button type="button" className="navbar-toggler rounded" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
-                        <NavigationMenu isActive={isActive} underlineRef={underlineRef} />
-
-                        <div className="navbar-nav ml-auto d-flex align-items-center">
-                            <NotificationDropdown
-                                notifications={notifications}
-                                unreadCount={unreadCount}
-                                markAsRead={markAsRead}
-                            />
-                            <Card />
-                            <Message />
-                            <Favorites />
-                            <ProfileDropdown
-                                avatar={avatar}
-                                isTokenValid={isTokenValid}
-                                role={role}
-                                handleLogout={handleLogout}
-                            />
-                        </div>
-
-                    </div>
-                </nav>
-            </div>
             <div className="container-fluid mb-5">
                 <div className="search-bar p-4 rounded shadow-sm custom-search-bar">
                     <div className="row justify-content-center align-items-center">

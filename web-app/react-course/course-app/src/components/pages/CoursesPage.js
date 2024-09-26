@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import { Footer } from "../layouts/Footer";
 import { Search } from "../common/Search";
 import Pagination from '../common/Pagination';
+import { SearchService } from '../../service/CourseService';
+import { TopBar } from '../layouts/TopBar';
+import { Header } from '../layouts/Header';
 
 export const Courses = () => {
     const [loading, setLoading] = useState(true);
@@ -14,33 +17,25 @@ export const Courses = () => {
 
     useEffect(() => {
         document.title = 'Courses'
-    })
+    })  
 
-    // Hàm lấy dữ liệu từ API
+    // Get Course and Search Filter 
+
     const fetchCourses = async () => {
         setLoading(true);
-        console.log(loading)
+        console.log(loading);
         try {
-            let apiUrl = `http://localhost:8080/api/v1/courses?page=${currentPage}&size=${pageSize}`;
-            if (filterQuery) {
-                apiUrl += `&filter=${encodeURIComponent(filterQuery)}`;
-                console.log("Filter Query:", filterQuery);
-                console.log("API URL:", apiUrl);
+            const result = await SearchService(currentPage, pageSize, filterQuery); 
+            if (result && result.data) {  
+                setCourses(result.data);  
+                setTotalPages(result.totalPages);
+            } else {
+                setCourses([]); 
             }
-
-            const response = await fetch(apiUrl, { method: 'GET' });
-
-            if (!response.ok) {
-                throw new Error(`${response.status}`);
-            }
-            const result = await response.json();
-            const { data, totalPages } = result.result;
-            setTotalPages(totalPages);
-            setCourses(data);
         } catch (err) {
             console.log(err);
         } finally {
-            setLoading(false); // Kết thúc trạng thái loading
+            setLoading(false);  
         }
     };
 
@@ -51,7 +46,6 @@ export const Courses = () => {
         }
     };
 
-    // Reset `currentPage` khi `filterQuery` thay đổi
     useEffect(() => {
         setCurrentPage(1); // Đặt lại về trang đầu tiên mỗi khi `filterQuery` thay đổi
     }, [filterQuery]);
@@ -63,6 +57,8 @@ export const Courses = () => {
 
     return (
         <div>
+            <TopBar/>
+            <Header/>
             <Search onSearch={setFilterQuery} />
             <div className="container-fluid">
                 <div className="container py-3">
@@ -104,7 +100,7 @@ export const Courses = () => {
                         totalPages={totalPages}
                         changePage={changePage}
                     />
-                    
+
                 </div>
             </div>
             <Footer />

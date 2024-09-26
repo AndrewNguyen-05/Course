@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Footer } from "../layouts/Footer";
 import { TopBar } from "../layouts/TopBar";
 import { Header } from "../layouts/Header";
+import { checkUserExists, registerUser, sendOtpRegister } from "../../service/UserService";
 
 export const Register = () => {
 
@@ -48,8 +49,8 @@ export const Register = () => {
 
     // Xử lý lỗi khi để trống
     const handleInputBlur = (event) => {
-        const {name, value} = event.target;
-        if(! value){
+        const { name, value } = event.target;
+        if (!value) {
             setFormErrors({
                 ...formErrors,
                 [name]: "This field cannot be left blank"
@@ -58,92 +59,47 @@ export const Register = () => {
     };
 
     // Kiểm tra email và gửi OTP nếu chưa tồn tại
-    const handleRegisterSubmit = (e) => {
+    const handleRegisterSubmit = async (e) => {
         e.preventDefault();
 
-     
-
-        // some: 1- kiểm tra có bất kì lỗi nào trong formErrors khong
-        //       2- Kiểm tra có trường nào rỗng hoặc trống hay không
-
-        if(formData.password.length < 6 ){
-            setErrorMessage('Password must be 6 characters');
+        if (formData.password.length < 6) {
+            setErrorMessage('Password must be at least 6 characters');
             return;
         }
 
-        // Kiểm tra email đã tồn tại chưa
-        fetch(`http://localhost:8080/api/v1/check-exists-user?email=${formData.email}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("An error occurred while checking email.");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            console.log(data);
+        try {
+            // Kiểm tra email đã tồn tại
+            const data = await checkUserExists(formData.email);
             if (data.result) {
                 setErrorMessage("Email already exists, please use another email.");
             } else {
-                fetch(`http://localhost:8080/api/v1/send-otp-register?email=${formData.email}`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                })
-                .then((otpResponse) => {
-                    if (!otpResponse.ok) {
-                        throw new Error("Error sending OTP");
-                    }
-                    return otpResponse.json();
-                })
-                .then((otpData) => {
-                    if (otpData.code === 200) {
-                        setIsOtpSent(true); // Chuyển đến form nhập OTP
-                        setErrorMessage("");
-                        console.log("OTP sent successfully");
-                    } else {
-                        setErrorMessage("Error sending OTP, please try again.");
-                    }
-                })
-                .catch((error) => {
-                    console.error(error);
-                    setErrorMessage("An error occurred while sending OTP.");
-                });
+                // Gửi OTP
+                const otpData = await sendOtpRegister(formData.email);
+                if (otpData.code === 200) {
+                    setIsOtpSent(true);
+                    setErrorMessage("");
+                    console.log("OTP sent successfully");
+                } else {
+                    setErrorMessage("Error sending OTP, please try again.");
+                }
             }
-        })
+        } catch (error) {
+            console.error(error);
+            setErrorMessage("An error occurred while checking email.");
+        }
     };
 
-    // Xử lý xác thực OTP và gửi toàn bộ thông tin đăng ký
-    const handleOtpSubmit = (e) => {
+    const handleOtpSubmit = async (e) => {
         e.preventDefault();
 
-        // Gửi thông tin đăng ký kèm OTP
-        fetch(`http://localhost:8080/api/v1/register?otp=${formData.otp}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
+        try {
+            const data = await registerUser(formData.otp, {
                 email: formData.email,
                 password: formData.password,
                 firstName: formData.firstname,
                 lastName: formData.lastname,
                 dob: formData.dob,
-            }),
-        })
-        .then((response) => {
-            if (!response.ok) {
-                setErrorMessage('OTP is invalid or expired')
-                throw new Error("Error during registration");
-            }
-            return response.json();
-        })
-        .then((data) => {
+            });
             if (data.result) {
                 console.log("User registered successfully");
                 navigate("/login");
@@ -151,16 +107,15 @@ export const Register = () => {
                 setErrorMessage("OTP is invalid or expired");
                 console.error("Error during registration:", data.message);
             }
-        })
-        .catch((error) => {
+        } catch (error) {
             console.error(error);
             setErrorMessage("OTP is invalid or expired");
-        });
+        }
     };
 
     return (
         <div>
-            <TopBar/>
+            <TopBar />
             <Header />
             <section className="py-3 py-md-5 py-xl-8">
                 <div className="container">
@@ -172,7 +127,7 @@ export const Register = () => {
                                     Already have an account?{" "}
                                     <Link to="/login">Sign in</Link>
                                 </p>
-                            
+
                             </div>
                         </div>
                     </div>
@@ -200,7 +155,7 @@ export const Register = () => {
                                                         <label htmlFor="email" className="form-label">Email</label>
                                                         {formErrors.email && <p className="text-danger">{formErrors.email}</p>}
                                                     </div>
-                                            
+
                                                 </div>
                                                 <div className="col-12">
                                                     <div className="form-floating mb-3">
@@ -275,7 +230,7 @@ export const Register = () => {
                                                         <button className="btn btn-lg btn-dark rounded-0 fs-6" type="submit">
                                                             Register
                                                         </button>
-                                                        
+
                                                     </div>
                                                 </div>
                                                 {errorMessage && <p className="text-danger text-center">{errorMessage}</p>}

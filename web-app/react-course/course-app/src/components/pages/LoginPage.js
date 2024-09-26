@@ -9,15 +9,50 @@ import { introspect, login } from '../../service/AuthenticationService';
 
 export const LoginPage = () => {
 
-  useEffect(() => {
-    document.title = 'Login Page'
-  })
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showToast, setShowToast] = useState(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    document.title = 'Login Page'
+  }, [])
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      introspect(token)
+        .then(data => {
+          if (data.result.valid) {
+            navigate('/home');
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch(error => {
+          console.error('Error introspecting token:', error);
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, [navigate]);
+
+
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+  
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
 
   const handleGoogleLogin = () => {
@@ -42,14 +77,6 @@ export const LoginPage = () => {
 
     window.location.href = authUrl;
   };
-
-
-  useEffect(() => {
-    const token = localStorage.getItem('token')
-    if (token) {
-      navigate('/home')
-    }
-  })
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -91,12 +118,6 @@ export const LoginPage = () => {
       });
   };
 
-  useEffect(() => {
-    if (showToast) {
-      const timer = setTimeout(() => setShowToast(false), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [showToast]);
 
   return (
     <div>

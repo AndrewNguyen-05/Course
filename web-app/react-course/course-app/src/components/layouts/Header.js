@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { UseAuth } from '../authentication/UseAuth.js';
 import { HandleLogout } from '../authentication/HandleLogout.js';
 import { NotificationDropdown } from '../common/NotificationDropdown.js';
@@ -7,6 +7,10 @@ import { ProfileDropdown } from '../common/ProfileDropdown.js';
 import { Favorites } from '../common/Favorites.js';
 import { Message } from '../common/Message.js';
 import { NavigationMenu } from '../common/NavigationMenu.js';
+import { getAvatar } from '../../service/ProfileService.js';
+import { introspect } from '../../service/AuthenticationService.js';
+import { getPointsByCurrentLogin } from '../../service/UserService.js';
+import { markAsReadNotification, notificationCurrentLogin } from '../../service/NotificationService.js';
 
 export const Header = () => {
     const [loggedOut, setLoggedOut] = useState(false);
@@ -37,15 +41,7 @@ export const Header = () => {
             setLoading(false);
             return;
         }
-        fetch(`http://localhost:8080/api/v1/auth/introspect`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ token })
-        })
-            .then((response) => response.json())
+        introspect(token)
             .then(data => {
                 if (data.result.valid) {
                     setRole(data.result.scope);
@@ -57,54 +53,22 @@ export const Header = () => {
             .finally(() => setLoading(false));
     }, [token]);
 
-    useEffect(() => {
-        if (!token || !isTokenValid) return;
-
-        fetch(`http://localhost:8080/api/v1/notification-current`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                setNotifications(data.result || []);
-                setUnreadCount(data.result.filter(n => !n.isRead).length || []);
-            })
-            .catch(error => console.log(error));
-    }, [token, isTokenValid]);
 
     useEffect(() => {
         if (!token) {
             setLoading(false);
             return;
         }
-
-        fetch(`http://localhost:8080/api/v1/get-avatar`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(response => response.json())
+        getAvatar(token)
             .then(data => setAvatar(data.result))
             .catch(error => console.log(error));
     }, [token]);
 
+
     useEffect(() => {
         const fetchPoints = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/api/v1/get-points-user-current`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                })
-                if (!response.ok) {
-                    throw new Error('Failed to get points');
-                }
-                const data = await response.json();
+                const data = await getPointsByCurrentLogin(token);
                 setPoints(data.result.points)
             } catch (error) {
                 console.log(error)
@@ -113,23 +77,31 @@ export const Header = () => {
         fetchPoints();
     }, [token])
 
-    const markAsRead = (notificationId) => {
-        fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-            .then(response => response.json())
-            .then(() => {
-                setUnreadCount(prevCount => prevCount - 1);
-                setNotifications(prevNotifications =>
-                    prevNotifications.map(n =>
-                        n.id === notificationId ? { ...n, isRead: true } : n
-                    )
-                );
+
+    useEffect(() => {
+        if (!token || !isTokenValid) return;
+
+        notificationCurrentLogin(token)
+            .then(data => {
+                setNotifications(data.result || []);
+                setUnreadCount(data.result.filter(n => !n.isRead).length || []);
             })
-            .catch((error) => console.error('Error marking notification as read:', error));
+            .catch(error => console.log(error));
+    }, [token, isTokenValid]);
+    
+
+    const markAsRead = async (notificationId) => {
+        try {
+            await markAsReadNotification(token, notificationId);
+            setUnreadCount(prevCount => prevCount - 1);
+            setNotifications(prevNotifications =>
+                prevNotifications.map(n =>
+                    n.id === notificationId ? { ...n, isRead: true } : n
+                )
+            );
+        } catch (error) {
+            console.error('Lỗi khi đánh dấu thông báo là đã đọc:', error);
+        }
     };
 
     return (
