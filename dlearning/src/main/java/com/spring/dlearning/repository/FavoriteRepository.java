@@ -8,9 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Integer> {
     Page<Favorite> findByUser(User user, Pageable pageable);
+
+    List<Favorite> findByUser(User user);
 
     boolean existsByUserAndCourse(User user, Course course);
 }

@@ -60,8 +60,6 @@ public class CourseService {
             int numberOfReviews = course.getComments().size();
             double averageRating = numberOfReviews > 0 ? (double) totalRating / numberOfReviews : 0;
 
-            log.info("averageRating {}", averageRating);
-
             CourseResponse courseResponse = courseMapper.toCourseResponse(course);
             courseResponse.setAverageRating(averageRating);
             return courseResponse;

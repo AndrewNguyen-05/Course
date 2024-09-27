@@ -40,6 +40,7 @@ public class BannedWordsService {
     }
 
     public boolean containsBannedWords(String content) {
+        content = content.toLowerCase();
 
         List<AhoCorasickDoubleArrayTrie.Hit<String>> hits = ahoCorasickTrie.parseText(content.toLowerCase());
 

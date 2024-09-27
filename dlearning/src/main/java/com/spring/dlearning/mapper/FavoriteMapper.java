@@ -1,18 +1,22 @@
 package com.spring.dlearning.mapper;
 
+
 import com.spring.dlearning.dto.response.FavoriteResponse;
 import com.spring.dlearning.entity.Favorite;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface FavoriteMapper {
+@Component
+public class FavoriteMapper {
 
-    @Mapping(source = "course.id", target = "courseId")
-    @Mapping(source = "user.name", target = "name")
-    @Mapping(source = "course.author.name", target = "author")
-    @Mapping(source = "course.title", target = "title")
-    @Mapping(source = "course.thumbnail", target = "thumbnail")
-    @Mapping(source = "course.points", target = "points")
-    FavoriteResponse toFavoriteResponse(Favorite favorite);
+    public  FavoriteResponse toFavoriteResponse(Favorite favorite){
+        return FavoriteResponse.builder()
+                .name(favorite.getUser().getName())
+                .favoriteId(favorite.getId())
+                .courseId(favorite.getCourse().getId())
+                .title(favorite.getCourse().getTitle())
+                .thumbnail(favorite.getCourse().getThumbnail())
+                .points(favorite.getCourse().getPoints())
+                .author(favorite.getCourse().getAuthor().getName())
+                .build();
+    }
 }

@@ -14,7 +14,7 @@ public enum ErrorCode {
     USERNAME_INVALID(400, "Username must be at least {min} characters", HttpStatus.BAD_REQUEST),
     INVALID_PASSWORD(400, "Password must be at least {min} characters", HttpStatus.BAD_REQUEST),
     USER_NOT_EXISTED(404, "User not existed", HttpStatus.NOT_FOUND),
-    UNAUTHENTICATED(401, "Username or Password wrong", HttpStatus.UNAUTHORIZED),
+    UNAUTHENTICATED(401, "You need to log in to perform this action.", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(403, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(400, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
     INVALID_CREDENTIALS(400, "Invalid credentials, please try again.", HttpStatus.BAD_REQUEST),
@@ -50,6 +50,7 @@ public enum ErrorCode {
     COURSE_ID_INVALID(400, "Course ID cannot be null", HttpStatus.BAD_REQUEST),
     LESSON_ID_INVALID(400, "Lesson Id cannot be null", HttpStatus.BAD_REQUEST),
     LESSON_NAME_INVALID(400, "Lesson Name cannot be null", HttpStatus.BAD_REQUEST),
+    FAVORITE_NOT_FOUND(404, "Favorite not existed", HttpStatus.NOT_FOUND)
     ;
 
     private int code;

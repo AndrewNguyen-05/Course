@@ -41,6 +41,15 @@ public class FavoriteController {
                 .build();
     }
 
+    @DeleteMapping("/delete-favorite/{favoriteId}")
+    ApiResponse<Void> deleteFavorite (@PathVariable Integer favoriteId){
+        favoriteService.deleteFavorite(favoriteId);
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.NO_CONTENT.value())
+                .message("Delete Favorite Successfully")
+                .build();
+    }
+
     @GetMapping("/fetch-all-favorites")
     ApiResponse<PageResponse<FavoriteResponse>> fetchAllFavorite (@RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                                                   @RequestParam(value = "size", required = false, defaultValue = "6")  int size) {

@@ -21,7 +21,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -82,6 +84,25 @@ public class FavoriteService {
                 .totalElements(favorites.getTotalElements())
                 .data(favorites.getContent().stream().map(favoriteMapper::toFavoriteResponse).toList())
                 .build();
+    }
+
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
+    public void deleteFavorite(Integer favoriteId){
+        String email = SecurityUtils.getCurrentUserLogin()
+                        .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        List<Favorite> favorites = favoriteRepository.findByUser(user);
+
+        Favorite favoriteToDelete = favorites.stream()
+                .filter(f -> Objects.equals(f.getId(), favoriteId))
+                .findFirst()
+                .orElseThrow(() -> new AppException(ErrorCode.FAVORITE_NOT_FOUND));
+
+        favoriteRepository.delete(favoriteToDelete);
     }
 
 }

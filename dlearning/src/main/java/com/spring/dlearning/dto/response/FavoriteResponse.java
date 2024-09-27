@@ -10,13 +10,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FavoriteResponse {
-
-    Integer id;
+    Integer favoriteId;
     String name;
-
-    Long courseId;
     String author;
     String title;
     String thumbnail;
     Long points;
+    Long courseId;
 }
