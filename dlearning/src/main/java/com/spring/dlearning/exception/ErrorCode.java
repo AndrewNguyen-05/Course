@@ -50,7 +50,16 @@ public enum ErrorCode {
     COURSE_ID_INVALID(400, "Course ID cannot be null", HttpStatus.BAD_REQUEST),
     LESSON_ID_INVALID(400, "Lesson Id cannot be null", HttpStatus.BAD_REQUEST),
     LESSON_NAME_INVALID(400, "Lesson Name cannot be null", HttpStatus.BAD_REQUEST),
-    FAVORITE_NOT_FOUND(404, "Favorite not existed", HttpStatus.NOT_FOUND)
+    FAVORITE_NOT_FOUND(404, "Favorite not existed", HttpStatus.NOT_FOUND),
+    TITLE_ADS_INVALID(400, "Title advertisement cannot be null", HttpStatus.BAD_REQUEST),
+    EMAIL_CONTACT_INVALID(400, "Email Contact cannot be null", HttpStatus.BAD_REQUEST),
+    PHONE_CONTACT_INVALID(400, "Phone Contact cannot be null", HttpStatus.BAD_REQUEST),
+    COURSE_NAME_INVALID(400, "Course Name cannot be null", HttpStatus.BAD_REQUEST),
+    START_DATE_INVALID(400, "Start date must be greater than current date", HttpStatus.BAD_REQUEST),
+    START_END_INVALID(400, "Start end must be greater than start date", HttpStatus.BAD_REQUEST),
+    IMAGE_INVALID(400, "Image cannot be null", HttpStatus.BAD_REQUEST),
+    LINK_ADS_INVALID(400, "Link advertisement cannot be null", HttpStatus.BAD_REQUEST),
+
     ;
 
     private int code;

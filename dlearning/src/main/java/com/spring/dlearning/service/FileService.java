@@ -28,11 +28,12 @@ public class FileService {
      * @param file
      * @param folder
      */
+
     public String store(MultipartFile file, String folder) throws URISyntaxException, IOException {
         String encodedFileName = URLEncoder.encode(Objects.requireNonNull(file.getOriginalFilename()), StandardCharsets.UTF_8);
         String finalName = System.currentTimeMillis() + "-" + encodedFileName;
 
-        URI uri = new URI("file:///E:/Course/" + folder + "/" + finalName);
+        URI uri = new URI("file:///C:/D-Learning/" + folder + "/" + finalName);
         log.info("URI: {}", uri);
 
         Path path = Paths.get(uri);
@@ -44,6 +45,7 @@ public class FileService {
 
         return finalName;
     }
+
 
 }
 

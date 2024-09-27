@@ -1,12 +1,13 @@
 package com.spring.dlearning.entity;
 
-import com.spring.dlearning.common.AdsStatus;
+import com.spring.dlearning.utils.AdsStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -38,19 +39,16 @@ public class Advertisement extends AbstractEntity<Long>{
     @Min(value = 0)
     BigDecimal price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "course_id", nullable = false)
     Course course;
 
     @Column(name = "image_ads")
     String image;
-
-    @Column(name = "localtion")
-    String location;
 
     @Column(name = "link")
     String link;
@@ -62,7 +60,6 @@ public class Advertisement extends AbstractEntity<Long>{
     LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "approval_status")
     AdsStatus approvalStatus;
 
 }

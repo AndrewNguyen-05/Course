@@ -19,7 +19,7 @@ public class TemplateEngineConfiguration {
 
     public ClassLoaderTemplateResolver emailTemplateResolver(){
         ClassLoaderTemplateResolver classLoaderTemplateResolver = new ClassLoaderTemplateResolver();
-        classLoaderTemplateResolver.setPrefix("/templates/");
+        classLoaderTemplateResolver.setPrefix("/templates/:");
         classLoaderTemplateResolver.setSuffix(".html");
         classLoaderTemplateResolver.setTemplateMode(TemplateMode.HTML);
         classLoaderTemplateResolver.setCharacterEncoding(StandardCharsets.UTF_8.name());

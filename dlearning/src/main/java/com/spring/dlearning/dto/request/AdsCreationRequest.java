@@ -2,7 +2,7 @@ package com.spring.dlearning.dto.request;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
@@ -15,28 +15,29 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdsCreationRequest {
 
-    @NotBlank(message = "EMAIL_CONTACT_INVALID")
+    @NotNull(message = "COURSE_ID_INVALID")
+    Long courseId;
+
+    @NotNull(message = "EMAIL_CONTACT_INVALID")
     String contactEmail;
 
-    @NotBlank(message = "PHONE_CONTACT_INVALID")
+    @NotNull(message = "PHONE_CONTACT_INVALID")
     String contactPhone;
 
-    @NotBlank(message = "TITLE_ADS_INVALID")
+    @NotNull(message = "TITLE_ADS_INVALID")
     String title;
 
     String image;
 
-    String location;
-
     String description;
 
-    @NotBlank(message = "LINK_ADS_INVALID")
+    @NotNull(message = "LINK_ADS_INVALID")
     String link;
 
     @Future(message = "START_DATE_INVALID")
     LocalDate startDate;
 
-    @FutureOrPresent(message = "START_END_INVALID")
+    @FutureOrPresent(message = "END_DATE_INVALID")
     LocalDate endDate;
 
 }
