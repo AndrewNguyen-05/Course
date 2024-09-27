@@ -12,7 +12,8 @@ import instructor4Image from './../../img/nam.jpg';
 import testimonial1Image from './../../img/testimonial-1.jpg';
 import testimonial2Image from './../../img/testimonial-2.jpg';
 import { ToastContainer } from 'react-toastify';
-import { getAllCourses, addFavorite } from '../../service/CourseService'
+import { getAllCourses } from '../../service/CourseService'
+import { addFavorite } from '../../service/FavoriteService';
 
 export const HomePage = () => {
 

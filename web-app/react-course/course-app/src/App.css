@@ -11732,3 +11732,15 @@ h6,
 .go-back-button:hover {
   background-color: #e6b800;
 }
+
+.vip-title {
+    font-size: 2rem; /* Kích thước lớn hơn */
+    font-weight: bold; /* Chữ đậm */
+    color: #ff7f50; /* Màu sắc nổi bật (bạn có thể tùy chỉnh) */
+    text-align: center; /* Căn giữa tiêu đề */
+    text-transform: uppercase; /* Chuyển thành chữ in hoa */
+    letter-spacing: 3px; /* Khoảng cách giữa các chữ */
+    margin-bottom: 1.5rem; /* Tạo khoảng cách dưới tiêu đề */
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Đổ bóng để tạo hiệu ứng nổi */
+    margin-top: 30px;
+}

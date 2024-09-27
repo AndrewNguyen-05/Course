@@ -89,7 +89,6 @@ export const checkUserExists = async (email) => {
         throw new Error(errorData.message)
     }
     return response.json();
-
 }
 
 export const sendOtpRegister = async (email) => {
@@ -155,7 +154,7 @@ export const createPasswordForFirst = async (token, createPassword) => {
 
     if(! response.ok){
         const errorData = await response.json();
-        throw new Error('Fail to create password')
+        throw new Error('Fail to create password'|| errorData.message)
     }
 
     return response.json();
