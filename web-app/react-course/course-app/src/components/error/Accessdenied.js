@@ -1,12 +1,9 @@
-// src/pages/Accessdenied.js
-
 import React, { useState, useEffect } from 'react';
-import { Container, Alert, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import { MdErrorOutline } from 'react-icons/md';
+import { Link, useNavigate } from 'react-router-dom';
+import { MdErrorOutline } from 'react-icons/md'; 
 
 export const Accessdenied = () => {
-    const [countdown, setCountdown] = useState(10);
+    const [countdown, setCountdown] = useState(10); // Đếm ngược từ 10 giây
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -14,33 +11,27 @@ export const Accessdenied = () => {
             setCountdown(prevCountdown => {
                 if (prevCountdown <= 1) {
                     clearInterval(interval);
-                    navigate('/home');
+                    navigate('/home'); 
                 }
                 return prevCountdown - 1;
             });
-        }, 1000);
+        }, 1000); // Cập nhật mỗi giây
 
-        return () => clearInterval(interval);
+        return () => clearInterval(interval); 
     }, [navigate]);
 
     return (
-        <Container className="d-flex flex-column justify-content-center align-items-center vh-100 p-4">
-            <div className="text-center">
-                <Alert variant="danger" className="shadow-lg p-4 rounded">
-                    <MdErrorOutline size={64} color="red" className="mb-3" />
-                    <Alert.Heading className="display-4">403 - Access Denied</Alert.Heading>
-                    <p className="lead mb-4">
-                        You do not have permission to access this page.
-                    </p>
-                    <hr />
-                    <p className="lead mb-4">
-                        You will be redirected to the homepage in <span className="fw-bold">{countdown}</span> seconds.
-                    </p>
-                    <Button variant="danger" size="lg" onClick={() => navigate('/home')}>
-                        Go Back Now
-                    </Button>
-                </Alert>
-            </div>
-        </Container>
+        <div className="forbidden-container">
+            <MdErrorOutline className="forbidden-icon" size={60} />
+            <h1 className="forbidden-title">403</h1>
+            <h2 className="forbidden-message">Forbidden - You don't have permission to access this page.</h2>
+            <p className="forbidden-description">
+                Sorry, it seems like you are not allowed to view this content. Please contact the administrator if you believe this is a mistake.
+            </p>
+            <p className="countdown-text">You will be redirected to the homepage in {countdown} seconds...</p>
+            <Link to='/' className="go-back-button">
+                Go Back to Home
+            </Link>
+        </div>
     );
 };

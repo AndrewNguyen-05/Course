@@ -3,6 +3,7 @@ import { Footer } from "../layouts/Footer";
 import { ToastContainer, toast } from 'react-toastify';
 import { TopBar } from "../layouts/TopBar";
 import { Header } from "../layouts/Header";
+import { getMyInfo, registerTeacher } from "../../service/UserService";
 
 export const RegisterTeacher = () => {
 
@@ -41,13 +42,7 @@ export const RegisterTeacher = () => {
     const [loadingRegister, setLoadingRegister] = useState(false);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/v1/my-info`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        }).then(response => response.json())
+       getMyInfo(token)
             .then(data => {
                 setFormData((prevData) => ({
                     ...prevData,
@@ -57,7 +52,7 @@ export const RegisterTeacher = () => {
             }).catch(error => console.log(error));
     }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         setLoadingRegister(true);
@@ -83,27 +78,14 @@ export const RegisterTeacher = () => {
         formDataToSend.append('cv', formData.cv);
         formDataToSend.append('certificate', formData.certificate);
 
-        fetch(`http://localhost:8080/api/v1/register-teacher`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            },
-            body: formDataToSend
-        }).then((response) => {
-            return response.json().then(data => {
-                if (response.ok) {
-                    toast.success('Registration successful! Please await our notification.');
-                } else {
-                    toast.error('Your request is pending review, please do not resubmit.');
-                }
-                setLoadingRegister(false);
-                return data;
-            });
-        }).catch(error => {
-            console.error(error);
-            toast.error('An error occurred during registration');
-            setLoadingRegister(false)
-        });
+        try {
+            const data = await registerTeacher(token, formDataToSend);
+            toast.success('Registration successful! Please await our notification.');
+        } catch (error) {
+            toast.error('Your request is pending review, please do not resubmit.');
+        } finally {
+            setLoadingRegister(false);
+        }
     };
 
     return (

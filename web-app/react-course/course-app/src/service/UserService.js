@@ -1,3 +1,14 @@
+export const getMyInfo = async (token) => {
+    const response = await fetch(`http://localhost:8080/api/v1/my-info`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    return response.json();
+}
+
 export const getPointsByCurrentLogin = async (token) => {
     const response = await fetch(`http://localhost:8080/api/v1/get-points-user-current`, {
         method: 'GET',
@@ -109,3 +120,43 @@ export const registerUser = async (otp, userData) => {
     }
     return response.json();
 };
+
+export const registerTeacher = async (token, formDataToSend) => {
+    try {
+        const response = await fetch(`http://localhost:8080/api/v1/register-teacher`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formDataToSend
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Đã xảy ra lỗi trong quá trình đăng ký.');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error in registerTeacher API:', error);
+        throw error; 
+    }
+};
+
+export const createPasswordForFirst = async (token, createPassword) => {
+    const response =  await fetch(`http://localhost:8080/api/v1/create-password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(createPassword)
+    })
+
+    if(! response.ok){
+        const errorData = await response.json();
+        throw new Error('Fail to create password')
+    }
+
+    return response.json();
+}

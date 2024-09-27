@@ -3,6 +3,7 @@ import { Footer } from "../layouts/Footer";
 import { useNavigate } from "react-router-dom";
 import { TopBar } from "../layouts/TopBar";
 import { Header } from "../layouts/Header";
+import { createPasswordForFirst } from "../../service/UserService";
 
 export const CreatePassword = () => {
 
@@ -26,21 +27,8 @@ export const CreatePassword = () => {
         const token = localStorage.getItem("token");
         const data = { password: createPassword };
 
-        fetch(`http://localhost:8080/api/v1/create-password`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(data)
-        }).then((response) => {
-            if (!response.ok) {
-                return response.json().then(errorData => {
-                    throw new Error(errorData.message);
-                });
-            }
-            return response.json();
-        }).then((data) => {
+        createPasswordForFirst(token, data)
+       .then((data) => {
             alert(data.message || "Mật khẩu đã được tạo thành công!");
             navigate("/home");
         }).catch((error) => {

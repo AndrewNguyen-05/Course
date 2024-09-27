@@ -84,9 +84,25 @@ export const buyCourse = async (token, id) => {
 
     if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message); 
+        throw new Error(errorData.message);
     }
 
     return response.json();
 };
+
+export const getFavorite = async (currentPage, token) => {
+    const response = await fetch(`http://localhost:8080/api/v1/fetch-all-favorites?page=${currentPage}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }
+    })
+
+    if (!response.ok) {
+        const errorData = await response.json();
+       throw new Error(errorData.message || 'Error fetching data');
+    }
+    return response.json();
+}
 

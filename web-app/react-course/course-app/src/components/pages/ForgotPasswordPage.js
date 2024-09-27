@@ -59,7 +59,7 @@ export const ForgotPassword = () => {
             confirmButtonText: 'OK',
         };
     
-        return Swal.fire(alertOptions); // Trả về promise(dùng return)
+        return Swal.fire(alertOptions); // Trả về promise
     };
 
     const handlePasswordSubmit = async (event) => {

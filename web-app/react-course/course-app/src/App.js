@@ -28,6 +28,7 @@ import { PaymentFail } from './components/pages/PaymentFailed';
 import { PaymentCancel } from './components/pages/PaymentCancel';
 import { LearningPage } from './components/pages/LearningPage';
 import { MainLayout } from './components/router/MainLayout';
+import { NotFound } from './components/error/NotFound';
 
 function App() {
   return (
@@ -35,7 +36,7 @@ function App() {
       <Routes>
 
         <Route path="/" element={<MainLayout />}>
-          <Route index element={<HomePage />} /> 
+          <Route index element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
@@ -101,7 +102,7 @@ function App() {
         <Route path='/favorite' element={<FavoriteCourses />} />
         <Route path='/about' element={<About />} />
         <Route path='/courses' element={<Courses />} />
-       
+
         <Route path='/contact' element={<Contact />} />
         <Route path='/deposit' element={<DepositPage />} />
 
@@ -150,6 +151,8 @@ function App() {
             <Accessdenied />
           </LayoutWithoutHeaderFooter>
         } />
+
+        <Route path="*" element={<NotFound />} />
 
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFail />} />

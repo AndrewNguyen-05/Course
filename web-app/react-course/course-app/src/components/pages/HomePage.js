@@ -58,7 +58,7 @@ export const HomePage = () => {
     }, [currentPage, pageSize]); // useEffect chạy lại mỗi khi currentPage hoặc pageSize thay đổi
 
 
-    const addToFavorites = (courseId) => {
+    const handleaddToFavorites = (courseId) => {
         if (!token) {
             navigate('/login');
             return;
@@ -197,7 +197,7 @@ export const HomePage = () => {
                 </div>
 
                 <div className="row">
-                    {courses.map((course) => (
+                    {courses.map((course) => (  
                         <div className="col-lg-3 col-md-6 mb-4" key={course.id}>
                             <div className="course-card-custom-design-container shadow-sm">
                                 {/* Ảnh bìa */}
@@ -225,7 +225,7 @@ export const HomePage = () => {
                                     {/* Nút thêm vào khóa học yêu thích với icon trái tim */}
                                     <button
                                         className="course-card-custom-btn-favorite mt-2"
-                                        onClick={() => addToFavorites(course.id)}
+                                        onClick={() => handleaddToFavorites(course.id)}
                                     >
                                         <i className="fas fa-heart mr-2"></i>Add to Favorite
                                     </button>

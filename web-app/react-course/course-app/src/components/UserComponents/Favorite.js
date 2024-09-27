@@ -5,6 +5,7 @@ import { Footer } from '../layouts/Footer';
 import Pagination from '../common/Pagination'; // Import component Pagination
 import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
+import { getFavorite } from '../../service/CourseService';
 
 const FavoriteCourses = () => {
     const token = localStorage.getItem('token');
@@ -24,20 +25,7 @@ const FavoriteCourses = () => {
             setError(null);
 
             try {
-                const response = await fetch(`http://localhost:8080/api/v1/fetch-all-favorites?page=${currentPage}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`,
-                    },
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch favorite courses');
-                }
-
-                const data = await response.json();
-
+                const data = await getFavorite(currentPage, token)
                 if (data.result && Array.isArray(data.result.data)) {
                     setFavorites(data.result.data);
                     setTotalPages(data.result.totalPages || 1);
