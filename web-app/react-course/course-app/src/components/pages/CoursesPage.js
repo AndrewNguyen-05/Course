@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Footer } from "../layouts/Footer";
 import { Search } from "../common/Search";
-import Pagination from '../common/Pagination';
 import { SearchService } from '../../service/CourseService';
 import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
+import { Pagination } from '../common/Pagination';
 
 export const Courses = () => {
     const [loading, setLoading] = useState(true);

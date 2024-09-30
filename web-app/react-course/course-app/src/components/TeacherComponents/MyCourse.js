@@ -39,7 +39,7 @@ export const MyCourses = () => {
             <div className="container-fluid my-course-container my-5">
                 <div className="my-course-grid">
                     {courses.map(course => (
-                        <div key={course.id} className="my-course-item">
+                        <div key={course.courseId} className="my-course-item">
                             <div className="card h-100 shadow-sm border-0 my-course-card">
                                 {/* Hình ảnh khóa học */}
                                 <div className="my-course-thumbnail-wrapper">

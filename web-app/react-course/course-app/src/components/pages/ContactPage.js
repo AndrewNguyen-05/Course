@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { InfoContact } from "../common/InfoContact";
 
 export const Contact = () => {
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     useEffect(() => {
         document.title = 'Register Advertisement';
@@ -18,7 +18,6 @@ export const Contact = () => {
 
     return (
         <div className="container-fluid py-5">
-            {/* Tiêu đề nằm trên cùng và bao phủ cả hai cột */}
             <div className="row justify-content-center mb-5">
                 <div className="col-lg-8 text-center">
                     <h6 className="d-inline-block text-secondary text-uppercase pb-2 ads-title-highlight">Need Help?</h6>
@@ -27,10 +26,9 @@ export const Contact = () => {
             </div>
             <div className="container py-5">
                 <div className="row align-items-center">
-                    {/* Phần bên trái */}
-                    <InfoContact/>
+                    <InfoContact />
 
-                    {/* Phần form bên phải */}
+                    {/* Form đăng ký quảng cáo */}
                     <div className="col-lg-7">
                         <div className="contact-form">
                             <form onSubmit={handleSubmit(onSubmit)}>
@@ -62,6 +60,21 @@ export const Contact = () => {
                                             />
                                         </div>
                                         {errors.contactPhone && <span className="text-danger">Phone number is required</span>}
+                                    </div>
+                                </div>
+                                {/* Thêm trường Location */}
+                                <div className="form-group">
+                                    <div className="input-group">
+                                        <span className="input-group-text ads-input-icon bg-info text-white border-0">
+                                            <i className="fa fa-map-marker-alt"></i>
+                                        </span>
+                                        <input
+                                            type="text"
+                                            className="form-control border-top-0 border-right-0 border-left-0 p-2"
+                                            value='Home Page'
+                                            placeholder="Home Page"
+                                            readOnly
+                                        />
                                     </div>
                                 </div>
                                 <div className="form-group">
@@ -157,8 +170,6 @@ export const Contact = () => {
                 pauseOnHover
                 className="custom-toast-container"
             />
-
         </div>
-
     );
 };

@@ -1,40 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AdsTable } from "./AdsTable";
 import { Link } from "react-router-dom";
+import { getAdsByCurrentLogin } from "../../service/AdsService";
+import { Pagination } from "../common/Pagination";
 
 export const AdsPage = () => {
-    const [adsList, setAdsList] = useState([
-        {
-            id: 1,
-            name: "Spring Restful API",
-            image: "https://hoidanit.vn/_next/image?url=https%3A%2F%2Fhoidanit.vn%2Fimages%2Fdf103a910302aef81bc172b910af3f77bfb.png&w=3840&q=75",
-            type: "Sản phẩm",
-            placement: "Trang chủ",
-            customer: "Nguyễn Văn A",
-            status: "Approved",
-            make: "2024-09-25",
-        },
-        {
-            id: 2,
-            name: "Java Core for Beginner",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNDLTeb2ssFVFXtStyuvfj7IWY1xtL6Cuy9g&s",
-            type: "Dịch vụ",
-            placement: "Trang tin tức",
-            customer: "Trần Thị B",
-            status: "Pending",
-            make: "2024-08-30",
-        },
-        {
-            id: 3,
-            name: "JavaScript for Beginner",
-            image: "https://c8.alamy.com/comp/2C66938/moscow-russia-1-june-2020-javascript-js-logo-sign-with-program-code-on-background-illustrative-editorial-2C66938.jpg",
-            type: "Sản phẩm",
-            placement: "Trang chủ",
-            customer: "Lê Văn C",
-            status: "Rejected",
-            make: "2024-07-15",
-        },
-    ]);
+    const token = localStorage.getItem('token');
+    const [ads, setAds] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
+    const [pageSize] = useState(6); // Số lượng quảng cáo hiển thị mỗi trang
+    const [totalPages, setTotalPages] = useState(0); // Tổng số trang
+
+    useEffect(() => {
+        document.title = 'Advertisement';
+
+        const adsByCurrentLogin = async () => {
+            try {
+                setLoading(true);
+                const data = await getAdsByCurrentLogin(token, currentPage, pageSize); // Gọi API với phân trang
+                if (data.result && Array.isArray(data.result)) {
+                    setAds(data.result);
+                    setTotalPages(data.totalPages); // Lưu tổng số trang
+                } else {
+                    setAds([]);
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        adsByCurrentLogin();
+    }, [token, currentPage, pageSize]); // Chạy lại khi token, currentPage, hoặc pageSize thay đổi
+
+    // Thay đổi trang
+    const changePage = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
 
     return (
         <div>
@@ -62,14 +67,23 @@ export const AdsPage = () => {
             <div className="ads-content">
                 <div className="ads-container">
                     <div className="ads-filter-bar">
-                        <label htmlFor="orderByDate" className="ads-form-label">Advertisement Type</label>
+                        <label htmlFor="orderByDate" className="ads-form-label">Advertisement Sort</label>
                         <select className="ads-form-select" id="orderByDate" name="orderByDate">
-                            <option value="desc">Down</option>
-                            <option value="asc">Up</option>
+                            <option value="desc">Newest</option>
+                            <option value="asc">Oldest</option>
                         </select>
                     </div>
                     {/* Bảng quảng cáo */}
-                    <AdsTable ads={adsList} />
+                    <AdsTable ads={ads} />
+
+                    {/* Phân trang */}
+                    <div className="mt-4">
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            changePage={changePage}
+                        />
+                    </div>
                 </div>
             </div>
         </div>

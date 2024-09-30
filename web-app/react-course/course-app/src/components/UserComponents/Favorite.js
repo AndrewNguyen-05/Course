@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Spinner } from 'react-bootstrap';
-import Pagination from '../common/Pagination';
 import { getFavorite, removeFavorite } from '../../service/FavoriteService';
 import { toast, ToastContainer } from 'react-toastify';
 
 // Import icons từ react-icons
 import { FaTrashAlt } from 'react-icons/fa';  // Biểu tượng thùng rác
 import { MdOutlineDescription } from 'react-icons/md';  // Biểu tượng chi tiết
+import { Spinner } from 'react-bootstrap';
+import { Pagination } from '../common/Pagination';
 
 const FavoriteCourses = () => {
     const token = localStorage.getItem('token');

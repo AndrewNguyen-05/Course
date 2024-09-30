@@ -11843,6 +11843,7 @@ h6,
   padding: 5px;
   border-radius: 5px;
   border: 1px solid #ddd;
+  margin-bottom: 7px;
 }
 /* Banner với thiết kế nhẹ nhàng hơn */
 .banner-ads {
@@ -11908,3 +11909,35 @@ h6,
   margin-top: 40px;
 }
 
+.ads-badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-weight: bold;
+  color: #ffffff;
+  display: inline-block;
+}
+
+/* Màu sắc tương ứng cho từng trạng thái */
+.ads-badge-warning {
+  background-color: #ffc107; /* Màu vàng cho trạng thái cảnh báo */
+}
+
+.ads-badge-info {
+  background-color: #17a2b8; /* Màu xanh dương nhạt cho trạng thái AWAITING_PAYMENT */
+}
+
+.ads-badge-primary {
+  background-color: #007bff; /* Màu xanh dương đậm cho trạng thái ACTIVE */
+}
+
+.ads-badge-success {
+  background-color: #28a745; /* Màu xanh lá cây cho trạng thái hoàn thành */
+}
+
+.ads-badge-secondary {
+  background-color: #6c757d; /* Màu xám nhạt cho trạng thái hủy */
+}
+
+.ads-badge-danger {
+  background-color: #dc3545; /* Màu đỏ cho trạng thái từ chối */
+}

@@ -1,7 +1,7 @@
 // Pagination.js
 import React, { memo } from 'react';
 
-const Pagination = ({ currentPage, totalPages, changePage }) => {
+export const Pagination = ({ currentPage, totalPages, changePage }) => {
     return (
         <div className="col-12">
             <nav aria-label="Page navigation">
@@ -34,4 +34,4 @@ const Pagination = ({ currentPage, totalPages, changePage }) => {
     );
 };
 
-export default memo(Pagination);
+

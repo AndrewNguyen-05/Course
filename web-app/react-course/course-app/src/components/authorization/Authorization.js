@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
+const LoadingSpinner = () => (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div className="spinner-border text-primary" role="status">
+        <span className="sr-only">Loading...</span>
+      </div>
+    </div>
+  );
+
 export const Authorization = ({ children, requiredRole }) => {
 
     const navigate = useNavigate();
@@ -57,11 +66,11 @@ export const Authorization = ({ children, requiredRole }) => {
     }, [navigate, token, requiredRole]);
 
     if (isLoading) {
-        return <div>Loading...</div>; // Hiển thị khi đang kiểm tra quyền
+       return <LoadingSpinner />;
     }
 
     if (!isAuthorized) {
-        return null; // Không đủ quyền, không render gì cả
+        return null; 
     }
 
     return children; // Nếu người dùng được phân quyền, render nội dung bên trong
