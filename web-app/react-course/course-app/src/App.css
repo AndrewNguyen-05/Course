@@ -11851,9 +11851,8 @@ h6,
   justify-content: space-between;
   align-items: center;
   padding: 40px 60px;
-  background: linear-gradient(90deg, #e0f7fa 0%, #e6f3f9 100%); /* Nền nhẹ và hài hòa */
+  background: linear-gradient(90deg, #e0f7fa 0%, #e6f3f9 100%);
   border-radius: 12px;
-  margin-bottom: 40px;
 }
 
 .banner-ads-container {
@@ -11877,17 +11876,19 @@ h6,
   padding: 12px 30px;
   font-size: 18px;
   background-color: #007bff;
-  color: #ffffff;
+  color: #ffffff; 
   border: none;
   border-radius: 30px;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s ease, transform 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease, color 0.3s ease; 
 }
 
 .banner-ads-button:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; 
+  color: #ffffff; 
   transform: translateY(-3px);
+  text-decoration: none;
 }
 
 .banner-ads-right {

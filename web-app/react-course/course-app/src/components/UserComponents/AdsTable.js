@@ -14,14 +14,13 @@ export const AdsTable = ({ ads }) => {
                     <label className="form-check-label" htmlFor="checkAll"></label>
                   </div>
                 </th>
-                <th>Id</th>
-                <th>Tên Quảng Cáo</th>
-                <th>Hình Ảnh</th>
-                <th>Loại</th>
-                <th>Vị Trí</th>
-                <th>Khách Hàng</th>
-                <th>Trạng Thái</th>
-                <th>Ngày Tạo</th>
+                <th>Name Advertisement</th>
+                <th>Image</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>CreatedAt</th>
               </tr>
             </thead>
             <tbody>
@@ -33,7 +32,6 @@ export const AdsTable = ({ ads }) => {
                       <label className="form-check-label" htmlFor={`check${ad.id}`}></label>
                     </div>
                   </td>
-                  <td>{ad.id}</td>
                   <td>{ad.name}</td>
                   <td>
                     <img src={ad.image} alt={ad.name} className="ads-img" />

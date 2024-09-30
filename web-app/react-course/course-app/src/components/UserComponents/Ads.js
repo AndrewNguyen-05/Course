@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { AdsTable } from "./AdsTable";
+import { Link } from "react-router-dom";
 
 export const AdsPage = () => {
     const [adsList, setAdsList] = useState([
         {
             id: 1,
-            name: "Quảng cáo sản phẩm A",
+            name: "Spring Restful API",
             image: "https://hoidanit.vn/_next/image?url=https%3A%2F%2Fhoidanit.vn%2Fimages%2Fdf103a910302aef81bc172b910af3f77bfb.png&w=3840&q=75",
             type: "Sản phẩm",
             placement: "Trang chủ",
@@ -15,7 +16,7 @@ export const AdsPage = () => {
         },
         {
             id: 2,
-            name: "Quảng cáo dịch vụ B",
+            name: "Java Core for Beginner",
             image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNDLTeb2ssFVFXtStyuvfj7IWY1xtL6Cuy9g&s",
             type: "Dịch vụ",
             placement: "Trang tin tức",
@@ -25,7 +26,7 @@ export const AdsPage = () => {
         },
         {
             id: 3,
-            name: "Quảng cáo sản phẩm C",
+            name: "JavaScript for Beginner",
             image: "https://c8.alamy.com/comp/2C66938/moscow-russia-1-june-2020-javascript-js-logo-sign-with-program-code-on-background-illustrative-editorial-2C66938.jpg",
             type: "Sản phẩm",
             placement: "Trang chủ",
@@ -45,7 +46,7 @@ export const AdsPage = () => {
                         <p className="banner-ads-description">
                             Optimize performance and manage campaigns effectively
                         </p>
-                        <button className="banner-ads-button">Get started now</button>
+                        <Link to='/contact' className="banner-ads-button">Get started now</Link>
                     </div>
                 </div>
                 <div className="banner-ads-right">
