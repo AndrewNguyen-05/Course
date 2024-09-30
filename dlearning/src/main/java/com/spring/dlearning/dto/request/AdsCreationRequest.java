@@ -15,9 +15,6 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdsCreationRequest {
 
-    @NotNull(message = "COURSE_ID_INVALID")
-    Long courseId;
-
     @NotNull(message = "EMAIL_CONTACT_INVALID")
     String contactEmail;
 
@@ -37,7 +34,7 @@ public class AdsCreationRequest {
     @Future(message = "START_DATE_INVALID")
     LocalDate startDate;
 
-    @FutureOrPresent(message = "END_DATE_INVALID")
+    @FutureOrPresent(message = "START_END_INVALID")
     LocalDate endDate;
 
 }

@@ -1,10 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="UTF8">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin Quảng cáo của bạn</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .email-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            margin: 20px auto;
+        }
+
+        h1, h2, h3 {
+            color: #333333;
+            text-align: center;
+        }
+
+        .ads-info {
+            margin-bottom: 30px;
+        }
+
+        .ads-info img {
+            width: 100%;
+            max-width: 650px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .ads-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .ads-table th, .ads-table td {
+            padding: 12px 15px;
+            border: 1px solid #dddddd;
+            text-align: left;
+        }
+
+        .ads-table th {
+            background-color: #f2f2f2;
+            color: #333333;
+        }
+
+        .qr-code {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 15px 0;
+            font-size: 18px;
+            color: #ffffff;
+            background-color: #28a745;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: #218838;
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #888888;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 8px 0;
+        }
+
+        .icon {
+            font-size: 18px;
+            color: #007bff;
+            margin-right: 10px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .email-container {
+                padding: 20px;
+                max-width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 15px 0;
+                margin: 25px 0;
+            }
+
+            .ads-info img {
+                max-width: 100%;
+            }
+
+            .qr-code img {
+                width: 180px;
+                height: 180px;
+            }
+
+            .ads-table th, .ads-table td {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+    </style>
 </head>
 <body>
+<div class="email-container">
+    <h1><i class="fa-solid fa-bullhorn"></i> Your advertising information</h1>
+    <p style="text-align: center;"><i class="fa-solid fa-handshake icon"></i>Hi, Your ad has been successfully created. Here are the details about your ad:</p>
 
+    <div class="ads-info">
+        <h2><i class="fa-solid fa-badge-dollar icon"></i> <span th:text="${title}">Ad Title</span></h2>
+        <img th:src="${img}" alt="Advertisement Image" />
+        <table class="ads-table">
+            <tr>
+                <th><i class="fa-solid fa-file-alt icon"></i> Description</th>
+                <td th:text="${description}">Describe your ad in detail</td>
+            </tr>
+            <tr>
+                <th><i class="fa-solid fa-link icon"></i> Path</th>
+                <td><a th:href="${link}" th:text="${link}">Link to advertisement</a></td>
+            </tr>
+            <tr>
+                <th><i class="fa-solid fa-calendar-alt icon"></i> Start date</th>
+                <td th:text="${startDate}">01/01/2024</td>
+            </tr>
+            <tr>
+                <th><i class="fa-solid fa-calendar-alt icon"></i> End date</th>
+                <td th:text="${endDate}">31/01/2024</td>
+            </tr>
+            <tr>
+                <th><i class="fa-solid fa-money-bill-wave icon"></i> Advertising Price</th>
+                <td id="price-ads" th:text="${priceAds}">500,000 VND</td>
+            </tr>
+            <tr>
+                <th><i class="fa-solid fa-check-circle icon"></i> Status</th>
+                <td th:text="${status}">Awaiting_Payment</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="qr-code">
+        <h3><i class="fa-solid fa-qrcode"></i> QR Code Payment</h3>
+        <img th:src="${qrCodeUrl}" alt="QR Code Payment" style="width: 250px; height: 250px;" />
+        <p>Scan the QR code above to pay your advertising fee.</p>
+    </div>
+
+    <div style="text-align: center;">
+        <a href="#" id="btn-checkout" class="btn"><i class="fa-solid fa-credit-card"></i> Go to checkout page</a>
+    </div>
+
+    <p style="text-align: center;">Thank you for using our service!</p>
+    <div class="footer">
+        <p><i class="fa-solid fa-info-circle icon"></i> This is an automated email, please do not reply to this email.</p>
+        <p><i class="fa-solid fa-copyright icon"></i>Copyright © 2024 D-Learning. All rights reserved.</p>
+    </div>
+</div>
+
+<!--<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>-->
+<!--<script>-->
+<!--    $(document).ready(function() {-->
+<!--        $('#btn-checkout').click(async function(event) {-->
+<!--            event.preventDefault();-->
+<!--            const amount = $('#price-ads').text().replace(/\D/g, ''); // Lấy số tiền từ trường giá-->
+<!--            const token = localStorage.getItem('token');-->
+
+<!--            try {-->
+<!--                const response = await fetch(`http://localhost:8080/api/v1/payment/vn-pay?amount=${amount}&bankCode=NCB`, {-->
+<!--                    method: 'GET',-->
+<!--                    headers: {-->
+<!--                        'Content-Type': 'application/json',-->
+<!--                        'Authorization': `Bearer ${token}`-->
+<!--                    }-->
+<!--                });-->
+
+<!--                const data = await response.json();-->
+<!--                if (data.result && data.result.paymentUrl) {-->
+<!--                    window.location.href = data.result.paymentUrl; // Chuyển hướng đến URL thanh toán-->
+<!--                } else {-->
+<!--                    console.error("Không nhận được URL thanh toán");-->
+<!--                }-->
+<!--            } catch (error) {-->
+<!--                console.log(error);-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
 </body>
 </html>

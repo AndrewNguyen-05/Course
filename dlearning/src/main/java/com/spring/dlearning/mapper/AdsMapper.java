@@ -1,6 +1,7 @@
 package com.spring.dlearning.mapper;
 
 import com.spring.dlearning.dto.request.AdsCreationRequest;
+import com.spring.dlearning.dto.response.AdsApproveResponse;
 import com.spring.dlearning.dto.response.AdsCreationResponse;
 import com.spring.dlearning.entity.Advertisement;
 import com.spring.dlearning.entity.Course;
@@ -23,7 +24,7 @@ public class AdsMapper {
         this.userRepository = userRepository;
     }
 
-    public Advertisement toAdvertisementEntity(AdsCreationRequest request, Course course) {
+    public Advertisement toAdvertisementEntity(AdsCreationRequest request) {
 
         return Advertisement.builder()
                 .contactEmail(request.getContactEmail())
@@ -34,20 +35,18 @@ public class AdsMapper {
                 .description(request.getDescription())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
-                .course(course)
+                .price(totalOfMoneyAds(request.getStartDate(), request.getEndDate()))
                 .approvalStatus(AdsStatus.PENDING)
                 .build();
     }
 
     public AdsCreationResponse toAdsCreationResponse(Advertisement advertisement) {
         return AdsCreationResponse.builder()
-                .advertisementId(advertisement.getId())
+                .id(advertisement.getId())
                 .contactEmail(advertisement.getContactEmail())
                 .contactPhone(advertisement.getContactPhone())
                 .title(advertisement.getTitle())
-                .courseName(advertisement.getCourse().getTitle())
                 .description(advertisement.getDescription())
-                .points(advertisement.getCourse().getPoints())
                 .startDate(advertisement.getStartDate())
                 .endDate(advertisement.getEndDate())
                 .priceAds(totalOfMoneyAds(advertisement.getStartDate(), advertisement.getEndDate()))
@@ -55,6 +54,22 @@ public class AdsMapper {
                 .link(advertisement.getLink())
                 .status(advertisement.getApprovalStatus())
                 .createAt(advertisement.getCreatedAt())
+                .build();
+    }
+
+    public AdsApproveResponse toAdsApproveResponse(Advertisement advertisement) {
+        return AdsApproveResponse.builder()
+                .id(advertisement.getId())
+                .contactEmail(advertisement.getContactEmail())
+                .contactPhone(advertisement.getContactPhone())
+                .title(advertisement.getTitle())
+                .description(advertisement.getDescription())
+                .link(advertisement.getLink())
+                .imageUrl(advertisement.getImage())
+                .startDate(advertisement.getStartDate())
+                .endDate(advertisement.getEndDate())
+                .priceAds(totalOfMoneyAds(advertisement.getStartDate(), advertisement.getEndDate()))
+                .status(advertisement.getApprovalStatus())
                 .build();
     }
 

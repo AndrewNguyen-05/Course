@@ -23,12 +23,6 @@ import java.util.Objects;
 @Slf4j
 public class FileService {
 
-    /**
-     * save file
-     * @param file
-     * @param folder
-     */
-
     public String store(MultipartFile file, String folder) throws URISyntaxException, IOException {
         String encodedFileName = URLEncoder.encode(Objects.requireNonNull(file.getOriginalFilename()), StandardCharsets.UTF_8);
         String finalName = System.currentTimeMillis() + "-" + encodedFileName;
@@ -45,7 +39,6 @@ public class FileService {
 
         return finalName;
     }
-
 
 }
 

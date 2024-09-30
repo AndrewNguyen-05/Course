@@ -27,6 +27,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -58,12 +60,13 @@ public class CourseService {
                     .sum();
 
             int numberOfReviews = course.getComments().size();
-            double averageRating = numberOfReviews > 0 ? (double) totalRating / numberOfReviews : 0;
+            double averageRating = numberOfReviews > 0 ? BigDecimal.valueOf((double) totalRating / numberOfReviews)
+                    .setScale(2, RoundingMode.HALF_UP)
+                    .doubleValue() : 0.0 ;
 
             CourseResponse courseResponse = courseMapper.toCourseResponse(course);
             courseResponse.setAverageRating(averageRating);
             return courseResponse;
-
         }).toList();
 
         return PageResponse.<CourseResponse>builder()

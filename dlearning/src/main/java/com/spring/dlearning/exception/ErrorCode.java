@@ -59,6 +59,7 @@ public enum ErrorCode {
     START_END_INVALID(400, "Start end must be greater than start date", HttpStatus.BAD_REQUEST),
     IMAGE_INVALID(400, "Image cannot be null", HttpStatus.BAD_REQUEST),
     LINK_ADS_INVALID(400, "Link advertisement cannot be null", HttpStatus.BAD_REQUEST),
+    ADVERTISEMENT_ID_INVALID(404, "Advertisement not found", HttpStatus.NOT_FOUND),
 
     ;
 

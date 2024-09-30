@@ -15,18 +15,15 @@ import java.time.LocalDateTime;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdsCreationResponse {
 
-    Long advertisementId;
+    Long id;
     String contactEmail;
     String contactPhone;
     String title;
-    String courseName;
     String description;
-    Long points;
     String imageUrl;
     String link;
     LocalDate startDate;
     LocalDate endDate;
-
     BigDecimal priceAds;
     AdsStatus status;
     LocalDateTime createAt;
