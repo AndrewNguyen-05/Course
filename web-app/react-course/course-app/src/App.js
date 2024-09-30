@@ -2,7 +2,6 @@ import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import { PaymentSuccess } from './components/pages/PaymentSuccess';
 import { HomePage } from './components/pages/HomePage';
-import { LayoutWithoutHeaderFooter } from './components/UserComponents/LayoutWithoutHeaderFooter';
 import { ProcessLoginOAuth2 } from './components/authentication/OAuth2';
 import { Register } from './components/pages/RegisterPage';
 import { LoginPage } from './components/pages/LoginPage';
@@ -29,12 +28,13 @@ import { PaymentCancel } from './components/pages/PaymentCancel';
 import { LearningPage } from './components/pages/LearningPage';
 import { MainLayout } from './components/router/MainLayout';
 import { NotFound } from './components/error/NotFound';
+import { AdsPage } from './components/UserComponents/Ads';
+import { HeaderAndFooterRouter } from './components/router/HeaderAndFooterRouter';
 
 function App() {
   return (
     <div className="App">
       <Routes>
-
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
@@ -43,117 +43,71 @@ function App() {
           <Route path='/course-detail/:id' element={<CourseDetail />} />
         </Route>
 
-        <Route path='/lesson-detail/:id' element={<LearningPage />} />
+        <Route element={<HeaderAndFooterRouter />}>
+          <Route path='/my-ads' element={<AdsPage />} />
+          <Route path='/favorite' element={<FavoriteCourses />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<Register />} />
+          <Route path='/favorite' element={<FavoriteCourses />} />
+          <Route path='/deposit' element={<DepositPage />} />
 
-        <Route path="/login" element={
-          <LayoutWithoutHeaderFooter>
-            <LoginPage />
-          </LayoutWithoutHeaderFooter>
-        } />
-
-        <Route path="/authenticate" element={
-          <LayoutWithoutHeaderFooter>
-            <ProcessLoginOAuth2 />
-          </LayoutWithoutHeaderFooter>
-        } />
-
-        <Route path="/register" element={
-          <LayoutWithoutHeaderFooter>
-            <Register />
-          </LayoutWithoutHeaderFooter>
-        } />
-
-        <Route path="/logout" element={
-          <LayoutWithoutHeaderFooter>
-            <LoginPage />
-          </LayoutWithoutHeaderFooter>
-        } />
-
-        <Route path="/create-password" element={
-          <PrivateRoute>
-            <LayoutWithoutHeaderFooter>
+          <Route path="/create-password" element={
+            <PrivateRoute>
               <CreatePassword />
-            </LayoutWithoutHeaderFooter>
-          </PrivateRoute>
-        } />
+            </PrivateRoute>} />
 
-        <Route path="/forgot-password" element={
-          <LayoutWithoutHeaderFooter>
-            <ForgotPassword />
-          </LayoutWithoutHeaderFooter>
-        } />
-
-        <Route path="/change-password" element={
-          <PrivateRoute>
-            <LayoutWithoutHeaderFooter>
+          <Route path="/change-password" element={
+            <PrivateRoute>
               <ChangePassword />
-            </LayoutWithoutHeaderFooter>
-          </PrivateRoute>
-        } />
+            </PrivateRoute>
+          } />
 
-        <Route path='/profile' element={
-          <PrivateRoute>
-            <LayoutWithoutHeaderFooter>
+          <Route path='/profile' element={
+            <PrivateRoute>
               <Profile />
-            </LayoutWithoutHeaderFooter>
-          </PrivateRoute>
-        } />
+            </PrivateRoute>
+          } />
 
-        <Route path='/favorite' element={<FavoriteCourses />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/courses' element={<Courses />} />
-
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/deposit' element={<DepositPage />} />
-
-        <Route path="/teacher-add-courses" element={
-          <Authorization requiredRole={["TEACHER"]}>
-            <LayoutWithoutHeaderFooter>
-              <UploadCourse />
-            </LayoutWithoutHeaderFooter>
-          </Authorization>
-        } />
-
-        <Route path="/my-courses" element={
-          <PrivateRoute>
-            <LayoutWithoutHeaderFooter>
+          <Route path="/my-courses" element={
+            <PrivateRoute>
               <MyCourses />
-            </LayoutWithoutHeaderFooter>
-          </PrivateRoute>
-        } />
+            </PrivateRoute>
+          } />
 
-        <Route path="/register-teacher" element={
-          <Authorization requiredRole={["USER"]}>
-            <LayoutWithoutHeaderFooter>
+          <Route path="/register-teacher" element={
+            <Authorization requiredRole={["USER"]}>
               <RegisterTeacher />
-            </LayoutWithoutHeaderFooter>
-          </Authorization>
-        } />
+            </Authorization>
+          } />
+
+          <Route path="/forgot-password" element={
+            <ForgotPassword />
+          } />
+
+          <Route path="/teacher-add-courses" element={
+            <Authorization requiredRole={["TEACHER"]}>
+              <UploadCourse />
+            </Authorization>
+          } />
+        </Route>
 
         <Route path="/admin" element={
           <Authorization requiredRole={["ADMIN"]}>
-            <LayoutWithoutHeaderFooter>
-              <Dashboard />
-            </LayoutWithoutHeaderFooter>
+            <Dashboard />
           </Authorization>
         } />
 
         <Route path="/admin/list-registes-teacher" element={
           <Authorization requiredRole={["ADMIN"]}>
-            <LayoutWithoutHeaderFooter>
-              <RegistrationList />
-            </LayoutWithoutHeaderFooter>
+            <RegistrationList />
           </Authorization>
         } />
 
-        <Route path='/accessdenied' element={
-          <LayoutWithoutHeaderFooter>
-            <Accessdenied />
-          </LayoutWithoutHeaderFooter>
-        } />
-
+        <Route path='/courses' element={<Courses />} />
+        <Route path='/lesson-detail/:id' element={<LearningPage />} />
+        <Route path="/authenticate" element={<ProcessLoginOAuth2 />} />
+        <Route path='/accessdenied' element={<Accessdenied />} />
         <Route path="*" element={<NotFound />} />
-
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFail />} />
         <Route path="/payment-cancel" element={<PaymentCancel />} />

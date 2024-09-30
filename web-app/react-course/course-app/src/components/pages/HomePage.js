@@ -14,6 +14,7 @@ import testimonial2Image from './../../img/testimonial-2.jpg';
 import { ToastContainer } from 'react-toastify';
 import { getAllCourses } from '../../service/CourseService'
 import { addFavorite } from '../../service/FavoriteService';
+import { InfoContact } from '../common/InfoContact';
 
 export const HomePage = () => {
 
@@ -371,37 +372,8 @@ export const HomePage = () => {
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     <div className="row align-items-center">
-                        <div className="col-lg-5 mb-5 mb-lg-0">
-                            <div className="bg-light d-flex flex-column justify-content-center px-5" style={{ height: '450px' }}>
-                                <div className="d-flex align-items-center mb-5">
-                                    <div className="btn-icon bg-primary mr-4">
-                                        <i className="fa fa-2x fa-map-marker-alt text-white"></i>
-                                    </div>
-                                    <div className="mt-n1">
-                                        <h4>Our Location</h4>
-                                        <p className="m-0">Ngu Hanh Son, Da Nang, VN</p>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-center mb-5">
-                                    <div className="btn-icon bg-secondary mr-4">
-                                        <i className="fa fa-2x fa-phone-alt text-white"></i>
-                                    </div>
-                                    <div className="mt-n1">
-                                        <h4>Call Us</h4>
-                                        <p className="m-0">+03456789</p>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-center">
-                                    <div className="btn-icon bg-warning mr-4">
-                                        <i className="fa fa-2x fa-envelope text-white"></i>
-                                    </div>
-                                    <div className="mt-n1">
-                                        <h4>Email Us</h4>
-                                        <p className="m-0">duclkde170045@fpt.edu.vn</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       <InfoContact/>
+                       
                         <div className="col-lg-7">
                             <div className="section-title position-relative mb-4">
                                 <h6 className="d-inline-block position-relative text-secondary text-uppercase pb-2">Need Help?</h6>

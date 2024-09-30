@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Footer } from "../layouts/Footer";
 import { useNavigate } from "react-router-dom";
-import { TopBar } from "../layouts/TopBar";
-import { Header } from "../layouts/Header";
 import { createPasswordForFirst } from "../../service/UserService";
 
 export const CreatePassword = () => {
@@ -42,8 +39,6 @@ export const CreatePassword = () => {
 
     return (
         <div>
-            <TopBar/>
-            <Header/>
             <div className="container d-flex justify-content-center">
                 <div className="card p-4 shadow-lg" style={{ maxWidth: '500px', width: '100%', marginTop: '50px' }}>
                     <div className="card-body text-center">
@@ -74,7 +69,6 @@ export const CreatePassword = () => {
                     </div>
                 </div>
             </div>
-            <Footer/>
             
         </div>
     );

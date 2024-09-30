@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaEnvelope, FaKey, FaCheckCircle } from 'react-icons/fa';
-import { Footer } from '../layouts/Footer';
 import { useNavigate } from 'react-router-dom';
-import { TopBar } from '../layouts/TopBar';
-import { Header } from '../layouts/Header';
 import { resetPassword, sendOtp, verifyOtp } from '../../service/UserService';
 import Swal from 'sweetalert2';
 
@@ -75,11 +72,9 @@ export const ForgotPassword = () => {
     };
 
     return (
-        <div className="d-flex flex-column min-vh-100">
-            <TopBar />
-            <Header />
+        <div className="d-flex flex-column forgot-password">
             <div className="flex-grow-1 d-flex justify-content-center align-items-center" style={{ paddingTop: '70px', paddingBottom: '50px' }}>
-                <div className="card shadow-lg p-4 w-100" style={{ maxWidth: '500px', border: 'none', borderRadius: '15px' }}>
+                <div className="card shadow-lg p-4 w-100" style={{ maxWidth: '600px', border: 'none', borderRadius: '15px' }}>
                     <h2 className="text-center text-primary mb-4">Forgot Password</h2>
 
                     {!emailSent && (
@@ -168,7 +163,6 @@ export const ForgotPassword = () => {
                     )}
                 </div>
             </div>
-            <Footer />
         </div>
     );
 };

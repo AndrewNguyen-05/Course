@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Footer } from '../layouts/Footer';
-import { TopBar } from '../layouts/TopBar';
-import { Header } from '../layouts/Header';
 import { FaMoneyBillWave, FaPlusCircle } from 'react-icons/fa';
 
 const DepositPage = () => {
@@ -49,9 +46,6 @@ const DepositPage = () => {
     };
 
     return (
-        <div>
-            <TopBar />
-            <Header />
             <div className="container mt-5 deposit-container">
                 <h2 className="mb-4 text-center deposit-title">
                     <FaMoneyBillWave className="mr-2" /> Deposit Funds
@@ -87,8 +81,6 @@ const DepositPage = () => {
 
                 <ToastContainer />
             </div>
-            <Footer />
-        </div>
     );
 };
 

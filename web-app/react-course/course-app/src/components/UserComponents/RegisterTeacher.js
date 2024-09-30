@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Footer } from "../layouts/Footer";
 import { ToastContainer, toast } from 'react-toastify';
-import { TopBar } from "../layouts/TopBar";
-import { Header } from "../layouts/Header";
 import { getMyInfo, registerTeacher } from "../../service/UserService";
 
 export const RegisterTeacher = () => {
@@ -90,8 +87,6 @@ export const RegisterTeacher = () => {
 
     return (
         <div>
-            <TopBar />
-            <Header />
             <div className="container mt-5">
                 <div className="row justify-content-center">
                     <div className="col-md-8">
@@ -294,9 +289,6 @@ export const RegisterTeacher = () => {
                 autoClose={3000}
                 className="custom-toast-container"
             />
-
-            <Footer />
-
         </div>
     );
 };

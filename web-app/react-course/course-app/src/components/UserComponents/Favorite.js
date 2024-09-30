@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
-import { Footer } from '../layouts/Footer';
 import Pagination from '../common/Pagination';
-import { TopBar } from '../layouts/TopBar';
-import { Header } from '../layouts/Header';
 import { getFavorite, removeFavorite } from '../../service/FavoriteService';
 import { toast, ToastContainer } from 'react-toastify';
 
@@ -71,8 +68,6 @@ const FavoriteCourses = () => {
 
     return (
         <div>
-            <TopBar />
-            <Header />
             <div className="container">
                 <h2 className='vip-title'>Your Favorite Courses</h2><br />
 
@@ -146,7 +141,6 @@ const FavoriteCourses = () => {
                 className="custom-toast-container"
             />
 
-            <Footer />
         </div>
     );
 };

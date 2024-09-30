@@ -1,77 +1,164 @@
 import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { InfoContact } from "../common/InfoContact";
 
 export const Contact = () => {
-    useEffect(() => {
-        document.title = 'Contact'
-    })
-    return (
-        <div>
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
 
-            <div className="container-fluid py-5">
-                <div className="container py-5">
-                    <div className="row align-items-center">
-                        <div className="col-lg-5 mb-5 mb-lg-0">
-                            <div className="bg-light d-flex flex-column justify-content-center px-5" style={{ height: "450px" }}>
-                                <div className="d-flex align-items-center mb-5">
-                                    <div className="btn-icon bg-primary mr-4">
-                                        <i className="fa fa-2x fa-map-marker-alt text-white"></i>
-                                    </div>
-                                    <div className="mt-n1">
-                                        <h4>Our Location</h4>
-                                        <p className="m-0">123 Street, New York, USA</p>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-center mb-5">
-                                    <div className="btn-icon bg-secondary mr-4">
-                                        <i className="fa fa-2x fa-phone-alt text-white"></i>
-                                    </div>
-                                    <div className="mt-n1">
-                                        <h4>Call Us</h4>
-                                        <p className="m-0">+012 345 6789</p>
-                                    </div>
-                                </div>
-                                <div className="d-flex align-items-center">
-                                    <div className="btn-icon bg-warning mr-4">
-                                        <i className="fa fa-2x fa-envelope text-white"></i>
-                                    </div>
-                                    <div className="mt-n1">
-                                        <h4>Email Us</h4>
-                                        <p className="m-0">info@example.com</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-7">
-                            <div className="section-title position-relative mb-4">
-                                <h6 className="d-inline-block position-relative text-secondary text-uppercase pb-2">Need Help?</h6>
-                                <h1 className="display-4">Send Us A Message</h1>
-                            </div>
-                            <div className="contact-form">
-                                <form>
-                                    <div className="row">
-                                        <div className="col-6 form-group">
-                                            <input type="text" className="form-control border-top-0 border-right-0 border-left-0 p-0" placeholder="Your Name" required="required" />
+    useEffect(() => {
+        document.title = 'Register Advertisement';
+    }, []);
+
+    const onSubmit = (data) => {
+        console.log(data);
+        toast.success("Advertisement registration successful!", { position: "top-center" });
+    };
+
+    return (
+        <div className="container-fluid py-5">
+            {/* Tiêu đề nằm trên cùng và bao phủ cả hai cột */}
+            <div className="row justify-content-center mb-5">
+                <div className="col-lg-8 text-center">
+                    <h6 className="d-inline-block text-secondary text-uppercase pb-2 ads-title-highlight">Need Help?</h6>
+                    <h1 className="ads-title">Register Your Advertisement</h1>
+                </div>
+            </div>
+            <div className="container py-5">
+                <div className="row align-items-center">
+                    {/* Phần bên trái */}
+                    <InfoContact/>
+
+                    {/* Phần form bên phải */}
+                    <div className="col-lg-7">
+                        <div className="contact-form">
+                            <form onSubmit={handleSubmit(onSubmit)}>
+                                <div className="row">
+                                    <div className="col-6 form-group">
+                                        <div className="input-group">
+                                            <span className="input-group-text ads-input-icon bg-primary text-white border-0">
+                                                <i className="fa fa-envelope"></i>
+                                            </span>
+                                            <input
+                                                type="email"
+                                                className="form-control border-top-0 border-right-0 border-left-0 p-2"
+                                                placeholder="Your Email"
+                                                {...register('contactEmail', { required: true })}
+                                            />
                                         </div>
-                                        <div className="col-6 form-group">
-                                            <input type="email" className="form-control border-top-0 border-right-0 border-left-0 p-0" placeholder="Your Email" required="required" />
+                                        {errors.contactEmail && <span className="text-danger">Email is required</span>}
+                                    </div>
+                                    <div className="col-6 form-group">
+                                        <div className="input-group">
+                                            <span className="input-group-text ads-input-icon bg-secondary text-white border-0">
+                                                <i className="fa fa-phone"></i>
+                                            </span>
+                                            <input
+                                                type="text"
+                                                className="form-control border-top-0 border-right-0 border-left-0 p-2"
+                                                placeholder="Your Phone"
+                                                {...register('contactPhone', { required: true })}
+                                            />
                                         </div>
+                                        {errors.contactPhone && <span className="text-danger">Phone number is required</span>}
                                     </div>
-                                    <div className="form-group">
-                                        <input type="text" className="form-control border-top-0 border-right-0 border-left-0 p-0" placeholder="Subject" required="required" />
+                                </div>
+                                <div className="form-group">
+                                    <div className="input-group">
+                                        <span className="input-group-text ads-input-icon bg-primary text-white border-0">
+                                            <i className="fa fa-heading"></i>
+                                        </span>
+                                        <input
+                                            type="text"
+                                            className="form-control border-top-0 border-right-0 border-left-0 p-2"
+                                            placeholder="Advertisement Title"
+                                            {...register('title', { required: true })}
+                                        />
                                     </div>
-                                    <div className="form-group">
-                                        <textarea className="form-control border-top-0 border-right-0 border-left-0 p-0" rows="5" placeholder="Message" required="required"></textarea>
+                                    {errors.title && <span className="text-danger">Title is required</span>}
+                                </div>
+                                <div className="form-group">
+                                    <textarea
+                                        className="form-control border-top-0 border-right-0 border-left-0 p-2"
+                                        rows="3"
+                                        placeholder="Description"
+                                        {...register('description')}
+                                    ></textarea>
+                                </div>
+                                <div className="form-group">
+                                    <div className="input-group">
+                                        <span className="input-group-text ads-input-icon bg-warning text-white border-0">
+                                            <i className="fa fa-link"></i>
+                                        </span>
+                                        <input
+                                            type="text"
+                                            className="form-control border-top-0 border-right-0 border-left-0 p-2"
+                                            placeholder="Advertisement Link"
+                                            {...register('link', { required: true })}
+                                        />
                                     </div>
-                                    <div>
-                                        <button className="btn btn-primary py-3 px-5" type="submit">Send Message</button>
+                                    {errors.link && <span className="text-danger">Link is required</span>}
+                                </div>
+                                <div className="row">
+                                    <div className="col-6 form-group">
+                                        <div className="input-group">
+                                            <span className="input-group-text ads-input-icon bg-info text-white border-0">
+                                                <i className="fa fa-calendar"></i>
+                                            </span>
+                                            <input
+                                                type="date"
+                                                className="form-control border-top-0 border-right-0 border-left-0 p-2"
+                                                {...register('startDate', { required: true })}
+                                            />
+                                        </div>
+                                        {errors.startDate && <span className="text-danger">Start date is required</span>}
                                     </div>
-                                </form>
-                            </div>
+                                    <div className="col-6 form-group">
+                                        <div className="input-group">
+                                            <span className="input-group-text ads-input-icon bg-info text-white border-0">
+                                                <i className="fa fa-calendar"></i>
+                                            </span>
+                                            <input
+                                                type="date"
+                                                className="form-control border-top-0 border-right-0 border-left-0 p-2"
+                                                {...register('endDate', { required: true })}
+                                            />
+                                        </div>
+                                        {errors.endDate && <span className="text-danger">End date is required</span>}
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Upload Advertisement Image</label>
+                                    <input
+                                        type="file"
+                                        className="form-control border-0 p-2"
+                                        {...register('image', { required: true })}
+                                    />
+                                    {errors.image && <span className="text-danger">Image is required</span>}
+                                </div>
+                                <div>
+                                    <button className="btn btn-primary py-3 px-5 ads-submit-btn" type="submit">Register Ads</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                className="custom-toast-container"
+            />
 
         </div>
+
     );
-}
+};

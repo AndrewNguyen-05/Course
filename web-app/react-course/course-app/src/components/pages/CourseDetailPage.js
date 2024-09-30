@@ -485,7 +485,7 @@ export const CourseDetail = () => {
                                 <div className="py-3 px-4">
                                     <button
                                         className="btn enroll-now-btn btn-block py-3 px-5"
-                                        onClick={handleEnrollNow}  // Thêm sự kiện onClick để gọi hàm handleEnrollNow
+                                        onClick={handleEnrollNow} 
                                     >
                                         Enroll Now
                                     </button>

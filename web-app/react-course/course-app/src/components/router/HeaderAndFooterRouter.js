@@ -1,16 +1,18 @@
 import { Outlet } from "react-router-dom";
+import { Header } from "../layouts/Header";
 import { TopBar } from "../layouts/TopBar";
 import { Footer } from "../layouts/Footer";
-import { Header } from "../layouts/Header";
 
 export const HeaderAndFooterRouter = () => {
-  return (
-    <div>
-      <TopBar />
-      <Header />
-      <Outlet />
+    return(
+        <div>
+            <TopBar/>
+            <Header/>
 
-      <Footer />
-    </div>
-  );
-};
+            <Outlet/>
+
+            <Footer/>
+
+        </div>
+    );
+}

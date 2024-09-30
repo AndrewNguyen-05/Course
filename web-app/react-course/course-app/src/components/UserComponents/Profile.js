@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Footer } from "../layouts/Footer";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { TopBar } from "../layouts/TopBar";
-import { Header } from "../layouts/Header";
 import { getProfileInfo, removeAvatar, updateAvatar, updateProfile } from "../../service/ProfileService";
 
 export const Profile = () => {
@@ -141,8 +138,6 @@ export const Profile = () => {
 
     return (
         <div>
-            <TopBar />
-            <Header />
             {/* FORM INFO AND UPDATE PROFILE */}
             <div className="container">
                 <div className="row gutters">
@@ -360,8 +355,6 @@ export const Profile = () => {
                 autoClose={3000}
                 className="custom-toast-container"
             />
-
-            <Footer />
         </div>
     );
 };

@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Footer } from '../layouts/Footer';
 import { OAuthConfig } from '../config/OAuthConfig';
 import { ToastContainer } from 'react-toastify';
-import { TopBar } from '../layouts/TopBar';
-import { Header } from '../layouts/Header';
 import { introspect, login } from '../../service/AuthenticationService';
 
 export const LoginPage = () => {
@@ -121,8 +118,6 @@ export const LoginPage = () => {
 
   return (
     <div>
-      <TopBar />
-      <Header />
       <section className="py-3 py-md-5 py-xl-8">
         <div className="container">
           <div className="row">
@@ -235,7 +230,6 @@ export const LoginPage = () => {
           className="custom-toast-container"
         />
       </section>
-      <Footer />
     </div>
   );
 };

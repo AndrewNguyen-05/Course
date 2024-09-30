@@ -11,6 +11,7 @@ import { getAvatar } from '../../service/ProfileService.js';
 import { introspect } from '../../service/AuthenticationService.js';
 import { getPointsByCurrentLogin } from '../../service/UserService.js';
 import { markAsReadNotification, notificationCurrentLogin } from '../../service/NotificationService.js';
+import { Advertisement } from '../common/Advertisement.js';
 
 export const Header = () => {
     const [loggedOut, setLoggedOut] = useState(false);
@@ -67,6 +68,7 @@ export const Header = () => {
 
     useEffect(() => {
         const fetchPoints = async () => {
+            if (!token) return;
             try {
                 const data = await getPointsByCurrentLogin(token);
                 setPoints(data.result.points)
@@ -88,7 +90,7 @@ export const Header = () => {
             })
             .catch(error => console.log(error));
     }, [token, isTokenValid]);
-    
+
 
     const markAsRead = async (notificationId) => {
         try {
@@ -131,9 +133,9 @@ export const Header = () => {
                             unreadCount={unreadCount}
                             markAsRead={markAsRead}
                         />
-                        <Message />
+                        <Advertisement />
                         <Favorites />
-                        {/* Điều hướng dựa trên vai trò người dùng */}
+
                         <ProfileDropdown
                             avatar={avatar}
                             isTokenValid={isTokenValid}

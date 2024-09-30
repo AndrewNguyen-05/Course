@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Footer } from "../layouts/Footer";
-import { TopBar } from "../layouts/TopBar";
-import { Header } from "../layouts/Header";
 import { checkUserExists, registerUser, sendOtpRegister } from "../../service/UserService";
 
 export const Register = () => {
@@ -115,8 +112,6 @@ export const Register = () => {
 
     return (
         <div>
-            <TopBar />
-            <Header />
             <section className="py-3 py-md-5 py-xl-8">
                 <div className="container">
                     <div className="row">
@@ -274,7 +269,6 @@ export const Register = () => {
                     </div>
                 </div>
             </section>
-            <Footer />
         </div>
     );
 };

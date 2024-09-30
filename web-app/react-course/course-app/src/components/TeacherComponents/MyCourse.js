@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'; 
-import { Footer } from '../layouts/Footer';
-import { TopBar } from '../layouts/TopBar';
-import { Header } from '../layouts/Header';
 
 export const MyCourses = () => {
     const [loading, setLoading] = useState(true);
@@ -39,9 +36,6 @@ export const MyCourses = () => {
     };
 
     return (
-        <>
-            <TopBar />
-            <Header />
             <div className="container-fluid my-course-container my-5">
                 <div className="my-course-grid">
                     {courses.map(course => (
@@ -98,7 +92,5 @@ export const MyCourses = () => {
                     ))}
                 </div>
             </div>
-            <Footer />
-        </>
     );
 };

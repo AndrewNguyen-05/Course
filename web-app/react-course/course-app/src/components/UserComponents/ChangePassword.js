@@ -58,8 +58,6 @@ export const ChangePassword = () => {
 
   return (
     <div>
-      <TopBar />
-      <Header />
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">
@@ -161,7 +159,6 @@ export const ChangePassword = () => {
         className="custom-toast-container"
       />
 
-      <Footer />
     </div>
   );
 };
