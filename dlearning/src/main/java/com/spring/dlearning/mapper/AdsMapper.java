@@ -4,7 +4,6 @@ import com.spring.dlearning.dto.request.AdsCreationRequest;
 import com.spring.dlearning.dto.response.AdsApproveResponse;
 import com.spring.dlearning.dto.response.AdsCreationResponse;
 import com.spring.dlearning.entity.Advertisement;
-import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.repository.AdvertisementRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.utils.AdsStatus;
