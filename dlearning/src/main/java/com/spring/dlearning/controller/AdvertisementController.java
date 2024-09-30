@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,6 +46,14 @@ public class AdvertisementController {
                 .code(HttpStatus.OK.value())
                 .message("Your request has been approved, please proceed to payment")
                 .result(advertisementService.approveAds(request))
+                .build();
+    }
+
+    @GetMapping("/get-ads-current")
+    ApiResponse<List<AdsCreationResponse>> getAllByCurrentLogin(){
+        return ApiResponse.<List<AdsCreationResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .result(advertisementService.getAdsByCurrentLogin())
                 .build();
     }
 

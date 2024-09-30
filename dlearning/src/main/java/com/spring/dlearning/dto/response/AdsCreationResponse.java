@@ -1,8 +1,11 @@
 package com.spring.dlearning.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.spring.dlearning.utils.AdsStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,10 +24,14 @@ public class AdsCreationResponse {
     String title;
     String description;
     String imageUrl;
+    String location;
     String link;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     LocalDate startDate;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     LocalDate endDate;
     BigDecimal priceAds;
     AdsStatus status;
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     LocalDateTime createAt;
 }

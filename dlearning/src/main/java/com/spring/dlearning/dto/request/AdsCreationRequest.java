@@ -26,6 +26,8 @@ public class AdsCreationRequest {
 
     String image;
 
+    String location;
+
     String description;
 
     @NotNull(message = "LINK_ADS_INVALID")

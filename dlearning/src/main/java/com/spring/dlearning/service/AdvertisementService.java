@@ -18,9 +18,11 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +69,22 @@ public class AdvertisementService {
         emailService.confirmAdvertisement(advertisement.getContactEmail(), advertisement);
 
         return adsMapper.toAdsApproveResponse(advertisement);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public List<AdsCreationResponse> getAdsByCurrentLogin(){
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        List<Advertisement> advertisements = advertisementRepository
+                .findAdvertisementByUserId(user.getId());
+
+        return advertisements.stream()
+                .map(adsMapper::toAdsCreationResponse)
+                .toList();
     }
 
 }

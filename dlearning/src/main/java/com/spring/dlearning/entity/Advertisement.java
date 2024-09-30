@@ -50,6 +50,9 @@ public class Advertisement extends AbstractEntity<Long>{
     @Column(name = "image_ads")
     String image;
 
+    @Column(name = "localtion")
+    String location;
+
     @Column(name = "link")
     String link;
 
