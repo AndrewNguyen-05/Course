@@ -82,7 +82,7 @@ export const Courses = () => {
                                         </div>
                                         <div className="courses-title">{course.title}</div>
                                         <div className="course-meta">
-                                            <span><i className="fa fa-star mr-2"></i>4.5 (250)</span>
+                                            <span><i className="fa fa-star mr-2"></i>{course.averageRating} (250)</span>
                                         </div>
                                         <div className="course-price mt-2">
                                             <strong>Price: </strong>
