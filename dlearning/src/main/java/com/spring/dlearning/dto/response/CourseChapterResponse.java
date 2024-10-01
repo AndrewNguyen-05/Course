@@ -2,7 +2,7 @@ package com.spring.dlearning.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -14,12 +14,11 @@ import java.util.Set;
 public class CourseChapterResponse {
 
     Long courseId;
-    Long totalLesson;
     String courseTitle;
     String courseDescription;
 
     @Builder.Default
-    Set<ChapterDto> chapters = Collections.emptySet();
+    Set<ChapterDto> chapters = new HashSet<>();
 
     @Setter
     @Getter
@@ -32,7 +31,7 @@ public class CourseChapterResponse {
         String chapterName;
 
         @Builder.Default
-        Set<LessonDto> lessonDto = Collections.emptySet();
+        Set<LessonDto> lessonDto = new HashSet<>();
     }
 
     @Setter
@@ -44,7 +43,6 @@ public class CourseChapterResponse {
     public static class LessonDto{
         Long lessonId;
         String lessonName;
-        String description;
         String videoUrl;
     }
 

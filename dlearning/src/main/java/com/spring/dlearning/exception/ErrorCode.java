@@ -48,7 +48,8 @@ public enum ErrorCode {
     BUY_COURSE_INVALID(400, "Current points is not enough", HttpStatus.BAD_REQUEST),
     COURSE_ID_INVALID(400, "Course ID cannot be null", HttpStatus.BAD_REQUEST),
     LESSON_ID_INVALID(400, "Lesson Id cannot be null", HttpStatus.BAD_REQUEST),
-    LESSON_NAME_INVALID(400, "Lesson Name cannot be null", HttpStatus.BAD_REQUEST),
+    LESSON_NAME_INVALID(400, "Lesson name cannot be null", HttpStatus.BAD_REQUEST),
+    CHAPTER_NAME_INVALID(400, "Chapter Name cannot be null", HttpStatus.BAD_REQUEST),
     FAVORITE_NOT_FOUND(404, "Favorite not existed", HttpStatus.NOT_FOUND),
     TITLE_ADS_INVALID(400, "Title advertisement cannot be null", HttpStatus.BAD_REQUEST),
     EMAIL_CONTACT_INVALID(400, "Email Contact cannot be null", HttpStatus.BAD_REQUEST),
@@ -59,6 +60,7 @@ public enum ErrorCode {
     IMAGE_INVALID(400, "Image cannot be null", HttpStatus.BAD_REQUEST),
     LINK_ADS_INVALID(400, "Link advertisement cannot be null", HttpStatus.BAD_REQUEST),
     ADVERTISEMENT_ID_INVALID(404, "Advertisement not found", HttpStatus.NOT_FOUND),
+
 
     ;
 

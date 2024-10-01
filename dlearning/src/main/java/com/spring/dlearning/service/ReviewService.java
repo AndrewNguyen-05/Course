@@ -90,7 +90,6 @@ public class ReviewService {
         return commentMapper.toCommentResponse(newComment);
     }
 
-
     @PreAuthorize("isAuthenticated()")
     @Transactional
     public DeleteCommentResponse deleteCommentById(Long id) {

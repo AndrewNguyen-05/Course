@@ -19,5 +19,9 @@ public class CreationChapterRequest {
     @NotBlank(message = "CHAPTER_NAME_INVALID")
     String chapterName;
 
+    @NotBlank(message = "LESSON_NAME_INVALID")
+    String lessonName;
+
     String description;
+
 }

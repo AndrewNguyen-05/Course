@@ -12,7 +12,6 @@ import org.mapstruct.Mapping;
 public interface CourseMapper {
 
     @Mapping(source = "author.name", target = "author")
-    @Mapping(target = "lessonName", ignore = true)
     @Mapping(target = "averageRating", ignore = true)
     CourseResponse toCourseResponse(Course course);
 

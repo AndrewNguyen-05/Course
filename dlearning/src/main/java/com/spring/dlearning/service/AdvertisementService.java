@@ -4,6 +4,7 @@ import com.spring.dlearning.dto.request.AdsApproveRequest;
 import com.spring.dlearning.dto.request.AdsCreationRequest;
 import com.spring.dlearning.dto.response.AdsApproveResponse;
 import com.spring.dlearning.dto.response.AdsCreationResponse;
+import com.spring.dlearning.dto.response.PageResponse;
 import com.spring.dlearning.entity.Advertisement;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
@@ -18,11 +19,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -72,19 +75,26 @@ public class AdvertisementService {
     }
 
     @PreAuthorize("isAuthenticated()")
-    public List<AdsCreationResponse> getAdsByCurrentLogin(){
+    public PageResponse<AdsCreationResponse> getAdsByCurrentLogin(int page, int size){
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        List<Advertisement> advertisements = advertisementRepository
-                .findAdvertisementByUserId(user.getId());
+        Pageable pageable = PageRequest.of(page - 1, size);
 
-        return advertisements.stream()
-                .map(adsMapper::toAdsCreationResponse)
-                .toList();
+        Page<Advertisement> advertisements = advertisementRepository
+                .findAdvertisementByUserId(user.getId(), pageable);
+
+        return PageResponse.<AdsCreationResponse>builder()
+                .currentPage(page)
+                .pageSize(pageable.getPageSize())
+                .totalPages(advertisements.getTotalPages())
+                .totalElements(advertisements.getTotalElements())
+                .data(advertisements.getContent().stream()
+                        .map(adsMapper::toAdsCreationResponse).toList())
+                .build();
     }
 
 }

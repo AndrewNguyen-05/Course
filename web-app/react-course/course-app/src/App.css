@@ -11941,3 +11941,169 @@ h6,
 .ads-badge-danger {
   background-color: #dc3545; /* Màu đỏ cho trạng thái từ chối */
 }
+
+.ads-table-row {
+  transition: background-color 0.3s ease; 
+}
+
+.ads-table-row:hover {
+  background-color: #f1f1f1; 
+  cursor: pointer; 
+}
+
+.ads-table-row:hover {
+  background-color: #f0f8ff; /* Đổi màu nền */
+  color: #333; /* Đổi màu chữ */
+  border-left: 4px solid #008080; 
+}
+
+.header-image-mb-4{
+  font-size: 20px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+
+.ads-counter-box {
+  border-radius: 8px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.ads-counter-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.ads-icon-size {
+  font-size: 35px; /* Kích thước của biểu tượng */
+}
+
+.ads-counter-title {
+  font-size: 48px;
+  margin: 0;
+}
+
+.ads-counter-subtitle {
+  font-size: 16px;
+  font-weight: 500;
+}
+/* Container chính của toàn bộ nội dung khóa học */
+.course-content-container {
+  border: 1px solid #e7e7e7;
+  border-radius: 4px;
+  background: #ffffff;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+/* Tiêu đề chính của nội dung khóa học */
+.course-content-header {
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #e7e7e7; /* Gạch chân tiêu đề */
+  padding-bottom: 10px;
+}
+
+/* Mô tả ngắn gọn của nội dung */
+.course-content-summary {
+  font-size: 14px;
+  color: #6c757d;
+}
+
+/* Danh sách các chương */
+.course-chapters {
+  margin-top: 15px;
+}
+
+/* Từng chương học */
+.course-chapter {
+  border-bottom: 1px solid #e7e7e7; /* Đường kẻ nhẹ giữa các chương */
+  margin-bottom: 0;
+}
+
+/* Tiêu đề chương */
+.chapter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 0px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  color: #444;
+  font-weight: 560;
+  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+  border-top: 1px solid #e7e7e7;
+}
+
+/* Hiển thị thông tin chương học */
+.chapter-info {
+  display: flex;
+  align-items: center;
+}
+
+/* Biểu tượng mũi tên */
+.chapter-icon {
+  margin-left: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Hiệu ứng mũi tên xoay khi mở chương */
+.chapter-icon.open {
+  transform: rotate(180deg);
+}
+
+/* Danh sách bài giảng bên trong chương */
+.chapter-lectures {
+  padding: 10px 20px;
+  border-top: 1px solid #e7e7e7;
+  overflow: visible; /* Đảm bảo không bị ẩn các bài giảng */
+}
+
+/* Từng bài giảng */
+.lecture-item {
+  list-style: none;
+  margin: 9px 0; /* khoảng cách giữa các bài giảng */
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #555;
+  border-radius: 5px;
+  padding: 5px 0;
+  font-size: 16px;
+}
+
+.lecture-item:hover {
+  background-color: #f0f0f0; /* Màu nền khi hover */
+  color: #212529;
+  cursor: pointer;
+}
+
+/* Biểu tượng cho bài giảng */
+.lecture-icon {
+  margin-right: 10px;
+  color: #007bff;
+  font-size: 20px;
+  transition: color 0.3s ease-in-out; /* Hiệu ứng chuyển màu cho biểu tượng */
+}
+
+/* Tiêu đề chương khi được mở */
+.chapter-header.open {
+  background-color: #e7f3ff;
+  color: #333;
+}
+
+.chapter-header:hover {
+  background-color: #f0f0f0; 
+}
+
+.lecture-icon {
+  color: rgb(26, 32, 39);
+}
+.lesson-number {
+  margin-left: 8px;
+  font-size: 20px;
+}

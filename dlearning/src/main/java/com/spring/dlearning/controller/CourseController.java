@@ -98,8 +98,8 @@ public class CourseController {
     }
 
     @GetMapping("/info-course/{id}")
-    ApiResponse<CourseLessonResponse> infoCourse(@PathVariable Long id){
-        return ApiResponse.<CourseLessonResponse>builder()
+    ApiResponse<CourseChapterResponse> infoCourse(@PathVariable Long id){
+        return ApiResponse.<CourseChapterResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(courseService.getAllInfoCourse(id))
                 .build();

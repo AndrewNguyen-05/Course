@@ -5,6 +5,7 @@ import com.spring.dlearning.dto.request.AdsCreationRequest;
 import com.spring.dlearning.dto.response.AdsApproveResponse;
 import com.spring.dlearning.dto.response.AdsCreationResponse;
 import com.spring.dlearning.dto.response.ApiResponse;
+import com.spring.dlearning.dto.response.PageResponse;
 import com.spring.dlearning.service.AdvertisementService;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -16,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -50,10 +50,13 @@ public class AdvertisementController {
     }
 
     @GetMapping("/get-ads-current")
-    ApiResponse<List<AdsCreationResponse>> getAllByCurrentLogin(){
-        return ApiResponse.<List<AdsCreationResponse>>builder()
+    ApiResponse<PageResponse<AdsCreationResponse>> getAllByCurrentLogin(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "5") int size)
+    {
+        return ApiResponse.<PageResponse<AdsCreationResponse>>builder()
                 .code(HttpStatus.OK.value())
-                .result(advertisementService.getAdsByCurrentLogin())
+                .result(advertisementService.getAdsByCurrentLogin(page, size))
                 .build();
     }
 

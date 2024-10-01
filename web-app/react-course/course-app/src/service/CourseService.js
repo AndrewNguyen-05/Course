@@ -45,6 +45,19 @@ export const getCourseById = async (id) => {
 
 }
 
+export const getChapterById = async (id) => {
+
+    const response = await fetch(`http://localhost:8080/api/v1/info-course/${id}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+
+    if (!response.ok) throw new Error('Course not existed')
+    return response.json();
+}
+
 export const getCommentByCourseId = async (id) => {
     const response = await fetch(`http://localhost:8080/api/v1/courses-comment/${id}`, {
         method: 'GET',

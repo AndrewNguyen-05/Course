@@ -7,10 +7,9 @@ import { Pagination } from "../common/Pagination";
 export const AdsPage = () => {
     const token = localStorage.getItem('token');
     const [ads, setAds] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1); // Trang hiện tại
-    const [pageSize] = useState(6); // Số lượng quảng cáo hiển thị mỗi trang
-    const [totalPages, setTotalPages] = useState(0); // Tổng số trang
+    const [loading, setLoading] = useState(true);   
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0); 
 
     useEffect(() => {
         document.title = 'Advertisement';
@@ -18,12 +17,14 @@ export const AdsPage = () => {
         const adsByCurrentLogin = async () => {
             try {
                 setLoading(true);
-                const data = await getAdsByCurrentLogin(token, currentPage, pageSize); // Gọi API với phân trang
-                if (data.result && Array.isArray(data.result)) {
-                    setAds(data.result);
-                    setTotalPages(data.totalPages); // Lưu tổng số trang
+                const data = await getAdsByCurrentLogin(token, currentPage); 
+                console.log(data);
+                if (data.result && Array.isArray(data.result.data)) {
+                    setAds(data.result.data);
+                    setTotalPages(data.result.totalPages); 
                 } else {
                     setAds([]);
+                    setTotalPages(0);
                 }
             } catch (error) {
                 console.log(error);
@@ -32,7 +33,7 @@ export const AdsPage = () => {
             }
         };
         adsByCurrentLogin();
-    }, [token, currentPage, pageSize]); // Chạy lại khi token, currentPage, hoặc pageSize thay đổi
+    }, [token, currentPage]); 
 
     // Thay đổi trang
     const changePage = (page) => {

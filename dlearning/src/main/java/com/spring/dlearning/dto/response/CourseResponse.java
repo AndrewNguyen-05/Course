@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spring.dlearning.utils.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import java.util.HashSet;
-import java.util.Set;
 
 @Data
 @NoArgsConstructor
@@ -26,7 +24,5 @@ public class CourseResponse {
     String videoUrl;
     Double averageRating;
     Long points;
-
-    Set<String> lessonName =  new HashSet<>();
 
 }

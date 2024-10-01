@@ -1,37 +1,97 @@
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { InfoContact } from "../common/InfoContact";
+import { registerAds } from "../../service/AdsService";
 
 export const Contact = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
 
     useEffect(() => {
         document.title = 'Register Advertisement';
     }, []);
 
-    const onSubmit = (data) => {
-        console.log(data);
-        toast.success("Advertisement registration successful!", { position: "top-center" });
+    const token = localStorage.getItem('token');
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [formData, setFormData] = useState({
+        contactEmail: "",
+        contactPhone: "",
+        location: "Home Page",
+        title: "",
+        description: "",
+        link: "",
+        startDate: "",
+        endDate: "",
+        image: null
+    });
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
+        })
+    }
+
+    const handleOnchangeImg = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSelectedImage(reader.result);
+            };
+            reader.readAsDataURL(file);
+            setFormData({ ...formData, image: file });
+        }
+        console.log(formData.image)
     };
+
+    const handleSubmitAds = async (e) => {
+        e.preventDefault();
+        if (!token) {
+            toast.error('Please log in again.')
+            return;
+        }
+
+        try {
+            const jsonBlog = new Blob([JSON.stringify({
+                contactEmail: formData.contactEmail,
+                contactPhone: formData.contactPhone,
+                title: formData.title,
+                location: formData.location,
+                description: formData.description,
+                link: formData.link,
+                startDate: formData.startDate,
+                endDate: formData.endDate
+            })], { type: 'application/json' })
+
+            const formDataAds = new FormData();
+            formDataAds.append("request", jsonBlog)
+            formDataAds.append("file", formData.image);
+
+            await registerAds(token, formDataAds);
+            toast.success('Registration successful! Please await our notification.');
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     return (
         <div className="container-fluid py-5">
+            {/* Thêm hình ảnh mới vào phần body */}
             <div className="row justify-content-center mb-5">
                 <div className="col-lg-8 text-center">
                     <h6 className="d-inline-block text-secondary text-uppercase pb-2 ads-title-highlight">Need Help?</h6>
                     <h1 className="ads-title">Register Your Advertisement</h1>
                 </div>
             </div>
-            <div className="container py-5">
+            <div className="container py-6">
                 <div className="row align-items-center">
                     <InfoContact />
-
-                    {/* Form đăng ký quảng cáo */}
                     <div className="col-lg-7">
                         <div className="contact-form">
-                            <form onSubmit={handleSubmit(onSubmit)}>
+                            <form onSubmit={handleSubmitAds}>
+                                {/* Các trường nhập liệu khác */}
                                 <div className="row">
                                     <div className="col-6 form-group">
                                         <div className="input-group">
@@ -42,10 +102,11 @@ export const Contact = () => {
                                                 type="email"
                                                 className="form-control border-top-0 border-right-0 border-left-0 p-2"
                                                 placeholder="Your Email"
-                                                {...register('contactEmail', { required: true })}
+                                                name="contactEmail"
+                                                value={formData.contactEmail}
+                                                onChange={handleInputChange}
                                             />
                                         </div>
-                                        {errors.contactEmail && <span className="text-danger">Email is required</span>}
                                     </div>
                                     <div className="col-6 form-group">
                                         <div className="input-group">
@@ -56,10 +117,11 @@ export const Contact = () => {
                                                 type="text"
                                                 className="form-control border-top-0 border-right-0 border-left-0 p-2"
                                                 placeholder="Your Phone"
-                                                {...register('contactPhone', { required: true })}
+                                                name="contactPhone"
+                                                value={formData.contactPhone}
+                                                onChange={handleInputChange}
                                             />
                                         </div>
-                                        {errors.contactPhone && <span className="text-danger">Phone number is required</span>}
                                     </div>
                                 </div>
                                 {/* Thêm trường Location */}
@@ -71,8 +133,9 @@ export const Contact = () => {
                                         <input
                                             type="text"
                                             className="form-control border-top-0 border-right-0 border-left-0 p-2"
-                                            value='Home Page'
                                             placeholder="Home Page"
+                                            name="location"
+                                            value={formData.location}
                                             readOnly
                                         />
                                     </div>
@@ -86,17 +149,20 @@ export const Contact = () => {
                                             type="text"
                                             className="form-control border-top-0 border-right-0 border-left-0 p-2"
                                             placeholder="Advertisement Title"
-                                            {...register('title', { required: true })}
+                                            name="title"
+                                            value={formData.title}
+                                            onChange={handleInputChange}
                                         />
                                     </div>
-                                    {errors.title && <span className="text-danger">Title is required</span>}
                                 </div>
                                 <div className="form-group">
                                     <textarea
                                         className="form-control border-top-0 border-right-0 border-left-0 p-2"
                                         rows="3"
                                         placeholder="Description"
-                                        {...register('description')}
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleInputChange}
                                     ></textarea>
                                 </div>
                                 <div className="form-group">
@@ -108,10 +174,11 @@ export const Contact = () => {
                                             type="text"
                                             className="form-control border-top-0 border-right-0 border-left-0 p-2"
                                             placeholder="Advertisement Link"
-                                            {...register('link', { required: true })}
+                                            name="link"
+                                            value={formData.link}
+                                            onChange={handleInputChange}
                                         />
                                     </div>
-                                    {errors.link && <span className="text-danger">Link is required</span>}
                                 </div>
                                 <div className="row">
                                     <div className="col-6 form-group">
@@ -122,10 +189,11 @@ export const Contact = () => {
                                             <input
                                                 type="date"
                                                 className="form-control border-top-0 border-right-0 border-left-0 p-2"
-                                                {...register('startDate', { required: true })}
+                                                name="startDate"
+                                                value={formData.startDate}
+                                                onChange={handleInputChange}
                                             />
                                         </div>
-                                        {errors.startDate && <span className="text-danger">Start date is required</span>}
                                     </div>
                                     <div className="col-6 form-group">
                                         <div className="input-group">
@@ -135,10 +203,11 @@ export const Contact = () => {
                                             <input
                                                 type="date"
                                                 className="form-control border-top-0 border-right-0 border-left-0 p-2"
-                                                {...register('endDate', { required: true })}
+                                                name="endDate"
+                                                value={formData.endDate}
+                                                onChange={handleInputChange}
                                             />
                                         </div>
-                                        {errors.endDate && <span className="text-danger">End date is required</span>}
                                     </div>
                                 </div>
                                 <div className="form-group">
@@ -146,9 +215,17 @@ export const Contact = () => {
                                     <input
                                         type="file"
                                         className="form-control border-0 p-2"
-                                        {...register('image', { required: true })}
+                                        accept="image/*"
+                                        name="image"
+                                        onChange={handleOnchangeImg}
                                     />
-                                    {errors.image && <span className="text-danger">Image is required</span>}
+
+                                    {/* Hiển thị hình ảnh xem trước nếu có */}
+                                    {selectedImage && (
+                                        <div className="mt-3">
+                                            <img src={selectedImage} alt="Selected Preview" className="img-thumbnail" style={{ maxWidth: "300px" }} />
+                                        </div>
+                                    )}
                                 </div>
                                 <div>
                                     <button className="btn btn-primary py-3 px-5 ads-submit-btn" type="submit">Register Ads</button>
@@ -156,6 +233,7 @@ export const Contact = () => {
                             </form>
                         </div>
                     </div>
+                    
                 </div>
             </div>
             <ToastContainer

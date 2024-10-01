@@ -4,12 +4,11 @@ import com.spring.dlearning.dto.request.CourseRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.entity.Course;
-import com.spring.dlearning.entity.Lesson;
 import com.spring.dlearning.entity.Review;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
-import com.spring.dlearning.mapper.CourseLessonAndLessonContentMapper;
+import com.spring.dlearning.mapper.CourseChapterAndLessonMapper;
 import com.spring.dlearning.mapper.CourseMapper;
 import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.UserRepository;
@@ -45,7 +44,7 @@ public class CourseService {
     CourseRepository courseRepository;
     CloudinaryService cloudinaryService;
     CourseMapper courseMapper;
-    CourseLessonAndLessonContentMapper courseLessonAndLessonContentMapper;
+    CourseChapterAndLessonMapper courseChapterAndLessonMapper;
 
     public PageResponse<CourseResponse> getAllCourses(Specification<Course> spec, int page, int size) {
 
@@ -55,12 +54,16 @@ public class CourseService {
         List<CourseResponse> courseResponses  = pageData.getContent()
                 .stream().map(course -> {
 
-            long totalRating = course.getComments().stream()
-                    .mapToLong(Review::getRating)
-                    .sum();
+            List<Review> filteredComments = course.getComments().stream()
+                    .filter(r -> r.getRating() > 0 )
+                    .toList();
 
-            int numberOfReviews = course.getComments().size();
-            double averageRating = numberOfReviews > 0 ? BigDecimal.valueOf((double) totalRating / numberOfReviews)
+            long totalRating = filteredComments.stream()
+                            .mapToLong(Review::getRating)
+                            .sum();
+
+            int numberOfValidReviews = filteredComments.size();
+            double averageRating = numberOfValidReviews > 0 ? BigDecimal.valueOf((double) totalRating / numberOfValidReviews)
                     .setScale(2, RoundingMode.HALF_UP)
                     .doubleValue() : 0.0 ;
 
@@ -98,7 +101,6 @@ public class CourseService {
                 .thumbnail(course.getThumbnail())
                 .videoUrl(course.getVideoUrl())
                 .points(course.getPoints())
-                .lessonName(course.getLessons().stream().map(Lesson::getLessonName).collect(Collectors.toSet()))
                 .build();
     }
 
@@ -157,20 +159,19 @@ public class CourseService {
         return courseMapper.toUploadCourseResponse(course);
     }
 
-    @PreAuthorize("isAuthenticated()")
-    public CourseLessonResponse getAllInfoCourse (Long courseId){
+    public CourseChapterResponse getAllInfoCourse (Long courseId){
 
         courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
 
-        CourseLessonResponse courseLessonResponse =  courseLessonAndLessonContentMapper
+        CourseChapterResponse courseLessonResponse =  courseChapterAndLessonMapper
                 .getCourserLessonAndLessonContent(courseId);
 
-        Set<CourseLessonResponse.LessonDto> sortedLessons = courseLessonResponse.getLessons().stream()
-                .sorted(Comparator.comparing(CourseLessonResponse.LessonDto::getLessonId))
+        Set<CourseChapterResponse.ChapterDto> sortedChapter = courseLessonResponse.getChapters().stream()
+                .sorted(Comparator.comparing(CourseChapterResponse.ChapterDto::getChapterId))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        courseLessonResponse.setLessons(sortedLessons);
+        courseLessonResponse.setChapters(sortedChapter);
 
         return courseLessonResponse;
     }

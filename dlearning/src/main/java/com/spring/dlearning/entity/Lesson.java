@@ -4,10 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
 @Table(name = "lessons")
 @Setter
@@ -18,18 +14,19 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Lesson extends AbstractEntity<Long> {
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "course_id", nullable = false)
-    Course course;
-
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @Builder.Default
-    Set<LessonContent> lessonContents = new HashSet<>();
-
-    @Column(name = "title", nullable = false)
+    @Column(name = "lesson_name")
     String lessonName;
 
-    @Column(name = "description", columnDefinition = "MEDIUMTEXT")
-    String description;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "lesson_id", nullable = false)
+    Chapter chapter;
 
+    @Column(name = "content_type")
+    String contentType; // "video", "document", etc.
+
+    @Column(name = "content_url")
+    String videoUrl;
+
+    @Column(name = "description")
+    String description; // Mô tả nội dung nếu cần
 }

@@ -15,6 +15,13 @@ public interface ChapterMapper {
     @Mapping(source = "description", target = "description")
     Chapter toLesson(CreationChapterRequest request);
 
+    @Mapping(target = "userId", source = "course.author.id")
+    @Mapping(target = "courseId", source = "course.id")
+    @Mapping(target = "courseTitle", source = "course.title")
+    @Mapping(target = "chapterId", source = "id")
+    @Mapping(target = "lessons", source = "lessons")
+    CreationChapterResponse toCreateChapterResponse(Chapter chapter);
+
     @Mapping(target = "lessonId", source = "id")
     @Mapping(target = "lessonName", source = "lessonName")
     @Mapping(target = "videoUrl", source = "videoUrl")

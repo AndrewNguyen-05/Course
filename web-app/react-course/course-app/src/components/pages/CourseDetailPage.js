@@ -4,8 +4,9 @@ import { FaCommentDots, FaReply, FaTrash, FaStar, FaBook } from 'react-icons/fa'
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
-import { buyCourse, getCommentByCourseId, getCourseById } from "../../service/CourseService";
+import { buyCourse, getChapterById, getCommentByCourseId, getCourseById } from "../../service/CourseService";
 import { addComment, addReplyComment, deleteComment, editComment } from "../../service/ReviewService";
+import CourseContent from "../UserComponents/CourseContent";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
@@ -18,11 +19,12 @@ export const CourseDetail = () => {
     const [editContent, setEditContent] = useState({}); // cập nhật nội dung chỉnh sửa của bình luận.
     const [editingCommentId, setEditingCommentId] = useState(null); // lưu ID của bình luận đang được chỉnh sửa
     const [newRating, setNewRating] = useState(0);
+    const [chapter, setChapter] = useState(null);
+
 
     useEffect(() => {
         document.title = 'Courses Detail'
     })
-
     // Fetch course details
     useEffect(() => {
         getCourseById(id)
@@ -32,6 +34,17 @@ export const CourseDetail = () => {
                 setLoading(false);
             }).catch(error => {
                 console.log(error);
+                setLoading(false);
+            });
+    }, [id]);
+
+    useEffect(() => {
+        getChapterById(id)
+            .then(data => {
+                setChapter(data.result)
+                setLoading(false);
+            }).catch(error => {
+                console.log(error)
                 setLoading(false);
             });
     }, [id]);
@@ -48,6 +61,7 @@ export const CourseDetail = () => {
                 setComments(updatedComments);
             }).catch(error => console.log(error));
     }, [id]);
+
 
     if (loading) return <div>Loading...</div>;
 
@@ -93,6 +107,7 @@ export const CourseDetail = () => {
         const replyData = {
             content: replyText.trim(),
             parentCommentId: commentId,
+            rating: 0,
             courseId: id
         };
 
@@ -122,14 +137,14 @@ export const CourseDetail = () => {
     // Edit comment
     const handleEditComment = async (commentId) => {
         const updatedContent = (editContent[commentId] || "").trim();
-    
+
         if (!updatedContent) {
             toast.error('Please enter new content');
             return;
         }
         try {
             const result = await editComment(commentId, updatedContent, token);
-    
+
             if (result) {
                 setComments((prevComments) => {
                     const updatedComments = prevComments.map(comment => {
@@ -146,16 +161,16 @@ export const CourseDetail = () => {
                         });
                         return { ...comment, replies: updatedReplies };
                     });
-                    return [...updatedComments]; 
+                    return [...updatedComments];
                 });
-    
+
                 setEditingCommentId(null); // Thoát khỏi chế độ chỉnh sửa
             }
         } catch (error) {
             console.error('Error editing comment:', error);
         }
     };
-    
+
 
     // Delete comment
     const handleDeleteComment = async (commentId) => {
@@ -170,14 +185,14 @@ export const CourseDetail = () => {
                             ...comment,
                             replies: comment.replies.filter(reply => reply.id !== commentId)  // Loại bỏ cả các replies nếu có
                         }));
-    
+
                     return updatedComments;
                 });
             }
         } catch (error) {
             console.error('Error deleting comment:', error);
         }
-    };    
+    };
 
     // Toggle reply input
     const handleReplyToggle = (commentId) => {
@@ -218,7 +233,7 @@ export const CourseDetail = () => {
                 }
             }
         });
-    };  
+    };
 
     const renderStars = (rating, handleRating) => {
         return (
@@ -244,6 +259,10 @@ export const CourseDetail = () => {
         }
     };
 
+    if (!course) {
+        return <div>Course data is not available</div>;
+    }
+
     return (
         <div>
 
@@ -258,21 +277,8 @@ export const CourseDetail = () => {
                                 <p>{course.description}</p>
                             </div>
 
-                            <h2 className="lesson-header mb-4 d-flex align-items-center">
-                                <FaBook style={{ color: "#2c3e50", marginRight: "15px", fontSize: "1.5em" }} />
-                                Course Lessons
-                            </h2>
+                            <CourseContent chapter={chapter} />
 
-                            <ul className="lesson-list">
-                                {course && Array.isArray(course.lessonName) && course.lessonName.map((lesson, index) => (
-                                    <li key={index} className="lesson-item">
-                                        <div className="d-flex align-items-center">
-                                            <i className="fa fa-file-alt lesson-icon"></i>
-                                            <span className="lesson-title">{lesson}</span> {/* lesson ở đây là một chuỗi */}
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
 
                             {/* Comment Section */}
                             <div className="comments-section mt-5">
@@ -485,7 +491,7 @@ export const CourseDetail = () => {
                                 <div className="py-3 px-4">
                                     <button
                                         className="btn enroll-now-btn btn-block py-3 px-5"
-                                        onClick={handleEnrollNow} 
+                                        onClick={handleEnrollNow}
                                     >
                                         Enroll Now
                                     </button>
