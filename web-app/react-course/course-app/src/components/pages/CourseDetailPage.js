@@ -296,6 +296,8 @@ export const CourseDetail = () => {
                         <CourseFeatur
                             course={course}
                             handleEnrollNow={handleEnrollNow} />
+
+                            
                     </div>
                 </div>
                 <ToastContainer

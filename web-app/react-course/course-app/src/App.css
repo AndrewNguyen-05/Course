@@ -12108,75 +12108,129 @@ h6,
   font-size: 20px;
 }
 
-/* Định dạng banner */
-.banner-community {
-  background: linear-gradient(135deg, #4a90e2, #50c3e1);
-  height: 300px;
+.community-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row; /* Đảm bảo hiển thị theo chiều ngang */
+  justify-content: space-between; /* Căn các phần tử có khoảng cách đều nhau */
+}
+
+@media screen and (max-width: 768px) {
+  .community-container {
+    flex-direction: column; /* Chuyển sang bố cục cột khi màn hình nhỏ */
+  }
+}
+
+.sidebar {
+  width: 280px; /* Chiều rộng mặc định của sidebar */
+  height: auto;
+  background-color: #1a1b1e; /* Màu nền */
+  color: #fff;
+  padding: 20px 10px; /* Khoảng cách padding */
   position: relative;
-  overflow: hidden;
-  border-bottom: 4px solid #fff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  transition: all 0.3s ease-in-out; /* Thêm hiệu ứng mượt */
+}
+@media screen and (max-width: 768px) {
+  .sidebar {
+    width: 100%; /* Chiều rộng toàn bộ màn hình khi ở chế độ di động */
+    padding: 15px;
+    margin-top: 0;
+  }
 }
 
-.banner-title {
-  font-size: 3.5rem;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+@media screen and (min-width: 1200px) {
+  .sidebar {
+    width: 300px; /* Sidebar lớn hơn cho màn hình rộng */
+  }
 }
 
-.banner-subtitle {
-  font-size: 1.3rem;
-  font-weight: 300;
+.sidebar-item {
+  color: #e4e6eb;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
 }
 
-.banner-button {
-  font-size: 1.2rem;
+.sidebar-item:hover {
+  background: #3a3b3c;
 }
 
-/* Modal CSS */
-.modal-content {
-  border-radius: 15px;
+.main-content {
+  padding: 20px;
+  width: calc(100% - 260px); 
 }
 
-.modal-title {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
-.form-control-custom {
+.create-post-container {
+  background: rgb(28, 30, 33);
   border-radius: 10px;
   padding: 15px;
-  font-size: 1rem;
+  width: 60%; /* Mặc định rộng 60% */
+  max-width: 732px; /* Giới hạn chiều rộng tối đa */
+  margin: 0 auto;
+  margin-bottom: 30px;
+  transition: width 0.3s ease-in-out;
 }
 
-/* Nút và hiệu ứng hover */
-.btn-port {
-  transition: background 0.3s ease;
+@media screen and (max-width: 768px) {
+  .create-post-container {
+    width: 90%; 
+  }
 }
 
-.btn-port:hover {
-  background: #007bff;
-  color: #fff;
+.create-post-header {
+  display: flex;
+  align-items: center;
 }
-.icon-toolbar {
-  background: #f0f2f5;
+
+.create-post-input {
+  border-radius: 20px;
   padding: 10px 15px;
-  border-radius: 10px;
+  width: 100%;
+  color: #b0b3b8;
 }
 
+.create-post-footer {
+  border-top: 1px solid #3e4042;
+  padding-top: 10px;
+}
+
+.avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
 .icon-label {
   cursor: pointer;
 }
 
-.icon {
-  cursor: pointer;
-  transition: color 0.2s ease;
+.modal-show {
+  left: 50%; /* Đặt modal căn giữa */
+  top: 50%;
+  transform: translate(-42.5%, -50%); /* Đảm bảo căn giữa modal */
+  position: absolute;
 }
 
-.icon:hover {
-  color: #007bff;
+/* Responsive cho modal khi màn hình nhỏ */
+@media screen and (max-width: 768px) {
+  .modal-show {
+    width: 90%; /* Modal chiếm gần toàn bộ màn hình */
+  }
+}
+
+.post-card {
+  background: #fff;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+@media screen and (max-width: 768px) {
+  .post-card {
+    padding: 15px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .post-content {
+    font-size: 0.9rem; /* Font nhỏ hơn cho màn hình nhỏ */
+  }
 }
 

@@ -7,7 +7,7 @@ const CommentBox = () => {
       {/* Bình luận mẫu */}
       <Card className="mb-2">
         <Card.Body>
-          <strong>Anna:</strong> This is a great post!
+          {/* <strong>Anna:</strong> This is a great post! */}
         </Card.Body>
       </Card>
      

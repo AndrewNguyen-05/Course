@@ -16,7 +16,7 @@ export const getAdsByCurrentLogin = async (token, page) => {
     return response.json();
 };
 
-export const registerAds = async(token, formData) => {
+export const registerAds = async (token, formData) => {
     const response = await fetch(`http://localhost:8080/api/v1/register-ads`, {
         method: 'POST',
         headers: {
@@ -25,7 +25,7 @@ export const registerAds = async(token, formData) => {
         body: formData
     })
 
-    if(! response.ok){
+    if (!response.ok) {
         const errorData = await response.json();
         toast.error(errorData.message)
         throw new Error('Fail to registerAds' || errorData.message)

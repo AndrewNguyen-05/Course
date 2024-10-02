@@ -94,7 +94,7 @@ export const HomePage = () => {
     }
 
     return (
-        <div>
+        <div className='main-content'>
             <EducationHighlights/>
             <div className="container-fluid bg-image" style={{ margin: '90px 0' }}>
                 <div className="container">

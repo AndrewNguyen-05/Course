@@ -1,7 +1,8 @@
 import React from 'react';
 
 export const TopBar = () => {
-    return(
+  return (
+    <div className="fixed-topbar">
       <div className="container-fluid bg-dark">
         <div className="row py-2 px-lg-5">
           <div className="col-lg-6 text-center text-lg-left mb-2 mb-lg-0">
@@ -32,4 +33,6 @@ export const TopBar = () => {
           </div>
         </div>
       </div>
-)};
+    </div>
+  )
+};
