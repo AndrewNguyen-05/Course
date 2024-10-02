@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Footer } from "../layouts/Footer";
 import { Search } from "../common/Search";
 import { SearchService } from '../../service/CourseService';
 import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
 import { Pagination } from '../common/Pagination';
+import { ViewCouses } from '../AppComponents/ViewCourses';
 
 export const Courses = () => {
     const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ export const Courses = () => {
 
     useEffect(() => {
         document.title = 'Courses'
-    })  
+    })
 
     // Get Course and Search Filter 
 
@@ -25,17 +25,17 @@ export const Courses = () => {
         setLoading(true);
         console.log(loading);
         try {
-            const result = await SearchService(currentPage, pageSize, filterQuery); 
-            if (result && result.data) {  
-                setCourses(result.data);  
+            const result = await SearchService(currentPage, pageSize, filterQuery);
+            if (result && result.data) {
+                setCourses(result.data);
                 setTotalPages(result.totalPages);
             } else {
-                setCourses([]); 
+                setCourses([]);
             }
         } catch (err) {
             console.log(err);
         } finally {
-            setLoading(false);  
+            setLoading(false);
         }
     };
 
@@ -57,8 +57,8 @@ export const Courses = () => {
 
     return (
         <div>
-            <TopBar/>
-            <Header/>
+            <TopBar />
+            <Header />
             <Search onSearch={setFilterQuery} />
             <div className="container-fluid">
                 <div className="container py-3">
@@ -69,38 +69,12 @@ export const Courses = () => {
                             </div>
                         </div>
                     </div>
-
-                    {/* Lưới hiển thị khóa học */}
-                    <div className="row">
-                        {courses.map((course) => (
-                            <div className="col-lg-4 col-md-6 pb-4" key={course.id}>
-                                <Link className="courses-list-item" to={`/course-detail/${course.id}`}>
-                                    <img className="img-fluid" src={course.thumbnail} alt="Course Thumbnail" />
-                                    <div className="courses-info">
-                                        <div className="courses-author">
-                                            <span><i className="fa fa-user mr-2"></i>{course.author}</span>
-                                        </div>
-                                        <div className="courses-title">{course.title}</div>
-                                        <div className="course-meta">
-                                            <span><i className="fa fa-star mr-2"></i>{course.averageRating} (250)</span>
-                                        </div>
-                                        <div className="course-price mt-2">
-                                            <strong>Price: </strong>
-                                            <span className="course-price-value">${course.points}</span>
-                                        </div>
-                                    </div>
-                                </Link>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Phân trang */}
+                    <ViewCouses courses={courses} />
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
                         changePage={changePage}
                     />
-
                 </div>
             </div>
             <Footer />

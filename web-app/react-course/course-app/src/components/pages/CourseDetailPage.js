@@ -64,9 +64,11 @@ export const CourseDetail = () => {
             }).catch(error => console.log(error));
     }, [id]);
 
-
     if (loading) return <div>Loading...</div>;
-
+    
+    if (!course) {
+        return <div>Course data is not available</div>;
+    }
 
     // Add a new comment
     const handleAddComment = async () => {
@@ -135,7 +137,6 @@ export const CourseDetail = () => {
         }
     };
 
-
     // Edit comment
     const handleEditComment = async (commentId) => {
         const updatedContent = (editContent[commentId] || "").trim();
@@ -173,7 +174,6 @@ export const CourseDetail = () => {
         }
     };
 
-
     // Delete comment
     const handleDeleteComment = async (commentId) => {
         try {
@@ -206,7 +206,6 @@ export const CourseDetail = () => {
         });
         setComments(updatedComments);
     };
-
 
     const handleEnrollNow = async () => {
         Swal.fire({
@@ -261,13 +260,7 @@ export const CourseDetail = () => {
         }
     };
 
-    if (!course) {
-        return <div>Course data is not available</div>;
-    }
-
     return (
-        <div>
-
             <div className="container-fluid py-5">
                 <div className="container py-5">
                     <div className="row">
@@ -280,7 +273,6 @@ export const CourseDetail = () => {
                             </div>
 
                             <CourseContent chapter={chapter} />
-
                             <CommentSection
                                 comments={comments}
                                 newComment={newComment}
@@ -304,8 +296,6 @@ export const CourseDetail = () => {
                         <CourseFeatur
                             course={course}
                             handleEnrollNow={handleEnrollNow} />
-
-                        
                     </div>
                 </div>
                 <ToastContainer
@@ -314,7 +304,5 @@ export const CourseDetail = () => {
                     className="custom-toast-container"
                 />
             </div>
-
-        </div>
     );
 };

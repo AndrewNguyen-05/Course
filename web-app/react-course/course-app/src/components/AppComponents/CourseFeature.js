@@ -1,5 +1,7 @@
 export const CourseFeatur = ({course, handleEnrollNow}) => {
-    if (!course) return null;
+    if (!course) {
+        return <div>Course data is not available</div>;
+    }
     return (
         <div className="col-lg-4 mt-5 mt-lg-0">
             <div className="course-features-container mb-5 py-4 px-4 shadow-lg">
