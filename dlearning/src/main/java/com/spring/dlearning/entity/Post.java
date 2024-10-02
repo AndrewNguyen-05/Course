@@ -36,11 +36,4 @@ public class Post extends AbstractEntity<Long>{
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Comment> comments;
 
-    @PrePersist
-    protected void onCreate() {
-        if (this.likeCount == null) {
-            this.likeCount = 0;
-        }
-    }
-
 }

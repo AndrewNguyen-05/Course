@@ -30,6 +30,7 @@ import { MainLayout } from './components/router/MainLayout';
 import { NotFound } from './components/error/NotFound';
 import { AdsPage } from './components/AppComponents/Ads';
 import { HeaderAndFooterRouter } from './components/router/HeaderAndFooterRouter';
+import { Community } from './components/pages/Community';
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path='/favorite' element={<FavoriteCourses />} />
           <Route path='/deposit' element={<DepositPage />} />
+          <Route path="/comunity" element={<Community />} />
 
           <Route path="/create-password" element={
             <PrivateRoute>

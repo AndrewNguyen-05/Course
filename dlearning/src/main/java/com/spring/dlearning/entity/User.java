@@ -63,7 +63,7 @@ public class User extends AbstractEntity<Long> {
     @Column(name = "address")
     String address;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "MEDIUMTEXT")
     String description;
 
     @Column(name = "zipCode")

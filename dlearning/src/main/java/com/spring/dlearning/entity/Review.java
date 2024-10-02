@@ -25,11 +25,11 @@ public class Review extends AbstractEntity<Long> {
     Integer rating;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_comment_id")
+    @JoinColumn(name = "parent_review_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    Review parentComment;
+    Review parentReview;
 
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "parentReview", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Review> replies;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {

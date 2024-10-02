@@ -37,17 +37,17 @@ public class ReviewService {
     CourseRepository courseRepository;
     BannedWordsService bannedWordsService;
 
-    public List<CommentResponse> getCommentByCourse(Long id) {
+    public List<CommentResponse> getReviewByCourse(Long id) {
         List<Review> allReviews = reviewRepository.findByCourseId(id);
         return allReviews.stream()
-                .filter(comment -> comment.getParentComment() == null)
+                .filter(comment -> comment.getParentReview() == null)
                 .map(commentMapper::toCommentResponse)
                 .toList();
     }
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    public CommentResponse addComment(CommentRequest commentRequest, Long courseId) {
+    public CommentResponse addReview(CommentRequest commentRequest, Long courseId) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
@@ -82,7 +82,7 @@ public class ReviewService {
                         : "")
                 .rating(commentRequest.getRating())
                 .course(course)
-                .parentComment(parentComment)
+                .parentReview(parentComment)
                 .build();
 
         reviewRepository.save(newComment);
@@ -92,7 +92,7 @@ public class ReviewService {
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    public DeleteCommentResponse deleteCommentById(Long id) {
+    public DeleteCommentResponse deleteReviewById(Long id) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
@@ -115,7 +115,7 @@ public class ReviewService {
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    public UpdateCommentResponse updateComment(Long id, UpdateCommentRequest request) {
+    public UpdateCommentResponse updateReview(Long id, UpdateCommentRequest request) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 

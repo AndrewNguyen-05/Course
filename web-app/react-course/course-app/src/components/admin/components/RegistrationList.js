@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import { SidebarAdmim } from "../layouts/SidebarAdmin";
 import { AdminHeader } from "../layouts/HeaderAdmin";
 import { Footer } from "../../layouts/Footer";
-import { Button, Table, Badge, Spinner, Container, Row, Col } from "react-bootstrap";
+import { Button, Table, Badge, Spinner, Container, Row, Col, Modal } from "react-bootstrap";
 import { FaCertificate, FaCheck, FaFacebook, FaFilePdf, FaTimes } from "react-icons/fa";
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 
 export const RegistrationList = () => {
     const [listRegister, setListRegister] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // Modal State for Confirming Approve/Reject
+    const [showModal, setShowModal] = useState(false);
+    const [selectedTeacher, setSelectedTeacher] = useState(null);
+    const [actionType, setActionType] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -42,6 +47,17 @@ export const RegistrationList = () => {
     const handleOpenInNewTab = (url) => {
         const fullUrl = `http://localhost:8080${url}`;
         window.open(fullUrl, '_blank', 'noopener,noreferrer');
+    };
+
+    const handleActionClick = (teacher, action) => {
+        setSelectedTeacher(teacher);
+        setActionType(action);
+        setShowModal(true);
+    };
+
+    const handleConfirmAction = () => {
+        console.log(`${actionType} for`, selectedTeacher);
+        setShowModal(false);
     };
 
     return (
@@ -105,10 +121,18 @@ export const RegistrationList = () => {
                                                             </Button>
                                                         </td>
                                                         <td>
-                                                            <Button variant="outline-success" className="btn-custom me-2 btn-lg rounded-pill shadow-sm">
+                                                            <Button
+                                                                variant="outline-success"
+                                                                className="btn-custom me-2 btn-lg rounded-pill shadow-sm"
+                                                                onClick={() => handleActionClick(teacher, 'approve')}
+                                                            >
                                                                 <FaCheck /> Approve
                                                             </Button>
-                                                            <Button variant="outline-danger" className="btn-custom btn-lg rounded-pill shadow-sm">
+                                                            <Button
+                                                                variant="outline-danger"
+                                                                className="btn-custom btn-lg rounded-pill shadow-sm"
+                                                                onClick={() => handleActionClick(teacher, 'reject')}
+                                                            >
                                                                 <FaTimes /> Reject
                                                             </Button>
                                                         </td>
@@ -128,6 +152,28 @@ export const RegistrationList = () => {
                 </div>
             </div>
             <Footer />
+
+            {/* Confirmation Modal */}
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm {actionType}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    {actionType === 'approve' ? (
+                        <p>Are you sure you want to approve this registration?</p>
+                    ) : (
+                        <p>Are you sure you want to reject this registration?</p>
+                    )}
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Cancel
+                    </Button>
+                    <Button variant={actionType === 'approve' ? 'success' : 'danger'} onClick={handleConfirmAction}>
+                        Confirm
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };

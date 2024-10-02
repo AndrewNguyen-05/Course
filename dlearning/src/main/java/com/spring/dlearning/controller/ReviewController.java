@@ -1,14 +1,13 @@
 package com.spring.dlearning.controller;
 
-import com.spring.dlearning.dto.request.ReviewRequest;
-import com.spring.dlearning.dto.request.UpdateReviewRequest;
+import com.spring.dlearning.dto.request.CommentRequest;
+import com.spring.dlearning.dto.request.UpdateCommentRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
-import com.spring.dlearning.dto.response.ReviewResponse;
+import com.spring.dlearning.dto.response.CommentResponse;
 import com.spring.dlearning.dto.response.DeleteCommentResponse;
-import com.spring.dlearning.dto.response.UpdateReviewResponse;
+import com.spring.dlearning.dto.response.UpdateCommentResponse;
 import com.spring.dlearning.service.ReviewService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,33 +25,33 @@ public class ReviewController {
 
     ReviewService reviewService;
 
-    @GetMapping("/courses-review/{courseId}")
-    ApiResponse<List<ReviewResponse>> getReviewByCourseId(@PathVariable @Min(1) Long courseId){
-        return ApiResponse.<List<ReviewResponse>>builder()
+    @GetMapping("/courses-comment/{courseId}")
+    ApiResponse<List<CommentResponse>> getReviewByCourseId(@PathVariable Long courseId){
+        return ApiResponse.<List<CommentResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .result(reviewService.getReviewByCourse(courseId))
                 .build();
     }
 
-    @PostMapping("/add-review")
-    ApiResponse<ReviewResponse> addReview(@RequestBody @Valid ReviewRequest reviewRequest, @RequestParam Long id){
-        return ApiResponse.<ReviewResponse>builder()
+    @PostMapping("/add-comment")
+    ApiResponse<CommentResponse> addReview(@RequestBody @Valid CommentRequest commentRequest, @RequestParam Long id){
+        return ApiResponse.<CommentResponse>builder()
                 .code(HttpStatus.CREATED.value())
-                .result(reviewService.addReview(reviewRequest, id))
+                .result(reviewService.addReview(commentRequest, id))
                 .build();
     }
 
-    @DeleteMapping("/delete-review/{id}")
-    ApiResponse<DeleteCommentResponse> deleteReview(@PathVariable @Min(1) Long id) {
+    @DeleteMapping("/delete-comment/{id}")
+    ApiResponse<DeleteCommentResponse> deleteReview(@PathVariable Long id) {
         return ApiResponse.<DeleteCommentResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(reviewService.deleteReviewById(id))
                 .build();
     }
 
-    @PutMapping("/update-review/{id}")
-    ApiResponse<UpdateReviewResponse> updateReview(@PathVariable @Min(1) Long id, @RequestBody UpdateReviewRequest request) {
-        return ApiResponse.<UpdateReviewResponse>builder()
+    @PutMapping("/update-comment/{id}")
+    ApiResponse<UpdateCommentResponse> updateReview(@PathVariable Long id, @RequestBody UpdateCommentRequest request) {
+        return ApiResponse.<UpdateCommentResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(reviewService.updateReview(id, request))
                 .build();

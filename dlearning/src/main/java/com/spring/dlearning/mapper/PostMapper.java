@@ -2,7 +2,6 @@ package com.spring.dlearning.mapper;
 
 import com.spring.dlearning.dto.request.PostCreationRequest;
 import com.spring.dlearning.dto.response.PostCreationResponse;
-import com.spring.dlearning.dto.response.PostResponse;
 import com.spring.dlearning.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,9 +14,4 @@ public interface PostMapper {
     @Mapping(target = "name", source = "user.name")
     @Mapping(target = "avatar", source = "user.avatar")
     PostCreationResponse toPostCreationResponse(Post post);
-
-    @Mapping(target = "name", source = "user.name")
-    @Mapping(target = "avatar", source = "user.avatar")
-    @Mapping(target = "likeCount", source = "likeCount")
-    PostResponse toPostResponse(Post post);
 }

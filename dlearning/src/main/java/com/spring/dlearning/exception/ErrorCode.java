@@ -60,6 +60,7 @@ public enum ErrorCode {
     IMAGE_INVALID(400, "Image cannot be null", HttpStatus.BAD_REQUEST),
     LINK_ADS_INVALID(400, "Link advertisement cannot be null", HttpStatus.BAD_REQUEST),
     ADVERTISEMENT_ID_INVALID(404, "Advertisement not found", HttpStatus.NOT_FOUND),
+    CONTENT_POST_INVALID(400, "Content post cannot be null", HttpStatus.BAD_REQUEST),
 
 
     ;

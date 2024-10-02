@@ -12107,3 +12107,76 @@ h6,
   margin-left: 8px;
   font-size: 20px;
 }
+
+/* Định dạng banner */
+.banner-community {
+  background: linear-gradient(135deg, #4a90e2, #50c3e1);
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 4px solid #fff;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.banner-title {
+  font-size: 3.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.banner-subtitle {
+  font-size: 1.3rem;
+  font-weight: 300;
+}
+
+.banner-button {
+  font-size: 1.2rem;
+}
+
+/* Modal CSS */
+.modal-content {
+  border-radius: 15px;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.form-control-custom {
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 1rem;
+}
+
+/* Nút và hiệu ứng hover */
+.btn-port {
+  transition: background 0.3s ease;
+}
+
+.btn-port:hover {
+  background: #007bff;
+  color: #fff;
+}
+.icon-toolbar {
+  background: #f0f2f5;
+  padding: 10px 15px;
+  border-radius: 10px;
+}
+
+.icon-label {
+  cursor: pointer;
+}
+
+.icon {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.icon:hover {
+  color: #007bff;
+}
+
