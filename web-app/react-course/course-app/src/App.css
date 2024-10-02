@@ -12206,7 +12206,7 @@ h6,
 .modal-show {
   left: 50%; /* Đặt modal căn giữa */
   top: 50%;
-  transform: translate(-42.5%, -50%); /* Đảm bảo căn giữa modal */
+  transform: translate(-40%, -30%); /* Đảm bảo căn giữa modal */
   position: absolute;
 }
 

@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Form, Container, Row, Col, Modal, Spinner } from 'react-bootstrap';
-import { FaImage, FaUserFriends, FaSmile, FaMapMarkerAlt, FaRegGrinAlt, FaHome, FaVideo, FaSave } from 'react-icons/fa';
-import { MdExplore, MdGif, MdLiveTv, MdVideoLibrary } from 'react-icons/md';
+import { FaHome, FaImage, FaMapMarkerAlt, FaRegGrinAlt, FaSave, FaSmile, FaUserFriends, FaVideo } from 'react-icons/fa';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import PostCard from '../AppComponents/PostCard';
 import { creationPost, getAllPosts } from '../../service/PostService';
 import { toast, ToastContainer } from 'react-toastify';
-import { TopBar } from '../layouts/TopBar';
-import { Header } from '../layouts/Header';
+import { MdExplore, MdGif, MdLiveTv, MdVideoLibrary } from 'react-icons/md';
 
 export const Community = () => {
   const token = localStorage.getItem('token');
@@ -17,61 +16,34 @@ export const Community = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-
   const [filterQuery, setFilterQuery] = useState('');
 
-  const observer = useRef();
-
-  const firstRender = useRef(true); // Dùng để kiểm tra xem useEffect có chạy lần đầu không
-
-  // Hàm lấy bài viết từ API
-  useEffect(() => {
-    const fetchPosts = async () => {
-      console.log("Fetching page:", currentPage);
-      setLoading(true);
-      try {
-        const data = await getAllPosts(currentPage, filterQuery);
-        if (data && data.result && Array.isArray(data.result.data)) {
-          const newPosts = data.result.data.filter(
-            (newPost) => !posts.some((post) => post.id === newPost.id)
-          );
-          setPosts((prevPosts) => [...prevPosts, ...newPosts]); // Gộp dữ liệu mới
-          setTotalPages(data.result.totalPages || 1);
-          setHasMore(currentPage < data.result.totalPages); // Cập nhật hasMore
-        } else {
-          setHasMore(false);
-        }
-      } catch (error) {
-        console.log(error);
+  const fetchPosts = async (pageNumber) => {
+    setLoading(true);
+    try {
+      const data = await getAllPosts(pageNumber, filterQuery);
+      if (data && data.result && Array.isArray(data.result.data)) {
+        const newPosts = data.result.data;
+        console.log("Page",currentPage)
+        setPosts((prevPosts) => {
+          // Kiểm tra xem dữ liệu mới có trùng lặp không
+          const mergedPosts = [...prevPosts, ...newPosts.filter(post => !prevPosts.some(p => p.id === post.id))];
+          return mergedPosts;
+        });
+        setTotalPages(data.result.totalPages || 1);
+        setHasMore(pageNumber < data.result.totalPages); // Cập nhật hasMore
+      } else {
+        setHasMore(false);
       }
-      setLoading(false);
-    };
-
-    // Chỉ chạy fetchPosts nếu không phải lần render đầu tiên
-    if (!firstRender.current) {
-      fetchPosts();
-    } else {
-      firstRender.current = false; // Lần đầu render, không gọi API
+    } catch (error) {
+      console.error(error);
     }
-  }, [currentPage]); // Chỉ phụ thuộc vào currentPage
+    setLoading(false);
+  };
 
-  const lastPostRef = useCallback(
-    (node) => {
-      if (loading || !hasMore) return; // Nếu đang tải hoặc không còn bài viết mới
-      if (observer.current) observer.current.disconnect();
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setCurrentPage((prevPage) => prevPage + 1);
-        }
-      });
-      if (node) observer.current.observe(node); // Gán observer cho phần tử cuối cùng
-    },
-    [loading, hasMore]
-  );
-
-  const [newPost, setNewPost] = useState(
-    { content: '', image: null }
-  );
+  useEffect(() => {
+    fetchPosts(currentPage);
+  }, [currentPage, posts]);
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
@@ -88,12 +60,15 @@ export const Community = () => {
       await creationPost(token, formData);
       toast.success('Create Post Successfully');
       setShowModal(false);
+
       setCurrentPage(1);
-      setPosts([]);
+      setPosts([]); // Xóa dữ liệu hiện tại để load lại
     } catch (error) {
       console.log(error);
     }
   };
+
+  const [newPost, setNewPost] = useState({ content: '', image: null });
 
   const handleContentChange = (e) => setNewPost({ ...newPost, content: e.target.value });
 
@@ -107,20 +82,10 @@ export const Community = () => {
     }
   };
 
-  const handleLikePost = (postId) => {
-    const updatedPosts = posts.map((post) => {
-      if (post.id === postId) {
-        return { ...post, likes: post.likes + 1 };
-      }
-      return post;
-    });
-    setPosts(updatedPosts);
-  };
-
   return (
     <div className="community-container d-flex">
-      {/* Sidebar Menu */}
-      <div className="sidebar bg-dark text-light p-4">
+
+<div className="sidebar bg-dark text-light p-4">
         <h4 className="text-white mb-4">Video</h4>
         <Form.Control type="text" placeholder="Search Post" className="mb-3" />
         <div className="sidebar-menu">
@@ -203,7 +168,6 @@ export const Community = () => {
               {/* Hiển thị ảnh xem trước nếu đã chọn */}
               {selectedImage && (
                 <div className="mt-3">
-                  <p>Preview Image:</p>
                   <img
                     src={selectedImage}
                     alt="Selected Preview"
@@ -219,14 +183,23 @@ export const Community = () => {
           </Modal.Body>
         </Modal>
 
-        {/* Hiển thị danh sách bài viết */}
+        {/* Danh sách bài viết với InfiniteScroll */}
         <Container className="view-post">
           <Row className="justify-content-md-center">
             <Col md={8}>
-              {posts.length === 0 ? (
-                <p className="text-center text-secondary">No posts yet. Be the first to post!</p>
-              ) : (
-                posts.map((post, index) => (
+              <InfiniteScroll
+                dataLength={posts.length}
+                next={() => setCurrentPage((prevPage) => prevPage + 1)}
+                hasMore={hasMore}
+                loader={
+                  <div className="text-center my-3">
+                    <Spinner animation="border" />
+                    <p>Loading more posts...</p>
+                  </div>
+                }
+                endMessage={<p className="text-center text-secondary">No more posts to display!</p>}
+              >
+                {posts.map((post) => (
                   <PostCard
                     key={post.id}
                     author={post.name}
@@ -235,17 +208,9 @@ export const Community = () => {
                     image={post.image}
                     likes={post.likeCount}
                     createdAt={post.createdAt}
-                    onLike={() => { }}
-                    ref={index === posts.length - 1 ? lastPostRef : null}
                   />
-                ))
-              )}
-              {loading && (
-                <div className="text-center my-3">
-                  <Spinner animation="border" />
-                  <p>Loading more posts...</p>
-                </div>
-              )}
+                ))}
+              </InfiniteScroll>
             </Col>
           </Row>
         </Container>
@@ -261,3 +226,5 @@ const SidebarMenuItem = ({ title, icon }) => (
     <span>{title}</span>
   </div>
 );
+
+export default Community;
