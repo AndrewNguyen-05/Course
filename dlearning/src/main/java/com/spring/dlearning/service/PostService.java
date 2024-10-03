@@ -1,6 +1,7 @@
 package com.spring.dlearning.service;
 
 import com.spring.dlearning.dto.request.PostCreationRequest;
+import com.spring.dlearning.dto.request.UpdateLikeCountRequest;
 import com.spring.dlearning.dto.response.PageResponse;
 import com.spring.dlearning.dto.response.PostCreationResponse;
 import com.spring.dlearning.dto.response.PostResponse;
@@ -57,6 +58,7 @@ public class PostService {
         return postMapper.toPostCreationResponse(post);
     }
 
+    @PreAuthorize("isAuthenticated()")
     public PageResponse<PostResponse> getAllPost (Specification<Post> spec, int page, int size){
 
         Sort sort = Sort.by(Sort.Direction.DESC,"createdAt");
@@ -74,6 +76,16 @@ public class PostService {
                 .totalPages(posts.getTotalPages())
                 .data(postResponses)
                 .build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public void updateLikeCount(UpdateLikeCountRequest request) {
+        Post post = postRepository.findById(request.getPostId())
+                .orElseThrow(() -> new AppException(ErrorCode.ID_POST_INVALID));
+
+        int likeChange = request.getIsLike() ? 1 : -1;
+        post.setLikeCount(post.getLikeCount() + likeChange);
+        postRepository.save(post);
     }
 
 }

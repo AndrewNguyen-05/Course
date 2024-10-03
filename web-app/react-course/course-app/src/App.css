@@ -12234,3 +12234,6 @@ h6,
   }
 }
 
+.sidebar-menu {
+  cursor: pointer;
+}

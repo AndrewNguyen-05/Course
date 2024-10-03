@@ -23,7 +23,7 @@ export const creationPost = async (token, formData) => {
   }
 };
 
-export const getAllPosts = async (currentPage, filterQuery) => {
+export const getAllPosts = async (token, currentPage, filterQuery) => {
 
   try {
     let urlApi = `http://localhost:8080/api/v1/get-all-post?page=${currentPage}`;
@@ -33,7 +33,12 @@ export const getAllPosts = async (currentPage, filterQuery) => {
       console.log("API URL:", urlApi);
     }
 
-    const response = await fetch(urlApi, { method: 'GET' });
+    const response = await fetch(urlApi, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
 
     const result = await response.json();
     return result;

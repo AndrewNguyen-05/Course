@@ -42,7 +42,6 @@ public class SecurityConfiguration {
             "/upload/**",
             "/api/v1/courses-comment/{courseId}",
             "/api/v1/payment/vn-pay-callback",
-            "/api/v1/get-all-post/**"
     };
 
     @Bean

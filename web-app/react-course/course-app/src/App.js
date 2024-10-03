@@ -51,7 +51,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path='/favorite' element={<FavoriteCourses />} />
           <Route path='/deposit' element={<DepositPage />} />
-          <Route path="/comunity" element={<Community />} />
+          <Route path="/comunity" element={
+           <PrivateRoute>
+             <Community />
+           </PrivateRoute> }/>
 
           <Route path="/create-password" element={
             <PrivateRoute>

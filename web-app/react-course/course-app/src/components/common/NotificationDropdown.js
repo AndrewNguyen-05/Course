@@ -2,9 +2,9 @@ import React from 'react';
 import moment from 'moment';
 
 export const NotificationDropdown = ({ notifications = [], unreadCount = 0, markAsRead }) => {
-
+    // Hàm định dạng thời gian theo kiểu "time ago"
     const timeAgo = (createdAt) => {
-        return moment(createdAt).fromNow(); 
+        return moment(createdAt).fromNow();
     };
 
     return (

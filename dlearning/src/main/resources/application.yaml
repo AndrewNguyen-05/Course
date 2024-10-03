@@ -23,3 +23,12 @@ upload-file:
   base-uri: file:///E:/Course/upload/
 
 
+---
+spring:
+  messaging:
+    stomp:
+      brokerRelay:
+        enabled: false
+
+
+

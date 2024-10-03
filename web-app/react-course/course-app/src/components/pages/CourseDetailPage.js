@@ -23,7 +23,6 @@ export const CourseDetail = () => {
     const [newRating, setNewRating] = useState(0);
     const [chapter, setChapter] = useState(null);
 
-
     useEffect(() => {
         document.title = 'Courses Detail'
     })

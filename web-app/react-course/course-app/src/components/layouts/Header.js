@@ -1,31 +1,54 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { UseAuth } from '../authentication/UseAuth.js';
-import { HandleLogout } from '../authentication/HandleLogout.js';
-import { NotificationDropdown } from '../common/NotificationDropdown.js';
-import { ProfileDropdown } from '../common/ProfileDropdown.js';
-import { Favorites } from '../common/Favorites.js';
-import { NavigationMenu } from '../common/NavigationMenu.js';
-import { getAvatar } from '../../service/ProfileService.js';
-import { introspect } from '../../service/AuthenticationService.js';
-import { getPointsByCurrentLogin } from '../../service/UserService.js';
-import { markAsReadNotification, notificationCurrentLogin } from '../../service/NotificationService.js';
-import { Advertisement } from '../common/Advertisement.js';
-import { Button, Form, FormControl } from 'react-bootstrap';
+import React, { useEffect, useRef, useState } from "react";
+import { NavLink, useLocation } from "react-router-dom";
+import { UseAuth } from "../authentication/UseAuth.js";
+import { HandleLogout } from "../authentication/HandleLogout.js";
+import { NotificationDropdown } from "../common/NotificationDropdown.js";
+import { ProfileDropdown } from "../common/ProfileDropdown.js";
+import { Favorites } from "../common/Favorites.js";
+import { NavigationMenu } from "../common/NavigationMenu.js";
+import { getAvatar } from "../../service/ProfileService.js";
+import { introspect } from "../../service/AuthenticationService.js";
+import { getPointsByCurrentLogin } from "../../service/UserService.js";
+import { markAsReadNotification, notificationCurrentLogin } from "../../service/NotificationService.js";
+import { useWebsocket } from "../router/useWebSocket.js";
+import { Advertisement } from "../common/Advertisement.js";
 
 export const Header = () => {
+    const token = localStorage.getItem("token");
     const [loggedOut, setLoggedOut] = useState(false);
     const { isTokenValid } = UseAuth({ loggedOut });
     const { handleLogout } = HandleLogout({ setLoggedOut });
     const location = useLocation();
     const underlineRef = useRef(null);
-    const [avatar, setAvatar] = useState('');
+    const [avatar, setAvatar] = useState("");
     const [loading, setLoading] = useState(true);
     const [notifications, setNotifications] = useState([]); // Danh sách thông báo
     const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
     const [points, setPoints] = useState(0);
     const [role, setRole] = useState(null);
-    const token = localStorage.getItem('token');
+
+    const wsClient = useWebsocket();
+
+    wsClient.onConnect = () => {
+        console.log("Connected to WebSocket");
+        wsClient.subscribe("/user/queue/notifications", (message) => {
+            const notification = JSON.parse(message.body);
+            setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+            setUnreadCount((prevCount) => prevCount + 1);
+        });
+    };
+
+    useEffect(() => {
+        if (!token || !isTokenValid) return;
+
+        notificationCurrentLogin(token)
+            .then((data) => {
+                setNotifications(data.result || []);
+                setUnreadCount(data.result.filter((n) => !n.isRead).length || []);
+            })
+            .catch((error) => console.log(error));
+    }, [token, isTokenValid]);
+
 
     useEffect(() => {
         const activeLink = document.querySelector(`.nav-item.active`);
@@ -43,17 +66,16 @@ export const Header = () => {
             return;
         }
         introspect(token)
-            .then(data => {
+            .then((data) => {
                 if (data.result.valid) {
                     setRole(data.result.scope);
                 } else {
                     console.error("Token không hợp lệ");
                 }
             })
-            .catch(error => console.log(error))
+            .catch((error) => console.log(error))
             .finally(() => setLoading(false));
     }, [token]);
-
 
     useEffect(() => {
         if (!token) {
@@ -61,48 +83,33 @@ export const Header = () => {
             return;
         }
         getAvatar(token)
-            .then(data => setAvatar(data.result))
-            .catch(error => console.log(error));
+            .then((data) => setAvatar(data.result))
+            .catch((error) => console.log(error));
     }, [token]);
-
 
     useEffect(() => {
         const fetchPoints = async () => {
             if (!token) return;
             try {
                 const data = await getPointsByCurrentLogin(token);
-                setPoints(data.result.points)
+                setPoints(data.result.points);
             } catch (error) {
-                console.log(error)
+                console.log(error);
             }
         };
         fetchPoints();
-    }, [token])
-
-
-    useEffect(() => {
-        if (!token || !isTokenValid) return;
-
-        notificationCurrentLogin(token)
-            .then(data => {
-                setNotifications(data.result || []);
-                setUnreadCount(data.result.filter(n => !n.isRead).length || []);
-            })
-            .catch(error => console.log(error));
-    }, [token, isTokenValid]);
+    }, [token]);
 
 
     const markAsRead = async (notificationId) => {
         try {
             await markAsReadNotification(token, notificationId);
-            setUnreadCount(prevCount => prevCount - 1);
-            setNotifications(prevNotifications =>
-                prevNotifications.map(n =>
-                    n.id === notificationId ? { ...n, isRead: true } : n
-                )
+            setUnreadCount((prevCount) => prevCount - 1);
+            setNotifications((prevNotifications) =>
+                prevNotifications.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))
             );
         } catch (error) {
-            console.error('Lỗi khi đánh dấu thông báo là đã đọc:', error);
+            console.error("Lỗi khi đánh dấu thông báo là đã đọc:", error);
         }
     };
 
@@ -116,7 +123,12 @@ export const Header = () => {
                         </h1>
                     </NavLink>
 
-                    <button type="button" className="navbar-toggler rounded" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                    <button
+                        type="button"
+                        className="navbar-toggler rounded"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#navbarCollapse"
+                    >
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse justify-content-between px-lg-3" id="navbarCollapse">
@@ -130,20 +142,11 @@ export const Header = () => {
                                 </span>
                             </div>
 
-                            <NotificationDropdown
-                                notifications={notifications}
-                                unreadCount={unreadCount}
-                                markAsRead={markAsRead}
-                            />
+                            <NotificationDropdown notifications={notifications} unreadCount={unreadCount} markAsRead={markAsRead} />
                             <Advertisement />
                             <Favorites />
 
-                            <ProfileDropdown
-                                avatar={avatar}
-                                isTokenValid={isTokenValid}
-                                role={role}
-                                handleLogout={handleLogout}
-                            />
+                            <ProfileDropdown avatar={avatar} isTokenValid={isTokenValid} role={role} handleLogout={handleLogout} />
                         </div>
                     </div>
                 </nav>

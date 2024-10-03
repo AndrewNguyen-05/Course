@@ -21,7 +21,7 @@ export const Community = () => {
   const fetchPosts = async (pageNumber) => {
     setLoading(true);
     try {
-      const data = await getAllPosts(pageNumber, filterQuery);
+      const data = await getAllPosts(token,pageNumber, filterQuery);
       if (data && data.result && Array.isArray(data.result.data)) {
         const newPosts = data.result.data;
         console.log("Page",currentPage)
@@ -43,7 +43,7 @@ export const Community = () => {
 
   useEffect(() => {
     fetchPosts(currentPage);
-  }, [currentPage, posts]);
+  }, [currentPage]);
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
@@ -62,7 +62,7 @@ export const Community = () => {
       setShowModal(false);
 
       setCurrentPage(1);
-      setPosts([]); // Xóa dữ liệu hiện tại để load lại
+      setPosts([]);
     } catch (error) {
       console.log(error);
     }
@@ -211,6 +211,7 @@ export const Community = () => {
                   />
                 ))}
               </InfiniteScroll>
+
             </Col>
           </Row>
         </Container>
@@ -221,7 +222,7 @@ export const Community = () => {
 };
 
 const SidebarMenuItem = ({ title, icon }) => (
-  <div className="sidebar-item d-flex align-items-center mb-3 p-2">
+  <div className="sidebar-item d-flex align-items-center mb-3 p-2 .sidebar-menu">
     <span className="me-3">{icon}</span>
     <span>{title}</span>
   </div>

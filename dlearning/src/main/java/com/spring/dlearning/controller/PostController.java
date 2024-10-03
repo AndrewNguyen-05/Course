@@ -1,6 +1,7 @@
 package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.request.PostCreationRequest;
+import com.spring.dlearning.dto.request.UpdateLikeCountRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.PageResponse;
 import com.spring.dlearning.dto.response.PostCreationResponse;
@@ -48,4 +49,14 @@ public class PostController {
                 .result(postService.getAllPost(spec, page, size))
                 .build();
     }
+
+    @PutMapping("/update-like-count")
+    ApiResponse<Void> updateLikeCount(@RequestBody UpdateLikeCountRequest request) {
+        postService.updateLikeCount(request);
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.OK.value())
+                .message("Update like successfully")
+                .build();
+    }
+
 }
