@@ -5,10 +5,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import { buyCourse, getChapterById, getCommentByCourseId, getCourseById } from "../../service/CourseService";
-import { addComment, addReplyComment, deleteComment, editComment } from "../../service/ReviewService";
 import CourseContent from "../AppComponents/CourseContent";
 import { CommentSection } from "../AppComponents/CommentSection";
 import { CourseFeatur } from "../AppComponents/CourseFeature";
+import { addReplyReview, addReview, deleteReview, editReview } from "../../service/ReviewService";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
@@ -70,7 +70,7 @@ export const CourseDetail = () => {
     }
 
     // Add a new comment
-    const handleAddComment = async () => {
+    const handleAddReview = async () => {
         if (!newComment.trim() && newRating === 0) {
             toast.error('Please enter a comment or select a rating');
             return;
@@ -84,7 +84,7 @@ export const CourseDetail = () => {
         };
 
         try {
-            const result = await addComment(commentData, token, id);
+            const result = await addReview(commentData, token, id);
             setComments([{
                 ...result, // sao chép toàn bộ thuộc tính trong result:  bình luận mới được trả về từ server.
                 replying: false,
@@ -115,7 +115,7 @@ export const CourseDetail = () => {
         };
 
         try {
-            const result = await addReplyComment(replyData, token, id);
+            const result = await addReplyReview(replyData, token, id);
 
             if (result) {
                 // Cập nhật lại danh sách comments với reply mới
@@ -137,7 +137,7 @@ export const CourseDetail = () => {
     };
 
     // Edit comment
-    const handleEditComment = async (commentId) => {
+    const handleEditReview = async (commentId) => {
         const updatedContent = (editContent[commentId] || "").trim();
 
         if (!updatedContent) {
@@ -145,7 +145,7 @@ export const CourseDetail = () => {
             return;
         }
         try {
-            const result = await editComment(commentId, updatedContent, token);
+            const result = await editReview(commentId, updatedContent, token);
 
             if (result) {
                 setComments((prevComments) => {
@@ -174,20 +174,20 @@ export const CourseDetail = () => {
     };
 
     // Delete comment
-    const handleDeleteComment = async (commentId) => {
+    const handleDeleteReview = async (reviewId) => {
         try {
-            const result = await deleteComment(commentId, token);
+            const result = await deleteReview(reviewId, token);
             if (result) {
                 // Cập nhật lại danh sách comments sau khi xóa thành công
                 setComments((prevComments) => {
-                    const updatedComments = prevComments
-                        .filter(comment => comment.id !== commentId)  // Loại bỏ bình luận cha đã bị xoá
+                    const updatedReviews = prevComments
+                        .filter(comment => comment.id !== reviewId)  // Loại bỏ bình luận cha đã bị xoá
                         .map(comment => ({
                             ...comment,
-                            replies: comment.replies.filter(reply => reply.id !== commentId)  // Loại bỏ cả các replies nếu có
+                            replies: comment.replies.filter(reply => reply.id !== reviewId)  // Loại bỏ cả các replies nếu có
                         }));
 
-                    return updatedComments;
+                    return updatedReviews;
                 });
             }
         } catch (error) {
@@ -196,14 +196,14 @@ export const CourseDetail = () => {
     };
 
     // Toggle reply input
-    const handleReplyToggle = (commentId) => {
-        const updatedComments = comments.map(comment => {
-            if (comment.id === commentId) {
+    const handleReplyToggle = (reviewId) => {
+        const updatedReviews = comments.map(comment => {
+            if (comment.id === reviewId) {
                 return { ...comment, replying: !comment.replying };
             }
             return comment;
         });
-        setComments(updatedComments);
+        setComments(updatedReviews);
     };
 
     const handleEnrollNow = async () => {
@@ -285,11 +285,11 @@ export const CourseDetail = () => {
                                 editContent={editContent}
                                 setEditContent={setEditContent}
                                 renderStars={renderStars}
-                                handleAddComment={handleAddComment}
+                                handleAddReview={handleAddReview}
                                 handleReplyToggle={handleReplyToggle}
                                 handleAddReply={handleAddReply}
-                                handleEditComment={handleEditComment}
-                                handleDeleteComment={handleDeleteComment}
+                                handleEditReview={handleEditReview}
+                                handleDeleteReview={handleDeleteReview}
                                 handleRatingChange={handleRatingChange} /> </div>
 
                         <CourseFeatur

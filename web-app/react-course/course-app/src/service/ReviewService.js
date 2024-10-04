@@ -1,8 +1,8 @@
 import { toast } from 'react-toastify';
 
-export const addComment = async (commentData, token, courseId) => {
+export const addReview = async (commentData, token, courseId) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/add-comment?id=${courseId}`, {
+        const response = await fetch(`http://localhost:8080/api/v1/add-review?id=${courseId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,9 +27,9 @@ export const addComment = async (commentData, token, courseId) => {
     }
 };
 
-export const addReplyComment = async (replyData, token, courseId) => {
+export const addReplyReview = async (replyData, token, courseId) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/add-comment?id=${courseId}`, {
+        const response = await fetch(`http://localhost:8080/api/v1/add-review?id=${courseId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,9 +53,9 @@ export const addReplyComment = async (replyData, token, courseId) => {
     }
 };
 
-export const editComment = async (commentId, updatedContent, token) => {
+export const editReview = async (commentId, updatedContent, token) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/update-comment/${commentId}`, {
+        const response = await fetch(`http://localhost:8080/api/v1/update-review/${commentId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -79,9 +79,9 @@ export const editComment = async (commentId, updatedContent, token) => {
     }
 };
 
-export const deleteComment = async (commentId, token) => {
+export const deleteReview= async (commentId, token) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/delete-comment/${commentId}`, {
+        const response = await fetch(`http://localhost:8080/api/v1/delete-review/${commentId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

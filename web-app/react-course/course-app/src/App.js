@@ -31,6 +31,7 @@ import { NotFound } from './components/error/NotFound';
 import { AdsPage } from './components/AppComponents/Ads';
 import { HeaderAndFooterRouter } from './components/router/HeaderAndFooterRouter';
 import { Community } from './components/pages/Community';
+import ProfilePage from './components/pages/MyAccount';
 
 function App() {
   return (
@@ -52,9 +53,9 @@ function App() {
           <Route path='/favorite' element={<FavoriteCourses />} />
           <Route path='/deposit' element={<DepositPage />} />
           <Route path="/comunity" element={
-           <PrivateRoute>
-             <Community />
-           </PrivateRoute> }/>
+            <PrivateRoute>
+              <Community />
+            </PrivateRoute>} />
 
           <Route path="/create-password" element={
             <PrivateRoute>
@@ -108,6 +109,7 @@ function App() {
           </Authorization>
         } />
 
+        <Route path="/my-account" element={<ProfilePage />} />
         <Route path='/courses' element={<Courses />} />
         <Route path='/lesson-detail/:id' element={<LearningPage />} />
         <Route path="/authenticate" element={<ProcessLoginOAuth2 />} />

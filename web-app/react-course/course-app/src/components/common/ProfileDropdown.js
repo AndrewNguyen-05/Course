@@ -16,7 +16,8 @@ export const ProfileDropdown = ({ avatar, isTokenValid, role, handleLogout }) =>
                 {isTokenValid === null ? (
                     <li></li>
                 ) : isTokenValid ? (
-                    <>
+                    <>  
+                        <li><Link to="/my-account" className="dropdown-item d-flex align-items-center"><i class="fa-solid fa-circle-user me-2"></i>My Account</Link></li>
                         <li><Link to="/profile" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-address-card me-2"></i>Profile</Link></li>
                         <li><Link to="/my-courses" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-book me-2"></i>My Courses</Link></li>
                       

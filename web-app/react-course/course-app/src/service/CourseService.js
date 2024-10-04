@@ -59,7 +59,7 @@ export const getChapterById = async (id) => {
 }
 
 export const getCommentByCourseId = async (id) => {
-    const response = await fetch(`http://localhost:8080/api/v1/courses-comment/${id}`, {
+    const response = await fetch(`http://localhost:8080/api/v1/courses-review/${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'

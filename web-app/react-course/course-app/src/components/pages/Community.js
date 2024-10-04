@@ -6,6 +6,7 @@ import PostCard from '../AppComponents/PostCard';
 import { creationPost, getAllPosts } from '../../service/PostService';
 import { toast, ToastContainer } from 'react-toastify';
 import { MdExplore, MdGif, MdLiveTv, MdVideoLibrary } from 'react-icons/md';
+import { getAvatar } from '../../service/ProfileService';
 
 export const Community = () => {
   const token = localStorage.getItem('token');
@@ -17,16 +18,28 @@ export const Community = () => {
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [filterQuery, setFilterQuery] = useState('');
+  const [showCommentBox, setShowCommentBox] = useState({});
+  const [avatar, setAvatar] = useState('https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg');
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  useEffect(() => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+    getAvatar(token)
+      .then((data) => setAvatar(data.result))
+      .catch((error) => console.log(error));
+  }, [token]);
 
   const fetchPosts = async (pageNumber) => {
     setLoading(true);
     try {
-      const data = await getAllPosts(token,pageNumber, filterQuery);
+      const data = await getAllPosts(token, pageNumber, filterQuery);
       if (data && data.result && Array.isArray(data.result.data)) {
         const newPosts = data.result.data;
-        console.log("Page",currentPage)
+        console.log("Page", currentPage)
         setPosts((prevPosts) => {
-          // Kiểm tra xem dữ liệu mới có trùng lặp không
           const mergedPosts = [...prevPosts, ...newPosts.filter(post => !prevPosts.some(p => p.id === post.id))];
           return mergedPosts;
         });
@@ -84,8 +97,7 @@ export const Community = () => {
 
   return (
     <div className="community-container d-flex">
-
-<div className="sidebar bg-dark text-light p-4">
+      <div className="sidebar bg-dark text-light p-4">
         <h4 className="text-white mb-4">Video</h4>
         <Form.Control type="text" placeholder="Search Post" className="mb-3" />
         <div className="sidebar-menu">
@@ -102,7 +114,7 @@ export const Community = () => {
       <div className="main-content">
         <div className="create-post-container">
           <div className="create-post-header d-flex align-items-center">
-            <img src="https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg" alt="User Avatar" className="avatar-img me-3" />
+            <img src={avatar} alt="User Avatar" className="avatar-img me-3" />
             <Form.Control
               type="text"
               placeholder="Đức ơi, bạn đang nghĩ gì thế?"
@@ -184,7 +196,7 @@ export const Community = () => {
         </Modal>
 
         {/* Danh sách bài viết với InfiniteScroll */}
-        <Container className="view-post">
+        <Container>
           <Row className="justify-content-md-center">
             <Col md={8}>
               <InfiniteScroll
@@ -194,24 +206,26 @@ export const Community = () => {
                 loader={
                   <div className="text-center my-3">
                     <Spinner animation="border" />
-                    <p>Loading more posts...</p>
+                    <p>Đang tải thêm bài viết...</p>
                   </div>
                 }
-                endMessage={<p className="text-center text-secondary">No more posts to display!</p>}
+                endMessage={<p className="text-center text-secondary">Không còn bài viết nào để hiển thị!</p>}
               >
                 {posts.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    author={post.name}
-                    avatar={post.avatar}
-                    content={post.content}
-                    image={post.image}
-                    likes={post.likeCount}
-                    createdAt={post.createdAt}
-                  />
+                  <div key={post.id} className="post-container mb-3 p-3 border rounded">
+                    <PostCard
+                      id={post.id}
+                      author={post.name}
+                      content={post.content}
+                      avatar={post.avatar}
+                      image={post.image}
+                      likes={post.likes}
+                      comments={post.comments}
+                      createdAt={post.createdAt}
+                    />
+                  </div>
                 ))}
               </InfiniteScroll>
-
             </Col>
           </Row>
         </Container>

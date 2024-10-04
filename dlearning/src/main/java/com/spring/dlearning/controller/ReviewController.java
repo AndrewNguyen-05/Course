@@ -1,9 +1,9 @@
 package com.spring.dlearning.controller;
 
-import com.spring.dlearning.dto.request.CommentRequest;
+import com.spring.dlearning.dto.request.ReviewRequest;
 import com.spring.dlearning.dto.request.UpdateCommentRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
-import com.spring.dlearning.dto.response.CommentResponse;
+import com.spring.dlearning.dto.response.ReviewResponse;
 import com.spring.dlearning.dto.response.DeleteCommentResponse;
 import com.spring.dlearning.dto.response.UpdateCommentResponse;
 import com.spring.dlearning.service.ReviewService;
@@ -25,23 +25,23 @@ public class ReviewController {
 
     ReviewService reviewService;
 
-    @GetMapping("/courses-comment/{courseId}")
-    ApiResponse<List<CommentResponse>> getReviewByCourseId(@PathVariable Long courseId){
-        return ApiResponse.<List<CommentResponse>>builder()
+    @GetMapping("/courses-review/{courseId}")
+    ApiResponse<List<ReviewResponse>> getReviewByCourseId(@PathVariable Long courseId){
+        return ApiResponse.<List<ReviewResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .result(reviewService.getReviewByCourse(courseId))
                 .build();
     }
 
-    @PostMapping("/add-comment")
-    ApiResponse<CommentResponse> addReview(@RequestBody @Valid CommentRequest commentRequest, @RequestParam Long id){
-        return ApiResponse.<CommentResponse>builder()
+    @PostMapping("/add-review")
+    ApiResponse<ReviewResponse> addReview(@RequestBody @Valid ReviewRequest reviewRequest, @RequestParam Long id){
+        return ApiResponse.<ReviewResponse>builder()
                 .code(HttpStatus.CREATED.value())
-                .result(reviewService.addReview(commentRequest, id))
+                .result(reviewService.addReview(reviewRequest, id))
                 .build();
     }
 
-    @DeleteMapping("/delete-comment/{id}")
+    @DeleteMapping("/delete-review/{id}")
     ApiResponse<DeleteCommentResponse> deleteReview(@PathVariable Long id) {
         return ApiResponse.<DeleteCommentResponse>builder()
                 .code(HttpStatus.OK.value())
@@ -49,7 +49,7 @@ public class ReviewController {
                 .build();
     }
 
-    @PutMapping("/update-comment/{id}")
+    @PutMapping("/update-review/{id}")
     ApiResponse<UpdateCommentResponse> updateReview(@PathVariable Long id, @RequestBody UpdateCommentRequest request) {
         return ApiResponse.<UpdateCommentResponse>builder()
                 .code(HttpStatus.OK.value())

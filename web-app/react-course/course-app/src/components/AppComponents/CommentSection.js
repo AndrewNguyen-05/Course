@@ -9,11 +9,11 @@ export const CommentSection = ({
     newRating,
     setNewComment,
     renderStars,
-    handleAddComment,
+    handleAddReview,
     handleReplyToggle,
     handleAddReply,
-    handleEditComment,
-    handleDeleteComment,
+    handleEditReview,
+    handleDeleteReview,
     editContent,
     setEditContent,
     replyContent,
@@ -37,7 +37,7 @@ export const CommentSection = ({
                 {/* Rating Stars */}
                 {renderStars(newRating, handleRatingChange)}
 
-                <button className="btn btn-primary px-4 mt-3" onClick={handleAddComment}>
+                <button className="btn btn-primary px-4 mt-3" onClick={handleAddReview}>
                     Submit Comment
                 </button>
             </div>
@@ -63,7 +63,7 @@ export const CommentSection = ({
                                 >
                                     <i className="fa-solid fa-comment-dots"></i>
                                 </button>
-                                <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(comment.id)}>
+                                <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteReview(comment.id)}>
                                     <FaTrash />
                                 </button>
                             </div>
@@ -83,7 +83,7 @@ export const CommentSection = ({
                                     value={editContent[comment.id] !== undefined ? editContent[comment.id] : comment.content}
                                     onChange={(e) => setEditContent({ ...editContent, [comment.id]: e.target.value })}
                                 />
-                                <button className="btn btn-success mt-2" onClick={() => handleEditComment(comment.id, editContent[comment.id])}>
+                                <button className="btn btn-success mt-2" onClick={() => handleEditReview(comment.id, editContent[comment.id])}>
                                     Save
                                 </button>
                             </div>
@@ -113,7 +113,7 @@ export const CommentSection = ({
                                                 >
                                                     <i className="fa-solid fa-comment-dots"></i>
                                                 </button>
-                                                <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteComment(reply.id)}>
+                                                <button className="btn btn-sm btn-outline-danger" onClick={() => handleDeleteReview(reply.id)}>
                                                     <FaTrash />
                                                 </button>
                                             </div>
@@ -128,7 +128,7 @@ export const CommentSection = ({
                                                     value={editContent[reply.id] !== undefined ? editContent[reply.id] : reply.content}
                                                     onChange={(e) => setEditContent({ ...editContent, [reply.id]: e.target.value })}
                                                 />
-                                                <button className="btn btn-success mt-2" onClick={() => handleEditComment(reply.id, editContent[reply.id])}>
+                                                <button className="btn btn-success mt-2" onClick={() => handleEditReview(reply.id, editContent[reply.id])}>
                                                     Save
                                                 </button>
                                             </div>

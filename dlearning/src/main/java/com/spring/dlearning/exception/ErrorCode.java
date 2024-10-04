@@ -44,7 +44,7 @@ public enum ErrorCode {
     PRICE_INVALID(400, "Price must be greater than or equal to 0", HttpStatus.BAD_REQUEST),
     VIDEO_URL_INVALID(400, "Video URL is mandatory", HttpStatus.BAD_REQUEST),
     PAYMENT_NOT_FOUND(404, "Payment not found", HttpStatus.NOT_FOUND),
-    INVALID_COMMENT_CONTENT(404, "Invalid comment", HttpStatus.BAD_REQUEST),
+    INVALID_COMMENT_CONTENT(404, "Comment contains inappropriate content. Please try again.", HttpStatus.BAD_REQUEST),
     BUY_COURSE_INVALID(400, "Current points is not enough", HttpStatus.BAD_REQUEST),
     COURSE_ID_INVALID(400, "Course ID cannot be null", HttpStatus.BAD_REQUEST),
     LESSON_ID_INVALID(400, "Lesson Id cannot be null", HttpStatus.BAD_REQUEST),
@@ -62,6 +62,11 @@ public enum ErrorCode {
     ADVERTISEMENT_ID_INVALID(404, "Advertisement not found", HttpStatus.NOT_FOUND),
     CONTENT_POST_INVALID(400, "Content post cannot be null", HttpStatus.BAD_REQUEST),
     ID_POST_INVALID(400, "Id post not existed", HttpStatus.BAD_REQUEST),
+    CONTENT_INVALID(400, "Content cannot exceed 500 characters", HttpStatus.BAD_REQUEST),
+    POST_ID_INVALID(400, "Post id not existed", HttpStatus.BAD_REQUEST),
+    CONTENT_COMMENT_INVALID(400, "Content Comment cannot be null", HttpStatus.BAD_REQUEST),
+
+
 
     ;
 

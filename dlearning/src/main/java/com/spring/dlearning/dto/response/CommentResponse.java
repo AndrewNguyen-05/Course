@@ -1,5 +1,6 @@
 package com.spring.dlearning.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -15,13 +16,17 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommentResponse {
+
     Long id;
+    Long postId;
     String name;
     String avatar;
     String content;
-    Integer rating;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
 
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    LocalDateTime createdAt;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    LocalDateTime updatedAt;
     List<CommentResponse> replies = new ArrayList<>();
+
 }

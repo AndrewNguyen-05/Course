@@ -1,75 +1,35 @@
-import { toast } from "react-toastify";
-import axios from "../utils/CustomizeAxios";
-
-export const getCommentByPostId = async (postId, currentPage) => {
-    try {
-        const response = await axios.get(`api/v1/post-comment/${postId}`, {
-            params: {
-                page: currentPage
-            }
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching comments from API:', error.response || error.message);
-        throw new Error(`Failed to fetch comments: ${error.response?.status || error.message}`);
-    }
-};
-
-export const addComment = async (commentData) => {
-    try {
-        const response = await axios.post(`api/v1/add-comment`, commentData);
-        console.log(response);
-        if (response.data.result) {
-            toast.success('Comment added successfully');
-            return response.data.result;
-        } else {
-            toast.error(response.data.message);
-            throw new Error(response.data.message);
+export const getCommentByPostId = async (token, postId, currentPage) => {
+    const response = await fetch(`http://localhost:8080/api/v1/post-comment/${postId}?page=${currentPage}`, { 
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
         }
-    } catch (error) {
-        console.error('Error in addComment:', error);
-        throw error;
+    })
+
+    if (!response.ok) {
+        const dataError = await response.json();
+        throw new Error('Fail to getComment by PostId', dataError.message)
     }
+
+    return response.json();
 }
 
-export const replyComment = async (replyData) => {
-    try {
-        const response = await axios.post(`api/v1/add-comment`, replyData)
-        if (response.data.result) {
-            toast.success('Comment added successfully')
-            return response.data.result;
-        } else {
-            toast.error(response.data.message)
-            throw new Error(response.data.message);
-        }
-    } catch (error) {
-        console.log(error)
-        throw error;
-    }
-}
+export const addComment = async (token, commentData) => {
 
-export const deleteComment = async (commentId) => {
-    try {
-        const response = await axios.delete(`api/v1/delete-comment/${commentId}`);
-        return response.data;
-    } catch (error) {
-        console.error(error);
-        throw error;
-    }
-};
+    const response = await fetch(`http://localhost:8080/api/v1/post-comment/add-comment`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(commentData)
+    })
 
-export const updateComment = async (commentId, updateContent) => {
-    try {
-        const response = await axios.put(`api/v1/update-comment/${commentId}`, { content: updateContent })
-        if (response.data.result) {
-            toast.success('Update Comment Successfully');
-            return response.data.result;
-        } else {
-            toast.error(response.data.message);
-            throw new Error(response.data.message);
-        }
-    } catch (error) {
-        console.error('Error in service:', error);
-        throw error;
+    if (!response.ok) {
+        const dataError = await response.json();
+        throw new Error('Fail to AddComment', dataError.message)
     }
+
+    return response.json();
+
 }

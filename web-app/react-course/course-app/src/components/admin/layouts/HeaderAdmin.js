@@ -24,16 +24,13 @@ export const AdminHeader = () => {
   const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
 
   useEffect(() => {
-    wsClient.activate();
     notificationCurrentLogin(token)
       .then((data) => {
         setNotifications(data.result);
         setUnreadCount(data.result.filter((n) => !n.isRead).length);
       })
       .catch((error) => console.log(error));
-
-    return () => wsClient.deactivate();
-  }, [wsClient, isTokenValid]);
+  }, []);
 
   wsClient.onConnect = () => {
     console.log("Connected to WebSocket");

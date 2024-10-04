@@ -1,8 +1,8 @@
 package com.spring.dlearning.service;
 
-import com.spring.dlearning.dto.request.CommentRequest;
+import com.spring.dlearning.dto.request.ReviewRequest;
 import com.spring.dlearning.dto.request.UpdateCommentRequest;
-import com.spring.dlearning.dto.response.CommentResponse;
+import com.spring.dlearning.dto.response.ReviewResponse;
 import com.spring.dlearning.dto.response.DeleteCommentResponse;
 import com.spring.dlearning.dto.response.UpdateCommentResponse;
 import com.spring.dlearning.entity.Review;
@@ -10,7 +10,7 @@ import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
-import com.spring.dlearning.mapper.CommentMapper;
+import com.spring.dlearning.mapper.ReviewMapper;
 import com.spring.dlearning.repository.ReviewRepository;
 import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.UserRepository;
@@ -33,21 +33,21 @@ public class ReviewService {
 
     UserRepository userRepository;
     ReviewRepository reviewRepository;
-    CommentMapper commentMapper;
+    ReviewMapper reviewMapper;
     CourseRepository courseRepository;
     BannedWordsService bannedWordsService;
 
-    public List<CommentResponse> getReviewByCourse(Long id) {
+    public List<ReviewResponse> getReviewByCourse(Long id) {
         List<Review> allReviews = reviewRepository.findByCourseId(id);
         return allReviews.stream()
                 .filter(comment -> comment.getParentReview() == null)
-                .map(commentMapper::toCommentResponse)
+                .map(reviewMapper::toCommentResponse)
                 .toList();
     }
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    public CommentResponse addReview(CommentRequest commentRequest, Long courseId) {
+    public ReviewResponse addReview(ReviewRequest reviewRequest, Long courseId) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
@@ -57,37 +57,37 @@ public class ReviewService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
 
-        Review parentComment = null;
-        if (commentRequest.getParentCommentId() != null) {
-            parentComment = reviewRepository.findById(commentRequest.getParentCommentId())
+        Review parentReview = null;
+        if (reviewRequest.getParentReviewId() != null) {
+            parentReview = reviewRepository.findById(reviewRequest.getParentReviewId())
                     .orElseThrow(() -> new AppException(ErrorCode.PARENT_COMMENT_NOT_EXISTED));
         }
 
-        if ((commentRequest.getContent() == null || commentRequest.getContent().isEmpty()) && commentRequest.getRating() == null) {
+        if ((reviewRequest.getContent() == null || reviewRequest.getContent().isEmpty()) && reviewRequest.getRating() == null) {
             throw new AppException(ErrorCode.INVALID_COMMENT_OR_RATING);
         }
 
-        if (commentRequest.getRating() != null && (commentRequest.getRating() < 0 || commentRequest.getRating() > 5)) {
+        if (reviewRequest.getRating() != null && (reviewRequest.getRating() < 0 || reviewRequest.getRating() > 5)) {
             throw new AppException(ErrorCode.INVALID_RATING);
         }
 
-        if ( commentRequest.getContent()!= null && bannedWordsService.containsBannedWords(commentRequest.getContent())) {
+        if ( reviewRequest.getContent()!= null && bannedWordsService.containsBannedWords(reviewRequest.getContent())) {
             throw new AppException(ErrorCode.INVALID_COMMENT_CONTENT);
         }
 
         Review newComment = Review.builder()
                 .user(user)
-                .content(commentRequest.getContent() != null && !commentRequest.getContent().isEmpty()
-                        ? commentRequest.getContent()
+                .content(reviewRequest.getContent() != null && !reviewRequest.getContent().isEmpty()
+                        ? reviewRequest.getContent()
                         : "")
-                .rating(commentRequest.getRating())
+                .rating(reviewRequest.getRating())
                 .course(course)
-                .parentReview(parentComment)
+                .parentReview(parentReview)
                 .build();
 
         reviewRepository.save(newComment);
 
-        return commentMapper.toCommentResponse(newComment);
+        return reviewMapper.toCommentResponse(newComment);
     }
 
     @PreAuthorize("isAuthenticated()")

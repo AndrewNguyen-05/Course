@@ -12,9 +12,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentRequest {
 
-    @Size(max = 300, message = "Content cannot exceed 300 characters")
+    @Size(max = 500, message = "CONTENT_INVALID")
     String content;
     Long parentCommentId;
-    Long courseId;
-    Integer rating;
+    Long postId;
 }
