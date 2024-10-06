@@ -10,6 +10,19 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+ # Cấu hình Kafka
+  kafka:
+    bootstrap-servers: localhost:9094
+    consumer:
+      group-id: my-consumer-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.spring.dlearning.dto.event" #hoặc * để cho phép tất cả
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   servlet:
     multipart:
@@ -29,6 +42,7 @@ spring:
     stomp:
       brokerRelay:
         enabled: false
+
 
 
 

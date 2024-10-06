@@ -1,5 +1,6 @@
 package com.spring.dlearning.service;
 
+import com.spring.dlearning.dto.event.NotificationEvent;
 import com.spring.dlearning.entity.Advertisement;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -10,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -95,5 +97,31 @@ public class EmailService {
         context.setVariables(properties);
         return context;
     }
+
+    @KafkaListener(topics = "notification-delivery", groupId = "my-consumer-group")
+    public void sendEmailByKafka(NotificationEvent event)
+            throws MessagingException, UnsupportedEncodingException {
+        log.info("Received Kafka message to send email: {}", event);
+
+        Context context = new Context();
+        context.setVariable("recipientName", event.getRecipient());
+        context.setVariable("body", event.getBody());
+
+        String htmlContent = templateEngine.process(event.getTemplateCode(), context);
+
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+
+        helper.setFrom(emailFrom, "DLearning Team");
+        helper.setTo(event.getRecipient());
+        helper.setSubject(event.getSubject());
+        helper.setText(htmlContent, true);
+
+        mailSender.send(mimeMessage);
+
+        log.info("Email sent to {} successfully!", event.getRecipient());
+    }
+
+
 
 }

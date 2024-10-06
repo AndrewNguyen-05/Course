@@ -25,7 +25,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @Service
@@ -48,8 +47,10 @@ public class PostService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        String image = cloudinaryService.uploadImage(file);
-        request.setImage(image);
+        if(file != null){
+            String image = cloudinaryService.uploadImage(file);
+            request.setImage(image);
+        }
 
         Post post = postMapper.toPost(request);
         post.setUser(user);
@@ -75,6 +76,31 @@ public class PostService {
                 .totalElements(posts.getTotalElements())
                 .totalPages(posts.getTotalPages())
                 .data(postResponses)
+                .build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public PageResponse<PostResponse> getPostByCurrentLogin (int page, int size){
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Sort sort = Sort.by(Sort.Direction.DESC,"createdAt");
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
+        Page<Post> posts = postRepository.findPostByUser(user, pageable);
+
+        List<PostResponse> postResponse = posts.getContent()
+                .stream().map(postMapper::toPostResponse)
+                .toList();
+
+        return PageResponse.<PostResponse>builder()
+                .currentPage(page)
+                .pageSize(pageable.getPageSize())
+                .totalElements(posts.getTotalElements())
+                .totalPages(posts.getTotalPages())
+                .data(postResponse)
                 .build();
     }
 

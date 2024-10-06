@@ -1,6 +1,7 @@
 package com.spring.dlearning.service;
 
 import com.spring.dlearning.constant.PredefinedRole;
+import com.spring.dlearning.dto.event.NotificationEvent;
 import com.spring.dlearning.dto.request.PasswordCreationRequest;
 import com.spring.dlearning.dto.request.UserCreationRequest;
 import com.spring.dlearning.dto.request.VerifyOtpRequest;
@@ -20,6 +21,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -43,6 +45,7 @@ public class UserService {
     RoleRepository roleRepository;
     EmailService emailService;
     OtpService otpService;
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     public boolean findByEmail(String email){
        return userRepository.existsByEmail(email);
@@ -50,9 +53,10 @@ public class UserService {
 
     @Transactional
     public UserResponse createUser(UserCreationRequest request, String otp)  {
-        if(userRepository.findByEmail(request.getEmail()).isPresent())
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new AppException(ErrorCode.USER_EXISTED);
-        // Xác thực otp
+        }
+
         String storedOtp = otpService.getOtp(request.getEmail());
         if (storedOtp == null || !storedOtp.equals(otp)) {
             throw new AppException(ErrorCode.INVALID_OTP);
@@ -68,8 +72,17 @@ public class UserService {
         user.setName(request.getFirstName() + " " + request.getLastName());
         userRepository.save(user);
 
-        // Xóa OTP khỏi Redis sau khi xác thực thành công
         otpService.deleteOtp(request.getEmail());
+
+        NotificationEvent event = NotificationEvent.builder()
+                .channel("EMAIL")
+                .recipient(user.getEmail())
+                .templateCode("welcome-email")
+                .subject("Welcome to DLearning")
+                .body("Hello " + user.getName())
+                .build();
+
+        kafkaTemplate.send("notification-delivery", event);
 
         return userMapper.toUserResponse(user);
     }

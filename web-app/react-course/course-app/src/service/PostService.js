@@ -48,3 +48,20 @@ export const getAllPosts = async (token, currentPage, filterQuery) => {
     throw error;
   }
 }
+
+export const getPostByUserLogin = async (token, currentPage) => {
+  const response = await fetch(`http://localhost:8080/api/v1/get-post-current-login?page=${currentPage}`, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    console.log(errorData);
+    throw new Error('Fail to fecth post by user login', errorData.message);
+  }
+
+  return response.json();
+}

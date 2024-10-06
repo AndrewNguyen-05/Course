@@ -6,7 +6,6 @@ import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.PageResponse;
 import com.spring.dlearning.dto.response.PostCreationResponse;
 import com.spring.dlearning.dto.response.PostResponse;
-import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.Post;
 import com.spring.dlearning.service.PostService;
 import com.turkraft.springfilter.boot.Filter;
@@ -31,7 +30,7 @@ public class PostController {
 
     @PostMapping("/create-post")
     ApiResponse<PostCreationResponse> createPost (@RequestPart("request") @Valid PostCreationRequest request,
-                                                  @RequestPart("file") MultipartFile file) {
+                                                  @RequestPart(value = "file", required = false) MultipartFile file) {
         return ApiResponse.<PostCreationResponse>builder()
                 .code(HttpStatus.CREATED.value())
                 .result(postService.createPost(request, file))
@@ -47,6 +46,17 @@ public class PostController {
         return ApiResponse.<PageResponse<PostResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .result(postService.getAllPost(spec, page, size))
+                .build();
+    }
+
+    @GetMapping("/get-post-current-login")
+    ApiResponse<PageResponse<PostResponse>> getPostByCurrentLogin(
+            @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "3") int size
+    ){
+        return ApiResponse.<PageResponse<PostResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .result(postService.getPostByCurrentLogin(page, size))
                 .build();
     }
 
