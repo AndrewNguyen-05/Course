@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Image, ListGroup, Form } from 'react-bootstrap';
-import { FaThumbsUp, FaReply, FaEllipsisH, FaSmile, FaCamera, FaPaperPlane, FaHeart, FaLaugh, FaSurprise, FaSadTear, FaAngry } from 'react-icons/fa';
+import { Modal, Button, Image, ListGroup, Form, Spinner } from 'react-bootstrap';
+import { FaThumbsUp, FaReply, FaEllipsisH, FaSmile, FaCamera, FaPaperPlane, FaCommentAlt, FaShare } from 'react-icons/fa';
 import { MdGif } from 'react-icons/md';
 import { BsFillImageFill } from 'react-icons/bs';
 import { getCommentByPostId } from '../../service/CommentService';
 
 const PostModal = ({ show, handleClose, post }) => {
-    
     const token = localStorage.getItem('token');
     const [comment, setComment] = useState('');
     const [comments, setComments] = useState([]);
@@ -23,7 +22,6 @@ const PostModal = ({ show, handleClose, post }) => {
             setIsLoading(true);
             try {
                 await new Promise((resolve) => setTimeout(resolve, 1000));
-
                 const data = await getCommentByPostId(token, postId, currentPage);
                 const updatedComments = data.result.data.map((comment) => ({
                     ...comment,
@@ -54,15 +52,15 @@ const PostModal = ({ show, handleClose, post }) => {
 
     return (
         <Modal show={show} onHide={handleClose} centered className="post-modal">
-            <Modal.Body className="post-modal-body">
-                {/* Hiển thị thông tin bài viết */}
-                <div className="d-flex align-items-center mb-3">
+            <Modal.Body className="post-modal-body p-0"> {/* Loại bỏ padding mặc định */}
+                {/* Header của Modal */}
+                <div className="d-flex align-items-center p-3">
                     <Image
                         src={post.avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"}
                         roundedCircle
                         width={40}
                         height={40}
-                        className="me-3 shadow-sm"
+                        className="me-3"
                     />
                     <div>
                         <strong>{post.author}</strong>
@@ -70,51 +68,36 @@ const PostModal = ({ show, handleClose, post }) => {
                     </div>
                 </div>
 
-                {/* Hiển thị nội dung bài viết */}
-                <p className="post-modal-content">{post.content}</p>
-                {post.image && (
-                    <div className="post-modal-image-container">
-                        <img src={post.image} alt="Post" className="post-modal-image" />
-                    </div>
-                )}
-
-                {/* Nút tương tác */}
-                <div className="d-flex justify-content my-3">
-                    <div className="like-post">
-                        <FaThumbsUp className="icon" />
-                        <span className="reaction-tooltip">Like</span>
-                    </div>
-
-                    <div className="favorite-post">
-                        <FaHeart className="icon" />
-                        <span className="reaction-tooltip">Love</span>
-                    </div>
-
-                    <div className="falaugh-post">
-                        <FaLaugh className="icon" />
-                        <span className="reaction-tooltip">Haha</span>
-                    </div>
-
-                    <div className="fasurprice-post">
-                        <FaSurprise className="icon" />
-                        <span className="reaction-tooltip">Wow</span>
-                    </div>
-
-                    <div className="sad-post">
-                        <FaSadTear className="icon" />
-                        <span className="reaction-tooltip">Sad</span>
-                    </div>
-
-                    <div className="angry-post">
-                        <FaAngry className="icon" />
-                        <span className="reaction-tooltip">Angry</span>
-                    </div>
+                {/* Nội dung bài viết */}
+                <div className="px-3">
+                    <p className="post-content">{post.content}</p>
+                    {post.image && (
+                        <div className="post-image-container mb-3">
+                            <img
+                                src={post.image}
+                                alt="Post"
+                                className="post-image"
+                                style={{ maxWidth: '100%', height: 'auto' }}
+                            />
+                        </div>
+                    )}
                 </div>
 
-                {/* Hiển thị danh sách bình luận */}
-                <hr />
+                {/* Footer tương tác */}
+                <div className="post-footer d-flex justify-content-around py-2 px-3 border-top">
+                    <Button variant="link" className="post-action text-primary">
+                        <FaThumbsUp /> Likes
+                    </Button>
+                    <Button variant="link" className="post-action text-info">
+                        <FaCommentAlt /> Comments
+                    </Button>
+                    <Button variant="link" className="post-action text-secondary">
+                        <FaShare /> Share
+                    </Button>
+                </div>
+
                 {hasMoreComments && (
-                    <div className="d-flex justify-content-center mt-2">
+                    <div className="d-flex justify-content-center py-3">
                         <Button
                             variant="outline-primary"
                             size="sm"
@@ -123,33 +106,37 @@ const PostModal = ({ show, handleClose, post }) => {
                             disabled={isLoading}
                         >
                             {isLoading ? (
-                                <span>Loading...</span>
+                                <>
+                                    <Spinner animation="border" size="sm" className="me-2" /> {/* Hiển thị hiệu ứng tải */}
+                                    Loading...
+                                </>
                             ) : (
                                 'See more comments ...'
                             )}
                         </Button>
                     </div>
                 )}
+
                 <ListGroup className="post-modal-comments">
                     {comments.map((cmt) => (
-                        <ListGroup.Item key={cmt.id} className="post-comment-item shadow-sm">
+                        <ListGroup.Item key={cmt.id} className="post-comment-item">
                             <div className="d-flex align-items-start">
                                 <Image
                                     src={cmt.avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"}
                                     roundedCircle
                                     width={30}
                                     height={30}
-                                    className="me-3 shadow-sm"
+                                    className="me-3"
                                 />
                                 <div className="flex-grow-1">
-                                    <div className="post-comment-header d-flex justify-content-between align-items-center">
+                                    <div className="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <strong className="post-comment-author">{cmt.name}</strong> <span className="text-muted">{cmt.createdAt}</span>
+                                            <strong>{cmt.name}</strong> <span className="text-muted">{cmt.createdAt}</span>
                                         </div>
                                         <FaEllipsisH className="text-secondary" />
                                     </div>
                                     <p className="mb-1">{cmt.content}</p>
-                                    <div className="post-comment-actions d-flex align-items-center">
+                                    <div className="d-flex align-items-center">
                                         <Button variant="link" size="sm" className="text-primary p-0 me-3">
                                             <FaThumbsUp /> {cmt.likes} Thích
                                         </Button>

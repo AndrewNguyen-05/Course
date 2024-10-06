@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Footer } from '../layouts/Footer';
+import { motion } from 'framer-motion';
 import { EducationHighlights } from '../AppComponents/EducationHighlights';
 
 export const About = () => {
@@ -7,7 +7,13 @@ export const About = () => {
     document.title = 'About';
   })
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.5 }}
+      className="content-page"
+    >
 
       <EducationHighlights/>
       {/* About End */}
@@ -59,6 +65,6 @@ export const About = () => {
         </div>
       </div>
 
-    </div>
+    </motion.div>
   );
 };

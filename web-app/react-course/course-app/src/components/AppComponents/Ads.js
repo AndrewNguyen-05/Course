@@ -3,13 +3,14 @@ import { AdsTable } from "./AdsTable";
 import { Link } from "react-router-dom";
 import { getAdsByCurrentLogin } from "../../service/AdsService";
 import { Pagination } from "../common/Pagination";
+import { motion } from "framer-motion";
 
 export const AdsPage = () => {
     const token = localStorage.getItem('token');
     const [ads, setAds] = useState([]);
-    const [loading, setLoading] = useState(true);   
+    const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0); 
+    const [totalPages, setTotalPages] = useState(0);
 
 
     useEffect(() => {
@@ -18,11 +19,11 @@ export const AdsPage = () => {
         const adsByCurrentLogin = async () => {
             try {
                 setLoading(true);
-                const data = await getAdsByCurrentLogin(token, currentPage); 
+                const data = await getAdsByCurrentLogin(token, currentPage);
                 console.log(data);
                 if (data.result && Array.isArray(data.result.data)) {
                     setAds(data.result.data);
-                    setTotalPages(data.result.totalPages); 
+                    setTotalPages(data.result.totalPages);
                 } else {
                     setAds([]);
                     setTotalPages(0);
@@ -34,7 +35,7 @@ export const AdsPage = () => {
             }
         };
         adsByCurrentLogin();
-    }, [token, currentPage]); 
+    }, [token, currentPage]);
 
     // Thay đổi trang
     const changePage = (page) => {
@@ -44,7 +45,13 @@ export const AdsPage = () => {
     };
 
     return (
-        <div>
+        <motion.div
+            initial={{ opacity: 0, y: 50 }} // Hiệu ứng khi trang bắt đầu: mờ và dịch xuống
+            animate={{ opacity: 1, y: 0 }}  // Hiệu ứng khi trang hiện ra: hiện và dịch lên
+            exit={{ opacity: 0, y: 50 }}     // Hiệu ứng khi rời khỏi trang: mờ và dịch xuống
+            transition={{ duration: 0.5 }}   // Thời gian chuyển đổi hiệu ứng
+            className="content-page"
+        >
             {/* Banner được tối ưu hóa với hình ảnh và biểu tượng */}
             <div className="banner-ads">
                 <div className="banner-ads-left">
@@ -88,6 +95,6 @@ export const AdsPage = () => {
                     </div>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 };

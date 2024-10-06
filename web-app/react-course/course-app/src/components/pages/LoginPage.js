@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { OAuthConfig } from '../config/OAuthConfig';
 import { ToastContainer } from 'react-toastify';
 import { introspect, login } from '../../service/AuthenticationService';
+import { motion } from 'framer-motion';
 
 export const LoginPage = () => {
 
@@ -45,7 +46,7 @@ export const LoginPage = () => {
       return () => clearTimeout(timer);
     }
   }, [showToast]);
-  
+
 
   if (loading) {
     return <div>Loading...</div>;
@@ -65,14 +66,6 @@ export const LoginPage = () => {
 
     window.location.href = targetUrl;
 
-  };
-
-  const handleFacebookLogin = () => {
-    const facebookAppId = OAuthConfig.facebookClientId;
-    const redirectUri = OAuthConfig.facebookRedirectUri;
-    const authUrl = `https://www.facebook.com/v10.0/dialog/oauth?client_id=${facebookAppId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=email,public_profile`;
-
-    window.location.href = authUrl;
   };
 
   const handleLogin = (event) => {
@@ -117,7 +110,13 @@ export const LoginPage = () => {
 
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, x: -100 }}  // Hiệu ứng ban đầu: ẩn và dịch trái
+      animate={{ opacity: 1, x: 0 }}     // Hiệu ứng khi hiển thị: hiện và dịch về vị trí gốc
+      exit={{ opacity: 0, x: 100 }}       // Hiệu ứng khi thoát: ẩn và dịch phải
+      transition={{ duration: 0.5 }}      // Thời gian chuyển động
+      className='content-page'
+    >
       <section className="py-3 py-md-5 py-xl-8">
         <div className="container">
           <div className="row">
@@ -206,7 +205,7 @@ export const LoginPage = () => {
                     </button>
 
                     <button className="btn bsb-btn-2xl btn-outline-dark rounded-0 d-flex align-items-center"
-                      onClick={handleFacebookLogin}
+
                     >
                       <i className="bi bi-facebook text-primary"></i>
                       <span className="ms-2 fs-6 flex-grow-1">Continue with Facebook</span>
@@ -230,6 +229,6 @@ export const LoginPage = () => {
           className="custom-toast-container"
         />
       </section>
-    </div>
+    </motion.div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'; 
+import { useNavigate, useParams } from 'react-router-dom';
 
 export const MyCourses = () => {
     const [loading, setLoading] = useState(true);
@@ -25,17 +25,18 @@ export const MyCourses = () => {
                 'Authorization': `Bearer ${token}`
             },
         }).then((response) => response.json())
-        .then(data => {
-            setCourses(data.result);
-            setLoading(false);
-        }).catch(error => console.log(error));
+            .then(data => {
+                setCourses(data.result);
+                setLoading(false);
+            }).catch(error => console.log(error));
     }, [token]);
 
     const handleLearnNow = (id) => {
-        navigate(`/lesson-detail/${id}`);         
+        navigate(`/lesson-detail/${id}`);
     };
 
     return (
+        <div className='mycousrse-page'>
             <div className="container-fluid my-course-container my-5">
                 <div className="my-course-grid">
                     {courses.map(course => (
@@ -43,10 +44,10 @@ export const MyCourses = () => {
                             <div className="card h-100 shadow-sm border-0 my-course-card">
                                 {/* Hình ảnh khóa học */}
                                 <div className="my-course-thumbnail-wrapper">
-                                    <img 
-                                        src={course.thumbnail} 
-                                        className="card-img-top img-fluid my-course-thumbnail" 
-                                        alt={course.title} 
+                                    <img
+                                        src={course.thumbnail}
+                                        className="card-img-top img-fluid my-course-thumbnail"
+                                        alt={course.title}
                                     />
                                     {/* Nút "Học ngay" hiển thị khi hover */}
                                     <div className="my-course-hover-overlay">
@@ -92,5 +93,6 @@ export const MyCourses = () => {
                     ))}
                 </div>
             </div>
+        </div>
     );
 };

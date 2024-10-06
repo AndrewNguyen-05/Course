@@ -5,6 +5,10 @@
  * Copyright 2011-2020 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+*{
+  box-sizing: border-box;
+}  
+
  :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -72,6 +76,7 @@
     transform: translateY(20px);
   }
 }
+
 
 .input-group {
   position: relative;
@@ -11742,7 +11747,7 @@ h6,
     letter-spacing: 3px; /* Khoảng cách giữa các chữ */
     margin-bottom: 1.5rem; /* Tạo khoảng cách dưới tiêu đề */
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Đổ bóng để tạo hiệu ứng nổi */
-    margin-top: 30px;
+    padding-top: 50px;
 }
 
 .ads-card {
@@ -12120,16 +12125,7 @@ h6,
   }
 }
 
-.sidebar {
-  width: 280px; /* Chiều rộng mặc định của sidebar */
-  height: auto;
-  background-color: #1a1b1e; /* Màu nền */
-  color: #fff;
-  padding: 20px 10px; /* Khoảng cách padding */
-  position: relative;
-  margin-top: 20px;
-  transition: all 0.3s ease-in-out; /* Thêm hiệu ứng mượt */
-}
+
 @media screen and (max-width: 768px) {
   .sidebar {
     width: 100%; /* Chiều rộng toàn bộ màn hình khi ở chế độ di động */
@@ -12160,22 +12156,6 @@ h6,
   width: calc(100% - 260px); 
 }
 
-.create-post-container {
-  background: rgb(28, 30, 33);
-  border-radius: 10px;
-  padding: 15px;
-  width: 60%; /* Mặc định rộng 60% */
-  max-width: 732px; /* Giới hạn chiều rộng tối đa */
-  margin: 0 auto;
-  margin-bottom: 30px;
-  transition: width 0.3s ease-in-out;
-}
-
-@media screen and (max-width: 768px) {
-  .create-post-container {
-    width: 90%; 
-  }
-}
 
 .create-post-header {
   display: flex;
@@ -12241,7 +12221,7 @@ h6,
 /* Định dạng chung cho Modal */
 .post-modal .modal-dialog {
   max-width: 700px; /* Giới hạn chiều rộng Modal */
-  margin-left: 40.5%; /* Căn giữa Modal theo chiều ngang */
+  margin-left: 38%; /* Căn giữa Modal theo chiều ngang */
   margin-right: auto; /* Căn giữa Modal theo chiều ngang */
 }
 
@@ -12595,51 +12575,10 @@ h6,
   font-size: 24px;
 }
 
-/* Định nghĩa background của bài viết */
-.post-container {
-  background-color: #242526; /* Màu nền tối giống Facebook */
-  color: #E4E6EB; /* Màu chữ trắng sáng */
-  border-radius: 8px; /* Làm bo góc cho hộp bài viết */
-  margin-bottom: 15px; /* Khoảng cách giữa các bài viết */
-  padding: 15px; /* Khoảng cách bên trong bài viết */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
-}
-
-/* Định dạng nội dung của từng bài viết */
-.post-container:hover {
-  background-color: #3A3B3C; /* Màu nền khi hover vào bài viết */
-}
-
 .post-container img {
   border-radius: 10px; /* Bo góc cho ảnh bên trong bài viết */
 }
 
-.post-container .post-header {
-  border-bottom: 1px solid #393A3B; /* Đường viền dưới header */
-  margin-bottom: 15px; /* Khoảng cách giữa header và nội dung */
-}
-
-/* Định dạng các nút Like, Comment, Share */
-.post-container .post-actions {
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
-  border-top: 1px solid #393A3B; /* Đường viền trên của footer */
-}
-
-.post-container .post-actions button {
-  background: none; /* Không có nền cho các nút */
-  border: none; /* Không có viền cho các nút */
-  color: #B0B3B8; /* Màu chữ cho các nút */
-  padding: 5px 10px;
-  cursor: pointer; /* Hiển thị icon con trỏ */
-}
-
-.post-container .post-actions button:hover {
-  background-color: #3A3B3C; /* Nền khi hover vào nút */
-  color: #E4E6EB; /* Màu chữ khi hover vào */
-  border-radius: 8px;
-}
 
 .post-container .post-comment-input-container {
   background-color: #3A3B3C; /* Nền cho ô nhập comment */
@@ -12979,3 +12918,368 @@ my-account-cover-photo
   color: #ffa500;
   font-size: 22px;
 }
+
+.fixed-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999; 
+}
+
+.header-page {
+  position: fixed;
+  top: 40px; /* Điều chỉnh theo chiều cao của TopBar */
+  left: 0;
+  width: 100%;
+  z-index: 998; /* Nằm dưới TopBar */
+  height: 80px; /* Chiều cao của Header */
+}
+
+
+.content-page {
+  margin-top: 120px;
+}
+
+.content-profile{
+  margin-top: 170px;
+}
+.mycousrse-page{
+  margin-top: 170px;
+}
+
+.register-teacher-page{
+  margin-top: 150px;
+}
+.deposit-page{
+  margin-top: 160px;
+}
+.change-password-page{
+  margin-top: 160px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .jumbotron {
+    min-height: 400px; /* Giảm chiều cao cho màn hình nhỏ hơn */
+  }
+}
+
+.sidebar {
+  position: fixed;
+  top: 50;
+  left: 0;
+  width: 260px; /* Chiều rộng Sidebar */
+  max-width: 20%;
+  height: 100vh;
+  background-color: #2b2b2b;
+  z-index: 1000;
+}
+
+.main-content {
+  margin-left: 20%; /* Đẩy phần nội dung chính sang bên phải, tương ứng với chiều rộng sidebar */
+  padding: 20px;
+  max-width: calc(100% - 250px); /* Đảm bảo nội dung không vượt quá chiều rộng còn lại */
+}
+
+.post-container {
+  width: 100%; /* Chiếm toàn bộ chiều rộng của main-content */
+  max-width: 800px; /* Giới hạn chiều rộng tối đa */
+  margin: 0 auto; /* Căn giữa bài viết */
+}
+/* Đảm bảo modal có cùng kích thước với các bài viết */
+.modal-content {
+  width: 100%;
+  max-width: 800px; /* Đặt chiều rộng tối đa */
+  margin: auto; /* Căn giữa modal */
+}
+
+.create-post-container {
+  width: 100%;
+  max-width: 70vw; /* Dùng đơn vị viewport để tối ưu hóa cho mọi màn hình */
+  min-width: 400px; /* Đảm bảo không quá nhỏ trên màn hình nhỏ */
+  margin: 20px auto; /* Căn giữa theo chiều ngang */
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #1c1c1e;
+}
+/* Điều chỉnh cho các kích thước màn hình khác nhau */
+
+/* Màn hình rất lớn (Trên 2560px) */
+@media (min-width: 2560px) {
+  .create-post-container {
+    max-width: 30vw; /* Giữ tỷ lệ hợp lý với đơn vị viewport */
+  }
+}
+
+/* Màn hình lớn (Từ 1920px đến 2560px) */
+@media (min-width: 1920px) and (max-width: 2560px) {
+  .create-post-container {
+    max-width: 37vw; /* Giữ tỷ lệ theo kích thước màn hình */
+  }
+}
+
+/* Màn hình vừa (Từ 1024px đến 1920px) */
+@media (min-width: 1024px) and (max-width: 1919px) {
+  .create-post-container {
+    max-width: 48vw; /* Giữ tỷ lệ cân đối với các màn hình vừa */
+  }
+}
+
+/* Màn hình nhỏ (Từ 768px đến 1023px) */
+@media (max-width: 1023px) {
+  .create-post-container {
+    max-width: 70vw; /* Chiếm phần lớn màn hình nhưng vẫn giữ padding */
+    padding: 15px;
+  }
+}
+
+/* Màn hình cực nhỏ (Dưới 768px) */
+@media (max-width: 768px) {
+  .create-post-container {
+    max-width: 80vw; /* Chiếm phần lớn màn hình nhưng vẫn giữ khoảng cách */
+    padding: 12px;
+  }
+}
+
+.create-post-input {
+  width: 100%; /* Chiếm toàn bộ chiều rộng */
+  border-radius: 20px;
+  padding: 10px;
+}
+
+.create-post-footer {
+  width: 100%; /* Chiều rộng của footer đồng bộ với container */
+  display: flex;
+  justify-content: space-between;
+}
+
+.main-content {
+  padding: 20px;
+  margin-left: 250px;
+}
+
+
+.post-container {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.post-card {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  border-radius: 10px;
+  border: 1px solid #e6e6e6;
+  background-color: #fff;
+}
+
+.post-header {
+  padding: 10px;
+  background-color: #f5f5f5;
+}
+
+.post-content {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  padding: 0 15px;
+}
+
+.post-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.post-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.post-footer {
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+
+.post-action {
+  font-size: 1rem;
+  color: #666;
+  cursor: pointer;
+}
+
+.post-action:hover {
+  color: #000;
+}
+
+.shadow-sm {
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-modal-body {
+  border-radius: 0px;
+  overflow: hidden;
+}
+
+.post-footer {
+  border-top: none;
+}
+
+.post-comment-item {
+  border-bottom: 1px solid #f0f0f0;
+}
+/* Định dạng CSS cho Post Modal */
+.post-modal .modal-body {
+  padding: 0;
+  border-radius: 8px;
+  border: none;
+}
+
+/* Container cho các comment */
+.post-modal-comments {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Giao diện từng comment */
+.post-comment-item {
+  border-bottom: 1px solid #f1f1f1;
+  padding: 10px 15px;
+  background: #ffffff;
+  border-radius: 4px;
+  margin-bottom: 5px;
+}
+
+/* Giao diện cho từng dòng text trong phần comment */
+.post-comment-item p {
+  margin: 0;
+}
+
+/* Header của phần comment */
+.post-comment-header {
+  font-size: 14px;
+}
+
+/* Nút "See more comments" */
+.post-load-more-btn {
+  border-radius: 50px; /* Nút bo tròn */
+  padding: 5px 20px; /* Khoảng cách giữa viền và chữ */
+  font-size: 14px; /* Kích thước chữ */
+  font-weight: bold; /* Chữ in đậm */
+  background: #007bff; /* Màu nền của nút */
+  color: #fff; /* Màu chữ */
+  transition: all 0.3s ease-in-out; /* Hiệu ứng khi hover */
+}
+
+.post-load-more-btn:hover {
+  background: #0056b3; /* Màu nền khi hover */
+  transform: scale(1.05); /* Phóng to nút khi hover */
+}
+
+/* Hiển thị spinner */
+.spinner-border {
+  margin-right: 5px;
+}
+
+/* Giao diện nút tương tác */
+.post-footer .post-action {
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+}
+
+.post-footer .post-action:hover {
+  text-decoration: none;
+  color: #0056b3;
+}
+
+.post-action.text-primary:hover {
+  color: #0d6efd;
+}
+
+.post-action.text-info:hover {
+  color: #17a2b8;
+}
+
+.post-action.text-secondary:hover {
+  color: #6c757d;
+}
+
+/* Định dạng cho phần nhập bình luận */
+.post-comment-input-container {
+  background: #f9f9f9;
+  border-top: 1px solid #f1f1f1;
+}
+
+.post-comment-input-container input {
+  border: none;
+  border-radius: 20px;
+  padding: 8px 15px;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.1);
+  font-size: 14px;
+}
+
+/* Định dạng cho icon trong phần nhập bình luận */
+.post-icon-container .post-icon {
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.post-icon-container .post-icon:hover {
+  transform: scale(1.2);
+}
+
+/* Định dạng tổng thể cho bình luận */
+.post-modal-image-container img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.post-modal-body .post-content {
+  padding: 10px 15px;
+  font-size: 15px;
+  color: #333;
+}
+
+.post-modal-body .post-modal-header {
+  padding: 10px 15px;
+  background: #f9f9f9;
+}
+
+.post-footer {
+  background: #f8f9fa;
+}
+
+.post-modal .post-header {
+  background: #f8f9fa;
+  border-bottom: 1px solid #f1f1f1;
+  border-top: 1px solid #f1f1f1;
+  padding: 15px;
+}
+
+.post-card {
+  border: none;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Đổ bóng mềm mại */
+  margin-bottom: 16px;
+  border-radius: 8px; /* Bo góc của PostCard */
+}
+
+.post-card .post-header,
+.post-card .post-footer {
+  border-bottom: none;
+}
+
+.post-card .post-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover; /* Giữ nguyên tỷ lệ ảnh */
+}
+

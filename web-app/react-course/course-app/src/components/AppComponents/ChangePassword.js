@@ -57,7 +57,7 @@ export const ChangePassword = () => {
 
 
   return (
-    <div>
+    <div className='change-password-page'>
       <div className="container py-5">
         <div className="row justify-content-center">
           <div className="col-12 col-md-8 col-lg-6">

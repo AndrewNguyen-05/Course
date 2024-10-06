@@ -38,14 +38,15 @@ const DepositPage = () => {
                 'Authorization': `Bearer ${token}`
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            window.location.href = data.result.paymentUrl;
-        })
-        .catch(error => console.log(error));
+            .then(response => response.json())
+            .then(data => {
+                window.location.href = data.result.paymentUrl;
+            })
+            .catch(error => console.log(error));
     };
 
     return (
+        <div className='deposit-page'>
             <div className="container mt-5 deposit-container">
                 <h2 className="mb-4 text-center deposit-title">
                     <FaMoneyBillWave className="mr-2" /> Deposit Funds
@@ -81,6 +82,7 @@ const DepositPage = () => {
 
                 <ToastContainer />
             </div>
+        </div>
     );
 };
 

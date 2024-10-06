@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getFavorite, removeFavorite } from '../../service/FavoriteService';
 import { toast, ToastContainer } from 'react-toastify';
-
-// Import icons từ react-icons
-import { FaTrashAlt } from 'react-icons/fa';  // Biểu tượng thùng rác
-import { MdOutlineDescription } from 'react-icons/md';  // Biểu tượng chi tiết
+import { FaTrashAlt } from 'react-icons/fa';  
+import { MdOutlineDescription } from 'react-icons/md'; 
 import { Spinner } from 'react-bootstrap';
 import { Pagination } from '../common/Pagination';
+import { motion } from 'framer-motion';
 
 const FavoriteCourses = () => {
     const token = localStorage.getItem('token');
@@ -67,7 +66,14 @@ const FavoriteCourses = () => {
     };
 
     return (
-        <div>
+        <motion.div
+                key={currentPage}  
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+                className='content-page'
+            >
             <div className="container">
                 <h2 className='vip-title'>Your Favorite Courses</h2><br />
 
@@ -141,7 +147,7 @@ const FavoriteCourses = () => {
                 className="custom-toast-container"
             />
 
-        </div>
+        </motion.div>
     );
 };
 

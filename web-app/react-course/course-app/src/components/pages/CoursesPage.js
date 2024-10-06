@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Footer } from "../layouts/Footer";
 import { Search } from "../common/Search";
 import { SearchService } from '../../service/CourseService';
-import { TopBar } from '../layouts/TopBar';
-import { Header } from '../layouts/Header';
 import { Pagination } from '../common/Pagination';
 import { ViewCouses } from '../AppComponents/ViewCourses';
+import { motion } from 'framer-motion';
 
 export const Courses = () => {
     const [loading, setLoading] = useState(true);
@@ -56,9 +54,13 @@ export const Courses = () => {
     }, [currentPage, pageSize, filterQuery]);
 
     return (
-        <div>
-            <TopBar />
-            <Header />
+        <motion.div
+                key={filterQuery || currentPage}  
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.5 }}
+            >
             <Search onSearch={setFilterQuery} />
             <div className="container-fluid">
                 <div className="container py-3">
@@ -77,7 +79,6 @@ export const Courses = () => {
                     />
                 </div>
             </div>
-            <Footer />
-        </div>
+        </motion.div>
     );
 };

@@ -137,7 +137,7 @@ export const Profile = () => {
     };    
 
     return (
-        <div>
+        <div className="content-profile">
             {/* FORM INFO AND UPDATE PROFILE */}
             <div className="container">
                 <div className="row gutters">

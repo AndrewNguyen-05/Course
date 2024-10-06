@@ -52,6 +52,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path='/favorite' element={<FavoriteCourses />} />
           <Route path='/deposit' element={<DepositPage />} />
+          <Route path='/courses'element={<Courses/>}></Route>
           <Route path="/comunity" element={
             <PrivateRoute>
               <Community />
@@ -114,7 +115,7 @@ function App() {
         <Route path='/lesson-detail/:id' element={<LearningPage />} />
         <Route path="/authenticate" element={<ProcessLoginOAuth2 />} />
         <Route path='/accessdenied' element={<Accessdenied />} />
-        <Route path="*" element={<NotFound />} />
+        {/* <Route path="*" element={<NotFound />} /> */}
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFail />} />
         <Route path="/payment-cancel" element={<PaymentCancel />} />

@@ -15,6 +15,7 @@ import { getAllCourses } from '../../service/CourseService'
 import { addFavorite } from '../../service/FavoriteService';
 import { InfoContact } from '../common/InfoContact';
 import { EducationHighlights } from '../AppComponents/EducationHighlights';
+import { motion } from 'framer-motion';
 
 export const HomePage = () => {
 
@@ -85,17 +86,23 @@ export const HomePage = () => {
         }
     };
 
-    if (loading && currentPage === 1) {
-        return <div>Loading...</div>;
-    }
+    // if (loading && currentPage === 1) {
+    //     return <div>Loading...</div>;
+    // }
 
     if (error) {
         return <div>Error: {error.message}</div>;
     }
 
     return (
-        <div>
-            <EducationHighlights/>
+        <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.5 }}
+            className="content-page"
+        >
+            <EducationHighlights />
             <div className="container-fluid bg-image" style={{ margin: '90px 0' }}>
                 <div className="container">
                     <div className="row">
@@ -364,6 +371,6 @@ export const HomePage = () => {
             />
 
 
-        </div>
+        </motion.div>
     );
 };

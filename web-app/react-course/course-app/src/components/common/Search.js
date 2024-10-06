@@ -44,7 +44,7 @@ export const Search = ({ onSearch }) => {
     // Khi người dùng nhấn nút Search, dữ liệu này sẽ được truyền ngược lên Courses thông qua hàm onSearch.
 
     return (
-        <div>
+        <div className="content-page">
             <div className="container-fluid mb-5">
                 <div className="search-bar p-4 rounded shadow-sm custom-search-bar">
                     <div className="row justify-content-center align-items-center">
