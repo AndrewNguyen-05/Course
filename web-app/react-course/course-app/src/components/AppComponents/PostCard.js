@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Card, Button, Image, Dropdown } from 'react-bootstrap';
-import { FaThumbsUp, FaCommentAlt, FaShare, FaEllipsisH } from 'react-icons/fa';
-import PostModal from './PostModal';
+import { Card, Button, Image } from 'react-bootstrap';
+import { FaThumbsUp, FaCommentAlt, FaShare } from 'react-icons/fa';
+import PostModal from './PostModal/PostModal';
 
 const PostCard = ({ id, author, avatar, content, image, likes, comments, createdAt }) => {
   const [showModal, setShowModal] = useState(false);
