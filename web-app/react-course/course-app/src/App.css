@@ -13362,3 +13362,13 @@ my-account-cover-photo
   margin-top: 10px;
 }
 
+.save-comment {
+  margin-bottom: 5px;
+  font-size: 13px;
+  margin-right: 5px;
+}
+
+.cancel-comment {
+  margin-bottom: 5px;
+  font-size: 13px;
+}

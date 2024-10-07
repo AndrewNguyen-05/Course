@@ -1,5 +1,6 @@
 package com.spring.dlearning.service;
 
+import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.CommentRequest;
 import com.spring.dlearning.dto.response.CommentResponse;
 import com.spring.dlearning.dto.response.PageResponse;
@@ -24,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -101,6 +103,25 @@ public class CommentService {
         commentRepository.save(comment);
 
         return commentMapper.toCommentResponse(comment);
+    }
+
+    public void deleteComment(Long commentId) {
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXISTED));
+
+        if (Objects.equals(user.getId(), comment.getUser().getId()) ||
+                PredefinedRole.ADMIN_ROLE.equals(user.getRole().getName())) {
+            commentRepository.delete(comment);
+            return;
+        }
+
+        throw new AppException(ErrorCode.DELETE_COMMENT_INVALID);
     }
 
 }

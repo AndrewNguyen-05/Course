@@ -42,4 +42,14 @@ public class CommentController {
                 .build();
     }
 
+    @DeleteMapping("/delete-comment/{commentId}")
+    ApiResponse<Void> deleteComment (@PathVariable Long commentId){
+        commentService.deleteComment(commentId);
+
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.NO_CONTENT.value())
+                .message("Delete Comment Successfully")
+                .build();
+    }
+
 }
