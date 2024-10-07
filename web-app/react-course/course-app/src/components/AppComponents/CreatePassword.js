@@ -38,7 +38,7 @@ export const CreatePassword = () => {
     };
 
     return (
-        <div>
+        <div className="content-page">
             <div className="container d-flex justify-content-center">
                 <div className="card p-4 shadow-lg" style={{ maxWidth: '500px', width: '100%', marginTop: '50px' }}>
                     <div className="card-body text-center">
