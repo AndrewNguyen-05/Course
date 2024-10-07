@@ -1,11 +1,11 @@
 package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.request.ReviewRequest;
-import com.spring.dlearning.dto.request.UpdateCommentRequest;
+import com.spring.dlearning.dto.request.UpdateReviewRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.ReviewResponse;
 import com.spring.dlearning.dto.response.DeleteCommentResponse;
-import com.spring.dlearning.dto.response.UpdateCommentResponse;
+import com.spring.dlearning.dto.response.UpdateReviewResponse;
 import com.spring.dlearning.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -50,8 +50,8 @@ public class ReviewController {
     }
 
     @PutMapping("/update-review/{id}")
-    ApiResponse<UpdateCommentResponse> updateReview(@PathVariable Long id, @RequestBody UpdateCommentRequest request) {
-        return ApiResponse.<UpdateCommentResponse>builder()
+    ApiResponse<UpdateReviewResponse> updateReview(@PathVariable Long id, @RequestBody UpdateReviewRequest request) {
+        return ApiResponse.<UpdateReviewResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(reviewService.updateReview(id, request))
                 .build();

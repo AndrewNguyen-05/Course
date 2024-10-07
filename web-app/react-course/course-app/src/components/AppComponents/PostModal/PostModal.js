@@ -6,9 +6,8 @@ import moment from 'moment';
 import { PostHeader } from './PostHeader';
 import { PostContent } from './PostContent';
 import { PostFooter } from './PostFooter';
-import CommentDropdown from './CommentDropdown';
 import { CommentInput } from './CommentInput';
-import { addComment, getCommentByPostId, replyComment } from '../../../service/CommentService';
+import { addComment, deleteComment, getCommentByPostId, replyComment, updateComment } from '../../../service/CommentService';
 import { getAvatar } from '../../../service/ProfileService';
 
 const PostModal = ({ show, handleClose, post }) => {
@@ -20,9 +19,9 @@ const PostModal = ({ show, handleClose, post }) => {
     const [hasMoreComments, setHasMoreComments] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
     const [commentContent, setCommentContent] = useState('');
-    const [replyStatus, setReplyStatus] = useState({});
+    const [replyStatus, setReplyStatus] = useState("");
     const [editingCommentId, setEditingCommentId] = useState(null);
-    const [editContent, setEditContent] = useState('');
+    const [editContent, setEditContent] = useState({});
     const [activeDropdownId, setActiveDropdownId] = useState(null);
     const [replyContent, setReplyContent] = useState({});
 
@@ -139,31 +138,68 @@ const PostModal = ({ show, handleClose, post }) => {
         }
     };
 
+    // Delete Comment
+    const handleDeleteComment = async (commentId) => {
+        if (!token || !commentId) return;
+        try {
+            await deleteComment(token, commentId);
 
+            setComments((prevComments) => {
+                return prevComments.map((comment) => {
+                    if (comment.replies.some((reply) => reply.id === commentId)) {
+                        return {
+                            ...comment,
+                            replies: comment.replies.filter((reply) => reply.id !== commentId),
+                        };
+                    }
+                    return comment;
+                }).filter((comment) => comment.id !== commentId);
+            });
 
-    // Edit Comment
+            toast.success("Comment deleted successfully!");
+        } catch (error) {
+            toast.error(`Failed to delete comment: ${error.message}`);
+        }
+    };
+
+    // Show Edit Comment
     const handleEditComment = (commentId, content) => {
-        setEditingCommentId(commentId);
-        setEditContent(content);
+        setEditingCommentId(commentId); // Xác định comment nào đang được chỉnh sửa
+        setEditContent((prevEditContent) => ({ ...prevEditContent, [commentId]: content })); // editContent chứa đúng nội dung theo commentId
     };
 
     // Save edit comment
-    const handleSaveEdit = (commentId) => {
-        setComments((prevComments) =>
-            prevComments.map((comment) =>
-                comment.id === commentId ? { ...comment, content: editContent } : comment
-            )
-        );
-        setEditingCommentId(null);
-        setEditContent('');
-        toast.success("Comment updated successfully!");
-    };
+    const handleSaveEdit = async (commentId) => {
+        const updatedContent = (editContent[commentId] || "").trim(); 
+        if (!updatedContent) {
+            toast.error('Please enter new content');
+            return;
+        }
+        try {
+            const result = await updateComment(token, commentId, updatedContent);
+            if (result) {
+                setComments((prevComments) => {
+                    const updateComments = prevComments.map(comment => {
+                        if (comment.id === commentId) {
+                            return { ...comment, content: result.content };
+                        }
 
-
-    // Delete Comment
-    const handleDeleteComment = (commentId) => {
-        setComments((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
-        toast.success("Comment deleted successfully!");
+                        const updatedReplies = comment.replies.map(reply => {
+                            if (reply.id === commentId) {
+                                return { ...reply, content: result.content };
+                            }
+                            return reply;
+                        });
+                        return { ...comment, replies: updatedReplies };
+                    })
+                    return [...updateComments];
+                });
+                setEditingCommentId(null);
+                setEditContent('');
+            }
+        } catch (error) {
+            console.error('Error updating comment:', error);
+        }
     };
 
     // ShowHide Reply
@@ -210,14 +246,15 @@ const PostModal = ({ show, handleClose, post }) => {
                                         <div>
                                             <strong>{cmt.name}</strong> <span className="text-muted">{timeAgo(cmt.createdAt)}</span>
                                         </div>
-                                        <CommentDropdown
-                                            commentId={cmt.id}
-                                            handleEdit={handleEditComment}
-                                            handleDelete={handleDeleteComment}
-                                            activeDropdownId={activeDropdownId}
-                                            toggleDropdown={toggleDropdown}
-                                            commentContent={cmt.content}
-                                        />
+                                        <Dropdown show={activeDropdownId === cmt.id} onToggle={() => toggleDropdown(cmt.id)} className="ms-auto">
+                                            <Dropdown.Toggle as="button" className="post-dropdown-toggle">
+                                                <FaEllipsisH />
+                                            </Dropdown.Toggle>
+                                            <Dropdown.Menu className="post-dropdown-menu">
+                                                <Dropdown.Item onClick={() => handleEditComment(cmt.id, cmt.content)}>Edit</Dropdown.Item>
+                                                <Dropdown.Item onClick={() => handleDeleteComment(cmt.id)}>Delete</Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
                                     </div>
 
                                     {/* Hiển thị phần nội dung comment cha */}
@@ -225,8 +262,8 @@ const PostModal = ({ show, handleClose, post }) => {
                                         <div>
                                             <Form.Control
                                                 as="textarea"
-                                                value={editContent}
-                                                onChange={(e) => setEditContent(e.target.value)}
+                                                value={editContent[cmt.id] || ""} // Hiển thị đúng nội dung cho comment theo commentId
+                                                onChange={(e) => setEditContent({ ...editContent, [cmt.id]: e.target.value })} // Cập nhật nội dung chỉnh sửa theo commentId
                                                 className="my-2"
                                             />
                                             <Button variant="primary" onClick={() => handleSaveEdit(cmt.id)} className='save-comment'>Save</Button>
@@ -258,7 +295,6 @@ const PostModal = ({ show, handleClose, post }) => {
                                                                 <strong>{reply.name}</strong>
                                                                 <span className="text-muted"> - {timeAgo(reply.createdAt)}</span>
                                                             </div>
-                                                            {/* Dropdown cho reply */}
                                                             <Dropdown show={activeDropdownId === reply.id} onToggle={() => toggleDropdown(reply.id)} className="ms-auto">
                                                                 <Dropdown.Toggle as="button" className="post-dropdown-toggle">
                                                                     <FaEllipsisH />
@@ -275,8 +311,8 @@ const PostModal = ({ show, handleClose, post }) => {
                                                             <div>
                                                                 <Form.Control
                                                                     as="textarea"
-                                                                    value={editContent}
-                                                                    onChange={(e) => setEditContent(e.target.value)}
+                                                                    value={editContent[reply.id] || ""} // Hiển thị đúng nội dung cho comment theo commentId
+                                                                    onChange={(e) => setEditContent({ ...editContent, [reply.id]: e.target.value })} // Cập nhật nội dung chỉnh sửa theo commentId
                                                                     className="my-2"
                                                                 />
                                                                 <Button variant="primary" onClick={() => handleSaveEdit(reply.id)} className='save-comment'>Save</Button>
@@ -290,7 +326,6 @@ const PostModal = ({ show, handleClose, post }) => {
                                             ))}
                                         </div>
                                     )}
-
 
                                     {/* Khung nhập phản hồi  */}
                                     {replyStatus[cmt.id] && (

@@ -23,7 +23,6 @@ export const ReviewSection = ({
     return (
         <div className="comments-section mt-5">
             <h2 className="mb-4 text-secondary"><FaCommentDots className="mr-2" /> Comments</h2>
-
             {/* Add Comment */}
             <div className="comment-form mb-5">
                 <textarea
@@ -33,7 +32,6 @@ export const ReviewSection = ({
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                 />
-
                 {/* Rating Stars */}
                 {renderStars(newRating, handleRatingChange)}
 
@@ -90,7 +88,6 @@ export const ReviewSection = ({
                         ) : (
                             <p className="mt-2">{comment.content}</p>
                         )}
-
                         {/* Replies Section */}
                         {comment.replies.length > 0 && (
                             <div className="replies mt-3 pl-5">
@@ -118,7 +115,7 @@ export const ReviewSection = ({
                                                 </button>
                                             </div>
                                         </div>
-
+                                        
                                         {/* Reply Editing Feature */}
                                         {editingCommentId === reply.id ? (
                                             <div>

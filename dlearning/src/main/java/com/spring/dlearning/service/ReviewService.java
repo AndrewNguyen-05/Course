@@ -1,10 +1,10 @@
 package com.spring.dlearning.service;
 
 import com.spring.dlearning.dto.request.ReviewRequest;
-import com.spring.dlearning.dto.request.UpdateCommentRequest;
+import com.spring.dlearning.dto.request.UpdateReviewRequest;
 import com.spring.dlearning.dto.response.ReviewResponse;
 import com.spring.dlearning.dto.response.DeleteCommentResponse;
-import com.spring.dlearning.dto.response.UpdateCommentResponse;
+import com.spring.dlearning.dto.response.UpdateReviewResponse;
 import com.spring.dlearning.entity.Review;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.User;
@@ -115,7 +115,7 @@ public class ReviewService {
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
-    public UpdateCommentResponse updateReview(Long id, UpdateCommentRequest request) {
+    public UpdateReviewResponse updateReview(Long id, UpdateReviewRequest request) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
@@ -135,7 +135,7 @@ public class ReviewService {
             }
             reviewRepository.save(comment);
 
-            return UpdateCommentResponse.builder()
+            return UpdateReviewResponse.builder()
                     .id(comment.getId())
                     .content(comment.getContent())
                     .build();

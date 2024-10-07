@@ -1,15 +1,13 @@
 package com.spring.dlearning.mapper;
 
-import com.spring.dlearning.dto.response.CourseLessonResponse;
 import com.spring.dlearning.dto.response.InfoTeacherByCourseResponse;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.Review;
 import com.spring.dlearning.repository.CourseRepository;
 import org.springframework.stereotype.Component;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Set;
+import java.util.List;
 
 @Component
 public class InfoTeacherMapper {
@@ -33,7 +31,7 @@ public class InfoTeacherMapper {
                 .build();
     }
 
-    public BigDecimal getAverageRating(Set<Review> reviews){
+    public BigDecimal getAverageRating(List<Review> reviews){
         int sum = reviews.stream().mapToInt(Review::getRating).sum();
 
         return BigDecimal.valueOf(sum).divide(BigDecimal.valueOf(reviews.size()), 1, RoundingMode.HALF_UP);

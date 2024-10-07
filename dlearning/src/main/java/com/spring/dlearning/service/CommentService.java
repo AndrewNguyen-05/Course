@@ -2,8 +2,10 @@ package com.spring.dlearning.service;
 
 import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.CommentRequest;
+import com.spring.dlearning.dto.request.UpdateCommentRequest;
 import com.spring.dlearning.dto.response.CommentResponse;
 import com.spring.dlearning.dto.response.PageResponse;
+import com.spring.dlearning.dto.response.UpdateCommentResponse;
 import com.spring.dlearning.entity.Comment;
 import com.spring.dlearning.entity.Post;
 import com.spring.dlearning.entity.User;
@@ -68,7 +70,6 @@ public class CommentService {
                 .build();
     }
 
-
     @PreAuthorize("isAuthenticated()")
     public CommentResponse addComment(CommentRequest request) {
 
@@ -105,6 +106,7 @@ public class CommentService {
         return commentMapper.toCommentResponse(comment);
     }
 
+    @PreAuthorize("isAuthenticated()")
     public void deleteComment(Long commentId) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -122,6 +124,31 @@ public class CommentService {
         }
 
         throw new AppException(ErrorCode.DELETE_COMMENT_INVALID);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public UpdateCommentResponse updateComment (Long commentId, UpdateCommentRequest request){
+
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXISTED));
+
+        if (!Objects.equals(user.getId(), comment.getUser().getId())) {
+            throw new AppException(ErrorCode.UPDATE_COMMENT_INVALID);
+        }
+
+        commentMapper.updateComment(request, comment);
+        commentRepository.save(comment);
+
+        return UpdateCommentResponse.builder()
+                .id(comment.getId())
+                .content(comment.getContent())
+                .build();
     }
 
 }

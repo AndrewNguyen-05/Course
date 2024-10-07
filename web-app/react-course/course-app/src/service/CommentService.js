@@ -53,7 +53,7 @@ export const replyComment = async (token, replyData) => {
             body: JSON.stringify(replyData)
         })
         const data = await response.json();
-           
+
         console.log('Server Response:', data);
         if (data.result) {
             toast.success('Update Comment Successfull')
@@ -65,6 +65,47 @@ export const replyComment = async (token, replyData) => {
 
     } catch (error) {
         console.log(error)
+        throw error;
+    }
+}
+
+export const deleteComment = async (token, commentId) => {
+    const response = await fetch(`http://localhost:8080/api/v1/delete-comment/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to delete comment');
+    }
+
+    return response.json();
+}
+
+export const updateComment = async (token, commentId, updateContent) => {
+
+    try {
+        const response = await fetch(`http://localhost:8080/api/v1/update-comment/${commentId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ content: updateContent })
+        })
+
+        const data = await response.json();
+        if (data.result) {
+            toast.success('Update Comment Successfully');
+            return data.result;
+        } else {
+            toast.error(data.message);
+            throw new Error(data.message);
+        }
+    } catch (error) {
+        console.error('Error in service:', error);
         throw error;
     }
 }

@@ -1,9 +1,11 @@
 package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.request.CommentRequest;
+import com.spring.dlearning.dto.request.UpdateCommentRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.CommentResponse;
 import com.spring.dlearning.dto.response.PageResponse;
+import com.spring.dlearning.dto.response.UpdateCommentResponse;
 import com.spring.dlearning.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
@@ -49,6 +51,15 @@ public class CommentController {
         return ApiResponse.<Void>builder()
                 .code(HttpStatus.NO_CONTENT.value())
                 .message("Delete Comment Successfully")
+                .build();
+    }
+
+    @PutMapping("/update-comment/{commentId}")
+    ApiResponse<UpdateCommentResponse> updateComment (@PathVariable Long commentId, @RequestBody @Valid UpdateCommentRequest request) {
+        return ApiResponse.<UpdateCommentResponse>builder()
+                .code(HttpStatus.OK.value())
+                .message("Update Comment Successfully")
+                .result(commentService.updateComment(commentId, request))
                 .build();
     }
 
