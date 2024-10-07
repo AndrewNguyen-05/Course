@@ -19,4 +19,5 @@ public class CourseRequest {
     String thumbnail;
     String videoUrl;
 
+
 }

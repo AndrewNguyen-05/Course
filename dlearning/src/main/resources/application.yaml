@@ -6,7 +6,7 @@ spring:
     url: "jdbc:mysql://localhost:3306/d_learning"
     driverClassName: "com.mysql.cj.jdbc.Driver"
     username: root
-    password: 1234
+    password: phuongthanh229
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,6 +20,6 @@ spring:
 
 ---
 upload-file:
-  base-uri: file:///C:/D-Learning/upload/
+  base-uri: file:///E:/Course/upload/
 
 

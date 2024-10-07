@@ -33,7 +33,7 @@ public class LessonService {
     LessonContentRepository lessonContentRepository;
 
     @Transactional
-    @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN', 'TEACHER')")
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN', 'TEACHER', 'USER')")
     public UploadLessonResponse createLesson(UploadLessonRequest request, MultipartFile lessonVideo) throws IOException {
 
         Course course = courseRepository.findById(request.getCourseId())
