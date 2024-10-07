@@ -170,7 +170,7 @@ const PostModal = ({ show, handleClose, post }) => {
 
     // Save edit comment
     const handleSaveEdit = async (commentId) => {
-        const updatedContent = (editContent[commentId] || "").trim(); 
+        const updatedContent = (editContent[commentId] || "").trim();
         if (!updatedContent) {
             toast.error('Please enter new content');
             return;
@@ -179,19 +179,26 @@ const PostModal = ({ show, handleClose, post }) => {
             const result = await updateComment(token, commentId, updatedContent);
             if (result) {
                 setComments((prevComments) => {
+                    // Bước 1: Tạo một danh sách comments mới bằng cách map qua các bình luận cũ.
                     const updateComments = prevComments.map(comment => {
+                    // Bước 2: Kiểm tra xem comment hiện tại có trùng ID với comment cần update không (commentId là ID của comment muốn update)
                         if (comment.id === commentId) {
+                            // Nếu trùng, cập nhật content của comment đó với nội dung mới từ `result`
                             return { ...comment, content: result.content };
                         }
-
+                    // Bước 3: Nếu không phải bình luận cha, tìm trong danh sách replies (bình luận con) của bình luận hiện tại
                         const updatedReplies = comment.replies.map(reply => {
+                            // Nếu reply hiện tại có ID trùng với commentId, cập nhật nội dung của nó
                             if (reply.id === commentId) {
                                 return { ...reply, content: result.content };
                             }
+                            // Nếu không, giữ nguyên reply
                             return reply;
                         });
+                    // Bước 4: Trả về bình luận hiện tại với danh sách replies đã được cập nhật (nếu có)
                         return { ...comment, replies: updatedReplies };
                     })
+                    // Bước 5: Cập nhật lại state `comments` với danh sách bình luận đã thay đổi
                     return [...updateComments];
                 });
                 setEditingCommentId(null);
