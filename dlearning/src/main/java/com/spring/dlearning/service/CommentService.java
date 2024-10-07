@@ -52,7 +52,6 @@ public class CommentService {
                     List<CommentResponse> replies = comment.getReplies().stream()
                             .map(commentMapper::toCommentResponse)
                             .toList();
-
                     response.setReplies(replies);
                     return response;
                 })

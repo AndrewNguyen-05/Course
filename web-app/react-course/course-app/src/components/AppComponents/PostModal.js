@@ -52,7 +52,7 @@ const PostModal = ({ show, handleClose, post }) => {
                 if (currentPage === 1) {
                     setComments(updatedComments);
                 } else {
-                    setComments((prevComments) => [...updatedComments, ...prevComments]);
+                    setComments((prevComments) => [...prevComments, ...updatedComments]);
                 }
                 if (updatedComments.length < 3) {
                     setHasMoreComments(false);
@@ -85,11 +85,15 @@ const PostModal = ({ show, handleClose, post }) => {
 
         try {
             const result = await addComment(token, commentData);
-            setComments([{
-                ...result,
-                replying: false,
-                replies: []
-            }, ...comments])
+            setComments([
+                ...comments,
+                {
+                    ...result,
+                    replying: false,
+                    replies: []
+                }
+            ]);
+            // comment mới(result) sẽ nằm dưới comment cũ(commentss)
             setCommentContent("");
 
         } catch (error) {
@@ -104,13 +108,13 @@ const PostModal = ({ show, handleClose, post }) => {
             toast.error('Comment cannot be empty!');
             return;
         }
-    
+
         const replyData = {
             content: replyText.trim(),
             parentCommentId: commentId,
             postId: postId,
         };
-    
+
         try {
             const result = await replyComment(token, replyData);
             if (result) {
@@ -131,7 +135,7 @@ const PostModal = ({ show, handleClose, post }) => {
             console.log('Error replying to comment:', error);
         }
     };
-    
+
 
 
     // Edit Comment
@@ -225,27 +229,6 @@ const PostModal = ({ show, handleClose, post }) => {
                     </Button>
                 </div>
 
-                {hasMoreComments && (
-                    <div className="d-flex justify-content-center py-3">
-                        <Button
-                            variant="outline-primary"
-                            size="sm"
-                            className="post-load-more-btn"
-                            onClick={handleLoadMoreComments}
-                            disabled={isLoading}
-                        >
-                            {isLoading ? (
-                                <>
-                                    <Spinner animation="border" size="sm" className="me-2" />
-                                    Loading...
-                                </>
-                            ) : (
-                                'See more comments ...'
-                            )}
-                        </Button>
-                    </div>
-                )}
-
                 <ListGroup className="post-modal-comments">
                     {comments.map((cmt) => (
                         <ListGroup.Item key={cmt.id} className="post-comment-item">
@@ -333,6 +316,27 @@ const PostModal = ({ show, handleClose, post }) => {
                             </div>
                         </ListGroup.Item>
                     ))}
+
+                    {hasMoreComments && (
+                        <div className="d-flex justify-content-center py-3 see-more-comment">
+                            <Button
+                                variant="outline-primary"
+                                size="sm"
+                                className="post-load-more-btn"
+                                onClick={handleLoadMoreComments}
+                                disabled={isLoading}
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <Spinner animation="border" size="sm" className="me-2" />
+                                        Loading...
+                                    </>
+                                ) : (
+                                    'See more comments ...'
+                                )}
+                            </Button>
+                        </div>
+                    )}
                 </ListGroup>
 
                 {/* Nhập bình luận mới */}
