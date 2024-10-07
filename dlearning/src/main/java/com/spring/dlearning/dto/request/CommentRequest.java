@@ -16,4 +16,5 @@ public class CommentRequest {
     String content;
     Long parentCommentId;
     Long postId;
+
 }

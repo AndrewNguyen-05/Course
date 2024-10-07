@@ -28,7 +28,7 @@ import { PaymentCancel } from './components/pages/PaymentCancel';
 import { LearningPage } from './components/pages/LearningPage';
 import { MainLayout } from './components/router/MainLayout';
 import { NotFound } from './components/error/NotFound';
-import { AdsPage } from './components/AppComponents/Ads';
+import { AdsPage } from './components/pages/Ads';
 import { HeaderAndFooterRouter } from './components/router/HeaderAndFooterRouter';
 import { Community } from './components/pages/Community';
 import ProfilePage from './components/pages/MyAccount';
@@ -115,7 +115,7 @@ function App() {
         <Route path='/lesson-detail/:id' element={<LearningPage />} />
         <Route path="/authenticate" element={<ProcessLoginOAuth2 />} />
         <Route path='/accessdenied' element={<Accessdenied />} />
-        {/* <Route path="*" element={<NotFound />} /> */}
+        <Route path="*" element={<NotFound />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFail />} />
         <Route path="/payment-cancel" element={<PaymentCancel />} />

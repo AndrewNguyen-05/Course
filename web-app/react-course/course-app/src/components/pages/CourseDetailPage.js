@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FaCommentDots, FaReply, FaTrash, FaStar, FaBook } from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import { buyCourse, getChapterById, getCommentByCourseId, getCourseById } from "../../service/CourseService";
 import CourseContent from "../AppComponents/CourseContent";
-import { CommentSection } from "../AppComponents/CommentSection";
+import { ReviewSection } from "../AppComponents/ReviewSection";
 import { CourseFeatur } from "../AppComponents/CourseFeature";
 import { addReplyReview, addReview, deleteReview, editReview } from "../../service/ReviewService";
 
@@ -17,7 +17,7 @@ export const CourseDetail = () => {
     const [loading, setLoading] = useState(true);
     const [comments, setComments] = useState([]); // list comment
     const [newComment, setNewComment] = useState(""); // add comment
-    const [replyContent, setReplyContent] = useState({}); // update nội dung cmt
+    const [replyContent, setReplyContent] = useState({});
     const [editContent, setEditContent] = useState({}); // cập nhật nội dung chỉnh sửa của bình luận.
     const [editingCommentId, setEditingCommentId] = useState(null); // lưu ID của bình luận đang được chỉnh sửa
     const [newRating, setNewRating] = useState(0);
@@ -109,13 +109,13 @@ export const CourseDetail = () => {
 
         const replyData = {
             content: replyText.trim(),
-            parentCommentId: commentId,
+            parentReviewId: commentId,
             rating: 0,
             courseId: id
         };
 
         try {
-            const result = await addReplyReview(replyData, token, id);
+            const result = await addReplyReview(token, replyData, id);
 
             if (result) {
                 // Cập nhật lại danh sách comments với reply mới
@@ -272,7 +272,7 @@ export const CourseDetail = () => {
                             </div>
 
                             <CourseContent chapter={chapter} />
-                            <CommentSection
+                            <ReviewSection
                                 comments={comments}
                                 newComment={newComment}
                                 editingCommentId={editingCommentId}

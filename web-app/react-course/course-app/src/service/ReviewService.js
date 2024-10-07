@@ -14,8 +14,6 @@ export const addReview = async (commentData, token, courseId) => {
         const data = await response.json();
 
         if (data.result) {
-            console.log(data)
-            console.log(data.result)
             toast.success('Comment added successfully');
             return data.result;
         } else {
@@ -27,7 +25,7 @@ export const addReview = async (commentData, token, courseId) => {
     }
 };
 
-export const addReplyReview = async (replyData, token, courseId) => {
+export const addReplyReview = async (token, replyData, courseId) => {
     try {
         const response = await fetch(`http://localhost:8080/api/v1/add-review?id=${courseId}`, {
             method: 'POST',

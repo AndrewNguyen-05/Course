@@ -1,7 +1,7 @@
 import React from "react";
-import { FaCommentDots, FaReply, FaTrash, FaStar } from 'react-icons/fa';
+import { FaCommentDots, FaReply, FaTrash } from 'react-icons/fa';
 
-export const CommentSection = ({
+export const ReviewSection = ({
     comments,
     newComment,
     editingCommentId,
@@ -150,16 +150,17 @@ export const CommentSection = ({
                                     value={replyContent[comment.id] || ""}
                                     onChange={(e) => setReplyContent({ ...replyContent, [comment.id]: e.target.value })}
                                 />
-                                <button className="btn btn-primary px-4" onClick={() => handleAddReply(comment.id, replyContent[comment.id])}>
+                                <button className="btn btn-primary px-4" onClick={() => handleAddReply(comment.id)}>
                                     Submit Reply
                                 </button>
+
                             </div>
                         )}
 
                         {/* Reply button after replies */}
                         <div className="comment-actions d-flex justify-content-end mt-2">
                             <button className="btn btn-sm btn-outline-info" onClick={() => handleReplyToggle(comment.id)}>
-                                <FaReply className="mr-1" /> Reply
+                                <FaReply className="mr-1 reply-review" /> Reply
                             </button>
                         </div>
                     </div>

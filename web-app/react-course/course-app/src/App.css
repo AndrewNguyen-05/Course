@@ -2993,14 +2993,16 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-info {
-  color: #17a2b8;
+  color: #1cb817;
   border-color: #17a2b8;
+  
 }
 
 .btn-outline-info:hover {
   color: #fff;
   background-color: #17a2b8;
   border-color: #17a2b8;
+  text-decoration: none;
 }
 
 .btn-outline-info:focus, .btn-outline-info.focus {
@@ -13282,4 +13284,82 @@ my-account-cover-photo
   border-radius: 8px;
   object-fit: cover; /* Giữ nguyên tỷ lệ ảnh */
 }
+
+/* Định dạng textarea và nút phản hồi */
+.reply-box-container {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.reply-textarea {
+  width: 95%;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  padding: 8px;
+  resize: none;
+}
+
+.reply-button {
+  margin-top: 5px;
+  font-size: 0.875rem;
+  background-color: #007bff;
+  color: #fff;
+}
+
+.post-dropdown-toggle {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: #6c757d; /* Màu xám cho icon */
+  font-size: 16px;
+}
+
+.reply-button {
+  align-self: flex-start;
+  padding: 4px 12px;
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.post-load-more-btn:hover {
+  background: #007bff;
+  color: white;
+}
+
+/* CSS để ẩn dấu tam giác của dropdown */
+.post-dropdown-toggle::after {
+  display: none !important; /* Loại bỏ mũi tên tam giác */
+}
+
+/* Tùy chỉnh thêm nếu cần */
+.post-dropdown-toggle {
+  border: none; /* Loại bỏ viền mặc định */
+  padding: 0; /* Loại bỏ khoảng cách */
+  background: none; /* Loại bỏ nền */
+  cursor: pointer; /* Con trỏ hiển thị như nút */
+}
+.save-edit-comment{
+  font-size: 13px;
+  margin-bottom: 3px;
+  margin-right: 10px
+}
+
+.close-edit-comment{
+  margin-bottom: 3px;
+  font-size: 13px;
+}
+
+.replies-container {
+  margin-left: 30px; /* Giúp phần replies thụt vào so với comment cha */
+}
+
+.reply-item {
+  margin-top: 10px;
+}
+
 

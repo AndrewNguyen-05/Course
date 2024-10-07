@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { AdsTable } from "./AdsTable";
+import { AdsTable } from "../AppComponents/AdsTable";
 import { Link } from "react-router-dom";
 import { getAdsByCurrentLogin } from "../../service/AdsService";
 import { Pagination } from "../common/Pagination";

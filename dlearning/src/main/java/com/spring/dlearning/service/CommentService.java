@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -38,21 +39,34 @@ public class CommentService {
 
     @PreAuthorize("isAuthenticated()")
     public PageResponse<CommentResponse> getCommentByPostId(Long postId, int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Comment> comments = commentRepository.findCommentByPostId(postId, pageable);
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
+        Pageable pageable = PageRequest.of(page - 1, size, sort);
 
-        List<CommentResponse> responses = comments.getContent()
-                .stream().map(commentMapper::toCommentResponse)
+        Page<Comment> parentComments = commentRepository.findCommentByPostIdAndParentCommentIsNull(postId, pageable);
+
+        List<CommentResponse> responses = parentComments.getContent()
+                .stream()
+                .map(comment -> {
+                    CommentResponse response = commentMapper.toCommentResponse(comment);
+
+                    List<CommentResponse> replies = comment.getReplies().stream()
+                            .map(commentMapper::toCommentResponse)
+                            .toList();
+
+                    response.setReplies(replies);
+                    return response;
+                })
                 .toList();
 
         return PageResponse.<CommentResponse>builder()
                 .currentPage(page)
                 .pageSize(pageable.getPageSize())
-                .totalElements(comments.getTotalElements())
-                .totalPages(comments.getTotalPages())
+                .totalElements(parentComments.getTotalElements())
+                .totalPages(parentComments.getTotalPages())
                 .data(responses)
                 .build();
     }
+
 
     @PreAuthorize("isAuthenticated()")
     public CommentResponse addComment(CommentRequest request) {

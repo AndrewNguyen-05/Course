@@ -11,9 +11,11 @@ public interface CommentMapper {
 
     Comment toComment (CommentRequest request);
 
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "postId", source = "post.id")
     @Mapping(target = "name", source = "user.name")
     @Mapping(target = "avatar", source = "user.avatar")
     @Mapping(target = "replies", source = "replies")
     CommentResponse toCommentResponse (Comment comment);
+
 }

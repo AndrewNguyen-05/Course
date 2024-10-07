@@ -54,7 +54,6 @@ export const Community = () => {
     setLoading(false);
   };
 
-
   useEffect(() => {
     fetchPosts(currentPage);
   }, [currentPage]);
@@ -70,17 +69,15 @@ export const Community = () => {
       const formData = new FormData();
       formData.append('request', jsonBlog);
       formData.append('file', newPost.image);
-  
-      const response = await creationPost(token, formData); 
+
+      const response = await creationPost(token, formData);
       if (response && response.result) {
         const newCreatedPost = response.result;
-  
+
         // Thêm bài viết mới vào đầu danh sách `posts`
         setPosts((prevPosts) => [newCreatedPost, ...prevPosts]);
-  
         toast.success('Create Post Successfully');
       }
-  
       // Đặt lại trạng thái sau khi tạo bài viết
       setShowModal(false);
       setSelectedImage(null);  // Xóa ảnh được chọn
@@ -239,7 +236,11 @@ export const Community = () => {
             </Row>
           </Container>
         </div>
-        <ToastContainer position="top-right" autoClose={3000} />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          style={{ top: '20%', right: '20px' }}
+        />
       </div>
     </div>
   );
