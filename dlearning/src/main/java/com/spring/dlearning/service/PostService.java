@@ -1,5 +1,6 @@
 package com.spring.dlearning.service;
 
+import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.PostCreationRequest;
 import com.spring.dlearning.dto.request.UpdateLikeCountRequest;
 import com.spring.dlearning.dto.response.PageResponse;
@@ -26,6 +27,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -102,6 +104,25 @@ public class PostService {
                 .totalPages(posts.getTotalPages())
                 .data(postResponse)
                 .build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    public void deletePost (Long postId) {
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new AppException(ErrorCode.POST_ID_INVALID));
+
+        if (!Objects.equals(user.getId(), post.getUser().getId()) &&
+                !Objects.equals(user.getRole().getName(), PredefinedRole.ADMIN_ROLE)) {
+            throw new AppException(ErrorCode.DELETE_POST_INVALID);
+        }
+
+        postRepository.delete(post);
     }
 
     @PreAuthorize("isAuthenticated()")

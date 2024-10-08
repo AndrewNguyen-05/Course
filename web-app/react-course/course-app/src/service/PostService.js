@@ -65,3 +65,19 @@ export const getPostByUserLogin = async (token, currentPage) => {
 
   return response.json();
 }
+
+export const deletePost = async (token, postId) => {
+  const response = await fetch(`http://localhost:8080/api/v1/delete-post/${postId}`, {
+    method: "DELETE",
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message);
+  }
+
+  return response.json();
+}

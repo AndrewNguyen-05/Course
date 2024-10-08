@@ -37,6 +37,16 @@ public class PostController {
                 .build();
     }
 
+    @DeleteMapping("/delete-post/{postId}")
+    ApiResponse<Void> deletePost (@PathVariable Long postId) {
+        postService.deletePost(postId);
+
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.NO_CONTENT.value())
+                .message("Delete post successfully")
+                .build();
+    }
+
     @GetMapping("/get-all-post")
     ApiResponse<PageResponse<PostResponse>> getAllPost (
                                       @Filter Specification<Post> spec,
