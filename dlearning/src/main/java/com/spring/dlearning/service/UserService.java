@@ -79,7 +79,6 @@ public class UserService {
                 .recipient(user.getEmail())
                 .templateCode("welcome-email")
                 .subject("Welcome to DLearning")
-                .body("Hello " + user.getName())
                 .build();
 
         kafkaTemplate.send("notification-delivery", event);

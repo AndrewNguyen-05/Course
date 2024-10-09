@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Container, Row, Col, Modal, Spinner } from 'react-bootstrap';
-import { FaHome, FaImage, FaMapMarkerAlt, FaRegGrinAlt, FaSave, FaSmile, FaUserFriends, FaVideo } from 'react-icons/fa';
+import { FaHome, FaImage, FaMapMarkerAlt, FaRegFrown, FaRegGrinAlt, FaSave, FaSearch, FaSmile, FaUserFriends, FaVideo } from 'react-icons/fa';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import PostCard from '../AppComponents/PostCard';
 import { creationPost, getAllPosts } from '../../service/PostService';
 import { toast, ToastContainer } from 'react-toastify';
 import { MdExplore, MdGif, MdLiveTv, MdVideoLibrary } from 'react-icons/md';
 import { getAvatar } from '../../service/ProfileService';
+import { ClipLoader } from 'react-spinners';
+import { motion } from 'framer-motion';
 
 export const Community = () => {
   const token = localStorage.getItem('token');
@@ -17,9 +19,10 @@ export const Community = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [filterQuery, setFilterQuery] = useState('');
   const [avatar, setAvatar] = useState('https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg');
   const [newPost, setNewPost] = useState({ content: '', image: null });
+  const [filterQuery, setFilterQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
 
   useEffect(() => {
     if (!token) {
@@ -32,19 +35,21 @@ export const Community = () => {
   }, [token]);
 
 
-  const fetchPosts = async (pageNumber) => {
+  const fetchPosts = async () => {
     setLoading(true);
+
     try {
-      const data = await getAllPosts(token, pageNumber, filterQuery);
+      const data = await getAllPosts(token, currentPage, filterQuery);
       if (data && data.result && Array.isArray(data.result.data)) {
         const newPosts = data.result.data;
         console.log("Page", currentPage)
-        setPosts((prevPosts) => {
-          const mergedPosts = [...prevPosts, ...newPosts.filter(post => !prevPosts.some(p => p.id === post.id))];
-          return mergedPosts;
-        });
+        if (currentPage === 1) {
+          setPosts(newPosts);
+        } else {
+          setPosts((prevPosts) => [...prevPosts, ...newPosts.filter(post => !prevPosts.some(p => p.id === post.id))]);
+        }
         setTotalPages(data.result.totalPages || 1);
-        setHasMore(pageNumber < data.result.totalPages); // Cập nhật hasMore
+        setHasMore(currentPage < data.result.totalPages);
       } else {
         setHasMore(false);
       }
@@ -52,11 +57,23 @@ export const Community = () => {
       console.error(error);
     }
     setLoading(false);
+    setIsSearching(false);
   };
 
   useEffect(() => {
     fetchPosts(currentPage);
   }, [currentPage]);
+
+  const handlesearchPost = () => {
+    setIsSearching(true);
+    setPosts([]);
+    setCurrentPage(1);
+
+    setTimeout(() => {
+      fetchPosts(1, filterQuery);
+    }, 2000);
+  };
+
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
@@ -103,9 +120,22 @@ export const Community = () => {
   return (
     <div className='content-page'>
       <div className="community-container d-flex">
+
         <div className="sidebar bg-dark text-light p-4">
-          <h4 className="text-white mb-4">Video</h4>
-          <Form.Control type="text" placeholder="Search Post" className="mb-3" />
+          <Form.Group className="search-group position-relative mb-3">
+            <Form.Control
+              type="text"
+              placeholder="Search Post"
+              className="custom-search-input"
+              value={filterQuery}
+              onChange={(e) => setFilterQuery(e.target.value)}
+            />
+            <button className="search-button"
+              onClick={handlesearchPost}
+            >
+              <FaSearch />
+            </button>
+          </Form.Group>
           <div className="sidebar-menu">
             <SidebarMenuItem title="Home" icon={<FaHome />} />
             <SidebarMenuItem title="Live" icon={<MdLiveTv />} />
@@ -120,7 +150,7 @@ export const Community = () => {
         <div className="main-content">
           <div className="create-post-container">
             <div className="create-post-header d-flex align-items-center">
-              <img src={avatar} alt="User Avatar" className="avatar-img me-3" />
+              <img src={avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"} alt="User Avatar" className="avatar-img me-3" />
               <Form.Control
                 type="text"
                 placeholder="Đức ơi, bạn đang nghĩ gì thế?"
@@ -131,15 +161,15 @@ export const Community = () => {
             <div className="create-post-footer d-flex justify-content-around mt-3">
               <Button variant="outline-danger" className="d-flex align-items-center">
                 <FaVideo className="me-1" />
-                Video trực tiếp
+                Live Video
               </Button>
               <Button variant="outline-success" className="d-flex align-items-center">
                 <FaImage className="me-1" />
-                Ảnh/video
+                Photo/Video
               </Button>
               <Button variant="outline-warning" className="d-flex align-items-center">
                 <FaSmile className="me-1" />
-                Cảm xúc/hoạt động
+                Feeling/Activity
               </Button>
             </div>
           </div>
@@ -205,33 +235,65 @@ export const Community = () => {
           <Container>
             <Row className="justify-content-md-center">
               <Col md={8}>
-                <InfiniteScroll
-                  dataLength={posts.length}
-                  next={() => setCurrentPage((prevPage) => prevPage + 1)}
-                  hasMore={hasMore}
-                  loader={
-                    <div className="text-center my-3">
-                      <Spinner animation="border" />
-                      <p>Đang tải thêm bài viết...</p>
-                    </div>
-                  }
-                  endMessage={<p className="text-center text-secondary">Không còn bài viết nào để hiển thị!</p>}
-                >
-                  {posts.map((post) => (
-                    <div key={post.id} className="post-container mb-1 p-2 rounded">
-                      <PostCard
-                        id={post.id}
-                        author={post.name}
-                        content={post.content}
-                        avatar={post.avatar}
-                        image={post.image}
-                        likes={post.likes}
-                        comments={post.comments}
-                        createdAt={post.createdAt}
-                      />
-                    </div>
-                  ))}
-                </InfiniteScroll>
+
+                {isSearching && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="d-flex justify-content-center align-items-center my-5"
+                  >
+                    <ClipLoader color={"#007bff"} size={50} />
+                    <span className="ms-3">Searching for posts...</span>
+                  </motion.div>
+                )}
+
+                {!loading && posts.length === 0 && !isSearching ? (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center my-4"
+                  >
+                    <FaRegFrown size={100} color="#ccc" className="my-3" />
+                    <p>No results were found matching your keyword.</p>
+                  </motion.div>
+                ) : (
+                  <InfiniteScroll
+                    dataLength={posts.length}
+                    next={() => setCurrentPage((prevPage) => prevPage + 1)}
+                    hasMore={hasMore}
+                    loader={
+                      !isSearching && (
+                        <div className="text-center my-3">
+                          <Spinner animation="border" />
+                          <p>Đang tải thêm bài viết...</p>
+                        </div>
+                      )
+                    }
+                    endMessage={<p className="text-center text-secondary">There are no more posts to display!</p>}
+                  >
+                    {posts.map((post) => (
+                      <motion.div
+                        key={post.id}
+                        className="post-container mb-1 p-2 rounded"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <PostCard
+                          id={post.id}
+                          author={post.name}
+                          content={post.content}
+                          avatar={post.avatar}
+                          image={post.image}
+                          likes={post.likes}
+                          comments={post.comments}
+                          createdAt={post.createdAt}
+                        />
+                      </motion.div>
+                    ))}
+                  </InfiniteScroll>
+
+                )}
               </Col>
             </Row>
           </Container>

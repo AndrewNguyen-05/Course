@@ -12971,7 +12971,7 @@ my-account-cover-photo
   position: fixed;
   top: 50;
   left: 0;
-  width: 260px; /* Chiều rộng Sidebar */
+  width: 15%; /* Chiều rộng Sidebar */
   max-width: 20%;
   height: 100vh;
   background-color: #2b2b2b;
@@ -13387,4 +13387,148 @@ my-account-cover-photo
 .cancel-comment {
   margin-bottom: 5px;
   font-size: 13px;
+}
+.search-group {
+    position: relative; /* Để nút tìm kiếm có thể được đặt bên trong */
+}
+
+.custom-search-input { 
+  padding-right: 40px; 
+  border: 2px solid #007bff; 
+  border-radius: 25px; 
+  height: 50px; 
+  background-color: #f9f9f9;
+  color: #333; 
+}
+
+.search-button {
+    position: absolute; /* Đặt nút tìm kiếm lên trên input */
+    right: 10px; /* Căn lề bên phải */
+    top: 50%; /* Giữa chiều cao */
+    transform: translateY(-50%); /* Giúp nút ở giữa ô nhập liệu */
+    border: none; /* Không viền */
+    background: transparent; /* Không màu nền */
+    cursor: pointer; /* Chuyển sang hình bàn tay khi hover */
+    color: #007bff; /* Màu chữ cho nút tìm kiếm */
+    font-size: 20px; /* Kích thước chữ cho biểu tượng tìm kiếm */
+}
+
+.search-button:hover {
+    color: #0056b3; /* Màu khi hover */
+}
+
+.deltail-ads-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.deltail-ads-modal-content {
+  width: 48%; /* Giảm chiều rộng modal */
+  background: #ffffff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.deltail-ads-modal-header {
+  padding: 12px; /* Giảm padding header */
+  background: #eceff4;
+  color: #333333;
+  text-align: center;
+  font-size: 20px; /* Giảm kích thước font */
+  border-bottom: 3px solid #d1d9e6;
+}
+
+.deltail-ads-modal-body {
+  padding: 12px 24px; /* Giảm padding trong phần body */
+}
+
+.deltail-ads-form-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px; /* Giảm khoảng cách giữa các hàng */
+  gap: 10px; /* Giảm khoảng cách giữa các cột */
+}
+
+/* Bốn cột */
+.four-columns .deltail-ads-form-group {
+  flex: 0 0 24%;
+}
+
+/* Hai cột */
+.two-columns .deltail-ads-form-group {
+  flex: 0 0 48%;
+}
+
+/* Full Width */
+.full-width {
+  width: 100%;
+}
+
+.deltail-ads-input {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 3px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #f8f8f8;
+  transition: border 0.3s ease;
+}
+
+.deltail-ads-input:focus {
+  border-color: #6a82fb;
+  outline: none;
+}
+
+.short-input {
+  width: 80%;
+}
+
+.status-width {
+  flex: 0 0 24%;
+}
+
+.deltail-ads-icon {
+  margin-right: 5px;
+  color: #6a82fb;
+}
+
+.deltail-ads-modal-footer {
+  padding: 15px 30px;
+  background: #eceff4;
+  text-align: right;
+}
+
+.deltail-ads-button {
+  padding: 8px 20px;
+  border: none;
+  background: #4b79a1;
+  color: #ffffff;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-left: 10px;
+}
+
+.deltail-ads-button-primary {
+  background: #5cb85c;
+}
+.status-short {
+  flex: 0 0 15%;  
+  max-width: 273px;
+}
+
+.deltail-ads-image-container {
+  width: 100%; /* Đặt chiều rộng của container */
+ 
+}
+
+.deltail-ads-image {
+  width: 50%; /* Đặt chiều rộng của hình ảnh, điều chỉnh theo tỷ lệ mong muốn */
+  height: auto; /* Đảm bảo chiều cao tự động thay đổi theo chiều rộng */
+  object-fit: contain; /* Giữ nguyên tỷ lệ gốc của ảnh mà không bị méo */
+  border-radius: 8px; /* Tạo góc bo tròn cho ảnh nếu cần */
+  margin-top: 15px;
 }

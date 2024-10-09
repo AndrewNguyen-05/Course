@@ -4,7 +4,6 @@ import com.spring.dlearning.dto.event.NotificationEvent;
 import com.spring.dlearning.entity.Advertisement;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,7 +21,6 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,53 +51,6 @@ public class EmailService {
         mailSender.send(mimeMessage);
     }
 
-    public void confirmAdvertisement (String emailTo, Advertisement advertisement)
-            throws MessagingException, UnsupportedEncodingException {
-        log.info("Sending email ...");
-
-
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
-                                       MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
-                                       StandardCharsets.UTF_8.name());
-
-        Context context = getContext(advertisement);
-
-        helper.setFrom(emailFrom, "Le Khanh Duc");
-        helper.setTo(emailTo);
-        helper.setSubject("Please Confirm your account");
-
-        String html = templateEngine.process("info-ads.html", context);
-        helper.setText(html, true);
-
-        mailSender.send(mimeMessage);
-
-        log.info("Email sent to {}", emailTo);
-    }
-
-    @NotNull
-    private static Context getContext(Advertisement advertisement) {
-        Context context = new Context();
-        Map<String, Object> properties = new HashMap<>();
-
-        String paymentUrl = getPaymentUrlFromApi(advertisement);
-
-        properties.put("title", advertisement.getTitle());
-        properties.put("img", advertisement.getImage());
-        properties.put("description", advertisement.getDescription());
-        properties.put("link", advertisement.getLink());
-        properties.put("startDate", advertisement.getStartDate().toString());
-        properties.put("endDate", advertisement.getEndDate().toString());
-        properties.put("priceAds", advertisement.getPrice().toString() + " VND");
-        properties.put("status", advertisement.getApprovalStatus().name());
-        properties.put("qrCodeUrl", "https://example.com/qr-code.jpg");
-
-        properties.put("paymentUrl", paymentUrl);
-
-        context.setVariables(properties);
-        return context;
-    }
-
     @KafkaListener(topics = "notification-delivery", groupId = "my-consumer-group")
     public void sendEmailByKafka(NotificationEvent event)
             throws MessagingException, UnsupportedEncodingException {
@@ -107,7 +58,12 @@ public class EmailService {
 
         Context context = new Context();
         context.setVariable("recipientName", event.getRecipient());
-        context.setVariable("body", event.getBody());
+
+        if (event.getParam() != null) {
+            context.setVariables(event.getParam());
+        } else {
+            log.warn("Event param is null, cannot set variables in email template.");
+        }
 
         String htmlContent = templateEngine.process(event.getTemplateCode(), context);
 
@@ -124,7 +80,7 @@ public class EmailService {
         log.info("Email sent to {} successfully!", event.getRecipient());
     }
 
-    private static String getPaymentUrlFromApi(Advertisement advertisement) {
+    public static String getPaymentUrlFromApi(Advertisement advertisement) {
         String apiUrl = "http://localhost:8080/api/v1/payment/vn-pay?amount=" + advertisement.getPrice() + "&bankCode=NCB";
 
         RestTemplate restTemplate = new RestTemplate();

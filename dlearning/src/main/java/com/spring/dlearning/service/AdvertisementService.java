@@ -27,6 +27,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -63,15 +66,29 @@ public class AdvertisementService {
         Advertisement advertisement = advertisementRepository.findById(request.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ADVERTISEMENT_ID_INVALID));
 
+        String qrCodeUrl = "https://lh6.googleusercontent.com/proxy/BekiCiO_nYW9g-JB-72dP3FnxBDXFvi7rT7gYP7cTiVKXggT_88-QscAL6sK_2mBjTTpWzMc2lCaPjs7qCHU94QvXov45qQiNmyrW8MGAzc38PBmzElAFgLjMscpMbMwrC0mKXVcQrguzyFe4VClo6SVHudUQkxFjk5qk_vBR67K8DI3Gp5wcDDbvULai7Soq8GvcJA620h1bZ5lj-02WsRWHumb94_wPDko0mjeZw7KYrDKebkrst6XUPRbQDvEaZMIZfF572y2Y30iVD9HzbmOpX_fK605or7WKhFKaEmirqPMxaAHiUuYXIUoQ-z2CJ9pqzO7gVg-nYL-Ka-yL3SB3Mj1641byJnmr8tRuAuQUkF0pKHmbfAytWbamyE";
+
         advertisement.setApprovalStatus(AdsStatus.AWAITING_PAYMENT);
         advertisementRepository.save(advertisement);
+
+        Map<String, Object> emailData = new HashMap<>();
+        emailData.put("title", advertisement.getTitle());
+        emailData.put("description", advertisement.getDescription());
+        emailData.put("img", advertisement.getImage());
+        emailData.put("link", advertisement.getLink());
+        emailData.put("startDate", advertisement.getStartDate().toString());
+        emailData.put("endDate", advertisement.getEndDate().toString());
+        emailData.put("priceAds", advertisement.getPrice() + " VND");
+        emailData.put("paymentUrl", EmailService.getPaymentUrlFromApi(advertisement));
+        emailData.put("qrCodeUrl", qrCodeUrl);
+        emailData.put("status", advertisement.getApprovalStatus().name());
 
         NotificationEvent event = NotificationEvent.builder()
                 .channel("Ads")
                 .recipient(advertisement.getContactEmail())
                 .templateCode("info-ads")
                 .subject("Congratulations! Your ad has been approved.")
-                .body("Congratulations, your ad titled '" + advertisement.getTitle() + "' has been approved.")
+                .param(emailData)
                 .build();
 
         kafkaTemplate.send("notification-delivery", event);
