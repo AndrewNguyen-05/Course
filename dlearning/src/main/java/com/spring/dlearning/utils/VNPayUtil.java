@@ -1,16 +1,27 @@
 package com.spring.dlearning.utils;
 
-import jakarta.servlet.http.HttpServletRequest;
-
+import com.spring.dlearning.configuration.VNPAYConfiguration;
+import com.spring.dlearning.model.PaymentInfo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
+import java.math.RoundingMode;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Random;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
+@Component
+@RequiredArgsConstructor
 public class VNPayUtil {
+    private final VNPAYConfiguration vnPayConfig;
+
     public static String hmacSHA512(final String key, final String data) {
         try {
             if (key == null || data == null) {
@@ -29,22 +40,9 @@ public class VNPayUtil {
             return sb.toString();
 
         } catch (Exception ex) {
-            ex.printStackTrace();  // Log lỗi
+            ex.printStackTrace();
             throw new RuntimeException("Error generating HMAC SHA512 hash", ex);
         }
-    }
-
-    public static String getIpAddress(HttpServletRequest request) {
-        String ipAdress;
-        try {
-            ipAdress = request.getHeader("X-FORWARDED-FOR");
-            if (ipAdress == null) {
-                ipAdress = request.getRemoteAddr();
-            }
-        } catch (Exception e) {
-            ipAdress = "Invalid IP:" + e.getMessage();
-        }
-        return ipAdress;
     }
 
     public static String getRandomNumber(int len) {
@@ -57,14 +55,35 @@ public class VNPayUtil {
         return sb.toString();
     }
 
-    public static String getPaymentURL(Map<String, String> paramsMap, boolean encodeKey) {
-        return paramsMap.entrySet().stream()
-                .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty())
+    public String getPaymentURL(PaymentInfo paymentInfo) {
+        Map<String, String> params = vnPayConfig.getVNPayConfig();
+        ZoneId zone = TimeZone.getTimeZone("GMT+7").toZoneId();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+
+        params.put("vnp_TxnRef", paymentInfo.getReference());
+        params.put("vnp_OrderInfo", paymentInfo.getDescription());
+        params.put("vnp_Amount", paymentInfo.getAmount().setScale(0, RoundingMode.DOWN).toString());
+        params.put("vnp_CreateDate", formatter.format(paymentInfo.getCreatedAt().atZone(zone).toLocalDateTime()));
+        params.put("vnp_ExpireDate", formatter.format(paymentInfo.getExpiredAt().atZone(zone).toLocalDateTime()));
+        params.put("vnp_IpAddr", paymentInfo.getIpAddress());
+
+        String query = buildQuery(params, true);
+        String checksum = VNPayUtil.hmacSHA512(vnPayConfig.getSecretKey(), buildQuery(params, false));
+        query += "&vnp_SecureHash=" + checksum;
+
+        return vnPayConfig.getVnp_PayUrl() + "?" + query;
+    }
+
+    private String buildQuery(Map<String, String> params, boolean encodeKey) {
+        return params.entrySet().stream()
+                .filter(e -> e.getValue() != null && !e.getValue().isEmpty())
                 .sorted(Map.Entry.comparingByKey())
-                .map(entry ->
-                        (encodeKey ? URLEncoder.encode(entry.getKey(), StandardCharsets.UTF_8)
-                                : entry.getKey()) + "=" +
-                                URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8))
+                .map(e -> {
+                    Charset charset = StandardCharsets.US_ASCII;
+                    String key = encodeKey ? URLEncoder.encode(e.getKey(), charset) : e.getKey();
+                    return key + "=" + URLEncoder.encode(e.getValue(), charset);
+                })
                 .collect(Collectors.joining("&"));
     }
+
 }

@@ -11,10 +11,12 @@ import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.AdsMapper;
+import com.spring.dlearning.model.PaymentInfo;
 import com.spring.dlearning.repository.AdvertisementRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.utils.AdsStatus;
 import com.spring.dlearning.utils.SecurityUtils;
+import com.spring.dlearning.utils.VNPayUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +29,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +45,7 @@ public class AdvertisementService {
     CloudinaryService cloudinaryService;
     AdsMapper adsMapper;
     KafkaTemplate<String, Object> kafkaTemplate;
+    VNPayUtil vnPayUtil;
 
     public AdsCreationResponse userCreateAds(AdsCreationRequest request, MultipartFile image)
     {
@@ -71,6 +76,13 @@ public class AdvertisementService {
         advertisement.setApprovalStatus(AdsStatus.AWAITING_PAYMENT);
         advertisementRepository.save(advertisement);
 
+        PaymentInfo paymentInfo = new PaymentInfo()
+                .setReference("ADS_" + advertisement.getId())
+                .setAmount(advertisement.getPrice().multiply(BigDecimal.valueOf(100)))
+                .setDescription("Chay quang cao")
+                .setExpiresIn(Duration.ofDays(1))
+                .setIpAddress("0:0:0:0:0:0:0:1");
+
         Map<String, Object> emailData = new HashMap<>();
         emailData.put("title", advertisement.getTitle());
         emailData.put("description", advertisement.getDescription());
@@ -79,9 +91,9 @@ public class AdvertisementService {
         emailData.put("startDate", advertisement.getStartDate().toString());
         emailData.put("endDate", advertisement.getEndDate().toString());
         emailData.put("priceAds", advertisement.getPrice() + " VND");
-        emailData.put("paymentUrl", EmailService.getPaymentUrlFromApi(advertisement));
         emailData.put("qrCodeUrl", qrCodeUrl);
         emailData.put("status", advertisement.getApprovalStatus().name());
+        emailData.put("paymentUrl",vnPayUtil.getPaymentURL(paymentInfo));
 
         NotificationEvent event = NotificationEvent.builder()
                 .channel("Ads")

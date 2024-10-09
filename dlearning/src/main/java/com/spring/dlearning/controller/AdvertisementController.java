@@ -39,9 +39,7 @@ public class AdvertisementController {
     }
 
     @PutMapping("/approve-ads")
-    ApiResponse<AdsApproveResponse> approveAds(@RequestBody AdsApproveRequest request)
-            throws MessagingException, UnsupportedEncodingException {
-
+    ApiResponse<AdsApproveResponse> approveAds(@RequestBody AdsApproveRequest request) {
         return ApiResponse.<AdsApproveResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Your request has been approved, please proceed to payment")
