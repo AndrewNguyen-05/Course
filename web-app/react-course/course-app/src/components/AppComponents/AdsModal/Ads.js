@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { AdsTable } from "../AppComponents/AdsTable";
 import { Link } from "react-router-dom";
-import { getAdsByCurrentLogin } from "../../service/AdsService";
-import { Pagination } from "../common/Pagination";
+import { getAdsByCurrentLogin } from "../../../service/AdsService";
+import { Pagination } from "../../common/Pagination";
 import { motion } from "framer-motion";
+import { AdsTable } from "./AdsTable";
 
 export const AdsPage = () => {
     const token = localStorage.getItem('token');
@@ -52,7 +52,6 @@ export const AdsPage = () => {
             transition={{ duration: 0.5 }}   // Thời gian chuyển đổi hiệu ứng
             className="content-page"
         >
-            {/* Banner được tối ưu hóa với hình ảnh và biểu tượng */}
             <div className="banner-ads">
                 <div className="banner-ads-left">
                     <div className="banner-ads-content">
@@ -82,10 +81,8 @@ export const AdsPage = () => {
                             <option value="asc">Oldest</option>
                         </select>
                     </div>
-                    {/* Bảng quảng cáo */}
                     <AdsTable ads={ads} />
 
-                    {/* Phân trang */}
                     <div className="mt-4">
                         <Pagination
                             currentPage={currentPage}

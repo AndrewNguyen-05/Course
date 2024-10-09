@@ -28,8 +28,9 @@ export const getAllPosts = async (token, currentPage, filterQuery) => {
   try {
     let urlApi = `http://localhost:8080/api/v1/get-all-post?page=${currentPage}`;
     if (filterQuery) {
-      urlApi += `&filter=${encodeURIComponent(filterQuery)}`;
-      console.log("Filter Query:", filterQuery);
+      const formattedQuery = `content~~'*${encodeURIComponent(filterQuery)}*' or user.name~~'*${encodeURIComponent(filterQuery)}*'`;
+      urlApi += `&filter=${formattedQuery}`;
+      console.log("Filter Query:", formattedQuery);
       console.log("API URL:", urlApi);
     }
 

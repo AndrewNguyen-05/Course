@@ -28,10 +28,11 @@ import { PaymentCancel } from './components/pages/PaymentCancel';
 import { LearningPage } from './components/pages/LearningPage';
 import { MainLayout } from './components/router/MainLayout';
 import { NotFound } from './components/error/NotFound';
-import { AdsPage } from './components/pages/Ads';
 import { HeaderAndFooterRouter } from './components/router/HeaderAndFooterRouter';
 import { Community } from './components/pages/Community';
 import ProfilePage from './components/pages/MyAccount';
+import { AdsPage } from './components/AppComponents/AdsModal/Ads';
+import AdsDetail from './components/AppComponents/AdsModal/DetailAds';
 
 function App() {
   return (
@@ -111,6 +112,7 @@ function App() {
         } />
 
         <Route path="/my-account" element={<ProfilePage />} />
+        <Route path="/detail-ads" element={<AdsDetail />} />
         <Route path='/courses' element={<Courses />} />
         <Route path='/lesson-detail/:id' element={<LearningPage />} />
         <Route path="/authenticate" element={<ProcessLoginOAuth2 />} />

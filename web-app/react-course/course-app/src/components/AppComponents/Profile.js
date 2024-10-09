@@ -39,7 +39,7 @@ export const Profile = () => {
                         description: data.result.description || '',
                         courseLevel: data.result.courseLevel || '',
                     });
-                    setSelectedImage(data.result.avatar || "https://bootdey.com/img/Content/avatar/avatar7.png");
+                    setSelectedImage(data.result.avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg");
                 }
             })
             .catch(error => {
@@ -49,44 +49,44 @@ export const Profile = () => {
 
     const handleUpdateAvatar = (event) => {
         event.preventDefault();
-    
+
         const fileInput = document.getElementById("url-update-avatar");
         const file = fileInput.files[0];
-    
+
         if (!file) {
             toast.error('Please select an image first');
             return;
         }
-    
+
         const formData = new FormData();
         formData.append("file", file);
-    
+
         setIsUpdatingAvatar(true);
-    
+
         updateAvatar(formData, token)
-        .then(response => {
-            if (response && response.message === "Profile updated successfully") {
-                toast.success(response.message); 
-            } else {
-                toast.error('Avatar update failed');
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            toast.error('Failed to update avatar');
-        })
-        .finally(() => {
-            setIsUpdatingAvatar(false);
-        });
+            .then(response => {
+                if (response && response.message === "Profile updated successfully") {
+                    toast.success(response.message);
+                } else {
+                    toast.error('Avatar update failed');
+                }
+            })
+            .catch(error => {
+                console.error(error);
+                toast.error('Failed to update avatar');
+            })
+            .finally(() => {
+                setIsUpdatingAvatar(false);
+            });
     };
-        
+
 
     const handleRemoveAvatar = () => {
         setIsRemovingAvatar(true);
 
         removeAvatar(token)
             .then(() => {
-                setSelectedImage("https://bootdey.com/img/Content/avatar/avatar7.png"); // Set lại avatar mặc định
+                setSelectedImage("https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"); 
                 toast.success('Avatar removed successfully!');
             })
             .catch(error => {
@@ -134,7 +134,7 @@ export const Profile = () => {
             };
             reader.readAsDataURL(file);
         }
-    };    
+    };
 
     return (
         <div className="content-profile">
@@ -152,7 +152,8 @@ export const Profile = () => {
                                                 alt="User Avatar"
                                                 id="avatar-preview"
                                                 className="rounded-circle"
-                                                style={{ width: "150px", height: "150px", objectFit: "cover", border: "3px solid #007bff" }}
+                                                style={{ width: "150px", height: "150px", objectFit: "cover", border: "3px solid #007bff", cursor: "pointer" }}
+                                                onClick={() => document.getElementById("url-update-avatar").click()} // Kích hoạt input ẩn khi nhấp vào ảnh
                                             />
                                         </div>
                                         <div className="account-title mt-3">
@@ -162,6 +163,7 @@ export const Profile = () => {
                                                 id="url-update-avatar"
                                                 name="file"
                                                 accept="image/*"
+                                                hidden
                                                 onChange={handleOnChangeAvatar}
                                             />
                                         </div>
