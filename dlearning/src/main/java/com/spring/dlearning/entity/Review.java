@@ -44,4 +44,19 @@ public class Review extends AbstractEntity<Long> {
     @JoinColumn(name = "course_id", nullable = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     Course course;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "chapter_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    Chapter chapter;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST, CascadeType.MERGE,
+            CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name = "lesson_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    Lesson lesson;
+
 }

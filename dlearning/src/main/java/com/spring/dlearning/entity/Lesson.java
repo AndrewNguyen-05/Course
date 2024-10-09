@@ -18,7 +18,7 @@ public class Lesson extends AbstractEntity<Long> {
     String lessonName;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "lesson_id", nullable = false)
+    @JoinColumn(name = "chapter_id", nullable = false)
     Chapter chapter;
 
     @Column(name = "content_type")

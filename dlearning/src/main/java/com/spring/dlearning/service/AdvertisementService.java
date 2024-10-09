@@ -1,5 +1,6 @@
 package com.spring.dlearning.service;
 
+import com.spring.dlearning.dto.event.NotificationEvent;
 import com.spring.dlearning.dto.request.AdsApproveRequest;
 import com.spring.dlearning.dto.request.AdsCreationRequest;
 import com.spring.dlearning.dto.response.AdsApproveResponse;
@@ -14,7 +15,6 @@ import com.spring.dlearning.repository.AdvertisementRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.utils.AdsStatus;
 import com.spring.dlearning.utils.SecurityUtils;
-import jakarta.mail.MessagingException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -22,10 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.UnsupportedEncodingException;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class AdvertisementService {
     UserRepository userRepository;
     CloudinaryService cloudinaryService;
     AdsMapper adsMapper;
-    EmailService emailService;
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     public AdsCreationResponse userCreateAds(AdsCreationRequest request, MultipartFile image)
     {
@@ -59,17 +59,22 @@ public class AdvertisementService {
         return adsMapper.toAdsCreationResponse(advertisement);
     }
 
-
-    public AdsApproveResponse approveAds(AdsApproveRequest request)
-            throws MessagingException, UnsupportedEncodingException {
-
+    public AdsApproveResponse approveAds(AdsApproveRequest request) {
         Advertisement advertisement = advertisementRepository.findById(request.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.ADVERTISEMENT_ID_INVALID));
 
         advertisement.setApprovalStatus(AdsStatus.AWAITING_PAYMENT);
         advertisementRepository.save(advertisement);
 
-        emailService.confirmAdvertisement(advertisement.getContactEmail(), advertisement);
+        NotificationEvent event = NotificationEvent.builder()
+                .channel("Ads")
+                .recipient(advertisement.getContactEmail())
+                .templateCode("info-ads")
+                .subject("Congratulations! Your ad has been approved.")
+                .body("Congratulations, your ad titled '" + advertisement.getTitle() + "' has been approved.")
+                .build();
+
+        kafkaTemplate.send("notification-delivery", event);
 
         return adsMapper.toAdsApproveResponse(advertisement);
     }

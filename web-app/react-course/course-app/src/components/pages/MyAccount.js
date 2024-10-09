@@ -3,7 +3,8 @@ import { TopBar } from '../layouts/TopBar';
 import { Header } from '../layouts/Header';
 import { FaCamera, FaCameraRetro, FaSmile, FaVideo } from 'react-icons/fa';
 import { getAvatar } from '../../service/ProfileService';
-import { getPostByUserLogin } from '../../service/PostService';
+import { deletePost, getPostByUserLogin } from '../../service/PostService';
+import Swal from 'sweetalert2';
 
 const ProfilePage = () => {
   const token = localStorage.getItem('token');
@@ -45,6 +46,39 @@ const ProfilePage = () => {
     };
     fetchPostByUserLogin();
   }, [token, currentPage]);
+
+  const handleDeletePost = async (postId) => {
+    Swal.fire({
+      title: 'Are you sure ?',
+      text: 'Do you want to delete this post ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete now',
+      cancelButtonText: "No, cancel",
+      width: "370px",
+    })
+      .then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await deletePost(token, postId);
+            setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+            Swal.fire({
+              title: 'Deleted!',
+              text: 'Your post has been deleted.',
+              icon: 'success',
+              width: "370px",
+            });
+          } catch (error) {
+            Swal.fire({
+              title: 'Error!',
+              text: error.message || 'Đã xảy ra lỗi trong quá trình mua khóa học. Vui lòng thử lại sau.',
+              icon: 'error'
+            });
+            console.error(error);
+          }
+        }
+      })
+  }
 
   return (
     <div>
@@ -139,8 +173,11 @@ const ProfilePage = () => {
                         <strong>{post.name}</strong> - {post.createdAt}{' '}
                         <i className="fa-solid fa-globe"></i>
                       </p>
-                      <button className="delete-post-button">
+                      <button className="delete-post-button"
+                        onClick={() => handleDeletePost(post.id)}
+                      >
                         <i className="fa-solid fa-trash"></i>
+
                       </button>
                     </div>
                     <p>{post.content}</p>

@@ -11,17 +11,17 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +57,7 @@ public class EmailService {
             throws MessagingException, UnsupportedEncodingException {
         log.info("Sending email ...");
 
+
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,
                                        MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
@@ -68,7 +69,7 @@ public class EmailService {
         helper.setTo(emailTo);
         helper.setSubject("Please Confirm your account");
 
-        String html = templateEngine.process("confirm-email.html", context);
+        String html = templateEngine.process("info-ads.html", context);
         helper.setText(html, true);
 
         mailSender.send(mimeMessage);
@@ -81,8 +82,7 @@ public class EmailService {
         Context context = new Context();
         Map<String, Object> properties = new HashMap<>();
 
-        DecimalFormat formatter = new DecimalFormat("#,### VND");
-        BigDecimal price = advertisement.getPrice();
+        String paymentUrl = getPaymentUrlFromApi(advertisement);
 
         properties.put("title", advertisement.getTitle());
         properties.put("img", advertisement.getImage());
@@ -90,9 +90,11 @@ public class EmailService {
         properties.put("link", advertisement.getLink());
         properties.put("startDate", advertisement.getStartDate().toString());
         properties.put("endDate", advertisement.getEndDate().toString());
-        properties.put("priceAds", formatter.format(price));
+        properties.put("priceAds", advertisement.getPrice().toString() + " VND");
         properties.put("status", advertisement.getApprovalStatus().name());
-        properties.put("qrCodeUrl", "https://res.cloudinary.com/dznef2sae/image/upload/v1727686554/qr_code/qr_code.jpg");
+        properties.put("qrCodeUrl", "https://example.com/qr-code.jpg");
+
+        properties.put("paymentUrl", paymentUrl);
 
         context.setVariables(properties);
         return context;
@@ -122,6 +124,15 @@ public class EmailService {
         log.info("Email sent to {} successfully!", event.getRecipient());
     }
 
+    private static String getPaymentUrlFromApi(Advertisement advertisement) {
+        String apiUrl = "http://localhost:8080/api/v1/payment/vn-pay?amount=" + advertisement.getPrice() + "&bankCode=NCB";
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Map> response = restTemplate.getForEntity(apiUrl, Map.class);
+
+        Map<String, Object> result = (Map<String, Object>) response.getBody().get("result");
+        return (String) result.get("paymentUrl");
+    }
 
 
 }

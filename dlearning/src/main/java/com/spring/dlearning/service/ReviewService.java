@@ -38,7 +38,7 @@ public class ReviewService {
     BannedWordsService bannedWordsService;
 
     public List<ReviewResponse> getReviewByCourse(Long id) {
-        List<Review> allReviews = reviewRepository.findByCourseId(id);
+        List<Review> allReviews = reviewRepository.findByCourseIdAndChapterIsNullAndLessonIsNull(id);
         return allReviews.stream()
                 .filter(comment -> comment.getParentReview() == null)
                 .map(reviewMapper::toCommentResponse)

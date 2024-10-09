@@ -160,11 +160,11 @@ public class UserService {
         StringBuilder content = new StringBuilder();
         content.append("<html>")
                 .append("<body style='font-family: Arial, sans-serif; line-height: 1.6;'>")
-                .append("<h2 style='color: #4CAF50;'>Welcome to [Your Company Name]!</h2>")
+                .append("<h2 style='color: #4CAF50;'>Welcome to DLearning!</h2>")
                 .append("<p>Dear <strong>")
                 .append(email)
                 .append("</strong>,</p>")
-                .append("<p>Thank you for registering with <strong>[Your Company Name]</strong>. We are excited to have you on board!</p>")
+                .append("<p>Thank you for registering with <strong>DLearning</strong>. We are excited to have you on board!</p>")
                 .append("<p style='font-size: 18px;'><strong>Your OTP Code is:</strong> ")
                 .append("<span style='font-size: 22px; color: #FF5733;'><strong>")
                 .append(otp)
@@ -173,7 +173,7 @@ public class UserService {
                 .append("<p>If you did not request this code, please ignore this email. For your security, do not share this code with anyone.</p>")
                 .append("<br/>")
                 .append("<p>Best regards,</p>")
-                .append("<p><strong>[Your Company Name] Team</strong></p>")
+                .append("<p><strong>DLearning Team</strong></p>")
                 .append("</body>")
                 .append("</html>");
 
