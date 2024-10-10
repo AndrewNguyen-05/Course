@@ -38,10 +38,6 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         OAuth2AuthenticatedPrincipal principal = (OAuth2AuthenticatedPrincipal) authentication.getPrincipal();
         String name = principal.getAttribute("name");
         String email = principal.getAttribute("email");
-//        String avatar = principal.getAttribute("picture");
-
-        log.info("email {}", email);
-        log.info("name {}", name);
 
         assert name != null;
         String[] nameParts = name.split(" ");

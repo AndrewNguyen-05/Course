@@ -2,12 +2,8 @@ package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.request.AdsApproveRequest;
 import com.spring.dlearning.dto.request.AdsCreationRequest;
-import com.spring.dlearning.dto.response.AdsApproveResponse;
-import com.spring.dlearning.dto.response.AdsCreationResponse;
-import com.spring.dlearning.dto.response.ApiResponse;
-import com.spring.dlearning.dto.response.PageResponse;
+import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.service.AdvertisementService;
-import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.UnsupportedEncodingException;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,6 +52,14 @@ public class AdvertisementController {
         return ApiResponse.<PageResponse<AdsCreationResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .result(advertisementService.getAdsByCurrentLogin(page, size))
+                .build();
+    }
+
+    @GetMapping("/get-ads-active")
+    ApiResponse<List<AdsActiveResponse>> getAdsActive () {
+        return ApiResponse.<List<AdsActiveResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .result(advertisementService.getAdsWithActive())
                 .build();
     }
 

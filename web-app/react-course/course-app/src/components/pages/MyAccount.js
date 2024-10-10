@@ -110,7 +110,7 @@ const ProfilePage = () => {
             </div>
 
             <div className="my-account-info">
-              <h2 className="my-account-name">Lê Khánh Đức</h2>
+              <h2 className="my-account-name">{posts.name}</h2>
               <p className="my-account-friends-count">576 người bạn</p>
               <button className="my-account-edit-profile-btn">Chỉnh sửa trang cá nhân</button>
             </div>

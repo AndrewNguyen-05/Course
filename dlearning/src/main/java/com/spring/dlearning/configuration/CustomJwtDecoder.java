@@ -1,7 +1,6 @@
 package com.spring.dlearning.configuration;
 
 import com.nimbusds.jose.JOSEException;
-import com.spring.dlearning.dto.request.IntrospectRequest;
 import com.spring.dlearning.service.AuthenticationService;
 import lombok.experimental.NonFinal;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,12 +31,8 @@ public class CustomJwtDecoder implements JwtDecoder {
 
     @Override
     public Jwt decode(String token) throws JwtException {
-
         try {
-            var response = authenticationService.introspect(
-                    IntrospectRequest.builder().token(token).build());
-
-            if (!response.isValid()) throw new JwtException("Token invalid");
+            authenticationService.verifyToken(token, false);
         } catch (JOSEException | ParseException e) {
             throw new JwtException(e.getMessage());
         }

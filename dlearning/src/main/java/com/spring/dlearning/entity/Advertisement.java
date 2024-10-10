@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -63,6 +62,7 @@ public class Advertisement extends AbstractEntity<Long>{
     LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "approval_status")
     AdsStatus approvalStatus;
 
 }

@@ -1,5 +1,6 @@
 package com.spring.dlearning.configuration;
 
+import com.spring.dlearning.filter.CustomJwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -43,7 +45,8 @@ public class SecurityConfiguration {
             "/upload/**",
             "/api/v1/courses-review/{courseId}",
             "/api/v1/payment/vn-pay-callback",
-            "/api/v1/payment/vn-pay/**"
+            "/api/v1/payment/vn-pay/**",
+            "/api/v1/get-ads-active"
     };
 
     @Bean
@@ -62,6 +65,7 @@ public class SecurityConfiguration {
                                 .decoder(jwtDecoder)
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
                         .authenticationEntryPoint(new JwtAuthenticationEntryPoint()))
+                .addFilterBefore(new CustomJwtAuthFilter(), BearerTokenAuthenticationFilter.class)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return httpSecurity.build();

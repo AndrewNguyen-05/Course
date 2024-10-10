@@ -3,6 +3,7 @@ package com.spring.dlearning.service;
 import com.spring.dlearning.dto.event.NotificationEvent;
 import com.spring.dlearning.dto.request.AdsApproveRequest;
 import com.spring.dlearning.dto.request.AdsCreationRequest;
+import com.spring.dlearning.dto.response.AdsActiveResponse;
 import com.spring.dlearning.dto.response.AdsApproveResponse;
 import com.spring.dlearning.dto.response.AdsCreationResponse;
 import com.spring.dlearning.dto.response.PageResponse;
@@ -28,10 +29,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -129,6 +130,13 @@ public class AdvertisementService {
                 .data(advertisements.getContent().stream()
                         .map(adsMapper::toAdsCreationResponse).toList())
                 .build();
+    }
+
+    public List<AdsActiveResponse> getAdsWithActive(){
+        List<Advertisement> advertisement = advertisementRepository.findAdvertisementByApprovalStatusActive("ACTIVE");
+
+        return advertisement.stream().map(adsMapper::toAdsActiveResponse)
+                .toList();
     }
 
 }

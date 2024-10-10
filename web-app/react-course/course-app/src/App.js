@@ -53,7 +53,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path='/favorite' element={<FavoriteCourses />} />
           <Route path='/deposit' element={<DepositPage />} />
-          <Route path='/courses'element={<Courses/>}></Route>
+          <Route path='/courses' element={<Courses />}></Route>
           <Route path="/comunity" element={
             <PrivateRoute>
               <Community />

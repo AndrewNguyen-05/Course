@@ -65,7 +65,8 @@ public enum ErrorCode {
     CONTENT_INVALID(400, "Content cannot exceed 500 characters", HttpStatus.BAD_REQUEST),
     POST_ID_INVALID(400, "Post id not existed", HttpStatus.BAD_REQUEST),
     CONTENT_COMMENT_INVALID(400, "Content Comment cannot be null", HttpStatus.BAD_REQUEST),
-    DELETE_POST_INVALID(400, "You can only delete posts that you own.", HttpStatus.BAD_REQUEST)
+    DELETE_POST_INVALID(400, "You can only delete posts that you own.", HttpStatus.BAD_REQUEST),
+    EXPIRED_TOKEN(401, "EXPIRED_TOKEN", HttpStatus.UNAUTHORIZED);
     ;
 
     private int code;

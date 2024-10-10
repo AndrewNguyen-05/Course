@@ -1,6 +1,7 @@
 package com.spring.dlearning.mapper;
 
 import com.spring.dlearning.dto.request.AdsCreationRequest;
+import com.spring.dlearning.dto.response.AdsActiveResponse;
 import com.spring.dlearning.dto.response.AdsApproveResponse;
 import com.spring.dlearning.dto.response.AdsCreationResponse;
 import com.spring.dlearning.entity.Advertisement;
@@ -71,6 +72,20 @@ public class AdsMapper {
                 .endDate(advertisement.getEndDate())
                 .priceAds(totalOfMoneyAds(advertisement.getStartDate(), advertisement.getEndDate()))
                 .status(advertisement.getApprovalStatus())
+                .build();
+    }
+
+    public AdsActiveResponse toAdsActiveResponse (Advertisement advertisement){
+
+        return AdsActiveResponse.builder()
+                .id(advertisement.getId())
+                .title(advertisement.getTitle())
+                .image(advertisement.getImage())
+                .price(advertisement.getPrice())
+                .description(advertisement.getDescription())
+                .link(advertisement.getLink())
+                .startDate(advertisement.getStartDate())
+                .endDate(advertisement.getEndDate())
                 .build();
     }
 
