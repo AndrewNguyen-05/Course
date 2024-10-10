@@ -10,7 +10,6 @@ import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.repository.RoleRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.service.AuthenticationService;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;

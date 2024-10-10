@@ -1,6 +1,7 @@
 package com.spring.dlearning.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spring.dlearning.utils.Gender;
 import com.spring.dlearning.utils.RegistrationStatus;
 import jakarta.persistence.*;
@@ -11,6 +12,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -111,6 +113,10 @@ public class User extends AbstractEntity<Long> {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     Set<Favorite> favorites;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonInclude
+    List<Post> posts;
 
     @PrePersist
     protected void onCreate() {

@@ -10,7 +10,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
- # Cấu hình Kafka
+  profiles:
+    active: local
+  # Cấu hình Kafka
   kafka:
     bootstrap-servers: localhost:9094
     consumer:
