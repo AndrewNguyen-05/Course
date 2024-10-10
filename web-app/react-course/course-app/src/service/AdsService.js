@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
+import { fetchApi } from "../components/utils/api-utils";
 
 export const getAdsByCurrentLogin = async (token, page) => {
-    const response = await fetch(`http://localhost:8080/api/v1/get-ads-current?page=${page}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/get-ads-current?page=${page}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -17,7 +18,7 @@ export const getAdsByCurrentLogin = async (token, page) => {
 };
 
 export const registerAds = async (token, formData) => {
-    const response = await fetch(`http://localhost:8080/api/v1/register-ads`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/register-ads`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`

@@ -1,6 +1,8 @@
+import { fetchApi } from "../components/utils/api-utils";
+
 export const getAllCourses = async (currentPage, pageSize) => {
 
-    const response = await fetch(`http://localhost:8080/api/v1/courses?page=${currentPage}&size=${pageSize}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/courses?page=${currentPage}&size=${pageSize}`, {
         method: 'GET'
     })
 
@@ -18,7 +20,7 @@ export const SearchService = async (currentPage, pageSize, filterQuery) => {
             console.log("API URL:", apiUrl);
         }
 
-        const response = await fetch(apiUrl, { method: 'GET' });
+        const response = await fetchApi(apiUrl, { method: 'GET' });
         if (!response.ok) {
             throw new Error(`${response.status}`);
         }
@@ -33,7 +35,7 @@ export const SearchService = async (currentPage, pageSize, filterQuery) => {
 
 export const getCourseById = async (id) => {
 
-    const response = await fetch(`http://localhost:8080/api/v1/course/${id}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/course/${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -47,7 +49,7 @@ export const getCourseById = async (id) => {
 
 export const getChapterById = async (id) => {
 
-    const response = await fetch(`http://localhost:8080/api/v1/info-course/${id}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/info-course/${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -59,7 +61,7 @@ export const getChapterById = async (id) => {
 }
 
 export const getCommentByCourseId = async (id) => {
-    const response = await fetch(`http://localhost:8080/api/v1/courses-review/${id}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/courses-review/${id}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -72,7 +74,7 @@ export const getCommentByCourseId = async (id) => {
 }
 
 export const buyCourse = async (token, id) => {
-    const response = await fetch(`http://localhost:8080/api/v1/buy-course`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/buy-course`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

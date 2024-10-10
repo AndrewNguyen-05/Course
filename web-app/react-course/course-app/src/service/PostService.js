@@ -1,8 +1,9 @@
 import { toast } from "react-toastify";
+import { fetchApi } from "../components/utils/api-utils";
 
 export const creationPost = async (token, formData) => {
   try {
-    const response = await fetch('http://localhost:8080/api/v1/create-post', {
+    const response = await fetchApi('http://localhost:8080/api/v1/create-post', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -34,7 +35,7 @@ export const getAllPosts = async (token, currentPage, filterQuery) => {
       console.log("API URL:", urlApi);
     }
 
-    const response = await fetch(urlApi, {
+    const response = await fetchApi(urlApi, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -51,7 +52,7 @@ export const getAllPosts = async (token, currentPage, filterQuery) => {
 }
 
 export const getPostByUserLogin = async (token, currentPage) => {
-  const response = await fetch(`http://localhost:8080/api/v1/get-post-current-login?page=${currentPage}`, {
+  const response = await fetchApi(`http://localhost:8080/api/v1/get-post-current-login?page=${currentPage}`, {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
@@ -68,7 +69,7 @@ export const getPostByUserLogin = async (token, currentPage) => {
 }
 
 export const deletePost = async (token, postId) => {
-  const response = await fetch(`http://localhost:8080/api/v1/delete-post/${postId}`, {
+  const response = await fetchApi(`http://localhost:8080/api/v1/delete-post/${postId}`, {
     method: "DELETE",
     headers: {
       'Authorization': `Bearer ${token}`

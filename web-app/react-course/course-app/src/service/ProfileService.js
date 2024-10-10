@@ -1,5 +1,7 @@
+import { fetchApi } from "../components/utils/api-utils";
+
 export const getAvatar = async (token) => {
-    const response = await fetch(`http://localhost:8080/api/v1/get-avatar`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/get-avatar`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -12,7 +14,7 @@ export const getAvatar = async (token) => {
 
 export const getProfileInfo = async (token) => {
 
-    const response = await fetch(`http://localhost:8080/api/v1/info-user`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/info-user`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -24,7 +26,7 @@ export const getProfileInfo = async (token) => {
 }
 
 export const updateAvatar = async (formData, token) => {
-    const response = await fetch(`http://localhost:8080/api/v1/update-avatar`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/update-avatar`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -37,7 +39,7 @@ export const updateAvatar = async (formData, token) => {
 
 
 export const removeAvatar = async(token) => {
-    const response = await fetch(`http://localhost:8080/api/v1/remove-avatar`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/remove-avatar`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -48,7 +50,7 @@ export const removeAvatar = async(token) => {
 }
 
 export const updateProfile = async (profileData, token) => {
-    const response = await fetch('http://localhost:8080/api/v1/update-profile', {
+    const response = await fetchApi('http://localhost:8080/api/v1/update-profile', {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',

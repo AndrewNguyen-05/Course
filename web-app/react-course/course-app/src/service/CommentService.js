@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
+import { fetchApi } from "../components/utils/api-utils";
 
 export const getCommentByPostId = async (token, postId, currentPage) => {
-    const response = await fetch(`http://localhost:8080/api/v1/post-comment/${postId}?page=${currentPage}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/post-comment/${postId}?page=${currentPage}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -18,7 +19,7 @@ export const getCommentByPostId = async (token, postId, currentPage) => {
 
 export const addComment = async (token, commentData) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/add-comment`, {
+        const response = await fetchApi(`http://localhost:8080/api/v1/add-comment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -44,7 +45,7 @@ export const addComment = async (token, commentData) => {
 
 export const replyComment = async (token, replyData) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/add-comment`, {
+        const response = await fetchApi(`http://localhost:8080/api/v1/add-comment`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -70,7 +71,7 @@ export const replyComment = async (token, replyData) => {
 }
 
 export const deleteComment = async (token, commentId) => {
-    const response = await fetch(`http://localhost:8080/api/v1/delete-comment/${commentId}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/delete-comment/${commentId}`, {
         method: 'DELETE',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -87,7 +88,7 @@ export const deleteComment = async (token, commentId) => {
 export const updateComment = async (token, commentId, updateContent) => {
 
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/update-comment/${commentId}`, {
+        const response = await fetchApi(`http://localhost:8080/api/v1/update-comment/${commentId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

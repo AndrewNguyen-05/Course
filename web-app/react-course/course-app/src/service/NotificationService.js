@@ -1,5 +1,7 @@
+import { fetchApi } from "../components/utils/api-utils";
+
 export const notificationCurrentLogin = async (token) => {
-    const response = await fetch(`http://localhost:8080/api/v1/notification-current`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/notification-current`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -11,7 +13,7 @@ export const notificationCurrentLogin = async (token) => {
 }
 
 export const markAsReadNotification = async (token, notificationId) => {
-    const response = await fetch(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`

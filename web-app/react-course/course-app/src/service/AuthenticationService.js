@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { fetchApi } from "../components/utils/api-utils";
 
 export const login = async (email, password) => {
     const response = await fetch(`http://localhost:8080/api/v1/auth/token`, {
@@ -19,7 +20,7 @@ export const login = async (email, password) => {
 };
 
 export const introspect = async (token) => {
-    const response = await fetch(`http://localhost:8080/api/v1/auth/introspect`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/auth/introspect`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

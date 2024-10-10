@@ -1,5 +1,7 @@
+import { fetchApi } from "../components/utils/api-utils";
+
 export const getMyInfo = async (token) => {
-    const response = await fetch(`http://localhost:8080/api/v1/my-info`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/my-info`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -10,7 +12,7 @@ export const getMyInfo = async (token) => {
 }
 
 export const getPointsByCurrentLogin = async (token) => {
-    const response = await fetch(`http://localhost:8080/api/v1/get-points-user-current`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/get-points-user-current`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
@@ -23,7 +25,7 @@ export const getPointsByCurrentLogin = async (token) => {
 }
 
 export const sendOtp = async (email) => {
-    const response = await fetch(`http://localhost:8080/api/v1/send-otp?email=${encodeURIComponent(email)}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/send-otp?email=${encodeURIComponent(email)}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -122,7 +124,7 @@ export const registerUser = async (otp, userData) => {
 
 export const registerTeacher = async (token, formDataToSend) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/register-teacher`, {
+        const response = await fetchApi(`http://localhost:8080/api/v1/register-teacher`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -143,7 +145,7 @@ export const registerTeacher = async (token, formDataToSend) => {
 };
 
 export const createPasswordForFirst = async (token, createPassword) => {
-    const response =  await fetch(`http://localhost:8080/api/v1/create-password`, {
+    const response =  await fetchApi(`http://localhost:8080/api/v1/create-password`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

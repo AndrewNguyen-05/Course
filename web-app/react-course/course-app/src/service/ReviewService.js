@@ -1,8 +1,9 @@
 import { toast } from 'react-toastify';
+import { fetchApi } from '../components/utils/api-utils';
 
 export const addReview = async (commentData, token, courseId) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/add-review?id=${courseId}`, {
+        const response = await fetchApi(`http://localhost:8080/api/v1/add-review?id=${courseId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -27,7 +28,7 @@ export const addReview = async (commentData, token, courseId) => {
 
 export const addReplyReview = async (token, replyData, courseId) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/add-review?id=${courseId}`, {
+        const response = await fetchApi(`http://localhost:8080/api/v1/add-review?id=${courseId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,7 +54,7 @@ export const addReplyReview = async (token, replyData, courseId) => {
 
 export const editReview = async (commentId, updatedContent, token) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/update-review/${commentId}`, {
+        const response = await fetchApi(`http://localhost:8080/api/v1/update-review/${commentId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -79,7 +80,7 @@ export const editReview = async (commentId, updatedContent, token) => {
 
 export const deleteReview= async (commentId, token) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/v1/delete-review/${commentId}`, {
+        const response = await fetchApi(`http://localhost:8080/api/v1/delete-review/${commentId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,7 +1,8 @@
 import { toast } from "react-toastify";
+import { fetchApi } from "../components/utils/api-utils";
 
 export const getFavorite = async (currentPage, token) => {
-    const response = await fetch(`http://localhost:8080/api/v1/fetch-all-favorites?page=${currentPage}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/fetch-all-favorites?page=${currentPage}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -17,7 +18,7 @@ export const getFavorite = async (currentPage, token) => {
 }
 
 export const addFavorite = async (token, courseId) => {
-    const response = await fetch(`http://localhost:8080/api/v1/save-favorite?id=${courseId}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/save-favorite?id=${courseId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -31,7 +32,7 @@ export const addFavorite = async (token, courseId) => {
 }
 
 export const removeFavorite = async (token, favoriteId) => {
-    const response = await fetch(`http://localhost:8080/api/v1/delete-favorite/${favoriteId}`, {
+    const response = await fetchApi(`http://localhost:8080/api/v1/delete-favorite/${favoriteId}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
