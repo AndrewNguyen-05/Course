@@ -1,52 +1,70 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useRoutes, useSearchParams } from "react-router-dom";
 
 export const ProcessLoginOAuth2 = () => {
   const navigate = useNavigate();
+  const pathParams = useParams();
+  const [query] = useSearchParams();
+
+  const fetchInfo = (token) => {
+    fetch(`http://localhost:8080/api/v1/my-info`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((userData) => {
+        if (userData.result && userData.result.noPassword) {
+          navigate("/create-password");
+        } else {
+          navigate("/home");
+        }
+      });
+  };
 
   useEffect(() => {
-    function handleAuthentication() {
-      const authCodeRegex = /code=([^&]+)/;
-      const isMatch = window.location.href.match(authCodeRegex);
+    const clientCode = pathParams.clientCode;
+    if (clientCode === "facebook") {
+      // exchange for access token
+      fetch(`http://localhost:8080/login/oauth2/code/facebook?${query.toString()}`, {
+        credentials: "include",
+      })
+        .then((data) => data.json())
+        .then((data) => {
+          console.log(data);
+          const token = data.token;
+          localStorage.setItem("token", token);
+          fetchInfo(token);
+        });
+    } else {
+      function handleAuthentication() {
+        const authCodeRegex = /code=([^&]+)/;
+        const isMatch = window.location.href.match(authCodeRegex);
 
-      if (isMatch) {
-        const authCode = isMatch[1];
+        if (isMatch) {
+          const authCode = isMatch[1];
 
-        fetch(`http://localhost:8080/api/v1/auth/outbound/authentication?code=${authCode}`, {
-          method: 'POST',
-        })
-          .then(response => response.json())
-          .then(data => {
-            if (data.result && data.result.token) {
-              console.log(data)
-              localStorage.setItem('token', data.result.token);
-
-              let token = localStorage.getItem('token');
-
-              fetch(`http://localhost:8080/api/v1/my-info`, {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Authorization': `Bearer ${token}`
-                }
-              })
-                .then(response => response.json())
-                .then(userData => {
-                  console.log('data', data);
-                  if (userData.result && userData.result.noPassword) {
-                    navigate('/create-password');
-                  } else {
-                    navigate('/home');
-                  }
-                });
-            }
-          }).catch(error => {
-            console.error('Error:', error);
-          });
+          fetch(`http://localhost:8080/api/v1/auth/outbound/authentication?code=${authCode}`, {
+            method: "POST",
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.result && data.result.token) {
+                localStorage.setItem("token", data.result.token);
+                let token = localStorage.getItem("token");
+                fetchInfo(token);
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
+        }
       }
-    }
 
-    handleAuthentication();
+      handleAuthentication();
+    }
   }, []);
 
   return (

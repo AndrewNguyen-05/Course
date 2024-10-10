@@ -115,7 +115,7 @@ function App() {
         <Route path="/detail-ads" element={<AdsDetail />} />
         <Route path='/courses' element={<Courses />} />
         <Route path='/lesson-detail/:id' element={<LearningPage />} />
-        <Route path="/authenticate" element={<ProcessLoginOAuth2 />} />
+        <Route path="/oauth2/callback/:clientCode" element={<ProcessLoginOAuth2 />} />
         <Route path='/accessdenied' element={<Accessdenied />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />

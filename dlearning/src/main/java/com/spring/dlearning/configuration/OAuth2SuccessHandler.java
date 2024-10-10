@@ -10,18 +10,17 @@ import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.repository.RoleRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.service.AuthenticationService;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
-import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
@@ -38,52 +37,26 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
             throws IOException {
 
         OAuth2AuthenticatedPrincipal principal = (OAuth2AuthenticatedPrincipal) authentication.getPrincipal();
+        String name = principal.getAttribute("name");
+        String email = principal.getAttribute("email");
+//        String avatar = principal.getAttribute("picture");
 
-        String registrationId = null;
-        if (authentication instanceof OAuth2AuthenticationToken) {
-            registrationId = ((OAuth2AuthenticationToken) authentication).getAuthorizedClientRegistrationId();
-        }
-
-        if (registrationId == null) {
-            throw new AppException(ErrorCode.UNKNOWN_PROVIDER);
-        }
-
-        String name;
-        String email;
-        String avatar;
-
-        if ("github".equalsIgnoreCase(registrationId)) {
-            name = principal.getAttribute("login");
-            email = principal.getAttribute("email");
-            avatar = principal.getAttribute("avatar_url");
-            if (email == null) {
-                email = principal.getAttribute("login") + "@gmail.com";
-            }
-        } else {
-            avatar = "";
-            if ("facebook".equalsIgnoreCase(registrationId)) {
-                name = principal.getAttribute("name");
-                email = principal.getAttribute("email");
-            } else {
-                throw new AppException(ErrorCode.UNKNOWN_PROVIDER);
-            }
-        }
+        log.info("email {}", email);
+        log.info("name {}", name);
 
         assert name != null;
         String[] nameParts = name.split(" ");
         String firstname = nameParts[0];
-        String lastname = nameParts.length > 1 ? String.join(" ", Arrays.copyOfRange(nameParts, 1, nameParts.length)) : "";
+        String lastname = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
 
         Role roles = roleRepository.findByName(PredefinedRole.USER_ROLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
-        String finalEmail = email;
         User user = userRepository.findByEmail(email).orElseGet(() -> userRepository.save(User.builder()
-                .email(finalEmail)
+                .email(email)
                 .firstName(firstname)
                 .lastName(lastname)
                 .name(name)
-                        .avatar(avatar)
                 .role(roles)
                 .build()));
 
@@ -95,4 +68,5 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         response.getWriter().write(new ObjectMapper().writeValueAsString(resp));
     }
+
 }

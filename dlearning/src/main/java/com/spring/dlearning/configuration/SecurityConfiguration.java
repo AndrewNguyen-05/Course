@@ -20,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfiguration {
 
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final CustomJwtDecoder jwtDecoder;
 
     private static final String[] PUBLIC_ENDPOINT = {
@@ -56,6 +57,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(PUBLIC_ENDPOINT).permitAll()
                         .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2.successHandler(oAuth2SuccessHandler))
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwtConfigurer -> jwtConfigurer
                                 .decoder(jwtDecoder)
                                 .jwtAuthenticationConverter(jwtAuthenticationConverter()))
