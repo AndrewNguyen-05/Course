@@ -1,28 +1,22 @@
-import { fetchApi } from "../components/utils/api-utils";
+import axios from "../components/utils/CustomizeAxios";
 
-export const notificationCurrentLogin = async (token) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/notification-current`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-
-    if (!response.ok) throw new Error('Fail to get Notification')
-    return response.json();
+export const notificationCurrentLogin = async () => {
+    try {
+        const response = await axios.get(`api/v1/notification-current`)
+        return response.data;
+    } catch (error) {
+        console.log('Failed to getNotification By Current Login', error);
+        throw error;
+    }
 }
 
-export const markAsReadNotification = async (token, notificationId) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/is-read/${notificationId}`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-
-    if (!response.ok) {
-        throw new Error('Fail to markAsRead Notification')
+export const markAsReadNotification = async (notificationId) => {
+    try {
+        const response = await axios.put(`api/v1/is-read/${notificationId}`);
+        console.log(response)
+        return response;
+    } catch (error) {
+        console.log('Failed to markAsReadNotification', error);
+        throw error;
     }
-
-    return response.json();
 }

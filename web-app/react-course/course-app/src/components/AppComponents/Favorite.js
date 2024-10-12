@@ -26,7 +26,7 @@ const FavoriteCourses = () => {
             setError(null);
 
             try {
-                const data = await getFavorite(currentPage, token);
+                const data = await getFavorite(currentPage);
                 if (data.result && Array.isArray(data.result.data)) {
                     setFavorites(data.result.data);
                     setTotalPages(data.result.totalPages || 1);
@@ -56,7 +56,7 @@ const FavoriteCourses = () => {
 
     const handleDeleteFavorite = async (favoriteId) => {
         try {
-            await removeFavorite(token, favoriteId);
+            await removeFavorite(favoriteId);
             setFavorites((prevFavorites) => prevFavorites.filter(favorite => favorite.favoriteId !== favoriteId));
             toast.success('Deleted favorite successfully');
         } catch (error) {

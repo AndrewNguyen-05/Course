@@ -29,7 +29,7 @@ export const Community = () => {
       setLoading(false);
       return;
     }
-    getAvatar(token)
+    getAvatar()
       .then((data) => setAvatar(data.result))
       .catch((error) => console.log(error));
   }, [token]);
@@ -39,7 +39,7 @@ export const Community = () => {
     setLoading(true);
 
     try {
-      const data = await getAllPosts(token, currentPage, filterQuery);
+      const data = await getAllPosts(currentPage, filterQuery);
       if (data && data.result && Array.isArray(data.result.data)) {
         const newPosts = data.result.data;
         console.log("Page", currentPage)
@@ -83,25 +83,21 @@ export const Community = () => {
     }
     try {
       const jsonBlog = new Blob([JSON.stringify({ content: newPost.content })], { type: 'application/json' });
+
       const formData = new FormData();
       formData.append('request', jsonBlog);
-      formData.append('file', newPost.image);
-
-      const response = await creationPost(token, formData);
-      if (response && response.result) {
-        const newCreatedPost = response.result;
-
-        // Thêm bài viết mới vào đầu danh sách `posts`
-        setPosts((prevPosts) => [newCreatedPost, ...prevPosts]);
-        toast.success('Create Post Successfully');
+      if (newPost.image) {
+        formData.append('file', newPost.image); // Append file nếu c
       }
-      // Đặt lại trạng thái sau khi tạo bài viết
+      const newCreatedPost  = await creationPost(formData);
+      if (newCreatedPost) {
+        setPosts((prevPosts) => [newCreatedPost, ...prevPosts]);
+      }
       setShowModal(false);
-      setSelectedImage(null);  // Xóa ảnh được chọn
-      setNewPost({ content: '', image: null });  // Reset lại form nhập liệu
+      setSelectedImage(null);
+      setNewPost({ content: '', image: null });
     } catch (error) {
       console.log(error);
-      toast.error('Failed to create post.');
     }
   };
 

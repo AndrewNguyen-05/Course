@@ -133,7 +133,8 @@ public class AdvertisementService {
     }
 
     public List<AdsActiveResponse> getAdsWithActive(){
-        List<Advertisement> advertisement = advertisementRepository.findAdvertisementByApprovalStatusActive("ACTIVE");
+        List<Advertisement> advertisement = advertisementRepository
+                .findAdvertisementByApprovalStatusActive("ACTIVE");
 
         return advertisement.stream().map(adsMapper::toAdsActiveResponse)
                 .toList();

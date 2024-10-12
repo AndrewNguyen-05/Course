@@ -30,7 +30,6 @@ export const CourseDetail = () => {
     useEffect(() => {
         getCourseById(id)
             .then(data => {
-                console.log(data)
                 setCourse(data.result);
                 setLoading(false);
             }).catch(error => {
@@ -64,7 +63,7 @@ export const CourseDetail = () => {
     }, [id]);
 
     if (loading) return <div>Loading...</div>;
-    
+
     if (!course) {
         return <div>Course data is not available</div>;
     }
@@ -84,7 +83,7 @@ export const CourseDetail = () => {
         };
 
         try {
-            const result = await addReview(commentData, token, id);
+            const result = await addReview(id, commentData);
             setComments([{
                 ...result, // sao chép toàn bộ thuộc tính trong result:  bình luận mới được trả về từ server.
                 replying: false,
@@ -115,7 +114,7 @@ export const CourseDetail = () => {
         };
 
         try {
-            const result = await addReplyReview(token, replyData, id);
+            const result = await addReplyReview(id, replyData);
 
             if (result) {
                 // Cập nhật lại danh sách comments với reply mới
@@ -217,12 +216,20 @@ export const CourseDetail = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const data = await buyCourse(token, id);
-                    Swal.fire({
-                        title: 'Purchase successful!',
-                        text: `You have purchased the course: ${data.result.title}`,
-                        icon: 'success'
-                    });
+                    const response = await buyCourse(id);
+                    if (response.data.result) {
+                        Swal.fire({
+                            title: 'Purchase successful!',
+                            text: `You have purchased the course: ${response.data.result.title}`,
+                            icon: 'success'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Purchase successful!',
+                            text: `${response.data.message}`,
+                            icon: 'error'
+                        });
+                    }
                 } catch (error) {
                     Swal.fire({
                         title: 'Lỗi!',
@@ -260,50 +267,50 @@ export const CourseDetail = () => {
     };
 
     return (
-            <div className="container-fluid py-5">
-                <div className="container py-5">
-                    <div className="row">
-                        <div className="col-lg-8">
-                            <div className="mb-5">
-                                <h6 className="text-secondary text-uppercase pb-2">Course Detail</h6>
-                                <h1 className="display-4">{course.title}</h1>
-                                <img className="img-fluid rounded w-100 mb-4" src={course.thumbnail} alt="Course" />
-                                <p>{course.description}</p>
-                            </div>
+        <div className="container-fluid py-5">
+            <div className="container py-5">
+                <div className="row">
+                    <div className="col-lg-8">
+                        <div className="mb-5">
+                            <h6 className="text-secondary text-uppercase pb-2">Course Detail</h6>
+                            <h1 className="display-4">{course.title}</h1>
+                            <img className="img-fluid rounded w-100 mb-4" src={course.thumbnail} alt="Course" />
+                            <p>{course.description}</p>
+                        </div>
 
-                            <CourseContent chapter={chapter} />
-                            <ReviewSection
-                                comments={comments}
-                                newComment={newComment}
-                                editingCommentId={editingCommentId}
-                                setEditingCommentId={setEditingCommentId}
-                                newRating={newRating}
-                                setNewComment={setNewComment}
-                                setNewRating={setNewRating}
-                                replyContent={replyContent}
-                                setReplyContent={setReplyContent}
-                                editContent={editContent}
-                                setEditContent={setEditContent}
-                                renderStars={renderStars}
-                                handleAddReview={handleAddReview}
-                                handleReplyToggle={handleReplyToggle}
-                                handleAddReply={handleAddReply}
-                                handleEditReview={handleEditReview}
-                                handleDeleteReview={handleDeleteReview}
-                                handleRatingChange={handleRatingChange} /> </div>
+                        <CourseContent chapter={chapter} />
+                        <ReviewSection
+                            comments={comments}
+                            newComment={newComment}
+                            editingCommentId={editingCommentId}
+                            setEditingCommentId={setEditingCommentId}
+                            newRating={newRating}
+                            setNewComment={setNewComment}
+                            setNewRating={setNewRating}
+                            replyContent={replyContent}
+                            setReplyContent={setReplyContent}
+                            editContent={editContent}
+                            setEditContent={setEditContent}
+                            renderStars={renderStars}
+                            handleAddReview={handleAddReview}
+                            handleReplyToggle={handleReplyToggle}
+                            handleAddReply={handleAddReply}
+                            handleEditReview={handleEditReview}
+                            handleDeleteReview={handleDeleteReview}
+                            handleRatingChange={handleRatingChange} /> </div>
 
-                        <CourseFeatur
-                            course={course}
-                            handleEnrollNow={handleEnrollNow} />
+                    <CourseFeatur
+                        course={course}
+                        handleEnrollNow={handleEnrollNow} />
 
-                            
-                    </div>
+
                 </div>
-                <ToastContainer
-                    position="top-right"
-                    autoClose={3000}
-                    className="custom-toast-container"
-                />
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                className="custom-toast-container"
+            />
+        </div>
     );
 };

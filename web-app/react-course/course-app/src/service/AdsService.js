@@ -1,36 +1,35 @@
-import { toast } from "react-toastify";
-import { fetchApi } from "../components/utils/api-utils";
+import axios from "../components/utils/CustomizeAxios";
 
-export const getAdsByCurrentLogin = async (token, page) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/get-ads-current?page=${page}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    });
+export const getAdsByCurrentLogin = async (page) => {
+    try {
+        const response = await axios.get(`api/v1/get-ads-current`, {
+            params: {
+                page: page
+            }
+        });
+        return response.data;
 
-    if (!response.ok) {
-        throw new Error(`Failed to fetch ads: ${response.status}`);
+    } catch (error) {
+        throw new Error(`Failed to fetch ads: ${error.response?.status || error.message}`);
     }
-
-    return response.json();
 };
 
 export const registerAds = async (token, formData) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/register-ads`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-        body: formData
-    })
+    try {
+        const response = await axios.post('api/v1/register-ads', formData, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            }
+        });
+        return response.data;
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        toast.error(errorData.message)
-        throw new Error('Fail to registerAds' || errorData.message)
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || 'Fail to registerAds';
+        throw new Error(errorMessage);
     }
+};
 
-    return response.json();
+
+export const getAdsActive = async () => {
+    return axios.get(`api/v1/get-ads-active`)
 }

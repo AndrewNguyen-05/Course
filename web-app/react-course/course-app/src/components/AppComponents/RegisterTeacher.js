@@ -39,7 +39,7 @@ export const RegisterTeacher = () => {
     const [loadingRegister, setLoadingRegister] = useState(false);
 
     useEffect(() => {
-       getMyInfo(token)
+        getMyInfo()
             .then(data => {
                 setFormData((prevData) => ({
                     ...prevData,
@@ -76,10 +76,17 @@ export const RegisterTeacher = () => {
         formDataToSend.append('certificate', formData.certificate);
 
         try {
-            const data = await registerTeacher(token, formDataToSend);
-            toast.success('Registration successful! Please await our notification.');
+            const data = await registerTeacher(formDataToSend);
+            if (data && data.result) {
+                toast.success('Registration successful! Please await our notification.');
+                return;
+            }
+            if (data.code === 400 && data.message === 'Your request is pending review, please do not resubmit.') {
+                toast.error('Your request is pending review, please do not resubmit.');
+                return;
+            }
         } catch (error) {
-            toast.error('Your request is pending review, please do not resubmit.');
+            toast.error('An unexpected error occurred. Please try again.');
         } finally {
             setLoadingRegister(false);
         }

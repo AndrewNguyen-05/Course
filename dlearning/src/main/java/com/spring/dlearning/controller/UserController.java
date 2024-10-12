@@ -3,10 +3,7 @@ package com.spring.dlearning.controller;
 import com.spring.dlearning.dto.request.PasswordCreationRequest;
 import com.spring.dlearning.dto.request.UserCreationRequest;
 import com.spring.dlearning.dto.request.VerifyOtpRequest;
-import com.spring.dlearning.dto.response.ApiResponse;
-import com.spring.dlearning.dto.response.GetPointsCurrentLogin;
-import com.spring.dlearning.dto.response.UserResponse;
-import com.spring.dlearning.dto.response.VerifyOtpResponse;
+import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.service.CloudinaryService;
 import com.spring.dlearning.service.UserService;
 import jakarta.mail.MessagingException;
@@ -40,8 +37,8 @@ public class UserController {
     }
 
     @PostMapping("/check-exists-user")
-    ApiResponse<Boolean> checkExistsUser(@RequestParam String email ){
-        var result = userService.findByEmail(email);
+    ApiResponse<Boolean> checkExistsUser(@RequestBody EmailRequest request){
+        var result = userService.findByEmail(request);
         System.out.println(result);
 
         return ApiResponse.<Boolean>builder()
@@ -51,19 +48,20 @@ public class UserController {
     }
 
     @PostMapping("/create-password")
-    ApiResponse<Void> createPassword(@RequestBody @Valid PasswordCreationRequest request){
+    ApiResponse<Void> createPassword(@RequestBody @Valid PasswordCreationForFirstRequest request){
         userService.createPassword(request);
 
         return ApiResponse.<Void>builder()
+                .code(HttpStatus.OK.value())
                 .message("Password has ben created, you could use it to log-in")
                 .build();
     }
 
     @PostMapping("/send-otp")
-    ApiResponse<Void> sendOtp(@RequestParam String email)
+    ApiResponse<Void> sendOtpForgotPassword(@RequestBody EmailRequest request)
             throws MessagingException, UnsupportedEncodingException {
 
-        userService.sendOtp(email);
+        userService.sendOtpForgotPassword(request);
 
         return ApiResponse.<Void>builder()
                 .code(HttpStatus.OK.value())
@@ -72,9 +70,9 @@ public class UserController {
     }
 
     @PostMapping("/send-otp-register")
-    ApiResponse<Void> sendOtpRegister(@RequestParam String email)
+    ApiResponse<Void> sendOtpRegister(@RequestBody EmailRequest request)
             throws MessagingException, UnsupportedEncodingException {
-        userService.sendOtpRegister(email);
+        userService.sendOtpRegister(request);
         return ApiResponse.<Void>builder()
                 .code(HttpStatus.OK.value())
                 .message("Send Otp Successfully")
@@ -92,12 +90,9 @@ public class UserController {
                 .build();
     }
 
-
     @PostMapping("/reset-password")
-    ApiResponse<?> resetPassword(@RequestBody @Valid PasswordCreationRequest request,
-                                 @RequestParam String email,
-                                 @RequestParam String otp ){
-        userService.resetPassword(email, otp, request);
+    ApiResponse<?> resetPassword(@RequestBody @Valid PasswordCreationRequest request ){
+        userService.resetPassword(request);
 
         return ApiResponse.<Void>builder()
                 .code(HttpStatus.OK.value())

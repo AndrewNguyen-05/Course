@@ -1,50 +1,37 @@
 import { toast } from 'react-toastify';
-import { fetchApi } from '../components/utils/api-utils';
+import axios from '../components/utils/CustomizeAxios';
 
-export const addReview = async (commentData, token, courseId) => {
+export const addReview = async (courseId, commentData) => {
     try {
-        const response = await fetchApi(`http://localhost:8080/api/v1/add-review?id=${courseId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(commentData)
+        const response = await axios.post(`api/v1/add-review`, commentData, {
+            params: { id: courseId }
         });
 
-        const data = await response.json();
-
-        if (data.result) {
+        if (response.data && response.data.result) {
             toast.success('Comment added successfully');
-            return data.result;
+            return response.data.result;
         } else {
-            toast.error(data.message);
-            throw new Error(data.message);
+            toast.error(response.data.message);
+            throw new Error(response.data.message);
         }
     } catch (error) {
+        console.error('Error adding review:', error);
         throw error;
     }
 };
 
-export const addReplyReview = async (token, replyData, courseId) => {
+
+export const addReplyReview = async (courseId, replyData) => {
     try {
-        const response = await fetchApi(`http://localhost:8080/api/v1/add-review?id=${courseId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(replyData)
+        const response = await axios.post(`api/v1/add-review`, replyData, {
+            params: { id: courseId }
         });
-
-        const data = await response.json();
-
-        if (data.result) {
+        if (response.data.result) {
             toast.success('Reply added successfully');
-            return data.result;
+            return response.data.result;
         } else {
-            toast.error(data.message);
-            throw new Error(data.message);
+            toast.error(response.data.message);
+            throw new Error(response.data.message);
         }
     } catch (error) {
         console.error('Error in service:', error);
@@ -52,25 +39,15 @@ export const addReplyReview = async (token, replyData, courseId) => {
     }
 };
 
-export const editReview = async (commentId, updatedContent, token) => {
+export const editReview = async (commentId, updatedContent) => {
     try {
-        const response = await fetchApi(`http://localhost:8080/api/v1/update-review/${commentId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify({ content: updatedContent })
-        });
-
-        const data = await response.json();
-
-        if (data.result) {
+        const response = await axios.put(`api/v1/update-review/${commentId}`, { content: updatedContent })
+        if (response.data.result) {
             toast.success('Update Comment Successfully');
-            return data.result;
+            return response.data.result;
         } else {
-            toast.error(data.message);
-            throw new Error(data.message);
+            toast.error(response.data.message);
+            throw new Error(response.data.message);
         }
     } catch (error) {
         console.error('Error in service:', error);
@@ -78,24 +55,15 @@ export const editReview = async (commentId, updatedContent, token) => {
     }
 };
 
-export const deleteReview= async (commentId, token) => {
+export const deleteReview = async (commentId) => {
     try {
-        const response = await fetchApi(`http://localhost:8080/api/v1/delete-review/${commentId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        const data = await response.json();
-
-        if (data.result) {
+        const response = await axios.delete(`api/v1/delete-review/${commentId}`);
+        if (response.data.result) {
             toast.success('Comment deleted successfully');
-            return data.result;
+            return response.data.result;
         } else {
-            toast.error(data.message);
-            throw new Error(data.message);
+            toast.error(response.message);
+            throw new Error(response.message);
         }
     } catch (error) {
         toast.error('Failed to delete comment');

@@ -76,7 +76,6 @@ export const Register = () => {
                 if (otpData.code === 200) {
                     setIsOtpSent(true);
                     setErrorMessage("");
-                    console.log("OTP sent successfully");
                 } else {
                     setErrorMessage("Error sending OTP, please try again.");
                 }

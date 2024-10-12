@@ -21,12 +21,11 @@ export const Courses = () => {
 
     const fetchCourses = async () => {
         setLoading(true);
-        console.log(loading);
         try {
             const result = await SearchService(currentPage, pageSize, filterQuery);
-            if (result && result.data) {
-                setCourses(result.data);
-                setTotalPages(result.totalPages);
+            if (result && result.result) {
+                setCourses(result.result.data);
+                setTotalPages(result.result.totalPages);
             } else {
                 setCourses([]);
             }
@@ -45,10 +44,10 @@ export const Courses = () => {
     };
 
     useEffect(() => {
-        setCurrentPage(1); // Đặt lại về trang đầu tiên mỗi khi `filterQuery` thay đổi
+        setCurrentPage(1); 
     }, [filterQuery]);
 
-    // Gọi `fetchCourses` mỗi khi `currentPage`, `pageSize` hoặc `filterQuery` thay đổi
+    
     useEffect(() => {
         fetchCourses();
     }, [currentPage, pageSize, filterQuery]);

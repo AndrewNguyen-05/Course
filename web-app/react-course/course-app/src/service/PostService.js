@@ -1,85 +1,68 @@
 import { toast } from "react-toastify";
-import { fetchApi } from "../components/utils/api-utils";
+import axios from "../components/utils/CustomizeAxios";
 
-export const creationPost = async (token, formData) => {
+export const creationPost = async (formData) => {
   try {
-    const response = await fetchApi('http://localhost:8080/api/v1/create-post', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      toast.error(errorData.message)
-      throw new Error(errorData.message || 'Failed to create post');
+    const response = await axios.post('api/v1/create-post',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    if (response.data.result) {
+      toast.success('Created Post Succesfully')
+      return response.data.result;
+    } else {
+      toast.error(response.data.message);
+      throw new Error(response.data.message);
     }
-    return await response.json();
-
   } catch (error) {
-    console.error('Error creating post:', error);
+    console.error('Error in create Post:', error);
     throw error;
   }
 };
 
-export const getAllPosts = async (token, currentPage, filterQuery) => {
-
+export const getAllPosts = async (currentPage, filterQuery) => {
   try {
-    let urlApi = `http://localhost:8080/api/v1/get-all-post?page=${currentPage}`;
+    let urlApi = `api/v1/get-all-post?page=${currentPage}`;
     if (filterQuery) {
       const formattedQuery = `content~~'*${encodeURIComponent(filterQuery)}*' or user.name~~'*${encodeURIComponent(filterQuery)}*'`;
       urlApi += `&filter=${formattedQuery}`;
-      console.log("Filter Query:", formattedQuery);
-      console.log("API URL:", urlApi);
     }
 
-    const response = await fetchApi(urlApi, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
-
-    const result = await response.json();
-    return result;
+    const response = await axios.get(urlApi);
+    return response.data;
 
   } catch (error) {
     console.error('Error fetching post filter:', error);
     throw error;
   }
+};
+
+
+export const getPostByUserLogin = async (currentPage) => {
+  try {
+    const response = await axios.get(`api/v1/get-post-current-login`, {
+      params: {
+        page: currentPage
+      }
+    })
+
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching post current login:', error);
+    throw error;
+  }
 }
 
-export const getPostByUserLogin = async (token, currentPage) => {
-  const response = await fetchApi(`http://localhost:8080/api/v1/get-post-current-login?page=${currentPage}`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  })
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    console.log(errorData);
-    throw new Error('Fail to fecth post by user login', errorData.message);
+export const deletePost = async (postId) => {
+  try {
+    const response = await axios.delete(`api/v1/delete-post/${postId}`);
+    return response.data;
+  } catch (error) {
+    console.log('Fail to delete post')
+    throw error;
   }
-
-  return response.json();
-}
-
-export const deletePost = async (token, postId) => {
-  const response = await fetchApi(`http://localhost:8080/api/v1/delete-post/${postId}`, {
-    method: "DELETE",
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  })
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message);
-  }
-
-  return response.json();
 }

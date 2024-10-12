@@ -11,7 +11,6 @@ export const AdminHeader = () => {
   const [loggedOut, setLoggedOut] = useState(false);
   const { isTokenValid } = UseAuth({ loggedOut });
   const { handleLogout } = HandleLogout({ setLoggedOut });
-
   const location = useLocation();
   const underlineRef = useRef(null);
   const [avatar, setAvatar] = useState("");
@@ -24,7 +23,7 @@ export const AdminHeader = () => {
   const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
 
   useEffect(() => {
-    notificationCurrentLogin(token)
+    notificationCurrentLogin()
       .then((data) => {
         setNotifications(data.result);
         setUnreadCount(data.result.filter((n) => !n.isRead).length);
@@ -43,7 +42,7 @@ export const AdminHeader = () => {
 
   const markAsRead = async (notificationId) => {
     try {
-      await markAsReadNotification(token, notificationId);
+      await markAsReadNotification(notificationId);
       setUnreadCount((prevCount) => prevCount - 1);
       setNotifications((prevNotifications) =>
         prevNotifications.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))

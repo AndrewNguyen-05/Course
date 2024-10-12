@@ -47,7 +47,7 @@ public class NotificationController {
         }
     }
 
-    @PostMapping("/is-read/{id}")
+    @PutMapping("/is-read/{id}")
     ApiResponse<Boolean> markAllAsRead(@PathVariable Long id) {
         try {
             notificationService.markAsRead(id);

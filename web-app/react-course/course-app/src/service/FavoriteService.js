@@ -1,52 +1,41 @@
-import { toast } from "react-toastify";
-import { fetchApi } from "../components/utils/api-utils";
+import axios from "../components/utils/CustomizeAxios";
 
-export const getFavorite = async (currentPage, token) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/fetch-all-favorites?page=${currentPage}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    })
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Error fetching data');
+export const getFavorite = async (currentPage) => {
+    try {
+        const response = await axios.get(`api/v1/fetch-all-favorites`, {
+            params: {
+                page: currentPage
+            }
+        })
+        return response.data;
+    } catch (error) {
+        console.log('Fail to get Fevorite', error);
+        throw error;
     }
-    return response.json();
 }
 
-export const addFavorite = async (token, courseId) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/save-favorite?id=${courseId}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-        }
-    })
-
-    if (!response.ok) throw new Error('Failed to add to favorites');
-
-    return response.json();
-}
-
-export const removeFavorite = async (token, favoriteId) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/delete-favorite/${favoriteId}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    });
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        toast.error('Delete Favorite Failed!');
-        throw new Error('Failed to remove Favorite' || errorData.message);
+export const addFavorite = async (courseId) => {
+    try {
+        const response = await axios.post(`api/v1/save-favorite`, {
+            id: courseId
+        });
+        console.log(response);
+        return response;
+    } catch (error) {
+        console.error('Failed to add to favorites', error);
+        throw error;
     }
+};
 
-    return response.json();
+
+export const removeFavorite = async (favoriteId) => {
+    try {
+        const response = await axios.delete(`api/v1/delete-favorite/${favoriteId}`);
+        return response;
+    } catch (error) {
+        console.log('Failed to delete favorite', error);
+        throw error;
+    }
 };
 
 

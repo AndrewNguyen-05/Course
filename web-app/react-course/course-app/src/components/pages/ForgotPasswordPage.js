@@ -62,6 +62,10 @@ export const ForgotPassword = () => {
 
     const handlePasswordSubmit = async (event) => {
         event.preventDefault();
+        if (newPassword.length < 6) {
+            showAlert(false, 'Password must be at least 6 characters long.');
+            return;
+        }
         try {
             await resetPassword(email, otp, newPassword);
             showAlert(true, 'Password reset successfully!').then(() => {
@@ -71,7 +75,7 @@ export const ForgotPassword = () => {
             showAlert(false, error.message);
         }
     };
-
+    
     return (
         <motion.div
             initial={{ opacity: 0, y: 50 }} // Hiệu ứng khi trang bắt đầu: mờ và dịch xuống
@@ -158,6 +162,7 @@ export const ForgotPassword = () => {
                                         value={newPassword}
                                         onChange={(e) => setNewPassword(e.target.value)}
                                         required
+                                        autocomplete="new-password"
                                     />
                                 </div>
                                 <button type="submit" className="btn btn-success btn-lg w-100 mb-3">

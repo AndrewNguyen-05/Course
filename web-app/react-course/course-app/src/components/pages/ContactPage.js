@@ -48,11 +48,12 @@ export const Contact = () => {
     const handleSubmitAds = async (e) => {
         e.preventDefault();
         if (!token) {
-            toast.error('Please log in again.')
+            toast.error('Please log in again.');
             return;
         }
-
         try {
+            const formDataAds = new FormData();
+    
             const jsonBlog = new Blob([JSON.stringify({
                 contactEmail: formData.contactEmail,
                 contactPhone: formData.contactPhone,
@@ -62,20 +63,22 @@ export const Contact = () => {
                 link: formData.link,
                 startDate: formData.startDate,
                 endDate: formData.endDate
-            })], { type: 'application/json' })
-
-            const formDataAds = new FormData();
-            formDataAds.append("request", jsonBlog)
+            })], { type: 'application/json' });
+    
+            formDataAds.append("request", jsonBlog);
             formDataAds.append("file", formData.image);
-
-            await registerAds(token, formDataAds);
+    
+            const response = await registerAds(token, formDataAds);
+    
+            if (response.error || response.message) {
+                throw new Error(response.message);
+            }
             toast.success('Registration successful! Please await our notification.');
-
         } catch (error) {
+            toast.error(error.message);
             console.log(error);
         }
-    }
-
+    };
 
     return (
         <motion.div

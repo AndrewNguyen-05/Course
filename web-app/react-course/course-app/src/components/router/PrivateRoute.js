@@ -21,7 +21,7 @@ export const PrivateRoute = ({ children }) => {
     }
     introspect(token)
       .then((data) => {
-        if (data.result?.valid) {
+        if (data?.valid) {
           setIsValidToken(true);
         } else {
           setIsValidToken(false);

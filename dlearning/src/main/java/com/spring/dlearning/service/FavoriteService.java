@@ -1,5 +1,6 @@
 package com.spring.dlearning.service;
 
+import com.spring.dlearning.dto.request.FavoriteRequest;
 import com.spring.dlearning.dto.response.FavoriteResponse;
 import com.spring.dlearning.dto.response.PageResponse;
 import com.spring.dlearning.entity.Course;
@@ -37,14 +38,14 @@ public class FavoriteService {
     FavoriteMapper favoriteMapper;
 
     @PreAuthorize("isAuthenticated()")
-    public void createFavorite (Long id) {
+    public void createFavorite (FavoriteRequest request) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        Course course = courseRepository.findById(id)
+        Course course = courseRepository.findById(request.getId())
                 .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
 
         boolean isAlreadyFavorite = favoriteRepository.existsByUserAndCourse(user, course);

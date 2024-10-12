@@ -25,7 +25,7 @@ export const Profile = () => {
     })
 
     useEffect(() => {
-        getProfileInfo(token)
+        getProfileInfo()
             .then(data => {
                 if (data.result) {
                     setProfileData({
@@ -63,7 +63,7 @@ export const Profile = () => {
 
         setIsUpdatingAvatar(true);
 
-        updateAvatar(formData, token)
+        updateAvatar(formData)
             .then(response => {
                 if (response && response.message === "Profile updated successfully") {
                     toast.success(response.message);
@@ -84,7 +84,7 @@ export const Profile = () => {
     const handleRemoveAvatar = () => {
         setIsRemovingAvatar(true);
 
-        removeAvatar(token)
+        removeAvatar()
             .then(() => {
                 setSelectedImage("https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"); 
                 toast.success('Avatar removed successfully!');
@@ -107,7 +107,7 @@ export const Profile = () => {
             }
         });
 
-        updateProfile(filteredData, localStorage.getItem('token'))
+        updateProfile(filteredData)
             .then(() => {
                 toast.success("Profile updated successfully");
             })

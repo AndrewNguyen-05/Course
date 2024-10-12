@@ -5,6 +5,7 @@ import { FaCamera, FaCameraRetro, FaSmile, FaVideo } from 'react-icons/fa';
 import { getAvatar } from '../../service/ProfileService';
 import { deletePost, getPostByUserLogin } from '../../service/PostService';
 import Swal from 'sweetalert2';
+import { getMyInfo } from '../../service/UserService';
 
 const ProfilePage = () => {
   const token = localStorage.getItem('token');
@@ -12,18 +13,34 @@ const ProfilePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [info, setInfo] = useState({
+    firstName: '',
+    lastName: '',
+  });
+
 
   // Lấy ảnh đại diện từ API
   useEffect(() => {
     if (!token) {
       return;
     }
-    getAvatar(token)
+    getAvatar()
       .then((data) => {
         setAvatar(data.result);
       })
       .catch((error) => console.log(error));
   }, [token]);
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    getMyInfo()
+      .then((data) => {
+        setInfo(data.result);
+      })
+      .catch((error) => console.log(error))
+  })
 
   // Lấy danh sách bài viết từ API
   useEffect(() => {
@@ -32,7 +49,7 @@ const ProfilePage = () => {
 
       try {
         setLoading(true);
-        const data = await getPostByUserLogin(token, currentPage);
+        const data = await getPostByUserLogin( currentPage);
         if (data.result && data.result.data) {
           setPosts(data.result.data);
         } else {
@@ -60,7 +77,7 @@ const ProfilePage = () => {
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
-            await deletePost(token, postId);
+            await deletePost(postId);
             setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
             Swal.fire({
               title: 'Deleted!',
@@ -110,7 +127,9 @@ const ProfilePage = () => {
             </div>
 
             <div className="my-account-info">
-              <h2 className="my-account-name">{posts.name}</h2>
+              <h2 className="my-account-name">
+                {info && info.firstName && info.lastName ? `${info.firstName} ${info.lastName}` : 'Đang tải...'}
+              </h2>
               <p className="my-account-friends-count">576 người bạn</p>
               <button className="my-account-edit-profile-btn">Chỉnh sửa trang cá nhân</button>
             </div>

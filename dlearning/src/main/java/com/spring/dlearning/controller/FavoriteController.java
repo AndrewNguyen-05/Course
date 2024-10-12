@@ -1,5 +1,6 @@
 package com.spring.dlearning.controller;
 
+import com.spring.dlearning.dto.request.FavoriteRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.FavoriteResponse;
 import com.spring.dlearning.dto.response.PageResponse;
@@ -22,8 +23,8 @@ public class FavoriteController {
     FavoriteService favoriteService;
 
     @PostMapping("/save-favorite")
-    ApiResponse<Void> saveFavorite (@RequestParam Long id) {
-         favoriteService.createFavorite(id);
+    ApiResponse<Void> saveFavorite (@RequestBody FavoriteRequest request) {
+         favoriteService.createFavorite(request);
 
         return ApiResponse.<Void>builder()
                 .code(HttpStatus.CREATED.value())

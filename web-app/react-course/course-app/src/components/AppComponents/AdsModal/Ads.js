@@ -15,11 +15,10 @@ export const AdsPage = () => {
 
     useEffect(() => {
         document.title = 'Advertisement';
-
         const adsByCurrentLogin = async () => {
             try {
                 setLoading(true);
-                const data = await getAdsByCurrentLogin(token, currentPage);
+                const data = await getAdsByCurrentLogin(currentPage);
                 console.log(data);
                 if (data.result && Array.isArray(data.result.data)) {
                     setAds(data.result.data);

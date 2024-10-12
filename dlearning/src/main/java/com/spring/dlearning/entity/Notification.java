@@ -27,7 +27,7 @@ public class Notification extends AbstractEntity<Long>{
     @Column(name = "message")
     String message;
 
-    @Column(name = "isRead")
+    @Column(name = "is_read")
     Boolean isRead;
 
     @Column(name = "url")

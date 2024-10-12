@@ -32,7 +32,7 @@ const PostModal = ({ show, handleClose, post }) => {
     // Fetch Avatar User Current Login
     useEffect(() => {
         if (!token) return;
-        getAvatar(token)
+        getAvatar()
             .then((data) => setAvatar(data.result))
             .catch((error) => console.log(error));
     })
@@ -45,7 +45,7 @@ const PostModal = ({ show, handleClose, post }) => {
             setIsLoading(true);
             try {
                 await new Promise((resolve) => setTimeout(resolve, 1000));
-                const data = await getCommentByPostId(token, postId, currentPage);
+                const data = await getCommentByPostId(postId, currentPage);
                 const updatedComments = data.result.data.map((comment) => ({
                     ...comment,
                     replying: false,
@@ -86,7 +86,7 @@ const PostModal = ({ show, handleClose, post }) => {
         };
 
         try {
-            const result = await addComment(token, commentData);
+            const result = await addComment(commentData);
             setComments([
                 ...comments,
                 {
@@ -118,7 +118,7 @@ const PostModal = ({ show, handleClose, post }) => {
         };
 
         try {
-            const result = await replyComment(token, replyData);
+            const result = await replyComment(replyData);
             if (result) {
                 // Cập nhật lại danh sách comments với reply mới
                 const updatedComments = comments.map(comment => {
@@ -176,7 +176,7 @@ const PostModal = ({ show, handleClose, post }) => {
             return;
         }
         try {
-            const result = await updateComment(token, commentId, updatedContent);
+            const result = await updateComment(commentId, updatedContent);
             if (result) {
                 setComments((prevComments) => {
                     // Bước 1: Tạo một danh sách comments mới bằng cách map qua các bình luận cũ.

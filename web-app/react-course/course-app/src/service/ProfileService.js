@@ -1,62 +1,42 @@
-import { fetchApi } from "../components/utils/api-utils";
+import axios from "../components/utils/CustomizeAxios";
 
-export const getAvatar = async (token) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/get-avatar`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    })
-
-    return response.json();
+export const getAvatar = async () => {
+    const response = await axios.get(`api/v1/get-avatar`)
+    return response.data
 }
 
-export const getProfileInfo = async (token) => {
-
-    const response = await fetchApi(`http://localhost:8080/api/v1/info-user`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    })
-
-    return response.json();
+export const getProfileInfo = async () => {
+    const response = await axios.get(`api/v1/info-user`)
+    return response.data;
 }
 
-export const updateAvatar = async (formData, token) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/update-avatar`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        },
-        body: formData
-    });
-
-    return response.json();
+export const updateAvatar = async (formData) => {
+    try {
+        const response = await axios.post(`api/v1/update-avatar`, formData)
+        console.log(response)
+        return response.data;
+    } catch (error) {
+        console.log('Fail to update Avatar', error)
+        throw error;
+    }
 };
 
-
-export const removeAvatar = async(token) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/remove-avatar`, {
-        method: 'DELETE',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-
-    return response.json();
+export const removeAvatar = async () => {
+    try {
+        const response = await axios.delete(`api/v1/remove-avatar`)
+        return response.data;
+    } catch (error) {
+        console.log('Fail to remove Avatar', error)
+        throw error;
+    }
 }
 
-export const updateProfile = async (profileData, token) => {
-    const response = await fetchApi('http://localhost:8080/api/v1/update-profile', {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(profileData)
-    });
-    return response.json();
+export const updateProfile = async (profileData) => {
+    try {
+        const response = await axios.put('api/v1/update-profile', profileData);
+        return response.data;
+    } catch (error) {
+        console.log('Fail to update profile', error)
+        throw error;
+    }
 };

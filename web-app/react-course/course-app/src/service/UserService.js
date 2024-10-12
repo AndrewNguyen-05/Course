@@ -1,163 +1,129 @@
-import { fetchApi } from "../components/utils/api-utils";
+import axios from '../components/utils/CustomizeAxios';
 
-export const getMyInfo = async (token) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/my-info`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    return response.json();
+export const getMyInfo = async () => {
+    try {
+        const response = await axios.get(`api/v1/my-info`)
+        return response.data;
+    } catch (error) {
+        console.error('Error get my info', error);
+        throw error;
+    }
 }
 
-export const getPointsByCurrentLogin = async (token) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/get-points-user-current`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-
-    if (!response.ok) throw new Error('Failed to get points');
-
-    return response.json();
+export const getPointsByCurrentLogin = async () => {
+    try {
+        const response = await axios.get(`api/v1/get-points-user-current`)
+        return response.data;
+    } catch (error) {
+        console.error('Error get point by current login', error);
+        throw error;
+    }
 }
 
 export const sendOtp = async (email) => {
-    const response = await fetchApi(`http://localhost:8080/api/v1/send-otp?email=${encodeURIComponent(email)}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    })
+    try {
+        const response = await axios.post(`api/v1/send-otp`, { email: email });
+        console.log(response);
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message);
+        return response.data;
+    } catch (error) {
+        console.error('Error forgot password', error);
+        throw error;
     }
-
-    return response.json();
 }
 
 export const verifyOtp = async (email, otp) => {
-    const response = await fetch(`http://localhost:8080/api/v1/verify-otp`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+    try {
+        const response = await axios.post(`api/v1/verify-otp`, {
             email: email,
-            otp: otp,
+            otp, otp
         })
-    })
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to verify OTP');
+        return response.data;
+    } catch (error) {
+        console.error('Error verify otp', error);
+        throw error;
     }
-
-    return response.json();
 }
 
 export const resetPassword = async (email, otp, newPassword) => {
+    try {
+        const response = await axios.post('api/v1/reset-password', {
+            email: email,
+            otp: otp,
+            password: newPassword
+        });
 
-    const response = await fetch(`http://localhost:8080/api/v1/reset-password?email=${encodeURIComponent(email)}&otp=${encodeURIComponent(otp)}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ password: newPassword })
-    })
+        console.log('Response:', response);
+        return response.data;
 
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Unable to reset password');
+    } catch (error) {
+        console.error('Error resetting password:', error.response ? error.response.data : error.message);
+        throw error;
     }
-
-    return response.json();
-}
+};
 
 export const checkUserExists = async (email) => {
-    const response = await fetch(`http://localhost:8080/api/v1/check-exists-user?email=${email}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    })
-
-    if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message)
+    try {
+        const response = await axios.post(`api/v1/check-exists-user`, { email: email })
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error('User not existed', error);
+        throw error;
     }
-    return response.json();
 }
 
 export const sendOtpRegister = async (email) => {
-    const response = await fetch(`http://localhost:8080/api/v1/send-otp-register?email=${email}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    });
-
-    if (!response.ok) {
-        throw new Error("Error sending OTP");
+    try {
+        const response = await axios.post(`api/v1/send-otp-register`, {
+            email: email
+        });
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error('Error sendOtpRegister', error);
+        throw error;
     }
-    return response.json();
 };
 
 export const registerUser = async (otp, userData) => {
-    const response = await fetch(`http://localhost:8080/api/v1/register?otp=${otp}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(userData),
-    });
-
-    if (!response.ok) {
-        throw new Error("Error during registration");
+    try {
+        const response = await axios.post(`api/v1/register`, userData, {
+            params: {
+                otp: otp
+            }
+        });
+        console.log(response);
+        return response.data;
+    } catch (error) {
+        console.error('Error create user', error);
+        throw error;
     }
-    return response.json();
 };
 
-export const registerTeacher = async (token, formDataToSend) => {
+export const registerTeacher = async (formDataToSend) => {
     try {
-        const response = await fetchApi(`http://localhost:8080/api/v1/register-teacher`, {
-            method: 'POST',
+        const response = await axios.post(`api/v1/register-teacher`, formDataToSend, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'multipart/form-data',
             },
-            body: formDataToSend
         });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Đã xảy ra lỗi trong quá trình đăng ký.');
-        }
-
-        return await response.json();
+        return response.data;
     } catch (error) {
         console.error('Error in registerTeacher API:', error);
-        throw error; 
+        throw error;
     }
 };
 
-export const createPasswordForFirst = async (token, createPassword) => {
-    const response =  await fetchApi(`http://localhost:8080/api/v1/create-password`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(createPassword)
-    })
 
-    if(! response.ok){
-        const errorData = await response.json();
-        throw new Error('Fail to create password'|| errorData.message)
+export const createPasswordForFirst = async (password) => {
+    try {
+        const response = await axios.post(`api/v1/create-password`, { password });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+        throw error;
     }
+};
 
-    return response.json();
-}
+

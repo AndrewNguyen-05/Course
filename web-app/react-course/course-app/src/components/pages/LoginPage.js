@@ -23,7 +23,7 @@ export const LoginPage = () => {
     if (token) {
       introspect(token)
         .then((data) => {
-          if (data.result.valid) {
+          if (data.valid) {
             navigate("/home");
           } else {
             setLoading(false);
@@ -73,35 +73,39 @@ export const LoginPage = () => {
 
     login(email, password)
       .then((data) => {
-        const token = data.result.token;
-        localStorage.setItem("token", token);
+        if (data && data.result && data.result.token) {
+          const token = data.result.token;
+          localStorage.setItem("token", token);
 
-        introspect(token)
-          .then((introspectData) => {
-            if (introspectData.result && introspectData.result.valid) {
-              const role = introspectData.result.scope;
+          introspect(token)
+            .then((introspectData) => {
+              if (introspectData && introspectData.valid) {
+                const role = introspectData.scope;
 
-              if (role === "USER") {
-                navigate("/home");
-              } else if (role === "ADMIN") {
-                navigate("/admin");
-              } else if (role === "TEACHER") {
-                navigate("/manager-courses");
+                if (role === "USER") {
+                  navigate("/home");
+                } else if (role === "ADMIN") {
+                  navigate("/admin");
+                } else if (role === "TEACHER") {
+                  navigate("/manager-courses");
+                }
+              } else {
+                throw new Error("Invalid token.");
               }
-            } else {
-              throw new Error("Invalid token.");
-            }
-          })
-          .catch((error) => {
-            console.error("Error during introspect:", error);
-            setError(error.message);
-            setShowToast(true);
-            setTimeout(() => setShowToast(false), 4000);
-          });
+            })
+            .catch((error) => {
+              console.error("Error during introspect:", error);
+              setError(error.message);
+              setShowToast(true);
+              setTimeout(() => setShowToast(false), 4000);
+            });
+        } else {
+          throw new Error("Login failed, please try again.");
+        }
       })
       .catch((error) => {
-        console.error("Login error:", error); // In lỗi ra console để kiểm tra
-        setError(error.message);
+        console.error("Login error:", error.message); // In lỗi ra console
+        setError(error.message || "Login failed, please try again.");
         setShowToast(true);
         setTimeout(() => setShowToast(false), 4000);
       });

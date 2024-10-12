@@ -41,7 +41,7 @@ export const Header = () => {
     useEffect(() => {
         if (!token || !isTokenValid) return;
 
-        notificationCurrentLogin(token)
+        notificationCurrentLogin()
             .then((data) => {
                 setNotifications(data.result || []);
                 setUnreadCount(data.result.filter((n) => !n.isRead).length || []);
@@ -67,8 +67,8 @@ export const Header = () => {
         }
         introspect(token)
             .then((data) => {
-                if (data.result.valid) {
-                    setRole(data.result.scope);
+                if (data.valid) {
+                    setRole(data.scope);
                 } else {
                     console.error("Token không hợp lệ");
                 }
@@ -82,7 +82,7 @@ export const Header = () => {
             setLoading(false);
             return;
         }
-        getAvatar(token)
+        getAvatar()
             .then((data) => setAvatar(data.result))
             .catch((error) => console.log(error));
     }, [token]);
@@ -91,7 +91,7 @@ export const Header = () => {
         const fetchPoints = async () => {
             if (!token) return;
             try {
-                const data = await getPointsByCurrentLogin(token);
+                const data = await getPointsByCurrentLogin();
                 setPoints(data.result.points);
             } catch (error) {
                 console.log(error);
@@ -103,7 +103,7 @@ export const Header = () => {
 
     const markAsRead = async (notificationId) => {
         try {
-            await markAsReadNotification(token, notificationId);
+            await markAsReadNotification(notificationId);
             setUnreadCount((prevCount) => prevCount - 1);
             setNotifications((prevNotifications) =>
                 prevNotifications.map((n) => (n.id === notificationId ? { ...n, isRead: true } : n))

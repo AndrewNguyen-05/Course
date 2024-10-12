@@ -17,35 +17,12 @@ import { InfoContact } from '../common/InfoContact';
 import { EducationHighlights } from '../AppComponents/EducationHighlights';
 import { motion } from 'framer-motion';
 import { PromoModal } from '../AppComponents/AdsModal/PromoModal';
+import { getAdsActive } from '../../service/AdsService';
 
 export const HomePage = () => {
 
     const token = localStorage.getItem('token');
-    const promotions = [
-        {
-            id: 1,
-            title: 'Làm Chủ Spring Boot',
-            description: 'Học Next.js để xây dựng các ứng dụng web hiện đại và tương tác cao.',
-            image: 'https://i.ytimg.com/vi/9SGDpanrc8U/maxresdefault.jpg',
-            price: 'Giá chỉ còn 499k',
-            discount: 'Ưu đãi đặc biệt 50%',
-            endDate: 'Kết thúc vào: 30/11/2024',
-            link: 'http://localhost:3000/course-detail/1',
-        },
-        {
-            id: 2,
-            title: 'Làm chủ React',
-            description: 'Học React để phát triển giao diện người dùng động và hiệu quả.',
-            image: 'https://i.ytimg.com/vi/-cg9dq-Jq2M/maxresdefault.jpg',
-            price: 'Giá chỉ còn 399k',
-            discount: 'Ưu đãi đặc biệt 30%',
-            endDate: 'Kết thúc vào: 31/12/2024',
-            link: 'https://example.com/your-second-course-url',
-        },
-    ];
-
     const navigate = useNavigate();
-
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);  // State để hiển thị loading
     const [error, setError] = useState(null);
@@ -53,6 +30,23 @@ export const HomePage = () => {
     const [pageSize] = useState(4);
     const [hasMore, setHasMore] = useState(true); // Trạng thái có còn dữ liệu không
     const [showPromoModal, setShowPromoModal] = useState(false);
+    const [ads, setAds] = useState([]);
+
+    useEffect(() => {
+        const fetchAdsActive = async () => {
+            try {
+                const response = await getAdsActive();
+                if (response.data.result && Array.isArray(response.data.result)) {
+                    setAds(response.data.result)
+                } else {
+                    setAds([])
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        fetchAdsActive();
+    }, [])
 
     const handleCloseModal = () => {
         setShowPromoModal(false);
@@ -95,24 +89,28 @@ export const HomePage = () => {
     }, [currentPage, pageSize]); // useEffect chạy lại mỗi khi currentPage hoặc pageSize thay đổi
 
 
-    const handleaddToFavorites = (courseId) => {
+    const handleAddToFavorites = (courseId) => {
         if (!token) {
             navigate('/login');
             return;
         }
-        addFavorite(token, courseId)
-            .then(data => {
-                if (data.code === 201) {
+
+        addFavorite(courseId)
+            .then(response => {
+                // Kiểm tra nếu response chứa mã phản hồi là 201 hoặc thông báo thành công
+                if (response && response.data.code === 201) {
                     toast.success('Course added to favorites successfully!');
+                    return;
                 } else {
+                    toast.error(response.data.message);
                     throw new Error('Failed to add to favorites');
                 }
             })
             .catch(error => {
-                console.log(error)
-                toast.error('Course is already in the favorites list.');
+                console.error('Error adding to favorites:', error);
             });
     };
+
 
     const loadMoreCourses = () => {
         if (hasMore) {
@@ -136,7 +134,7 @@ export const HomePage = () => {
             transition={{ duration: 0.5 }}
             className="content-page"
         >
-            {showPromoModal && <PromoModal onClose={handleCloseModal} promotions={promotions} />}
+            {showPromoModal && <PromoModal onClose={handleCloseModal} ads={ads} />}
             <EducationHighlights />
             <div className="container-fluid bg-image" style={{ margin: '90px 0' }}>
                 <div className="container">
@@ -223,7 +221,7 @@ export const HomePage = () => {
                                     {/* Nút thêm vào khóa học yêu thích với icon trái tim */}
                                     <button
                                         className="course-card-custom-btn-favorite mt-2"
-                                        onClick={() => handleaddToFavorites(course.id)}
+                                        onClick={() => handleAddToFavorites(course.id)}
                                     >
                                         <i className="fas fa-heart mr-2"></i>Add to Favorite
                                     </button>
@@ -400,9 +398,9 @@ export const HomePage = () => {
             </div>
 
             <ToastContainer
-                position="top-right"
+                position="bottom-right" // Bạn có thể thay đổi vị trí như bottom-left hoặc top-center nếu muốn
                 autoClose={3000}
-                className="custom-toast-container"
+                className="add-favorite-toast"
             />
 
 

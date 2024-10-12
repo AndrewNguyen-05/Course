@@ -159,6 +159,12 @@
             <artifactId>aho-corasick-double-array-trie</artifactId>
             <version>1.2.3</version>
         </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>17.0.0</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 

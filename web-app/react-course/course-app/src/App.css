@@ -10364,6 +10364,7 @@ h6,
   right: 20px !important; /* Giữ vị trí bên phải */
 }
 
+
 .course-features-container {
   background: linear-gradient(135deg, #0061a8, #00c6ff);
   border-radius: 15px;
@@ -10423,6 +10424,16 @@ h6,
 .fa-star.text-warning {
   color: #ffd700; /* Yellow for Rating */
 }
+
+.add-favorite-toast {
+  position: fixed !important;
+  bottom: 20px;
+  right: 20px;
+  top: 1900px !important;
+  z-index: 9999 !important; /* Đảm bảo thông báo xuất hiện phía trên mọi thành phần khác */
+  display: block !important;
+}
+
 
 .fa-book.text-success {
   color: #28a745; /* Green for Lectures */

@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @RestController
@@ -30,7 +29,6 @@ public class AdvertisementController {
         var result  = advertisementService.userCreateAds(request, file);
         return ApiResponse.<AdsCreationResponse>builder()
                 .code(HttpStatus.OK.value())
-                .message("Your request has been sent, please wait for our response.")
                 .result(result)
                 .build();
     }
@@ -39,7 +37,6 @@ public class AdvertisementController {
     ApiResponse<AdsApproveResponse> approveAds(@RequestBody AdsApproveRequest request) {
         return ApiResponse.<AdsApproveResponse>builder()
                 .code(HttpStatus.OK.value())
-                .message("Your request has been approved, please proceed to payment")
                 .result(advertisementService.approveAds(request))
                 .build();
     }

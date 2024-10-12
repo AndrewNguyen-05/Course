@@ -5,9 +5,7 @@ import com.spring.dlearning.dto.event.NotificationEvent;
 import com.spring.dlearning.dto.request.PasswordCreationRequest;
 import com.spring.dlearning.dto.request.UserCreationRequest;
 import com.spring.dlearning.dto.request.VerifyOtpRequest;
-import com.spring.dlearning.dto.response.GetPointsCurrentLogin;
-import com.spring.dlearning.dto.response.UserResponse;
-import com.spring.dlearning.dto.response.VerifyOtpResponse;
+import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.entity.Role;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
@@ -21,6 +19,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,8 +46,8 @@ public class UserService {
     OtpService otpService;
     KafkaTemplate<String, Object> kafkaTemplate;
 
-    public boolean findByEmail(String email){
-       return userRepository.existsByEmail(email);
+    public boolean findByEmail(@NotNull EmailRequest request){
+       return userRepository.existsByEmail(request.getEmail());
     }
 
     @Transactional
@@ -88,7 +87,7 @@ public class UserService {
 
     @Transactional
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")
-    public void createPassword(PasswordCreationRequest request){
+    public void createPassword(PasswordCreationForFirstRequest request){
 
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
@@ -127,8 +126,10 @@ public class UserService {
     }
 
     @Transactional
-    public void sendOtp(String email) throws MessagingException, UnsupportedEncodingException {
-        User user = userRepository.findByEmail(email)
+    public void sendOtpForgotPassword(@NotNull EmailRequest request)
+            throws MessagingException, UnsupportedEncodingException {
+
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         String otp = generateOtp();
@@ -146,13 +147,14 @@ public class UserService {
                         "<p>Best regards,<br/>Your Company</p>",
                 otp
         );
-        emailService.sendEmail(subject, content, List.of(email));
+        emailService.sendEmail(subject, content, List.of(user.getEmail()));
     }
 
-    public void sendOtpRegister(String email) throws MessagingException, UnsupportedEncodingException {
+    public void sendOtpRegister(@NotNull EmailRequest request)
+            throws MessagingException, UnsupportedEncodingException {
         String otp = generateOtp();
 
-        otpService.saveOtp(email, otp);
+        otpService.saveOtp(request.getEmail(), otp);
 
         String subject = "Your OTP Code for Account Registration";
 
@@ -161,7 +163,7 @@ public class UserService {
                 .append("<body style='font-family: Arial, sans-serif; line-height: 1.6;'>")
                 .append("<h2 style='color: #4CAF50;'>Welcome to DLearning!</h2>")
                 .append("<p>Dear <strong>")
-                .append(email)
+                .append(request.getEmail())
                 .append("</strong>,</p>")
                 .append("<p>Thank you for registering with <strong>DLearning</strong>. We are excited to have you on board!</p>")
                 .append("<p style='font-size: 18px;'><strong>Your OTP Code is:</strong> ")
@@ -177,7 +179,7 @@ public class UserService {
                 .append("</html>");
 
         String emailContent = content.toString();
-        emailService.sendEmail(subject, emailContent, List.of(email));
+        emailService.sendEmail(subject, emailContent, List.of(request.getEmail()));
     }
 
 
@@ -203,11 +205,11 @@ public class UserService {
     }
 
     @Transactional
-    public void resetPassword(String email, String otp, PasswordCreationRequest request){
-        User user = userRepository.findByEmail(email)
+    public void resetPassword(PasswordCreationRequest request){
+        User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        if (user.getOtp() == null || !user.getOtp().equals(otp)) {
+        if (user.getOtp() == null || !user.getOtp().equals(request.getOtp())) {
             throw new AppException(ErrorCode.INVALID_OTP);
         }
 
