@@ -21,10 +21,7 @@ export const CreatePassword = () => {
             return;
         }
 
-        const token = localStorage.getItem("token");
-        const data = { password: createPassword };
-
-        createPasswordForFirst(token, data)
+        createPasswordForFirst(createPassword)
        .then((data) => {
             alert(data.message || "Mật khẩu đã được tạo thành công!");
             navigate("/home");
