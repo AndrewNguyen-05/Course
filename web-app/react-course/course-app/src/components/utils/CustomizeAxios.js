@@ -25,7 +25,7 @@ const refreshToken = async () => {
 instance.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem('token');
-        if (token) {
+        if (token && config.url !== 'api/v1/auth/refresh') {
             config.headers['Authorization'] = `Bearer ${token}`;
         }
         return config;
