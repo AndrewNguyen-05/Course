@@ -4989,9 +4989,10 @@ input[type="button"].btn-block {
 
 .pagination {
   display: flex;
-  padding-left: 0;
+  padding: 20px 0;
   list-style: none;
   border-radius: false;
+  justify-content: center;
 }
 
 .page-link {
@@ -5025,6 +5026,8 @@ input[type="button"].btn-block {
   border-bottom-left-radius: false;
 }
 
+
+
 .page-item:last-child .page-link {
   border-top-right-radius: false;
   border-bottom-right-radius: false;
@@ -5054,6 +5057,10 @@ input[type="button"].btn-block {
 .pagination-lg .page-item:first-child .page-link {
   border-top-left-radius: 0.3rem;
   border-bottom-left-radius: 0.3rem;
+}
+
+.page-item {
+    margin: 0 5px; /* Khoảng cách giữa các nút phân trang */
 }
 
 .pagination-lg .page-item:last-child .page-link {
@@ -10427,13 +10434,10 @@ h6,
 
 .add-favorite-toast {
   position: fixed !important;
-  bottom: 20px;
   right: 20px;
   top: 1900px !important;
   z-index: 9999 !important; /* Đảm bảo thông báo xuất hiện phía trên mọi thành phần khác */
-  display: block !important;
 }
-
 
 .fa-book.text-success {
   color: #28a745; /* Green for Lectures */

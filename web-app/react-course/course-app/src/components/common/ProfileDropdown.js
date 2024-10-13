@@ -40,7 +40,7 @@ export const ProfileDropdown = ({ avatar, isTokenValid, role, handleLogout }) =>
 
                         <li><Link to="/change-password" className="dropdown-item d-flex align-items-center"><i className="fa-solid fa-key me-2"></i>Password</Link></li>
                         <li>
-                            <Link to="/logout" className="dropdown-item d-flex align-items-center" id="logout" onClick={handleLogout}>
+                            <Link to="/login" className="dropdown-item d-flex align-items-center" id="logout" onClick={handleLogout}>
                                 <i className="fa-solid fa-sign-out-alt me-2"></i>Logout
                             </Link>
                         </li>

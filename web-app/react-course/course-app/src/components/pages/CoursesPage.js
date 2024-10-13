@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Search } from "../common/Search";
 import { SearchService } from '../../service/CourseService';
-import { Pagination } from '../common/Pagination';
 import { ViewCouses } from '../AppComponents/ViewCourses';
 import { motion } from 'framer-motion';
+import ReactPaginate from 'react-paginate';
 
 export const Courses = () => {
     const [loading, setLoading] = useState(true);
@@ -18,7 +18,6 @@ export const Courses = () => {
     })
 
     // Get Course and Search Filter 
-
     const fetchCourses = async () => {
         setLoading(true);
         try {
@@ -36,30 +35,26 @@ export const Courses = () => {
         }
     };
 
-    // Hàm thay đổi trang
-    const changePage = (page) => {
-        if (page >= 1 && page <= totalPages) {
-            setCurrentPage(page);
-        }
-    };
-
     useEffect(() => {
-        setCurrentPage(1); 
+        setCurrentPage(1);
     }, [filterQuery]);
 
-    
     useEffect(() => {
         fetchCourses();
     }, [currentPage, pageSize, filterQuery]);
 
+    const handlePageClick = (data) => {
+        setCurrentPage(data.selected + 1);
+    }
+
     return (
         <motion.div
-                key={filterQuery || currentPage}  
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.5 }}
-            >
+            key={filterQuery || currentPage}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.5 }}
+        >
             <Search onSearch={setFilterQuery} />
             <div className="container-fluid">
                 <div className="container py-3">
@@ -71,10 +66,25 @@ export const Courses = () => {
                         </div>
                     </div>
                     <ViewCouses courses={courses} />
-                    <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        changePage={changePage}
+                    <ReactPaginate
+                        previousLabel={'«'}
+                        nextLabel={'»'}
+                        breakLabel={'...'}
+                        pageCount={totalPages}
+                        marginPagesDisplayed={2}
+                        pageRangeDisplayed={3}
+                        onPageChange={handlePageClick}
+                        forcePage={currentPage - 1} 
+                        containerClassName={'pagination pagination-lg justify-content-center'}
+                        pageClassName={'page-item'}
+                        pageLinkClassName={'page-link'}
+                        previousClassName={'page-item'}
+                        previousLinkClassName={'page-link'}
+                        nextClassName={'page-item'}
+                        nextLinkClassName={'page-link'}
+                        breakClassName={'page-item'}
+                        breakLinkClassName={'page-link'}
+                        activeClassName={'active'}
                     />
                 </div>
             </div>

@@ -17,16 +17,16 @@ export const login = async (email, password) => {
     }
 };
 
-export const introspect = async (token) => {
+export const introspect = async () => {
     try {
-        const response = await axios.post(`api/v1/auth/introspect`,
-            { token },
-            {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
-            }
-        );
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('Token is missing');
+        }
+
+        const response = await axios.post(`api/v1/auth/introspect`, {
+            token: token
+        });
 
         if (response.data && response.data.result) {
             return response.data.result;
@@ -38,6 +38,7 @@ export const introspect = async (token) => {
         throw new Error(errorMessage);
     }
 };
+
 
 
 

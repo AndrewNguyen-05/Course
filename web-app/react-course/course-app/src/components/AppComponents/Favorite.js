@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getFavorite, removeFavorite } from '../../service/FavoriteService';
 import { toast, ToastContainer } from 'react-toastify';
-import { FaTrashAlt } from 'react-icons/fa';  
-import { MdOutlineDescription } from 'react-icons/md'; 
+import { FaTrashAlt } from 'react-icons/fa';
+import { MdOutlineDescription } from 'react-icons/md';
 import { Spinner } from 'react-bootstrap';
-import { Pagination } from '../common/Pagination';
 import { motion } from 'framer-motion';
+import ReactPaginate from 'react-paginate';
 
 const FavoriteCourses = () => {
     const token = localStorage.getItem('token');
@@ -65,15 +65,19 @@ const FavoriteCourses = () => {
         }
     };
 
+    const handlePageClick = (data) => {
+        setCurrentPage(data.selected + 1)
+    }
+
     return (
         <motion.div
-                key={currentPage}  
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -50 }}
-                transition={{ duration: 0.5 }}
-                className='content-page'
-            >
+            key={currentPage}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.5 }}
+            className='content-page'
+        >
             <div className="container">
                 <h2 className='vip-title'>Your Favorite Courses</h2><br />
 
@@ -135,10 +139,25 @@ const FavoriteCourses = () => {
                     )}
                 </div>
 
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    changePage={changePage}
+                <ReactPaginate
+                    previousLabel={'«'}
+                    nextLabel={'»'}
+                    breakLabel={'...'}
+                    pageCount={totalPages}
+                    marginPagesDisplayed={2}
+                    pageRangeDisplayed={3}
+                    onPageChange={handlePageClick}
+                    forcePage={currentPage - 1}
+                    containerClassName={'pagination pagination-lg justify-content-center'}
+                    pageClassName={'page-item'}
+                    pageLinkClassName={'page-link'}
+                    previousClassName={'page-item'}
+                    previousLinkClassName={'page-link'}
+                    nextClassName={'page-item'}
+                    nextLinkClassName={'page-link'}
+                    breakClassName={'page-item'}
+                    breakLinkClassName={'page-link'}
+                    activeClassName={'active'}
                 />
             </div>
             <ToastContainer

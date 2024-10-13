@@ -398,7 +398,7 @@ export const HomePage = () => {
             </div>
 
             <ToastContainer
-                position="bottom-right" // Bạn có thể thay đổi vị trí như bottom-left hoặc top-center nếu muốn
+                position="top-right" // Bạn có thể thay đổi vị trí như bottom-left hoặc top-center nếu muốn
                 autoClose={3000}
                 className="add-favorite-toast"
             />

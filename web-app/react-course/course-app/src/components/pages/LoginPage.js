@@ -77,7 +77,7 @@ export const LoginPage = () => {
           const token = data.result.token;
           localStorage.setItem("token", token);
 
-          introspect(token)
+          introspect()
             .then((introspectData) => {
               if (introspectData && introspectData.valid) {
                 const role = introspectData.scope;

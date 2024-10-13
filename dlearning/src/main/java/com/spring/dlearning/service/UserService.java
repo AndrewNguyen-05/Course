@@ -2,6 +2,7 @@ package com.spring.dlearning.service;
 
 import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.event.NotificationEvent;
+import com.spring.dlearning.dto.request.EmailRequest;
 import com.spring.dlearning.dto.request.PasswordCreationRequest;
 import com.spring.dlearning.dto.request.UserCreationRequest;
 import com.spring.dlearning.dto.request.VerifyOtpRequest;

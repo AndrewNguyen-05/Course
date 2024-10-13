@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getAdsByCurrentLogin } from "../../../service/AdsService";
-import { Pagination } from "../../common/Pagination";
 import { motion } from "framer-motion";
 import { AdsTable } from "./AdsTable";
+import ReactPaginate from "react-paginate";
 
 export const AdsPage = () => {
     const token = localStorage.getItem('token');
@@ -37,11 +37,9 @@ export const AdsPage = () => {
     }, [token, currentPage]);
 
     // Thay đổi trang
-    const changePage = (page) => {
-        if (page >= 1 && page <= totalPages) {
-            setCurrentPage(page);
-        }
-    };
+    const handlePageClick = (data) => {
+        setCurrentPage(data.selected + 1);
+    }
 
     return (
         <motion.div
@@ -83,10 +81,25 @@ export const AdsPage = () => {
                     <AdsTable ads={ads} />
 
                     <div className="mt-4">
-                        <Pagination
-                            currentPage={currentPage}
-                            totalPages={totalPages}
-                            changePage={changePage}
+                        <ReactPaginate
+                            previousLabel={'«'}
+                            nextLabel={'»'}
+                            breakLabel={'...'}
+                            pageCount={totalPages}
+                            marginPagesDisplayed={2}
+                            pageRangeDisplayed={3}
+                            onPageChange={handlePageClick}
+                            forcePage={currentPage - 1}
+                            containerClassName={'pagination pagination-lg justify-content-center'}
+                            pageClassName={'page-item'}
+                            pageLinkClassName={'page-link'}
+                            previousClassName={'page-item'}
+                            previousLinkClassName={'page-link'}
+                            nextClassName={'page-item'}
+                            nextLinkClassName={'page-link'}
+                            breakClassName={'page-item'}
+                            breakLinkClassName={'page-link'}
+                            activeClassName={'active'}
                         />
                     </div>
                 </div>

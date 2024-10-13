@@ -31,7 +31,7 @@ instance.interceptors.request.use(
         return config;
     },
     (error) => {
-        return error && error.response && error.response.data ? error.response.data : Promise.reject(error);
+        return error && error.response && error.response ? error.response : Promise.reject(error);
     }
 );
 
@@ -41,10 +41,12 @@ instance.interceptors.response.use(
 },
     async (error) => {
         const originalRequest = error.config;
-        if (error.response && error.response.status === 401 && error.response.data.message === 'EXPIRED_TOKEN') {
+        if (error.response && error.response.status === 401 && error.response.data.message === 'EXPIRED_TOKEN' && !originalRequest._retry) {
+            originalRequest._retry = true;
             try {
                 const newToken = await refreshToken();
                 originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+                return instance(originalRequest);
             } catch (refreshError) {
                 return Promise.reject(refreshError);
             }

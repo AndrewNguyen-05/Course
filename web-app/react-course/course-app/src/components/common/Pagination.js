@@ -1,4 +1,3 @@
-// Pagination.js
 import React, { memo } from 'react';
 
 export const Pagination = ({ currentPage, totalPages, changePage }) => {
