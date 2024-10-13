@@ -35,7 +35,7 @@ export const LearningPage = () => {
                 }
                 const data = await response.json();
                 console.log(data);
-                setChapters(data.result.chapters || []); 
+                setChapters(data.result.chapters || []);
                 setLoading(false);
             } catch (error) {
                 console.log(error.message);
