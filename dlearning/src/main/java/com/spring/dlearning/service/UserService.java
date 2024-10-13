@@ -20,7 +20,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
+//import org.jetbrains.annotations.NotNull;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,7 +47,7 @@ public class UserService {
     OtpService otpService;
     KafkaTemplate<String, Object> kafkaTemplate;
 
-    public boolean findByEmail(@NotNull EmailRequest request){
+    public boolean findByEmail( EmailRequest request){
        return userRepository.existsByEmail(request.getEmail());
     }
 
@@ -127,7 +127,7 @@ public class UserService {
     }
 
     @Transactional
-    public void sendOtpForgotPassword(@NotNull EmailRequest request)
+    public void sendOtpForgotPassword(EmailRequest request)
             throws MessagingException, UnsupportedEncodingException {
 
         User user = userRepository.findByEmail(request.getEmail())
@@ -151,7 +151,7 @@ public class UserService {
         emailService.sendEmail(subject, content, List.of(user.getEmail()));
     }
 
-    public void sendOtpRegister(@NotNull EmailRequest request)
+    public void sendOtpRegister(EmailRequest request)
             throws MessagingException, UnsupportedEncodingException {
         String otp = generateOtp();
 
