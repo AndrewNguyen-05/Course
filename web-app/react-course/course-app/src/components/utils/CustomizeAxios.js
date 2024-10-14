@@ -1,5 +1,7 @@
 import axios from "axios";
 
+let refreshingFunc = undefined;
+
 const instance = axios.create({
     baseURL: 'http://localhost:8080/',
 })
@@ -43,11 +45,19 @@ instance.interceptors.response.use(
         const originalRequest = error.config;
         if (error.response && error.response.status === 401 && error.response.data.message === 'EXPIRED_TOKEN' && !originalRequest._retry) {
             originalRequest._retry = true;
+            if (!refreshingFunc) {
+                refreshingFunc = refreshToken();
+            }
             try {
-                const newToken = await refreshToken();
+                const newToken = await refreshingFunc; 
                 originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+                refreshingFunc = undefined; 
+
                 return instance(originalRequest);
             } catch (refreshError) {
+                refreshingFunc = undefined;
+                localStorage.removeItem("token");
+                window.location = `${window.location.origin}/login`;
                 return Promise.reject(refreshError);
             }
         }
