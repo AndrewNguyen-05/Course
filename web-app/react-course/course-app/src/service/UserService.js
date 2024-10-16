@@ -1,4 +1,4 @@
-import axios from '../components/utils/CustomizeAxios';
+import axios from '../utils/CustomizeAxios';
 
 export const getMyInfo = async () => {
     try {
@@ -36,7 +36,7 @@ export const verifyOtp = async (email, otp) => {
     try {
         const response = await axios.post(`api/v1/verify-otp`, {
             email: email,
-            otp, otp
+            otp: otp
         })
         return response.data;
     } catch (error) {

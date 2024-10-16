@@ -1,4 +1,4 @@
-import axios from "../components/utils/CustomizeAxios";
+import axios from "../utils/CustomizeAxios";
 
 export const getAdsByCurrentLogin = async (page) => {
     try {

@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getProfileInfo, removeAvatar, updateAvatar, updateProfile } from "../../../service/ProfileService";
-import avatarDefault from '../../../img/avatar-default.jpg'
-
+import {
+  getProfileInfo,
+  removeAvatar,
+  updateAvatar,
+  updateProfile,
+} from "../../../service/ProfileService";
 import { FromUpdateProfile } from "./components/FromUpdateProfile";
 
 export const Profile = () => {
+  const token = localStorage.getItem("token");
   const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
   const [isRemovingAvatar, setIsRemovingAvatar] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -42,7 +46,7 @@ export const Profile = () => {
           });
           setSelectedImage(
             data.result.avatar ||
-            avatarDefault
+              "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
           );
         }
       })
@@ -90,7 +94,7 @@ export const Profile = () => {
     removeAvatar()
       .then(() => {
         setSelectedImage(
-          avatarDefault
+          "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
         );
         toast.success("Avatar removed successfully!");
       })
@@ -103,7 +107,7 @@ export const Profile = () => {
       });
   };
 
-  const handleUpdateProfile = async () => {
+  const handleUpdateProfile = () => {
     const filteredData = {};
     Object.keys(profileData).forEach((key) => {
       if (profileData[key] !== null && profileData[key] !== "") {
@@ -111,16 +115,14 @@ export const Profile = () => {
       }
     });
 
-    try {
-      const data = await updateProfile(filteredData);
-      if (data.code === 200) {
+    updateProfile(filteredData)
+      .then(() => {
         toast.success("Profile updated successfully");
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
+      })
+      .catch((error) => {
+        toast.error("Error updating profile");
+        console.error(error);
+      });
   };
 
   const handleInputChange = (e) => {

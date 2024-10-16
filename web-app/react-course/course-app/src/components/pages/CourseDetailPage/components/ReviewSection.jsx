@@ -18,15 +18,13 @@ export const ReviewSection = ({
     setEditContent,
     replyContent,
     setReplyContent,
-    handleRatingChange,
-    isPurchase
+    handleRatingChange
 }) => {
     return (
         <div className="comments-section mt-5">
-            <h2 className="mb-4 text-secondary"><FaCommentDots className="mr-2" /> Reviews</h2>
-
+            <h2 className="mb-4 text-secondary"><FaCommentDots className="mr-2" /> Comments</h2>
             {/* Add Comment */}
-            {isPurchase && <div className="comment-form mb-5">
+            <div className="comment-form mb-5">
                 <textarea
                     className="form-control mb-3"
                     rows="3"
@@ -38,9 +36,9 @@ export const ReviewSection = ({
                 {renderStars(newRating, handleRatingChange)}
 
                 <button className="btn btn-primary px-4 mt-3" onClick={handleAddReview}>
-                    Send
+                    Submit Comment
                 </button>
-            </div>}
+            </div>
 
             {/* Comment List */}
             <div className="comments-list">
@@ -117,7 +115,7 @@ export const ReviewSection = ({
                                                 </button>
                                             </div>
                                         </div>
-
+                                        
                                         {/* Reply Editing Feature */}
                                         {editingCommentId === reply.id ? (
                                             <div>
@@ -150,7 +148,7 @@ export const ReviewSection = ({
                                     onChange={(e) => setReplyContent({ ...replyContent, [comment.id]: e.target.value })}
                                 />
                                 <button className="btn btn-primary px-4" onClick={() => handleAddReply(comment.id)}>
-                                    Send
+                                    Submit Reply
                                 </button>
 
                             </div>

@@ -3,6 +3,7 @@ import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { MdOndemandVideo, MdOutlinePlayLesson } from "react-icons/md";
 
 const CourseContent = ({ chapter }) => {
+  // Quản lý trạng thái mở/đóng của các chương
   const chapters = chapter?.chapters || [];
 
   const [expandedLessons, setExpandedLessons] = useState({});

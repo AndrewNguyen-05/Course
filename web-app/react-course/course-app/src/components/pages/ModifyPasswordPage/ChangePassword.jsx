@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaEye, FaEyeSlash, FaLock, FaKey, FaUser, FaShieldAlt } from 'react-icons/fa';
 import { ToastContainer, toast } from 'react-toastify';
-import LoadingSpinner from '../../../utils/LoadingSpinner';
 
 export const ChangePassword = () => {
 
@@ -53,10 +52,7 @@ export const ChangePassword = () => {
       });
   };
 
-  if (isSnipping) {
-    return (<LoadingSpinner />)
-  }
-  
+
   return (
     <div className='change-password-page'>
       <div className="container py-5">

@@ -4,7 +4,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import ReactPaginate from "react-paginate";
 import { ViewFavorite } from "./components/ViewFavorite";
-import LoadingSpinner from "../../../utils/LoadingSpinner";
 
 const FavoriteCourses = () => {
   const token = localStorage.getItem("token");
@@ -61,10 +60,6 @@ const FavoriteCourses = () => {
   const handlePageClick = (data) => {
     setCurrentPage(data.selected + 1);
   };
-
-  if(loading){
-    <LoadingSpinner />
-  }
 
   if (error) {
     return <div>{error.message}</div>;

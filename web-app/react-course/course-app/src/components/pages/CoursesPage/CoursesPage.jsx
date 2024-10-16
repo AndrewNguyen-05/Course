@@ -1,42 +1,39 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search } from './components/Search';
 import { SearchService } from '../../../service/CourseService';
-import { ViewCourses } from './components/ViewCourses';
+import { ViewCouses } from './components/ViewCourses';
 import { motion } from 'framer-motion';
 import ReactPaginate from 'react-paginate';
-import LoadingSpinner from '../../../utils/LoadingSpinner';
 
 export const Courses = () => {
     const [loading, setLoading] = useState(true);
     const [courses, setCourses] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(6);
-    const [totalPages, setTotalPages] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const [filterQuery, setFilterQuery] = useState('');
 
     useEffect(() => {
         document.title = 'Courses'
     })
 
-    const fetchCourses = useCallback(async () => {
+    // Get Course and Search Filter 
+    const fetchCourses = async () => {
         setLoading(true);
         try {
             const result = await SearchService(currentPage, pageSize, filterQuery);
             if (result && result.result) {
                 setCourses(result.result.data);
-                setTotalPages(result.result.totalPages >= 1 ? result.result.totalPages : 1); 
+                setTotalPages(result.result.totalPages);
             } else {
                 setCourses([]);
-                setTotalPages(1); 
             }
         } catch (err) {
             console.log(err);
-            setCourses([]);
-            setTotalPages(1);
         } finally {
             setLoading(false);
         }
-    }, [currentPage, pageSize, filterQuery]);
+    };
 
     useEffect(() => {
         setCurrentPage(1);
@@ -44,16 +41,10 @@ export const Courses = () => {
 
     useEffect(() => {
         fetchCourses();
-    }, [fetchCourses]);
+    }, [currentPage, pageSize, filterQuery]);
 
     const handlePageClick = (data) => {
         setCurrentPage(data.selected + 1);
-    }
-
-    if(loading){
-        return (
-            <LoadingSpinner />
-        );
     }
 
     return (
@@ -74,7 +65,7 @@ export const Courses = () => {
                             </div>
                         </div>
                     </div>
-                    <ViewCourses courses={courses} />
+                    <ViewCouses courses={courses} />
                     <ReactPaginate
                         previousLabel={'«'}
                         nextLabel={'»'}

@@ -1,4 +1,4 @@
-import axios from "../components/utils/CustomizeAxios";
+import axios from "../utils/CustomizeAxios";
 
 export const getAvatar = async () => {
     const response = await axios.get(`api/v1/get-avatar`)

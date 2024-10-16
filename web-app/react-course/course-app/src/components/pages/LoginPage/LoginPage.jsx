@@ -1,15 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { introspect, login } from "../../../service/AuthenticationService";
 import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import { LoginFrom } from "./components/LoginForm";
 import { OAuthConfig } from "../../config/OAuthConfig";
-import LoadingSpinner from "../../../utils/LoadingSpinner";
-import AuthContext from "../../../context/AuthContext";
 
 export const LoginPage = () => {
-  const authContext = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -23,20 +20,22 @@ export const LoginPage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      setLoading(false);
-      return;
-    }
+
     if (token) {
       introspect(token)
         .then((data) => {
           if (data.valid) {
             navigate("/home");
+          } else {
+            setLoading(false);
           }
         })
         .catch((error) => {
           console.error("Error introspecting token:", error);
-        }).finally(() => setLoading(false));
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
     }
   }, [navigate]);
 
@@ -47,6 +46,10 @@ export const LoginPage = () => {
     }
   }, [showToast]);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   const handleGoogleLogin = () => {
     const callbackUrl = OAuthConfig.google.redirectUri;
     const authUrl = OAuthConfig.google.authUri;
@@ -56,18 +59,15 @@ export const LoginPage = () => {
       callbackUrl
     )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
 
+    console.log(callbackUrl);
+    console.log(targetUrl);
+
     window.location.href = targetUrl;
   };
 
   const handleFacebookLogin = () => {
-    window.location.href =
-      "http://localhost:8080/oauth2/authorization/facebook";
+    window.location.href = "http://localhost:8080/oauth2/authorization/facebook";
   };
-
-  const handleGithubLogin = () => {
-    window.location.href =
-      "http://localhost:8080/oauth2/authorization/github"
-  }
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -77,7 +77,7 @@ export const LoginPage = () => {
         if (data && data.result && data.result.token) {
           const token = data.result.token;
           localStorage.setItem("token", token);
-          authContext.refresh();
+
           introspect()
             .then((introspectData) => {
               if (introspectData && introspectData.valid) {
@@ -112,14 +112,6 @@ export const LoginPage = () => {
       });
   };
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    <div>{error}</div>;
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0, x: -100 }} // Hiệu ứng ban đầu: ẩn và dịch trái
@@ -130,21 +122,16 @@ export const LoginPage = () => {
     >
       <section className="py-3 py-md-5 py-xl-8">
         <LoginFrom
-          email={email}
-          setEmail={setEmail}
-          password={password}
-          handleLogin={handleLogin}
-          setPassword={setPassword}
-          handleGoogleLogin={handleGoogleLogin}
-          handleFacebookLogin={handleFacebookLogin}
-          handleGithubLogin={handleGithubLogin}
+            email={email}
+            setEmail={setEmail}
+            password={password}
+            handleLogin={handleLogin}
+            setPassword={setPassword}
+            handleGoogleLogin={handleGoogleLogin}
+            handleFacebookLogin={handleFacebookLogin}
         />
 
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          className="custom-toast-container"
-        />
+        <ToastContainer position="top-right" autoClose={3000} className="custom-toast-container" />
       </section>
     </motion.div>
   );

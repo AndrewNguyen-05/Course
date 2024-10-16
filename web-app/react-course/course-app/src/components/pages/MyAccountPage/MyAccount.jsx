@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { TopBar } from '../layouts/TopBar';
-import { Header } from '../layouts/Header';
+import { TopBar } from '../../layouts/TopBar';
+import { Header } from '../../layouts/Header';
 import { FaCamera, FaCameraRetro, FaSmile, FaVideo } from 'react-icons/fa';
-import { getAvatar } from '../../service/ProfileService';
-import { deletePost, getPostByUserLogin } from '../../service/PostService';
+import { getAvatar } from '../../../service/ProfileService';
+import { deletePost, getPostByUserLogin } from '../../../service/PostService';
 import Swal from 'sweetalert2';
-import { getMyInfo } from '../../service/UserService';
+import { getMyInfo } from '../../../service/UserService';
 
 const ProfilePage = () => {
   const token = localStorage.getItem('token');

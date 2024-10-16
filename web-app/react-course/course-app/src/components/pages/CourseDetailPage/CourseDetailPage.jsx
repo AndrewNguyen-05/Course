@@ -7,20 +7,13 @@ import Swal from "sweetalert2";
 import { buyCourse, getChapterById, getCommentByCourseId, getCourseById } from "../../../service/CourseService";
 import CourseContent from "./components/CourseContent";
 import { ReviewSection } from "./components/ReviewSection";
-import { CourseFeature } from "./components/CourseFeature";
+import { CourseFeatur } from "./components/CourseFeature";
 import { addReplyReview, addReview, deleteReview, editReview } from "../../../service/ReviewService";
-import { checkPurchase } from "../../../service/Enrollment";
-import LoadingSpinner from "../../../utils/LoadingSpinner";
-import { Tab, Nav } from 'react-bootstrap';
-import { fetchInfoTeacher } from "../../../service/TeacherService";
-import Instructor from "./components/Instructor";
-import { getRelatedCourses } from "../../../service/ElasticSearchService";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
     const { id } = useParams();
     const [course, setCourse] = useState(null);  // thông tin chi tiết về khóa học
-    const [relatedCourses, setRelatedCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [comments, setComments] = useState([]); // list comment
     const [newComment, setNewComment] = useState(""); // add comment
@@ -29,69 +22,20 @@ export const CourseDetail = () => {
     const [editingCommentId, setEditingCommentId] = useState(null); // lưu ID của bình luận đang được chỉnh sửa
     const [newRating, setNewRating] = useState(0);
     const [chapter, setChapter] = useState(null);
-    const [isPurchase, setIsPurchase] = useState(false);
-
-    const [infoTeacher, setInfoTeacher] = useState({
-        userId: null,
-        name: '',
-        avatar: '',
-        avgRating: 0,
-        reviewAmount: 0,
-        studentAmount: 0,
-        courseAmount: 0,
-        description: ''
-    });
 
     useEffect(() => {
         document.title = 'Courses Detail'
     })
+    // Fetch course details
     useEffect(() => {
-        const fetchCourseData = async () => {
-            setLoading(true);
-            try {
-                const courseResponse = await getCourseById(id);
-                console.log(courseResponse)
-                if (courseResponse && courseResponse.result) {
-                    setCourse(courseResponse.result);
-
-                    const relatedCoursesResponse = await getRelatedCourses(courseResponse.result.title);
-                    if (relatedCoursesResponse && relatedCoursesResponse.result) {
-                        setRelatedCourses(relatedCoursesResponse.result.filter(c => c.title !== courseResponse.result.title));
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            } finally {
+        getCourseById(id)
+            .then(data => {
+                setCourse(data.result);
                 setLoading(false);
-            }
-        };
-
-        fetchCourseData();
-    }, [id]);
-
-    // Fetch Info Teacher
-
-    useEffect(() => {
-        const getInfoTeacher = async () => {
-            try {
-                const data = await fetchInfoTeacher(id);
-                if (data.code === 200) {
-                    setInfoTeacher({
-                        userId: data.result.userId,
-                        name: data.result.name,
-                        avatar: data.result.avatar,
-                        avgRating: data.result.avgRating,
-                        reviewAmount: data.result.reviewAmount,
-                        studentAmount: data.result.studentAmount,
-                        courseAmount: data.result.courseAmount,
-                        description: data.result.description
-                    });
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getInfoTeacher();
+            }).catch(error => {
+                console.log(error);
+                setLoading(false);
+            });
     }, [id]);
 
     useEffect(() => {
@@ -103,24 +47,6 @@ export const CourseDetail = () => {
                 console.log(error)
                 setLoading(false);
             });
-    }, [id]);
-
-    useEffect(() => {
-        const fetchPurchaseStatus = async () => {
-            try {
-                const result = await checkPurchase(id);
-                if (result && result.result && result.result.purchased) {
-                    setIsPurchase(result.result.purchased);
-                }
-            } catch (error) {
-                console.error("Error checking purchase status:", error);
-                setIsPurchase(false);
-            }
-        };
-
-        if (id) {
-            fetchPurchaseStatus();
-        }
     }, [id]);
 
     // Fetch comments
@@ -135,6 +61,12 @@ export const CourseDetail = () => {
                 setComments(updatedComments);
             }).catch(error => console.log(error));
     }, [id]);
+
+    if (loading) return <div>Loading...</div>;
+
+    if (!course) {
+        return <div>Course data is not available</div>;
+    }
 
     // Add a new comment
     const handleAddReview = async () => {
@@ -293,15 +225,15 @@ export const CourseDetail = () => {
                         });
                     } else {
                         Swal.fire({
-                            title: 'Purchase fail!',
+                            title: 'Purchase successful!',
                             text: `${response.data.message}`,
                             icon: 'error'
                         });
                     }
                 } catch (error) {
                     Swal.fire({
-                        title: 'Error!',
-                        text: error.message || 'An error occurred while purchasing the course. Please try again later.',
+                        title: 'Lỗi!',
+                        text: error.message || 'Đã xảy ra lỗi trong quá trình mua khóa học. Vui lòng thử lại sau.',
                         icon: 'error'
                     });
                     console.error(error);
@@ -334,87 +266,51 @@ export const CourseDetail = () => {
         }
     };
 
-    if (loading)
-        return <div><LoadingSpinner /></div>;
-
-    if (!course) {
-        return <div>Course data is not available</div>;
-    }
-
     return (
         <div className="container-fluid py-5">
             <div className="container py-5">
                 <div className="row">
                     <div className="col-lg-8">
                         <div className="mb-5">
+                            <h6 className="text-secondary text-uppercase pb-2">Course Detail</h6>
                             <h1 className="display-4">{course.title}</h1>
                             <img className="img-fluid rounded w-100 mb-4" src={course.thumbnail} alt="Course" />
                             <p>{course.description}</p>
                         </div>
 
-                        <Tab.Container defaultActiveKey="course-detail">
-                            <Nav className="custom-tabs mb-4">
-                                <Nav.Item>
-                                    <Nav.Link eventKey="course-detail">Course Content</Nav.Link>
-                                </Nav.Item>
-                                <Nav.Item>
-                                    <Nav.Link eventKey="info-teach">Instructor</Nav.Link>
-                                </Nav.Item>
-                                <Nav.Item>
-                                    <Nav.Link eventKey="review">Reviews</Nav.Link>
-                                </Nav.Item>
-                            </Nav>
+                        <CourseContent chapter={chapter} />
+                        <ReviewSection
+                            comments={comments}
+                            newComment={newComment}
+                            editingCommentId={editingCommentId}
+                            setEditingCommentId={setEditingCommentId}
+                            newRating={newRating}
+                            setNewComment={setNewComment}
+                            setNewRating={setNewRating}
+                            replyContent={replyContent}
+                            setReplyContent={setReplyContent}
+                            editContent={editContent}
+                            setEditContent={setEditContent}
+                            renderStars={renderStars}
+                            handleAddReview={handleAddReview}
+                            handleReplyToggle={handleReplyToggle}
+                            handleAddReply={handleAddReply}
+                            handleEditReview={handleEditReview}
+                            handleDeleteReview={handleDeleteReview}
+                            handleRatingChange={handleRatingChange} /> </div>
 
-                            <Tab.Content>
-                                <Tab.Pane eventKey="course-detail">
-                                    <CourseContent chapter={chapter} />
-                                </Tab.Pane>
-
-                                <Tab.Pane eventKey="info-teach">
-                                    <Instructor
-                                        infoTeacher={infoTeacher} />
-                                </Tab.Pane>
-
-                                <Tab.Pane eventKey="review">
-                                    <ReviewSection
-                                        comments={comments}
-                                        newComment={newComment}
-                                        editingCommentId={editingCommentId}
-                                        setEditingCommentId={setEditingCommentId}
-                                        newRating={newRating}
-                                        setNewComment={setNewComment}
-                                        setNewRating={setNewRating}
-                                        replyContent={replyContent}
-                                        setReplyContent={setReplyContent}
-                                        editContent={editContent}
-                                        setEditContent={setEditContent}
-                                        renderStars={renderStars}
-                                        handleAddReview={handleAddReview}
-                                        handleReplyToggle={handleReplyToggle}
-                                        handleAddReply={handleAddReply}
-                                        handleEditReview={handleEditReview}
-                                        handleDeleteReview={handleDeleteReview}
-                                        handleRatingChange={handleRatingChange}
-                                        isPurchase={isPurchase}
-                                    />
-                                </Tab.Pane>
-
-                            </Tab.Content>
-                        </Tab.Container>
-                    </div>
-
-                    <CourseFeature
+                    <CourseFeatur
                         course={course}
-                        handleEnrollNow={handleEnrollNow}
-                        isPurchase={isPurchase}
-                        relatedCourses={relatedCourses}
-                        id={id}
-                    />
+                        handleEnrollNow={handleEnrollNow} />
+
+
                 </div>
             </div>
-            <ToastContainer position="top-right" autoClose={3000} className="custom-toast-container" />
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                className="custom-toast-container"
+            />
         </div>
     );
-
-
 };

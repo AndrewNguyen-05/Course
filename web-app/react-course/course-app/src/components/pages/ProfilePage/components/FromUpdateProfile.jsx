@@ -299,7 +299,7 @@ export const FromUpdateProfile = (props) => {
                       className="btn btn-secondary"
                       style={{
                         marginRight: "10px",
-                        padding: "8px 15px",
+                        padding: "10px 20px",
                         borderRadius: "5px",
                       }}
                     >
@@ -310,7 +310,7 @@ export const FromUpdateProfile = (props) => {
                       name="submit"
                       className="btn btn-primary"
                       style={{
-                        padding: "8px 15px",
+                        padding: "10px 20px",
                         borderRadius: "5px",
                         backgroundColor: "#007bff",
                         borderColor: "#007bff",

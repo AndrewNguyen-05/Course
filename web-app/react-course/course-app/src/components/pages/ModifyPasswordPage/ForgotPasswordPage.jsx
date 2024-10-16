@@ -75,7 +75,7 @@ export const ForgotPassword = () => {
             showAlert(false, error.message);
         }
     };
-
+    
     return (
         <motion.div
             initial={{ opacity: 0, y: 50 }} // Hiệu ứng khi trang bắt đầu: mờ và dịch xuống

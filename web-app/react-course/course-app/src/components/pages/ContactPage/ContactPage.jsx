@@ -3,7 +3,6 @@ import { toast, ToastContainer } from "react-toastify";
 import { registerAds } from "../../../service/AdsService";
 import { InfoContact } from "./components/InfoContact";
 import { motion } from "framer-motion";
-import ClipLoader from "react-spinners/ClipLoader";
 
 export const ContactPage = () => {
 
@@ -12,7 +11,6 @@ export const ContactPage = () => {
     }, []);
 
     const token = localStorage.getItem('token');
-    const [isLoadingRegisterAds, setIsLoadingRegisterAds] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [formData, setFormData] = useState({
         contactEmail: "",
@@ -53,9 +51,8 @@ export const ContactPage = () => {
             return;
         }
         try {
-            setIsLoadingRegisterAds(true);
             const formDataAds = new FormData();
-
+    
             const jsonBlog = new Blob([JSON.stringify({
                 contactEmail: formData.contactEmail,
                 contactPhone: formData.contactPhone,
@@ -66,32 +63,17 @@ export const ContactPage = () => {
                 startDate: formData.startDate,
                 endDate: formData.endDate
             })], { type: 'application/json' });
-
+    
             formDataAds.append("request", jsonBlog);
             formDataAds.append("file", formData.image);
-
+    
             const response = await registerAds(token, formDataAds);
-
+    
             if (response.error || response.message) {
                 throw new Error(response.message);
             }
             toast.success('Registration successful! Please await our notification.');
-            setFormData({
-                contactEmail: "",
-                contactPhone: "",
-                location: "Home Page",
-                title: "",
-                description: "",
-                link: "",
-                startDate: "",
-                endDate: "",
-                image: null
-            });
-            setSelectedImage(null);
-            setIsLoadingRegisterAds(false);
-
         } catch (error) {
-            setIsLoadingRegisterAds(false);
             toast.error(error.message);
             console.log(error);
         }
@@ -105,12 +87,8 @@ export const ContactPage = () => {
             transition={{ duration: 0.5 }}
             className="content-page"
         >
-            {isLoadingRegisterAds && (
-                <div className="overlay">
-                    <ClipLoader size={50} color={"#ffffff"} loading={isLoadingRegisterAds} />
-                </div>
-            )}
             <div className="container-fluid py-5">
+                {/* Thêm hình ảnh mới vào phần body */}
                 <div className="row justify-content-center mb-5">
                     <div className="col-lg-8 text-center">
                         <h6 className="d-inline-block text-secondary text-uppercase pb-2 ads-title-highlight">Need Help?</h6>
@@ -252,6 +230,7 @@ export const ContactPage = () => {
                                             onChange={handleOnchangeImg}
                                         />
 
+                                        {/* Hiển thị hình ảnh xem trước nếu có */}
                                         {selectedImage && (
                                             <div className="mt-3">
                                                 <img src={selectedImage} alt="Selected Preview" className="img-thumbnail" style={{ maxWidth: "300px" }} />

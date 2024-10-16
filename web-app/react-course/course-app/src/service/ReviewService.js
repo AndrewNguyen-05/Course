@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import axios from '../components/utils/CustomizeAxios';
+import axios from '../utils/CustomizeAxios';
 
 export const addReview = async (courseId, commentData) => {
     try {
