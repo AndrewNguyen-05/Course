@@ -66,8 +66,11 @@ public enum ErrorCode {
     POST_ID_INVALID(400, "Post id not existed", HttpStatus.BAD_REQUEST),
     CONTENT_COMMENT_INVALID(400, "Content Comment cannot be null", HttpStatus.BAD_REQUEST),
     DELETE_POST_INVALID(400, "You can only delete posts that you own.", HttpStatus.BAD_REQUEST),
-    EXPIRED_TOKEN(401, "EXPIRED_TOKEN", HttpStatus.UNAUTHORIZED);
+    EXPIRED_TOKEN(401, "EXPIRED_TOKEN", HttpStatus.UNAUTHORIZED),
+    CHAPTER_NOT_EXIST(400, "Chapter is not exist", HttpStatus.BAD_REQUEST),
+    LESSON_NOT_EXIST(400, "Lesson is not exist", HttpStatus.BAD_REQUEST)
     ;
+
 
     private int code;
     private String message;
