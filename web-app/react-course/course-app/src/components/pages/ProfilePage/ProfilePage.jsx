@@ -10,7 +10,6 @@ import {
 import { FromUpdateProfile } from "./components/FromUpdateProfile";
 
 export const Profile = () => {
-  const token = localStorage.getItem("token");
   const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
   const [isRemovingAvatar, setIsRemovingAvatar] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);

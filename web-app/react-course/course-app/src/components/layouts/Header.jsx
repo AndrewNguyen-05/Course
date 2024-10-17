@@ -2,16 +2,16 @@ import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import { UseAuth } from "../authentication/UseAuth.js";
 import { HandleLogout } from "../authentication/HandleLogout.js";
-import { NotificationDropdown } from "../common/NotificationDropdown.js";
-import { ProfileDropdown } from "../common/ProfileDropdown.js";
-import { Favorites } from "../common/Favorites.js";
-import { NavigationMenu } from "../common/NavigationMenu.js";
+import { NotificationDropdown } from "../common/NotificationDropdown.jsx";
+import { ProfileDropdown } from "../common/ProfileDropdown.jsx";
+import { Favorites } from "../common/Favorites.jsx";
+import { NavigationMenu } from "../common/NavigationMenu.jsx";
 import { getAvatar } from "../../service/ProfileService.js";
 import { introspect } from "../../service/AuthenticationService.js";
 import { getPointsByCurrentLogin } from "../../service/UserService.js";
 import { markAsReadNotification, notificationCurrentLogin } from "../../service/NotificationService.js";
 import { useWebsocket } from "../router/useWebSocket.js";
-import { Advertisement } from "../common/Advertisement.js";
+import { Advertisement } from "../common/Advertisement.jsx";
 
 export const Header = () => {
     const token = localStorage.getItem("token");

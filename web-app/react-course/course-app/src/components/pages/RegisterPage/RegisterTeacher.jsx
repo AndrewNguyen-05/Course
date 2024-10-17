@@ -8,8 +8,6 @@ export const RegisterTeacher = () => {
         document.title = 'Register Teacher'
     })
 
-    const token = localStorage.getItem('token');
-
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -67,7 +65,7 @@ export const RegisterTeacher = () => {
             subject: formData.subject,
             experience: formData.experience,
             bio: formData.bio,
-            facebook: formData.facebook,
+            facebookLink: formData.facebook,
         })], { type: 'application/json' });
 
         formDataToSend.append('request', jsonBlob);

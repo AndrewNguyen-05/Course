@@ -15,6 +15,7 @@
     "axios": "^1.7.7",
     "bootstrap": "^5.3.3",
     "braintree-web-drop-in-react": "^1.2.1",
+    "eslint-plugin-import": "^2.31.0",
     "font-awesome": "^4.7.0",
     "framer-motion": "^11.11.7",
     "jquery": "^3.7.1",
@@ -44,6 +45,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
+  },
+  "_moduleAliases": {
+    "@modules": "build/modules",
+    "@core": "build/core"
   },
   "eslintConfig": {
     "extends": [
