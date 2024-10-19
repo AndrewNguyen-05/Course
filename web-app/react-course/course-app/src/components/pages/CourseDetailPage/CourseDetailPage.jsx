@@ -225,7 +225,7 @@ export const CourseDetail = () => {
                         });
                     } else {
                         Swal.fire({
-                            title: 'Purchase successful!',
+                            title: 'Purchase fail!',
                             text: `${response.data.message}`,
                             icon: 'error'
                         });

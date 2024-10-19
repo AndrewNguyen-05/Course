@@ -19,13 +19,13 @@ export const Header = () => {
     const { isTokenValid } = UseAuth({ loggedOut });
     const { handleLogout } = HandleLogout({ setLoggedOut });
     const location = useLocation();
-    const underlineRef = useRef(null);
     const [avatar, setAvatar] = useState("");
     const [loading, setLoading] = useState(true);
     const [notifications, setNotifications] = useState([]); // Danh sách thông báo
     const [unreadCount, setUnreadCount] = useState(0); // Đếm số lượng thông báo chưa đọc
     const [points, setPoints] = useState(0);
     const [role, setRole] = useState(null);
+    const underlineRef = useRef(null);
 
     const wsClient = useWebsocket();
 
@@ -135,7 +135,6 @@ export const Header = () => {
                             <NavigationMenu isActive={isActive} underlineRef={underlineRef} />
 
                             <div className="navbar-nav ml-auto d-flex align-items-center">
-                                {/* Hiển thị số điểm (Points) */}
                                 <div className="nav-item d-flex align-items-center mx-3">
                                     <span className="points-display text-primary">
                                         <i className="fa fa-coins"></i> {points} Points

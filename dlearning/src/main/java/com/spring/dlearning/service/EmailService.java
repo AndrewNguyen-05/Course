@@ -51,34 +51,34 @@ public class EmailService {
         mailSender.send(mimeMessage);
     }
 
-    @KafkaListener(topics = "notification-delivery", groupId = "my-consumer-group")
-    public void sendEmailByKafka(NotificationEvent event)
-            throws MessagingException, UnsupportedEncodingException {
-        log.info("Received Kafka message to send email: {}", event);
-
-        Context context = new Context();
-        context.setVariable("recipientName", event.getRecipient());
-
-        if (event.getParam() != null) {
-            context.setVariables(event.getParam());
-        } else {
-            log.warn("Event param is null, cannot set variables in email template.");
-        }
-
-        String htmlContent = templateEngine.process(event.getTemplateCode(), context);
-
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
-
-        helper.setFrom(emailFrom, "DLearning Team");
-        helper.setTo(event.getRecipient());
-        helper.setSubject(event.getSubject());
-        helper.setText(htmlContent, true);
-
-        mailSender.send(mimeMessage);
-
-        log.info("Email sent to {} successfully!", event.getRecipient());
-    }
+//    @KafkaListener(topics = "notification-delivery", groupId = "my-consumer-group")
+//    public void sendEmailByKafka(NotificationEvent event)
+//            throws MessagingException, UnsupportedEncodingException {
+//        log.info("Received Kafka message to send email: {}", event);
+//
+//        Context context = new Context();
+//        context.setVariable("recipientName", event.getRecipient());
+//
+//        if (event.getParam() != null) {
+//            context.setVariables(event.getParam());
+//        } else {
+//            log.warn("Event param is null, cannot set variables in email template.");
+//        }
+//
+//        String htmlContent = templateEngine.process(event.getTemplateCode(), context);
+//
+//        MimeMessage mimeMessage = mailSender.createMimeMessage();
+//        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+//
+//        helper.setFrom(emailFrom, "DLearning Team");
+//        helper.setTo(event.getRecipient());
+//        helper.setSubject(event.getSubject());
+//        helper.setText(htmlContent, true);
+//
+//        mailSender.send(mimeMessage);
+//
+//        log.info("Email sent to {} successfully!", event.getRecipient());
+//    }
 
     public static String getPaymentUrlFromApi(Advertisement advertisement) {
         String apiUrl = "http://localhost:8080/api/v1/payment/vn-pay?amount=" + advertisement.getPrice() + "&bankCode=NCB";
@@ -89,6 +89,5 @@ public class EmailService {
         Map<String, Object> result = (Map<String, Object>) response.getBody().get("result");
         return (String) result.get("paymentUrl");
     }
-
 
 }

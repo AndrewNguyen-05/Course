@@ -27,7 +27,7 @@ public class FileService {
         String encodedFileName = URLEncoder.encode(Objects.requireNonNull(file.getOriginalFilename()), StandardCharsets.UTF_8);
         String finalName = System.currentTimeMillis() + "-" + encodedFileName;
 
-        URI uri = new URI("file:///C:/D-Learning/" + folder + "/" + finalName);
+        URI uri = new URI("file:///D:/D-Learning/" + folder + "/" + finalName);
         log.info("URI: {}", uri);
 
         Path path = Paths.get(uri);

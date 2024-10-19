@@ -26,16 +26,16 @@ public class UserController {
     UserService userService;
     CloudinaryService cloudinaryService;
 
-    @PostMapping("/register")
-    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request,
-                                                @RequestParam String otp) {
-        var result = userService.createUser(request, otp);
-
-        return ApiResponse.<UserResponse>builder()
-                .code(HttpStatus.CREATED.value())
-                .result(result)
-                .build();
-    }
+//    @PostMapping("/register")
+//    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request,
+//                                                @RequestParam String otp) {
+//        var result = userService.createUser(request, otp);
+//
+//        return ApiResponse.<UserResponse>builder()
+//                .code(HttpStatus.CREATED.value())
+//                .result(result)
+//                .build();
+//    }
 
     @PostMapping("/check-exists-user")
     ApiResponse<Boolean> checkExistsUser(@RequestBody EmailRequest request){
