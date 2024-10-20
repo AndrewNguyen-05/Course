@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-
 @Entity
 @Table(name = "enrollments")
 @Getter
@@ -26,7 +25,6 @@ public class Enrollment extends AbstractEntity<Long>{
     @JsonIgnoreProperties("enrollments")
     Course course;
 
-    @Column(name = "status")
-    String status;
-
+    @Column(name = "is_purchased")
+    boolean purchased;
 }

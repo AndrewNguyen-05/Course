@@ -2,6 +2,7 @@ package com.spring.dlearning.service;
 
 import com.spring.dlearning.dto.request.BuyCourseRequest;
 import com.spring.dlearning.dto.response.BuyCourseResponse;
+import com.spring.dlearning.dto.response.CoursePurchaseResponse;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.Enrollment;
 import com.spring.dlearning.entity.User;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -74,10 +76,34 @@ public class EnrollmentService {
         Enrollment enrollment = Enrollment.builder()
                 .user(user)
                 .course(course)
+                .purchased(true)
                 .build();
 
         enrollmentRepository.save(enrollment);
         return enrollmentMapper.toBuyCourseResponse(enrollment);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    public CoursePurchaseResponse checkPurchase (Long courseId) {
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User userCurrent = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+
+        Optional<Enrollment> enrollment = enrollmentRepository.checkPurchase(userCurrent, course);
+
+        if(enrollment.isEmpty()){
+            return CoursePurchaseResponse.builder()
+                    .userId(userCurrent.getId())
+                    .courseId(courseId)
+                    .purchased(false)
+                    .build();
+        }
+
+        return enrollmentMapper.toCoursePurchaseResponse(enrollment.get());
+    }
 }
