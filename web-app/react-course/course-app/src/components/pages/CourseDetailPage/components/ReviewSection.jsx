@@ -18,13 +18,15 @@ export const ReviewSection = ({
     setEditContent,
     replyContent,
     setReplyContent,
-    handleRatingChange
+    handleRatingChange,
+    isPurchase
 }) => {
     return (
         <div className="comments-section mt-5">
             <h2 className="mb-4 text-secondary"><FaCommentDots className="mr-2" /> Comments</h2>
+            
             {/* Add Comment */}
-            <div className="comment-form mb-5">
+            {isPurchase && <div className="comment-form mb-5">
                 <textarea
                     className="form-control mb-3"
                     rows="3"
@@ -38,7 +40,7 @@ export const ReviewSection = ({
                 <button className="btn btn-primary px-4 mt-3" onClick={handleAddReview}>
                     Submit Comment
                 </button>
-            </div>
+            </div>}
 
             {/* Comment List */}
             <div className="comments-list">

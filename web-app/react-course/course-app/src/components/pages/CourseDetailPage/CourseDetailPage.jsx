@@ -9,6 +9,7 @@ import CourseContent from "./components/CourseContent";
 import { ReviewSection } from "./components/ReviewSection";
 import { CourseFeatur } from "./components/CourseFeature";
 import { addReplyReview, addReview, deleteReview, editReview } from "../../../service/ReviewService";
+import { checkPurchase } from "../../../service/Enrollment";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
@@ -22,6 +23,7 @@ export const CourseDetail = () => {
     const [editingCommentId, setEditingCommentId] = useState(null); // lưu ID của bình luận đang được chỉnh sửa
     const [newRating, setNewRating] = useState(0);
     const [chapter, setChapter] = useState(null);
+    const [isPurchase, setIsPurchase] = useState(false);
 
     useEffect(() => {
         document.title = 'Courses Detail'
@@ -47,6 +49,24 @@ export const CourseDetail = () => {
                 console.log(error)
                 setLoading(false);
             });
+    }, [id]);
+
+    useEffect(() => {
+        const fetchPurchaseStatus = async () => {
+            try {
+                const result = await checkPurchase(id);
+                if (result && result.result && result.result.purchased) {
+                    setIsPurchase(result.result.purchased);
+                }
+            } catch (error) {
+                console.error("Error checking purchase status:", error);
+                setIsPurchase(false);
+            }
+        };
+
+        if (id) {
+            fetchPurchaseStatus();
+        }
     }, [id]);
 
     // Fetch comments
@@ -232,8 +252,8 @@ export const CourseDetail = () => {
                     }
                 } catch (error) {
                     Swal.fire({
-                        title: 'Lỗi!',
-                        text: error.message || 'Đã xảy ra lỗi trong quá trình mua khóa học. Vui lòng thử lại sau.',
+                        title: 'Error!',
+                        text: error.message || 'An error occurred while purchasing the course. Please try again later.',
                         icon: 'error'
                     });
                     console.error(error);
@@ -297,7 +317,9 @@ export const CourseDetail = () => {
                             handleAddReply={handleAddReply}
                             handleEditReview={handleEditReview}
                             handleDeleteReview={handleDeleteReview}
-                            handleRatingChange={handleRatingChange} /> </div>
+                            handleRatingChange={handleRatingChange}
+                            isPurchase={isPurchase}
+                        /> </div>
 
                     <CourseFeatur
                         course={course}
