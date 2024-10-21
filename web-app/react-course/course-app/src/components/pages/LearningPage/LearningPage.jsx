@@ -75,8 +75,8 @@ export const LearningPage = () => {
                     {/* Bên trái: Danh sách chương và bài học */}
                     <div className="lp-lesson-list">
                         <h3>Course Content</h3>
-                        {chapters.map((chapter, index) => (
-                            <div key={index} className="lesson-section">
+                        {chapters.map((chapter) => (
+                            <div key={chapter.chapterId} className="lesson-section">
                                 {/* Tiêu đề chương */}
                                 <div className="sections-title" onClick={() => toggleSection(chapter.chapterId)}>
                                     <h4>
@@ -94,9 +94,9 @@ export const LearningPage = () => {
                                 {/* Danh sách bài học trong chương */}
                                 {openSections[chapter.chapterId] && chapter.lessonDto && (
                                     <ul className="lesson-list">
-                                        {chapter.lessonDto.map((lesson, lessonIndex) => (
+                                        {chapter.lessonDto.map((lesson) => (
                                             <li
-                                                key={lessonIndex}
+                                                key={lesson.lessonId}
                                                 className="lesson-item"
                                                 onClick={() => handleLessonClick(lesson)}
                                             >

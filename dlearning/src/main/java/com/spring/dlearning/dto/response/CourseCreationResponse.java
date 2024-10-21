@@ -1,5 +1,6 @@
-package com.spring.dlearning.dto.request;
+package com.spring.dlearning.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.spring.dlearning.utils.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,15 +10,16 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CourseRequest {
+public class CourseCreationResponse {
+
+    Long id;
+    String author;
     String title;
     String description;
     Integer duration;
     String language;
     CourseLevel courseLevel;
-    Long price;
     String thumbnail;
     String videoUrl;
-
-
+    Long points;
 }

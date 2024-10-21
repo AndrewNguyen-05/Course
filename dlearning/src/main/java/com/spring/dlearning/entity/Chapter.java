@@ -21,13 +21,17 @@ public class Chapter extends AbstractEntity<Long> {
     Course course;
 
     @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @Builder.Default
-    Set<Lesson> lessons = new HashSet<>();
+    Set<Lesson> lessons;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "chapter_name", nullable = false)
     String chapterName;
 
     @Column(name = "description", columnDefinition = "MEDIUMTEXT")
     String description;
+
+    @PrePersist
+    public void prePersist() {
+        this.lessons = new HashSet<>();
+    }
 
 }

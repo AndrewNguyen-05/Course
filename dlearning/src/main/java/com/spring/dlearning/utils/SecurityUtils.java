@@ -29,11 +29,4 @@ public class SecurityUtils {
         }
         return null;
     }
-
-    public static Optional<String> getCurrentUserJwt(){
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        return Optional.ofNullable(securityContext.getAuthentication())
-                .filter(authentication -> authentication.getCredentials() instanceof String)
-                .map(authentication -> (String) authentication.getCredentials());
-    }
 }

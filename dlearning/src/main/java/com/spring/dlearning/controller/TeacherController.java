@@ -1,10 +1,7 @@
 package com.spring.dlearning.controller;
 
-
-import com.cloudinary.Api;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.InfoTeacherByCourseResponse;
-import com.spring.dlearning.service.CourseService;
 import com.spring.dlearning.service.TeacherService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +23,10 @@ public class TeacherController {
     TeacherService teacherService;
 
     @GetMapping("/info-teacher/{id}")
-    public ApiResponse<InfoTeacherByCourseResponse> getInfoTeacherByCourse(@PathVariable long id){
-
-
+    ApiResponse<InfoTeacherByCourseResponse> getInfoTeacherByCourse(@PathVariable Long id){
         return ApiResponse.<InfoTeacherByCourseResponse>builder()
                 .code(HttpStatus.OK.value())
-                .message("Get information teacher succesfully")
+                .message("Get information teacher successfully")
                 .result(teacherService.getInfoTeacherByCourse(id))
                 .build();
     }

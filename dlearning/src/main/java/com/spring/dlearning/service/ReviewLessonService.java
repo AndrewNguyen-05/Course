@@ -55,7 +55,7 @@ public class ReviewLessonService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Course course = courseRepository.findById(reviewLessonRequest.getCourseId())
-                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
         Chapter chapter = chapterRepository.findById(reviewLessonRequest.getChapterId())
                 .orElseThrow(() -> new AppException(ErrorCode.CHAPTER_NOT_EXIST));

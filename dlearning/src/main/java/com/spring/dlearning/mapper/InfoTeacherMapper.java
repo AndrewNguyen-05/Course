@@ -20,7 +20,6 @@ public class InfoTeacherMapper {
 
     public InfoTeacherByCourseResponse mapToInfoTeacherByCourseResponse(Course course){
 
-
         return InfoTeacherByCourseResponse.builder()
                 .id(course.getId())
                 .author(course.getAuthor().getName())

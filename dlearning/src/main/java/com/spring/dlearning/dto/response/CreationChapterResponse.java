@@ -2,8 +2,6 @@ package com.spring.dlearning.dto.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.util.HashSet;
 import java.util.Set;
 
 @Setter
@@ -14,15 +12,12 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreationChapterResponse {
 
-    Long userId;
+    String userName;
     Long courseId;
-    String courseTitle;
     Long chapterId;
     String chapterName;
     String description;
-
-    @Builder.Default
-    Set<LessonDto> lessons = new HashSet<>();
+    Set<LessonDto> lessons;
 
     @Setter
     @Getter

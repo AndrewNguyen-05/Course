@@ -3,12 +3,10 @@ import { Route, Routes } from 'react-router-dom';
 import { ProcessLoginOAuth2 } from './components/authentication/OAuth2';
 import { Authorization } from './components/authorization/Authorization';
 import { PrivateRoute } from './components/router/PrivateRoute';
-import { MyCourses } from './components/TeacherComponents/MyCourse';
 import { RegisterTeacher } from './components/pages/RegisterPage/RegisterTeacher';
 import { Dashboard } from './components/admin/components/Dashboard';
 import { RegistrationList } from './components/admin/components/RegistrationList';
 import { Accessdenied } from './components/error/Accessdenied';
-import { UploadCourse } from './components/TeacherComponents/UploadCourse';
 import { LearningPage } from './components/pages/LearningPage/LearningPage';
 import { MainLayout } from './components/router/MainLayout';
 import { NotFound } from './components/error/NotFound';
@@ -33,6 +31,8 @@ import { ChangePassword } from './components/pages/ModifyPasswordPage/ChangePass
 import FavoriteCourses from './components/pages/FavoritePage/Favorite';
 import { AdsPage } from './components/pages/AdsPage/Ads';
 import AdsDetail from './components/pages/AdsPage/components/DetailAds';
+import { UploadCourse } from './components/pages/TeacherPage/UploadCourse';
+import { MyCourses } from './components/pages/TeacherPage/MyCourse';
 
 function App() {
   return (

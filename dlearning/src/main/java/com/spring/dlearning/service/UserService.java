@@ -237,6 +237,16 @@ public class UserService {
                 .build();
     }
 
+    public String userLogin (){
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return user.getName();
+    }
+
     private static String generateOtp(){
 
         Random random = new Random();

@@ -59,6 +59,14 @@ public class ApplicationInitConfiguration {
                         .build());
             }
 
+            Optional<Role> teacherRole = roleRepository.findByName(PredefinedRole.TEACHER_ROLE);
+            if(teacherRole.isEmpty()){
+                roleRepository.save(Role.builder()
+                        .name(PredefinedRole.TEACHER_ROLE)
+                        .description("Teacher role")
+                        .build());
+            }
+
             if (userRepository.findByEmail(ADMIN_USER_NAME).isEmpty()) {
                 Role roleADM = roleRepository.findByName(PredefinedRole.ADMIN_ROLE)
                         .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));

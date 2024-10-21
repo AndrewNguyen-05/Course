@@ -10,13 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,12 +21,11 @@ public class ChapterController {
 
     ChapterService chapterService;
 
-    @PostMapping("/upload/chapter")
-    ApiResponse<CreationChapterResponse> createLesson(@RequestPart("lesson") @Valid CreationChapterRequest request,
-                                                      @RequestPart("file") MultipartFile file) throws IOException {
+    @PostMapping("/create/chapter")
+    ApiResponse<CreationChapterResponse> createLesson(@RequestBody @Valid CreationChapterRequest request) {
         return ApiResponse.<CreationChapterResponse>builder()
                 .code(HttpStatus.CREATED.value())
-                .result(chapterService.createChapter(request, file))
+                .result(chapterService.createChapter(request))
                 .build();
     }
 

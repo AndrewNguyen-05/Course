@@ -4,13 +4,14 @@ import com.spring.dlearning.dto.request.CreationChapterRequest;
 import com.spring.dlearning.dto.response.CreationChapterResponse;
 import com.spring.dlearning.entity.Chapter;
 import com.spring.dlearning.entity.Course;
-import com.spring.dlearning.entity.Lesson;
+import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.ChapterMapper;
 import com.spring.dlearning.repository.ChapterRepository;
 import com.spring.dlearning.repository.CourseRepository;
-import com.spring.dlearning.repository.LessonRepository;
+import com.spring.dlearning.repository.UserRepository;
+import com.spring.dlearning.utils.SecurityUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -18,8 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import java.io.IOException;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,41 +29,42 @@ public class ChapterService {
 
     ChapterRepository chapterRepository;
     ChapterMapper chapterMapper;
+    UserRepository userRepository;
     CourseRepository courseRepository;
-    CloudinaryService cloudinaryService;
-    LessonRepository lessonRepository;
 
     @Transactional
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN', 'TEACHER')")
-    public CreationChapterResponse createChapter(CreationChapterRequest request, MultipartFile lessonVideo) throws IOException {
+    public CreationChapterResponse createChapter(CreationChapterRequest request) {
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Course course = courseRepository.findById(request.getCourseId())
-                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
-        Chapter chapter = chapterRepository.findByChapterNameAndCourse(request.getChapterName(), course)
-                .orElseGet(() -> {
-                    Chapter newChapter = chapterMapper.toLesson(request);
-                    newChapter.setCourse(course);
-                    chapterRepository.save(newChapter);
-                    return newChapter;
-                });
+        Chapter chapter = chapterMapper.toLesson(request);
+        chapter.setCourse(course);
+        chapterRepository.save(chapter);
 
-        String videoUrl = cloudinaryService.uploadVideoChunked(lessonVideo, "courses").get("url").toString();
-
-        Lesson lesson = Lesson.builder()
-                .chapter(chapter)
-                .contentType("video")
-                .videoUrl(videoUrl)
-                .lessonName(request.getLessonName())
-                .description("Video content for the lesson")
+        return CreationChapterResponse.builder()
+                .userName(user.getName())
+                .courseId(course.getId())
+                .chapterId(chapter.getId())
+                .chapterName(chapter.getChapterName())
+                .description(chapter.getDescription())
+                .lessons(chapter.getLessons().stream()
+                        .map(lesson ->
+                                CreationChapterResponse.
+                                        LessonDto.builder()
+                                        .lessonId(lesson.getId())
+                                        .lessonName(lesson.getLessonName())
+                                        .lessonDescription(lesson.getDescription())
+                                        .videoUrl(lesson.getVideoUrl())
+                                        .build())
+                        .collect(Collectors.toSet())
+                )
                 .build();
-
-        lessonRepository.save(lesson);
-
-        // Thêm LessonContent mới vào lesson
-        chapter.getLessons().add(lesson);
-
-        return chapterMapper.toCreateChapterResponse(chapter);
     }
-
 }

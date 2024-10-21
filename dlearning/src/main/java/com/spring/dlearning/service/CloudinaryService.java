@@ -93,6 +93,7 @@ public class CloudinaryService {
         tempFile.delete(); // Xóa file tạm sau khi tải lên
         return uploadResult;
     }
+
     private File convertMultipartFileToFile(MultipartFile file) throws IOException {
         File tempFile = File.createTempFile("upload", file.getOriginalFilename());
         file.transferTo(tempFile);

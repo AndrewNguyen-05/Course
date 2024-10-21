@@ -1,6 +1,7 @@
 package com.spring.dlearning.service;
 
-import com.spring.dlearning.dto.request.CourseRequest;
+import com.spring.dlearning.constant.PredefinedRole;
+import com.spring.dlearning.dto.request.CourseCreationRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.entity.Course;
@@ -28,10 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -88,7 +86,7 @@ public class CourseService {
     public CourseResponse getCourseById(Long id){
 
         Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
         return CourseResponse.builder()
                 .id(course.getId())
@@ -106,20 +104,26 @@ public class CourseService {
 
     @Transactional
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER', 'ADMIN')")
-    public CourseResponse createCourse(CourseRequest request){
-        Course course = courseMapper.toCourse(request);
-
+    public CourseCreationResponse createCourse(CourseCreationRequest request, MultipartFile thumbnail, MultipartFile video)
+            throws IOException {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        if(! Objects.equals(user.getRole().getName(), PredefinedRole.TEACHER_ROLE)){
+            throw new AppException(ErrorCode.ACCESSDENIED);
+        }
 
+        Course course = courseMapper.toCourse(request);
+        String urlThumbnail = cloudinaryService.uploadImage(thumbnail);
+        String videoUrl = cloudinaryService.uploadVideoChunked(video, "courses").get("url").toString();
+        course.setThumbnail(urlThumbnail);
+        course.setVideoUrl(videoUrl);
         course.setAuthor(user);
-
         courseRepository.save(course);
 
-        return courseMapper.toCourseResponse(course);
+        return courseMapper.toCourseCreationResponse(course);
     }
 
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('USER', 'TEACHER', 'ADMIN')")
@@ -162,10 +166,10 @@ public class CourseService {
     public CourseChapterResponse getAllInfoCourse (Long courseId){
 
         courseRepository.findById(courseId)
-                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
         CourseChapterResponse courseLessonResponse =  courseChapterAndLessonMapper
-                .getCourserLessonAndLessonContent(courseId);
+                .getCourserChapterAndLesson(courseId);
 
         Set<CourseChapterResponse.ChapterDto> sortedChapter = courseLessonResponse.getChapters().stream()
                 .sorted(Comparator.comparing(CourseChapterResponse.ChapterDto::getChapterId))

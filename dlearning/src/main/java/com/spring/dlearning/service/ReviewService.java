@@ -55,7 +55,7 @@ public class ReviewService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
         Review parentReview = null;
         if (reviewRequest.getParentReviewId() != null) {

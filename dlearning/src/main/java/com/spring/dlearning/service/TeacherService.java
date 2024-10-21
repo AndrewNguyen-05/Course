@@ -6,7 +6,6 @@ import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.InfoTeacherMapper;
 import com.spring.dlearning.repository.CourseRepository;
-import com.spring.dlearning.repository.ReviewRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,10 +22,7 @@ public class TeacherService {
     InfoTeacherMapper infoTeacherMapper;
 
     public InfoTeacherByCourseResponse getInfoTeacherByCourse(Long id) {
-        Course course = courseRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
-
+        Course course = courseRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
         return infoTeacherMapper.mapToInfoTeacherByCourseResponse(course);
     }
-
-
 }

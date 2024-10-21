@@ -1,6 +1,6 @@
 package com.spring.dlearning.controller;
 
-import com.spring.dlearning.dto.request.CourseRequest;
+import com.spring.dlearning.dto.request.CourseCreationRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.*;
 import com.spring.dlearning.entity.Course;
@@ -13,6 +13,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
@@ -63,11 +64,15 @@ public class CourseController {
                 .build();
     }
 
-    @PostMapping("/create-course")
-    ApiResponse<CourseResponse> createCourse(@RequestBody CourseRequest courseRequest){
-        var result = courseService.createCourse(courseRequest);
+    @PostMapping(value = "/create-course", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ApiResponse<CourseCreationResponse> createCourse(
+            @RequestPart("courseRequest") CourseCreationRequest courseRequest,
+            @RequestPart("thumbnail") MultipartFile thumbnail,
+            @RequestPart("video") MultipartFile video) throws IOException {
 
-        return ApiResponse.<CourseResponse>builder()
+        var result = courseService.createCourse(courseRequest, thumbnail, video);
+
+        return ApiResponse.<CourseCreationResponse>builder()
                 .code(HttpStatus.CREATED.value())
                 .message("Create Course Successfully")
                 .result(result)
@@ -85,7 +90,7 @@ public class CourseController {
     }
 
     @PostMapping("/upload-course")
-    public ApiResponse<UploadCourseResponse> uploadCourse(
+    ApiResponse<UploadCourseResponse> uploadCourse(
             @RequestPart("course") @Valid UploadCourseRequest request,
             @RequestPart("file") MultipartFile courseFile,
             @RequestPart("thumbnail") MultipartFile thumbnail) throws IOException {

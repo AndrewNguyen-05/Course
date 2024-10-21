@@ -20,7 +20,7 @@ public enum ErrorCode {
     PASSWORD_EXISTED(409, "Password existed", HttpStatus.CONFLICT),
     ROLE_NOT_EXISTED(400, "Role not existed", HttpStatus.NOT_FOUND),
     INVALID_OTP(400, "OTP is invalid or expired", HttpStatus.BAD_REQUEST),
-    COURSER_NOT_EXISTED(400, "Course not existed", HttpStatus.BAD_REQUEST),
+    COURSE_NOT_EXISTED(400, "Course not existed", HttpStatus.BAD_REQUEST),
     EMAIL_INVALID(400, "Email not existed", HttpStatus.BAD_REQUEST),
     REGISTER_TEACHER_INVALID(400, "Your request is pending review, please do not resubmit.", HttpStatus.BAD_REQUEST),
     FILE_INVALID_FORMAT(400, "Invalid file format", HttpStatus.BAD_REQUEST),
@@ -68,13 +68,15 @@ public enum ErrorCode {
     DELETE_POST_INVALID(400, "You can only delete posts that you own.", HttpStatus.BAD_REQUEST),
     EXPIRED_TOKEN(401, "EXPIRED_TOKEN", HttpStatus.UNAUTHORIZED),
     CHAPTER_NOT_EXIST(400, "Chapter is not exist", HttpStatus.BAD_REQUEST),
-    LESSON_NOT_EXIST(400, "Lesson is not exist", HttpStatus.BAD_REQUEST)
+    LESSON_NOT_EXIST(400, "Lesson is not exist", HttpStatus.BAD_REQUEST),
+    ACCESSDENIED(403, "Only teachers and Admins have the right to create courses.", HttpStatus.FORBIDDEN),
+    CHAPTER_ID_INVALID(400, "Chapter id cannot be null", HttpStatus.BAD_REQUEST)
     ;
 
 
-    private int code;
-    private String message;
-    private HttpStatusCode statusCode;
+    private final int code;
+    private final String message;
+    private final HttpStatusCode statusCode;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;

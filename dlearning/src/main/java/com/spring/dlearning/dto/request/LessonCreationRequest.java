@@ -11,14 +11,16 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreationChapterRequest {
+public class LessonCreationRequest {
 
     @NotNull(message = "COURSE_ID_INVALID")
     Long courseId;
 
-    @NotBlank(message = "CHAPTER_NAME_INVALID")
-    String chapterName;
+    @NotNull(message = "CHAPTER_ID_INVALID")
+    Long chapterId;
+
+    @NotBlank(message = "LESSON_NAME_INVALID")
+    String lessonName;
 
     String description;
-
 }

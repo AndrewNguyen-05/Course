@@ -20,9 +20,9 @@ public final class CourseChapterAndLessonMapper {
         this.courseRepository = courseRepository;
     }
 
-    public CourseChapterResponse getCourserLessonAndLessonContent(Long courseId){
+    public CourseChapterResponse getCourserChapterAndLesson(Long courseId){
         Course course =  courseRepository.findById(courseId)
-                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
         Set<CourseChapterResponse.ChapterDto> chapterDto = course.getChapters().stream()
                 .map(this::mapToLessonDto)

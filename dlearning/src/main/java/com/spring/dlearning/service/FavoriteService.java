@@ -46,7 +46,7 @@ public class FavoriteService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Course course = courseRepository.findById(request.getId())
-                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
         boolean isAlreadyFavorite = favoriteRepository.existsByUserAndCourse(user, course);
         if (isAlreadyFavorite) {

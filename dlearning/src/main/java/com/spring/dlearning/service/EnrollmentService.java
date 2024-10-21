@@ -58,7 +58,7 @@ public class EnrollmentService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Course course = courseRepository.findById(request.getCourseId())
-                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
         if (enrollmentRepository.existsByUserAndCourse(user, course)) {
             throw new AppException(ErrorCode.COURSE_ALREADY_PURCHASED);
@@ -92,7 +92,7 @@ public class EnrollmentService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new AppException(ErrorCode.COURSER_NOT_EXISTED));
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
         Optional<Enrollment> enrollment = enrollmentRepository.checkPurchase(userCurrent, course);
 
