@@ -297,7 +297,6 @@ export const CourseDetail = () => {
                             <img className="img-fluid rounded w-100 mb-4" src={course.thumbnail} alt="Course" />
                             <p>{course.description}</p>
                         </div>
-
                         <CourseContent chapter={chapter} />
                         <ReviewSection
                             comments={comments}
@@ -324,8 +323,6 @@ export const CourseDetail = () => {
                     <CourseFeatur
                         course={course}
                         handleEnrollNow={handleEnrollNow} />
-
-
                 </div>
             </div>
             <ToastContainer
