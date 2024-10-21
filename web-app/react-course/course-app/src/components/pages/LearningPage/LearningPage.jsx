@@ -2,6 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { TopBar } from '../../layouts/TopBar';
 import { Header } from '../../layouts/Header';
 import { useParams } from 'react-router-dom';
+import { toast, ToastContainer } from "react-toastify";
+import { ReviewSection } from '../CourseDetailPage/components/ReviewSection';
+import { addReplyReview, addReview, deleteReview, editReview } from "../../../service/ReviewService";
+import { ReviewLesson } from '../CourseDetailPage/components/ReviewLesson';
 
 export const LearningPage = () => {
     useEffect(() => {
@@ -14,6 +18,11 @@ export const LearningPage = () => {
     const [chapters, setChapters] = useState([]);  // Danh sách các chương từ API
     const [currentLesson, setCurrentLesson] = useState(null);  // Bài học hiện tại
     const [openSections, setOpenSections] = useState({});  // Trạng thái mở của các chương
+    const [comments, setComments] = useState([]); // list comment
+    const [newComment, setNewComment] = useState(""); // add comment
+    const [replyContent, setReplyContent] = useState({});
+    const [editContent, setEditContent] = useState({}); // cập nhật nội dung chỉnh sửa của bình luận.
+    const [editingCommentId, setEditingCommentId] = useState(null); // lưu ID của bình luận đang được chỉnh sửa
 
     // Lấy dữ liệu các chương và bài học
     useEffect(() => {
@@ -46,6 +55,140 @@ export const LearningPage = () => {
 
         fetchLessonByCourseId();
     }, [id, token]);
+
+    // Add a new comment
+    const handleAddReview = async () => {
+        if (!newComment.trim()) {
+            toast.error('Please enter a comment or select a rating');
+            return;
+        }
+
+        const commentData = {
+            content: newComment.trim(),
+            parentCommentId: null,
+            courseId: id
+        };
+
+        try {
+            const result = await addReview(id, commentData);
+            setComments([{
+                ...result, // sao chép toàn bộ thuộc tính trong result:  bình luận mới được trả về từ server.
+                replying: false,
+                replies: []
+            }, ...comments]);  // sao chép toàn bộ các comment trước đó và bao gồm cả comment mới được thêm vào đầu danh sách
+
+            setNewComment("");
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    // Handle adding a reply
+    const handleAddReply = async (commentId) => {
+        const replyText = replyContent[commentId];
+
+        if (!replyText.trim()) {
+            toast.error('Please enter a reply');
+            return;
+        }
+
+        const replyData = {
+            content: replyText.trim(),
+            parentReviewId: commentId,
+            courseId: id
+        };
+
+        try {
+            const result = await addReplyReview(id, replyData);
+
+            if (result) {
+                // Cập nhật lại danh sách comments với reply mới
+                const updatedComments = comments.map(comment => {
+                    if (comment.id === commentId) {
+                        return {
+                            ...comment,
+                            replies: [...comment.replies, { ...result, replying: false }]
+                        };
+                    }
+                    return comment;
+                });
+                setComments(updatedComments);
+                setReplyContent({ ...replyContent, [commentId]: '' });
+            }
+        } catch (error) {
+            console.error('Error in component:', error);
+        }
+    };
+
+    // Edit comment
+    const handleEditReview = async (commentId) => {
+        const updatedContent = (editContent[commentId] || "").trim();
+
+        if (!updatedContent) {
+            toast.error('Please enter new content');
+            return;
+        }
+        try {
+            const result = await editReview(commentId, updatedContent, token);
+
+            if (result) {
+                setComments((prevComments) => {
+                    const updatedComments = prevComments.map(comment => {
+                        // Cập nhật comment cha nếu cần
+                        if (comment.id === commentId) {
+                            return { ...comment, content: result.content };
+                        }
+                        // Cập nhật replies nếu comment là trả lời
+                        const updatedReplies = comment.replies.map(reply => {
+                            if (reply.id === commentId) {
+                                return { ...reply, content: result.content };
+                            }
+                            return reply;
+                        });
+                        return { ...comment, replies: updatedReplies };
+                    });
+                    return [...updatedComments];
+                });
+
+                setEditingCommentId(null); // Thoát khỏi chế độ chỉnh sửa
+            }
+        } catch (error) {
+            console.error('Error editing comment:', error);
+        }
+    };
+
+    // Delete comment
+    const handleDeleteReview = async (reviewId) => {
+        try {
+            const result = await deleteReview(reviewId, token);
+            if (result) {
+                // Cập nhật lại danh sách comments sau khi xóa thành công
+                setComments((prevComments) => {
+                    const updatedReviews = prevComments
+                        .filter(comment => comment.id !== reviewId)  // Loại bỏ bình luận cha đã bị xoá
+                        .map(comment => ({
+                            ...comment,
+                            replies: comment.replies.filter(reply => reply.id !== reviewId)  // Loại bỏ cả các replies nếu có
+                        }));
+
+                    return updatedReviews;
+                });
+            }
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+        }
+    };
+
+    // Toggle reply input
+    const handleReplyToggle = (reviewId) => {
+        const updatedReviews = comments.map(comment => {
+            if (comment.id === reviewId) {
+                return { ...comment, replying: !comment.replying };
+            }
+            return comment;
+        });
+        setComments(updatedReviews);
+    };
 
     // Đóng/mở chương học
     const toggleSection = (sectionId) => {
@@ -124,6 +267,22 @@ export const LearningPage = () => {
                                     <source src={currentLesson.videoUrl} type="video/mp4" />
                                     Your browser does not support the video tag.
                                 </video>
+                                <ReviewLesson
+                                    comments={comments}
+                                    newComment={newComment}
+                                    editingCommentId={editingCommentId}
+                                    setEditingCommentId={setEditingCommentId}
+                                    setNewComment={setNewComment}
+                                    replyContent={replyContent}
+                                    setReplyContent={setReplyContent}
+                                    editContent={editContent}
+                                    setEditContent={setEditContent}
+                                    handleAddReview={handleAddReview}
+                                    handleReplyToggle={handleReplyToggle}
+                                    handleAddReply={handleAddReply}
+                                    handleEditReview={handleEditReview}
+                                    handleDeleteReview={handleDeleteReview}
+                                />
                             </div>
                         ) : (
                             <p>Chọn một bài học để xem nội dung</p>
@@ -131,6 +290,11 @@ export const LearningPage = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                className="custom-toast-container"
+            />
         </div>
     );
 };
