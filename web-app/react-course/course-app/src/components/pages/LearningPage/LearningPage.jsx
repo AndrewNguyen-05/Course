@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { TopBar } from '../../layouts/TopBar';
-import { Header } from '../../layouts/Header';
 import { useParams } from 'react-router-dom';
 import { toast, ToastContainer } from "react-toastify";
 import { ReviewLesson } from './components/ReviewLesson';
 import { addCommentLesson, getCommentLesson } from '../../../service/LessonComment';
 import { getAvatar } from '../../../service/ProfileService';
 import { getInfoCourse } from '../../../service/CourseService';
+import ProgressBar from './components/ProgressBar';
+import { FaChevronDown } from 'react-icons/fa';
 
 export const LearningPage = () => {
     useEffect(() => {
@@ -208,64 +208,66 @@ export const LearningPage = () => {
 
     return (
         <div>
-            <TopBar />
-            <Header />
-            <div className='content-page'>
-                <div className="lp-learning-container d-flex">
-                    <div className="lp-lesson-list">
-                        <h3>Course Content</h3>
-                        {chapters.map((chapter) => (
-                            <div key={chapter.chapterId} className="lesson-section">
-                                <div className="sections-title" onClick={() => toggleSection(chapter.chapterId)}>
-                                    <h4>{chapter.chapterName}</h4>
-                                </div>
-                                {openSections[chapter.chapterId] && chapter.lessonDto && (
-                                    <ul className="lesson-list">
-                                        {chapter.lessonDto.map((lesson) => (
-                                            <li
-                                                key={lesson.lessonId}
-                                                className="lesson-item"
-                                                onClick={() => handleLessonClick(lesson, chapter.chapterId)}
-                                            >
-                                                {lesson.lessonName}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                    <div className="lp-video-content">
-                        {currentLesson ? (
-                            <div>
-                                <h3>{currentLesson.lessonName}</h3>
-                                <video
-                                    key={currentLesson.videoUrl}
-                                    width="100%"
-                                    height={750}
-                                    controls
-                                >
-                                    <source src={currentLesson.videoUrl} type="video/mp4" />
-                                    Your browser does not support the video tag.
-                                </video>
-                                <ReviewLesson
-                                    comments={commentLesson}
-                                    handleAddCommentLesson={handleAddCommentLesson}
-                                    newCommentLesson={newCommentLesson}
-                                    handleReplyChange={handleReplyChange}
-                                    handleReplySubmit={handleReplySubmit}
-                                    replyContent={replyContent}
-                                    handleNewCommentChange={handleNewCommentChange}
-                                    toggleReplyInput={toggleReplyInput}
-                                    activeReply={activeReply}
-                                    avatar={avatar}
+            <ProgressBar />
+            <div className="lp-learning-container d-flex">
+                <div className="lp-lesson-list">
+                    {chapters.map((chapter) => (
+                        <div key={chapter.chapterId} className="lesson-section">
+                            <div 
+                                className="sections-title" 
+                                onClick={() => toggleSection(chapter.chapterId)}
+                            >
+                                <h4>{chapter.chapterName}</h4>
+                                <FaChevronDown 
+                                    className={`arrow-icon ${openSections[chapter.chapterId] ? 'open' : ''}`} 
                                 />
-
                             </div>
-                        ) : (
-                            <p>Chọn một bài học để xem nội dung</p>
-                        )}
-                    </div>
+                            {openSections[chapter.chapterId] && chapter.lessonDto && (
+                                <ul className="lesson-list">
+                                    {chapter.lessonDto.map((lesson) => (
+                                        <li
+                                            key={lesson.lessonId}
+                                            className="lesson-item"
+                                            onClick={() => handleLessonClick(lesson, chapter.chapterId)}
+                                        >
+                                            {lesson.lessonName}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                    ))}
+                </div>
+                <div className="lp-video-content">
+                    {currentLesson ? (
+                        <div>
+                            <video
+                                key={currentLesson.videoUrl}
+                                width="100%"
+                                height={750}
+                                controls
+                            >
+                                <source src={currentLesson.videoUrl} type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                            <h3 className='title-lesson-current'>{currentLesson.lessonName}</h3>
+
+                            <ReviewLesson
+                                comments={commentLesson}
+                                handleAddCommentLesson={handleAddCommentLesson}
+                                newCommentLesson={newCommentLesson}
+                                handleReplyChange={handleReplyChange}
+                                handleReplySubmit={handleReplySubmit}
+                                replyContent={replyContent}
+                                handleNewCommentChange={handleNewCommentChange}
+                                toggleReplyInput={toggleReplyInput}
+                                activeReply={activeReply}
+                                avatar={avatar}
+                            />
+                        </div>
+                    ) : (
+                        <p>Chọn một bài học để xem nội dung</p>
+                    )}
                 </div>
             </div>
             <ToastContainer
