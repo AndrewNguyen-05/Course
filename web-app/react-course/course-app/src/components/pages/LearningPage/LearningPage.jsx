@@ -3,9 +3,10 @@ import { TopBar } from '../../layouts/TopBar';
 import { Header } from '../../layouts/Header';
 import { useParams } from 'react-router-dom';
 import { toast, ToastContainer } from "react-toastify";
-import { ReviewSection } from '../CourseDetailPage/components/ReviewSection';
-import { addReplyReview, addReview, deleteReview, editReview } from "../../../service/ReviewService";
-import { ReviewLesson } from '../CourseDetailPage/components/ReviewLesson';
+import { ReviewLesson } from './components/ReviewLesson';
+import { addCommentLesson, getCommentLesson } from '../../../service/LessonComment';
+import { getAvatar } from '../../../service/ProfileService';
+import { getInfoCourse } from '../../../service/CourseService';
 
 export const LearningPage = () => {
     useEffect(() => {
@@ -15,16 +16,16 @@ export const LearningPage = () => {
     const { id } = useParams();
     const token = localStorage.getItem('token');
     const [loading, setLoading] = useState(true);
-    const [chapters, setChapters] = useState([]);  // Danh sách các chương từ API
-    const [currentLesson, setCurrentLesson] = useState(null);  // Bài học hiện tại
-    const [openSections, setOpenSections] = useState({});  // Trạng thái mở của các chương
-    const [comments, setComments] = useState([]); // list comment
-    const [newComment, setNewComment] = useState(""); // add comment
+    const [chapters, setChapters] = useState([]);
+    const [currentChapter, setCurrentChapter] = useState(null);
+    const [currentLesson, setCurrentLesson] = useState(null);
+    const [openSections, setOpenSections] = useState({});
+    const [commentLesson, setCommentLesson] = useState([]);
+    const [newCommentLesson, setNewCommentLesson] = useState('');
     const [replyContent, setReplyContent] = useState({});
-    const [editContent, setEditContent] = useState({}); // cập nhật nội dung chỉnh sửa của bình luận.
-    const [editingCommentId, setEditingCommentId] = useState(null); // lưu ID của bình luận đang được chỉnh sửa
+    const [activeReply, setActiveReply] = useState(null);
+    const [avatar, setAvatar] = useState();
 
-    // Lấy dữ liệu các chương và bài học
     useEffect(() => {
         const fetchLessonByCourseId = async () => {
             if (!token) {
@@ -32,22 +33,26 @@ export const LearningPage = () => {
                 return;
             }
             try {
-                const response = await fetch(`http://localhost:8080/api/v1/info-course/${id}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+                const data = await getInfoCourse(id);
+                const chaptersData = data.result.chapters || [];
+                setChapters(chaptersData);
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch lessons');
+                if (chaptersData.length > 0) {
+                    const firstLesson = chaptersData[0].lessonDto && chaptersData[0].lessonDto[0];
+                    if (firstLesson) {
+                        setCurrentLesson(firstLesson);
+
+                        setCurrentChapter({
+                            chapterId: chaptersData[0].chapterId
+                        });
+                        fetchCommentLesson(firstLesson.lessonId);
+                    }
                 }
-                const data = await response.json();
-                console.log(data);
-                setChapters(data.result.chapters || []);
+
                 setLoading(false);
             } catch (error) {
                 console.log(error.message);
+                toast.error('Không thể tải dữ liệu khóa học');
             } finally {
                 setLoading(false);
             }
@@ -56,141 +61,120 @@ export const LearningPage = () => {
         fetchLessonByCourseId();
     }, [id, token]);
 
-    // Add a new comment
-    const handleAddReview = async () => {
-        if (!newComment.trim()) {
-            toast.error('Please enter a comment or select a rating');
+    useEffect(() => {
+        if (!token) {
+            return;
+        }
+        getAvatar()
+            .then(data => setAvatar(data.result))
+            .catch(error => console.log(error));
+    }, [token])
+
+    const fetchCommentLesson = async (lessonId) => {
+        if (!lessonId) return;
+        try {
+            const response = await getCommentLesson(lessonId);
+            if (response.result) {
+                setCommentLesson(response.result || []);
+            } else {
+                toast.error('Error getting comment list');
+            }
+        } catch (error) {
+            toast.error('Error getting comment list');
+        }
+    };
+
+    const handleAddCommentLesson = async () => {
+        if (!newCommentLesson.trim()) {
+            toast.error('Please enter a comment');
+            return;
+        }
+
+        if (!currentLesson) {
+            toast.error('No lesson selected');
             return;
         }
 
         const commentData = {
-            content: newComment.trim(),
-            parentCommentId: null,
-            courseId: id
+            courseId: id,
+            chapterId: currentChapter.chapterId,
+            lessonId: currentLesson.lessonId,
+            content: newCommentLesson,
+            parentReviewId: null
         };
 
         try {
-            const result = await addReview(id, commentData);
-            setComments([{
-                ...result, // sao chép toàn bộ thuộc tính trong result:  bình luận mới được trả về từ server.
-                replying: false,
-                replies: []
-            }, ...comments]);  // sao chép toàn bộ các comment trước đó và bao gồm cả comment mới được thêm vào đầu danh sách
+            const response = await addCommentLesson(commentData);
 
-            setNewComment("");
+            if (response && response.result) {
+                setCommentLesson(prevComments => [
+                    {
+                        ...response.result,
+                        replies: []
+                    },
+                    ...prevComments
+                ])
+                toast.success('Add comment successfully')
+                setNewCommentLesson('');
+            } else {
+                console.error('Failed response:', response);
+                toast.error('Failed to add comment');
+            }
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error adding comment:', error);
+            toast.error('Failed to add comment');
         }
     };
 
-    // Handle adding a reply
-    const handleAddReply = async (commentId) => {
-        const replyText = replyContent[commentId];
+    const handleReplySubmit = async (commentId) => {
+        if (!replyContent[commentId]?.trim()) return;
 
-        if (!replyText.trim()) {
-            toast.error('Please enter a reply');
-            return;
+        const commentReply = {
+            courseId: id,
+            chapterId: currentChapter.chapterId,
+            lessonId: currentLesson.lessonId,
+            content: replyContent[commentId],
+            parentReviewId: commentId
         }
-
-        const replyData = {
-            content: replyText.trim(),
-            parentReviewId: commentId,
-            courseId: id
-        };
-
         try {
-            const result = await addReplyReview(id, replyData);
-
-            if (result) {
-                // Cập nhật lại danh sách comments với reply mới
-                const updatedComments = comments.map(comment => {
-                    if (comment.id === commentId) {
+            const response = await addCommentLesson(commentReply);
+            if (response && response.result) {
+                setCommentLesson(prevComments => prevComments.map(comment => {
+                    if (comment.reviewId === commentId) {
                         return {
                             ...comment,
-                            replies: [...comment.replies, { ...result, replying: false }]
-                        };
+                            replies: [...comment.replies, response.result]
+                        }
                     }
                     return comment;
-                });
-                setComments(updatedComments);
-                setReplyContent({ ...replyContent, [commentId]: '' });
+                }))
+
+                toast.success('Reply added successfully');
+                setReplyContent(prev => ({ ...prev, [commentId]: '' })); // Reset nội dung trả lời
+                setActiveReply(null);
+            } else {
+                toast.error('Failed to add reply');
             }
         } catch (error) {
-            console.error('Error in component:', error);
+            toast.error('Error adding reply');
         }
+
     };
 
-    // Edit comment
-    const handleEditReview = async (commentId) => {
-        const updatedContent = (editContent[commentId] || "").trim();
-
-        if (!updatedContent) {
-            toast.error('Please enter new content');
-            return;
+    useEffect(() => {
+        if (currentLesson && currentLesson.lessonId) {
+            fetchCommentLesson(currentLesson.lessonId);
         }
-        try {
-            const result = await editReview(commentId, updatedContent, token);
+    }, [currentLesson]);
 
-            if (result) {
-                setComments((prevComments) => {
-                    const updatedComments = prevComments.map(comment => {
-                        // Cập nhật comment cha nếu cần
-                        if (comment.id === commentId) {
-                            return { ...comment, content: result.content };
-                        }
-                        // Cập nhật replies nếu comment là trả lời
-                        const updatedReplies = comment.replies.map(reply => {
-                            if (reply.id === commentId) {
-                                return { ...reply, content: result.content };
-                            }
-                            return reply;
-                        });
-                        return { ...comment, replies: updatedReplies };
-                    });
-                    return [...updatedComments];
-                });
 
-                setEditingCommentId(null); // Thoát khỏi chế độ chỉnh sửa
-            }
-        } catch (error) {
-            console.error('Error editing comment:', error);
-        }
+    const handleReplyChange = (id, value) => {
+        setReplyContent(prev => ({
+            ...prev,
+            [id]: value
+        }));
     };
 
-    // Delete comment
-    const handleDeleteReview = async (reviewId) => {
-        try {
-            const result = await deleteReview(reviewId, token);
-            if (result) {
-                // Cập nhật lại danh sách comments sau khi xóa thành công
-                setComments((prevComments) => {
-                    const updatedReviews = prevComments
-                        .filter(comment => comment.id !== reviewId)  // Loại bỏ bình luận cha đã bị xoá
-                        .map(comment => ({
-                            ...comment,
-                            replies: comment.replies.filter(reply => reply.id !== reviewId)  // Loại bỏ cả các replies nếu có
-                        }));
-
-                    return updatedReviews;
-                });
-            }
-        } catch (error) {
-            console.error('Error deleting comment:', error);
-        }
-    };
-
-    // Toggle reply input
-    const handleReplyToggle = (reviewId) => {
-        const updatedReviews = comments.map(comment => {
-            if (comment.id === reviewId) {
-                return { ...comment, replying: !comment.replying };
-            }
-            return comment;
-        });
-        setComments(updatedReviews);
-    };
-
-    // Đóng/mở chương học
     const toggleSection = (sectionId) => {
         setOpenSections(prevState => ({
             ...prevState,
@@ -198,11 +182,24 @@ export const LearningPage = () => {
         }));
     };
 
-    // Xử lý khi chọn bài học trong một chương
-    const handleLessonClick = (lesson) => {
+    const handleLessonClick = (lesson, chapterId) => {
         if (lesson.videoUrl) {
             setCurrentLesson(lesson);
+
+            setCurrentChapter({
+                chapterId: chapterId
+            });
+            fetchCommentLesson(lesson.lessonId);
         }
+    };
+
+
+    const handleNewCommentChange = (e) => {
+        setNewCommentLesson(e.target.value);
+    }
+
+    const toggleReplyInput = (id) => {
+        setActiveReply(activeReply === id ? null : id);
     };
 
     if (loading) {
@@ -215,36 +212,22 @@ export const LearningPage = () => {
             <Header />
             <div className='content-page'>
                 <div className="lp-learning-container d-flex">
-                    {/* Bên trái: Danh sách chương và bài học */}
                     <div className="lp-lesson-list">
                         <h3>Course Content</h3>
                         {chapters.map((chapter) => (
                             <div key={chapter.chapterId} className="lesson-section">
-                                {/* Tiêu đề chương */}
                                 <div className="sections-title" onClick={() => toggleSection(chapter.chapterId)}>
-                                    <h4>
-                                        {chapter.chapterName}{" "}
-                                        <span className="toggle-icon">
-                                            {openSections[chapter.chapterId] ? (
-                                                <i className="fas fa-chevron-down"></i>
-                                            ) : (
-                                                <i className="fas fa-chevron-right"></i>
-                                            )}
-                                        </span>
-                                    </h4>
+                                    <h4>{chapter.chapterName}</h4>
                                 </div>
-
-                                {/* Danh sách bài học trong chương */}
                                 {openSections[chapter.chapterId] && chapter.lessonDto && (
                                     <ul className="lesson-list">
                                         {chapter.lessonDto.map((lesson) => (
                                             <li
                                                 key={lesson.lessonId}
                                                 className="lesson-item"
-                                                onClick={() => handleLessonClick(lesson)}
+                                                onClick={() => handleLessonClick(lesson, chapter.chapterId)}
                                             >
-                                                <i className="fa fa-file-video"></i>
-                                                <span>{`Lesson: ${lesson.lessonName}`}</span>
+                                                {lesson.lessonName}
                                             </li>
                                         ))}
                                     </ul>
@@ -252,8 +235,6 @@ export const LearningPage = () => {
                             </div>
                         ))}
                     </div>
-
-                    {/* Bên phải: Video và mô tả bài học */}
                     <div className="lp-video-content">
                         {currentLesson ? (
                             <div>
@@ -268,21 +249,18 @@ export const LearningPage = () => {
                                     Your browser does not support the video tag.
                                 </video>
                                 <ReviewLesson
-                                    comments={comments}
-                                    newComment={newComment}
-                                    editingCommentId={editingCommentId}
-                                    setEditingCommentId={setEditingCommentId}
-                                    setNewComment={setNewComment}
+                                    comments={commentLesson}
+                                    handleAddCommentLesson={handleAddCommentLesson}
+                                    newCommentLesson={newCommentLesson}
+                                    handleReplyChange={handleReplyChange}
+                                    handleReplySubmit={handleReplySubmit}
                                     replyContent={replyContent}
-                                    setReplyContent={setReplyContent}
-                                    editContent={editContent}
-                                    setEditContent={setEditContent}
-                                    handleAddReview={handleAddReview}
-                                    handleReplyToggle={handleReplyToggle}
-                                    handleAddReply={handleAddReply}
-                                    handleEditReview={handleEditReview}
-                                    handleDeleteReview={handleDeleteReview}
+                                    handleNewCommentChange={handleNewCommentChange}
+                                    toggleReplyInput={toggleReplyInput}
+                                    activeReply={activeReply}
+                                    avatar={avatar}
                                 />
+
                             </div>
                         ) : (
                             <p>Chọn một bài học để xem nội dung</p>

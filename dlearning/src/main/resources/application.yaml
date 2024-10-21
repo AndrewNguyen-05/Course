@@ -33,10 +33,6 @@ spring:
       max-request-size: 200MB
       file-size-threshold: 2KB
 
----
-upload-file:
-  base-uri: file:///C:/D-Learning/upload/
-
 
 
 

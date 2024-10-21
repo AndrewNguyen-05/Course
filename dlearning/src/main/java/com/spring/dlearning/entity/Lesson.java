@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Table(name = "lessons")
 @Setter
@@ -29,4 +31,8 @@ public class Lesson extends AbstractEntity<Long> {
 
     @Column(name = "description")
     String description; // Mô tả nội dung nếu cần
+
+    @OneToMany(mappedBy = "lesson", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    List<Review> reviews;
+
 }

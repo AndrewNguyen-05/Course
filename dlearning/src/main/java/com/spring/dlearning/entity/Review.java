@@ -58,4 +58,11 @@ public class Review extends AbstractEntity<Long> {
     @JoinColumn(name = "lesson_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     Lesson lesson;
+
+    @PrePersist
+    public void prePersist(){
+        if(this.rating == null){
+            this.rating = 0;
+        }
+    }
 }
