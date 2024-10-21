@@ -173,6 +173,12 @@ public class CourseService {
 
         Set<CourseChapterResponse.ChapterDto> sortedChapter = courseLessonResponse.getChapters().stream()
                 .sorted(Comparator.comparing(CourseChapterResponse.ChapterDto::getChapterId))
+                .peek(chapter -> {
+                    Set<CourseChapterResponse.LessonDto> sortedLessons = chapter.getLessonDto().stream()
+                            .sorted(Comparator.comparing(CourseChapterResponse.LessonDto::getLessonId))
+                            .collect(Collectors.toCollection(LinkedHashSet::new));
+                    chapter.setLessonDto(sortedLessons);
+                })
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
         courseLessonResponse.setChapters(sortedChapter);
