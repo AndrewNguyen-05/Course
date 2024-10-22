@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { UseAuth } from "../../authentication/UseAuth";
-import { HandleLogout } from "../../authentication/HandleLogout";
-import { NotificationDropdown } from "../../common/NotificationDropdown";
 import { useWebsocket } from "../../router/useWebSocket";
 import { markAsReadNotification, notificationCurrentLogin } from "../../../service/NotificationService";
+import { NotificationDropdown } from "../../pages/Widgets/NotificationDropdown";
+import LoadingSpinner from "../../../utils/LoadingSpinner";
+import { UseAuth } from "../../../service/Oauth2/UseAuth";
+import { HandleLogout } from "../../../service/Oauth2/HandleLogout";
 
 export const AdminHeader = () => {
   const wsClient = useWebsocket();
@@ -74,7 +75,7 @@ export const AdminHeader = () => {
         })
         .catch((error) => console.log(error));
     }
-  }, [token]);
+  }, [token, role]);
 
   useEffect(() => {
     if (!token) {
@@ -107,6 +108,12 @@ export const AdminHeader = () => {
   }, [location.pathname]);
 
   const isActive = (path) => location.pathname === path;
+
+  if(loading){
+    return (
+      <LoadingSpinner />
+    )
+  }
 
   return (
     <div>
