@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import LoadingSpinner from '../../../../utils/LoadingSpinner';
 
 export const MyCourses = () => {
     const [loading, setLoading] = useState(true);
@@ -34,6 +35,10 @@ export const MyCourses = () => {
     const handleLearnNow = (id) => {
         navigate(`/lesson-detail/${id}`);
     };
+
+    if (loading) {
+        return (<LoadingSpinner />);
+    }
 
     return (
         <div className='mycousrse-page'>

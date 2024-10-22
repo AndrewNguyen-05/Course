@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import { LoginFrom } from "./components/LoginForm";
 import { OAuthConfig } from "../../config/OAuthConfig";
+import LoadingSpinner from "../../../utils/LoadingSpinner";
 
 export const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -45,10 +46,6 @@ export const LoginPage = () => {
       return () => clearTimeout(timer);
     }
   }, [showToast]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   const handleGoogleLogin = () => {
     const callbackUrl = OAuthConfig.google.redirectUri;
@@ -112,6 +109,16 @@ export const LoginPage = () => {
       });
   };
 
+  if (loading) {
+    return (
+      <LoadingSpinner />
+    )
+  }
+
+  if (error) {
+    <div>{error}</div>
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -100 }} // Hiệu ứng ban đầu: ẩn và dịch trái
@@ -122,13 +129,13 @@ export const LoginPage = () => {
     >
       <section className="py-3 py-md-5 py-xl-8">
         <LoginFrom
-            email={email}
-            setEmail={setEmail}
-            password={password}
-            handleLogin={handleLogin}
-            setPassword={setPassword}
-            handleGoogleLogin={handleGoogleLogin}
-            handleFacebookLogin={handleFacebookLogin}
+          email={email}
+          setEmail={setEmail}
+          password={password}
+          handleLogin={handleLogin}
+          setPassword={setPassword}
+          handleGoogleLogin={handleGoogleLogin}
+          handleFacebookLogin={handleFacebookLogin}
         />
 
         <ToastContainer position="top-right" autoClose={3000} className="custom-toast-container" />

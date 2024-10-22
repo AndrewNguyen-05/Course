@@ -12689,12 +12689,27 @@ h6,
 }
 
 .my-course-start-learning-btn {
-  font-size: 1.2rem;
+  font-size: 0.7rem;
   padding: 0.6rem 1.5rem;
   background-color: #ff7f50;
   border: none;
   color: white;
+  margin-right: 10px;
   transition: background-color 0.3s ease;
+}
+
+.my-course-remove-learning-btn {
+  font-size: 0.7rem;
+  padding: 0.6rem 1.3rem;
+  background-color: #ff7f50;
+  border: none;
+  color: white;
+  margin-right: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.my-course-remove-learning-btn:hover {
+  background-color: #ff5722;
 }
 
 .my-course-start-learning-btn:hover {
@@ -15648,3 +15663,315 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   margin: 30px 16px;
   font-size: 26px;
 }
+
+/* Container Styles */
+.manager-course-container {
+  display: flex;
+  max-width: 80%;
+  margin: auto;
+  background: #f0f4f8;
+  border-radius: 15px;
+  margin-top: 30px;
+}
+
+/* Sidebar Styles */
+.manager-course-sidebar {
+  width: 240px;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  margin-right: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.manager-course-sidebar h3 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.manager-course-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.manager-course-sidebar li {
+  font-size: 18px;
+  margin: 12px 0;
+  color: #444;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.manager-course-sidebar li:hover {
+  color: #007bff;
+  transform: translateX(5px);
+}
+
+.manager-course-sidebar hr {
+  border: 0;
+  height: 1px;
+  background: #ddd;
+  margin: 20px 0;
+}
+
+/* Content Container */
+.manager-course-content {
+  flex-grow: 1;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styles */
+.manager-courses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.manager-courses-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #333;
+}
+
+/* Button Create Chapter */
+.manager-courses-btn-create {
+  background: linear-gradient(135deg, #0066cc, #3399ff);
+  color: #fff;
+  padding: 14px 25px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.manager-courses-btn-create:hover {
+  background: linear-gradient(135deg, #004d99, #1a8cff);
+  box-shadow: 0 8px 20px rgba(53, 122, 189, 0.5);
+}
+
+/* Chapter Styles */
+.manager-courses-chapter {
+  background: #f9fbfd;
+  padding: 20px;
+  border-radius: 10px;
+  border-left: 6px solid #007bff;
+  margin-bottom: 25px;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.manager-courses-chapter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Button Add Lesson */
+.manager-courses-btn-add-lesson {
+  background: linear-gradient(135deg, #28a745, #62d778);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.manager-courses-btn-add-lesson:hover {
+  background: linear-gradient(135deg, #218838, #44c767);
+  box-shadow: 0 8px 20px rgba(33, 136, 56, 0.5);
+}
+
+/* Lesson Styles */
+.manager-courses-lesson {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #ccc;
+  transition: background-color 0.3s;
+}
+
+.manager-courses-lesson:hover {
+  background: #e6f0ff;
+  cursor: pointer;
+}
+
+.manager-courses-lesson span {
+  font-size: 17px;
+  color: #444;
+}
+
+.manager-courses-lesson-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* Edit and Remove Buttons */
+.manager-courses-btn-edit,
+.manager-courses-btn-remove {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 15px;
+  transition: color 0.3s, transform 0.2s;
+}
+
+.manager-courses-btn-edit:hover {
+  color: #0056b3;
+  transform: scale(1.1);
+}
+
+.manager-courses-btn-remove:hover {
+  color: #d9534f;
+  transform: scale(1.1);
+}
+
+
+/* CSS cho modal */
+.create-chapter-modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  animation: create-chapter-fadeIn 0.3s ease;
+}
+
+@keyframes create-chapter-fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.create-chapter-modal-content {
+  background-color: #fff;
+  padding: 40px;
+  border-radius: 15px;
+  width: 50%;
+  max-width: 600px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: create-chapter-slideIn 0.4s ease;
+  transform-origin: top center;
+}
+
+@keyframes create-chapter-slideIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.create-chapter-modal-close {
+  color: #bbb;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 20px;
+}
+
+.create-chapter-modal-close:hover {
+  color: #333;
+}
+
+.create-chapter-modal h2 {
+  font-size: 26px;
+  color: #444;
+  margin-bottom: 25px;
+  text-align: center;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+}
+
+.create-chapter-input-group {
+  margin-bottom: 20px;
+}
+
+.create-chapter-input-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #666;
+  font-size: 14px;
+}
+
+.create-chapter-input-group input,
+.create-chapter-input-group textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: #f9f9f9;
+}
+
+.create-chapter-input-group input:focus,
+.create-chapter-input-group textarea:focus {
+  border-color: #5b86e5;
+  box-shadow: 0 0 8px rgba(91, 134, 229, 0.5);
+  background-color: #fff;
+}
+
+.create-chapter-input-group textarea {
+  height: 120px;
+  resize: none;
+}
+
+.create-chapter-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.create-chapter-btn-cancel,
+.create-chapter-btn-save {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.create-chapter-btn-cancel {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+.create-chapter-btn-cancel:hover {
+  background-color: #c0392b;
+  transform: translateY(-3px);
+}
+
+.create-chapter-btn-save {
+  background-color: #4CAF50;
+  color: #fff;
+}
+
+.create-chapter-btn-save:hover {
+  background-color: #45a049;
+  transform: translateY(-3px);
+}
+

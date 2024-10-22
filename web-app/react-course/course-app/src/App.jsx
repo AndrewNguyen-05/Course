@@ -1,15 +1,11 @@
 import './App.css'
 import { Route, Routes } from 'react-router-dom';
-import { ProcessLoginOAuth2 } from './components/authentication/OAuth2';
-import { Authorization } from './components/authorization/Authorization';
 import { PrivateRoute } from './components/router/PrivateRoute';
 import { RegisterTeacher } from './components/pages/RegisterPage/RegisterTeacher';
 import { Dashboard } from './components/admin/components/Dashboard';
 import { RegistrationList } from './components/admin/components/RegistrationList';
-import { Accessdenied } from './components/error/Accessdenied';
 import { LearningPage } from './components/pages/LearningPage/LearningPage';
 import { MainLayout } from './components/router/MainLayout';
-import { NotFound } from './components/error/NotFound';
 import { HeaderAndFooterRouter } from './components/router/HeaderAndFooterRouter';
 import { HomePage } from './components/pages/HomePage/HomePage';
 import { LoginPage } from './components/pages/LoginPage/LoginPage';
@@ -32,7 +28,13 @@ import FavoriteCourses from './components/pages/FavoritePage/Favorite';
 import { AdsPage } from './components/pages/AdsPage/Ads';
 import AdsDetail from './components/pages/AdsPage/components/DetailAds';
 import { UploadCourse } from './components/pages/TeacherPage/UploadCourse';
-import { MyCourses } from './components/pages/TeacherPage/MyCourse';
+import { MyCourses } from './components/pages/HomePage/components/MyCourse';
+import ManagerCourse from './components/pages/TeacherPage/ManagerCourse';
+import ManagerCourseDetail from './components/pages/TeacherPage/ManagerCourseDetail';
+import { Accessdenied } from './components/pages/ErrorPage/Accessdenied';
+import { NotFound } from './components/pages/ErrorPage/NotFound';
+import { ProcessLoginOAuth2 } from './service/Oauth2/OAuth2';
+import { Authorization } from './service/Security/Authorization';
 
 function App() {
   return (
@@ -45,6 +47,8 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path='/course-detail/:id' element={<CourseDetail />} />
         </Route>
+
+        <Route path='/manager-course/:id' element={<ManagerCourseDetail />} />
 
         <Route element={<HeaderAndFooterRouter />}>
           <Route path='/my-ads' element={<AdsPage />} />
@@ -80,6 +84,12 @@ function App() {
             <PrivateRoute>
               <MyCourses />
             </PrivateRoute>
+          } />
+
+          <Route path="/manager-courses" element={
+            <Authorization requiredRole={["TEACHER"]}>
+              <ManagerCourse />
+            </Authorization>
           } />
 
           <Route path="/register-teacher" element={

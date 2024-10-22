@@ -67,7 +67,6 @@ export const getCommentByCourseId = async (id) => {
 export const buyCourse = async (id) => {
   try {
     const response = await axios.post(`api/v1/buy-course`, { courseId: id });
-    console.log(response);
     return response;
   } catch (error) {
     console.error("Error By Course:", error);
@@ -83,4 +82,9 @@ export const getInfoCourse = async (id) => {
     console.error("Error By Course:", error);
     throw error;
   }
+};
+
+export const getCoursesByTeacher = async () => {
+  const response = await axios.get("api/v1/manager-courses");
+  return response.data;
 };

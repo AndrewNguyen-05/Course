@@ -20,5 +20,4 @@ public class CreationChapterRequest {
     String chapterName;
 
     String description;
-
 }

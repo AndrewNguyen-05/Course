@@ -127,14 +127,14 @@ public class CourseService {
     }
 
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('USER', 'TEACHER', 'ADMIN')")
-    public List<CourseResponse> myCourses(){
+    public List<CourseResponse> managerCourses(){
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        List<Course> myCourse = courseRepository.findByAuthor(user);
+        List<Course> myCourse = courseRepository.findByAuthorId(user.getId());
 
         return myCourse.stream().map(courseMapper::toCourseResponse).toList();
     }

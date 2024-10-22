@@ -5,14 +5,15 @@ import com.spring.dlearning.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecificationExecutor<Course> {
 
-    List<Course> findByAuthor(User user);
+    @Query("SELECT c FROM Course c JOIN c.author u WHERE u.id = :userId")
+    List<Course> findByAuthorId(@Param("userId") Long userId);
 
     @Query("SELECT c.title FROM Course c WHERE c.title LIKE %:query%")
     List<String> findTitleSuggestions(String query);

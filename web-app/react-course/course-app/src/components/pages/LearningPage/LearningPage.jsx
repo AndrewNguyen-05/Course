@@ -7,6 +7,7 @@ import { getAvatar } from '../../../service/ProfileService';
 import { getInfoCourse } from '../../../service/CourseService';
 import ProgressBar from './components/ProgressBar';
 import { FaChevronDown } from 'react-icons/fa';
+import LoadingSpinner from '../../../utils/LoadingSpinner';
 
 export const LearningPage = () => {
     useEffect(() => {
@@ -16,6 +17,8 @@ export const LearningPage = () => {
     const { id } = useParams();
     const token = localStorage.getItem('token');
     const [loading, setLoading] = useState(true);
+    const [httpError, setHttpError] = useState('');
+    const [courseTitle, setCourseTitle] = useState('');
     const [chapters, setChapters] = useState([]);
     const [currentChapter, setCurrentChapter] = useState(null);
     const [currentLesson, setCurrentLesson] = useState(null);
@@ -34,6 +37,7 @@ export const LearningPage = () => {
             }
             try {
                 const data = await getInfoCourse(id);
+                setCourseTitle(data.result.courseTitle);
                 const chaptersData = data.result.chapters || [];
                 setChapters(chaptersData);
 
@@ -51,8 +55,8 @@ export const LearningPage = () => {
 
                 setLoading(false);
             } catch (error) {
-                console.log(error.message);
-                toast.error('Không thể tải dữ liệu khóa học');
+                setHttpError(error.message)
+                toast.error('Unable to load course data');
             } finally {
                 setLoading(false);
             }
@@ -67,7 +71,10 @@ export const LearningPage = () => {
         }
         getAvatar()
             .then(data => setAvatar(data.result))
-            .catch(error => console.log(error));
+            .catch(error =>{
+                console.log(error)
+                setHttpError(error.message);
+            });
     }, [token])
 
     const fetchCommentLesson = async (lessonId) => {
@@ -80,6 +87,7 @@ export const LearningPage = () => {
                 toast.error('Error getting comment list');
             }
         } catch (error) {
+            setHttpError(error.message);
             toast.error('Error getting comment list');
         }
     };
@@ -193,7 +201,6 @@ export const LearningPage = () => {
         }
     };
 
-
     const handleNewCommentChange = (e) => {
         setNewCommentLesson(e.target.value);
     }
@@ -203,23 +210,31 @@ export const LearningPage = () => {
     };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <LoadingSpinner />;
+    }
+
+    if (httpError) {
+        return (
+            <div>
+                {httpError}
+            </div>
+        )
     }
 
     return (
         <div>
-            <ProgressBar />
+            <ProgressBar courseTitle={courseTitle} />
             <div className="lp-learning-container d-flex">
                 <div className="lp-lesson-list">
                     {chapters.map((chapter) => (
                         <div key={chapter.chapterId} className="lesson-section">
-                            <div 
-                                className="sections-title" 
+                            <div
+                                className="sections-title"
                                 onClick={() => toggleSection(chapter.chapterId)}
                             >
                                 <h4>{chapter.chapterName}</h4>
-                                <FaChevronDown 
-                                    className={`arrow-icon ${openSections[chapter.chapterId] ? 'open' : ''}`} 
+                                <FaChevronDown
+                                    className={`arrow-icon ${openSections[chapter.chapterId] ? 'open' : ''}`}
                                 />
                             </div>
                             {openSections[chapter.chapterId] && chapter.lessonDto && (

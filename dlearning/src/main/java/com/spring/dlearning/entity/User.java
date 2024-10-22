@@ -6,6 +6,7 @@ import com.spring.dlearning.utils.Gender;
 import com.spring.dlearning.utils.RegistrationStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +27,7 @@ import java.util.Set;
 public class User extends AbstractEntity<Long> {
 
     @Column(name = "email", nullable = false, unique = true)
-    @NotNull
+    @NotBlank
     @Email
     String email;
 

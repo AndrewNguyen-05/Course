@@ -24,7 +24,7 @@ public class InfoTeacherMapper {
                 .id(course.getId())
                 .author(course.getAuthor().getName())
                 .rating(getAverageRating(course.getComments()))
-                .courseAmount(courseRepository.findByAuthor(course.getAuthor()).size())
+                .courseAmount(courseRepository.findByAuthorId(course.getAuthor().getId()).size())
                 .reviewAmount(course.getComments().size())
                 .description(course.getDescription())
                 .build();

@@ -79,9 +79,9 @@ public class CourseController {
                 .build();
     }
 
-    @GetMapping("/my-courses")
-    ApiResponse<List<CourseResponse>> myCourses(){
-        var result = courseService.myCourses();
+    @GetMapping("/manager-courses")
+    ApiResponse<List<CourseResponse>> managerCourse(){
+        var result = courseService.managerCourses();
 
         return ApiResponse.<List<CourseResponse>>builder()
                 .code(HttpStatus.OK.value())
