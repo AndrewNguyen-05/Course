@@ -15,7 +15,6 @@ export const getCommentByPostId = async (postId, currentPage) => {
     }
 };
 
-
 export const addComment = async (commentData) => {
     try {
         const response = await axios.post(`api/v1/add-comment`, commentData);
