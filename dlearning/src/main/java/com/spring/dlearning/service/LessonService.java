@@ -72,6 +72,7 @@ public class LessonService {
         return LessonCreationResponse.builder()
                 .courseId(course.getId())
                 .chapterId(chapter.getId())
+                .lessonId(lesson.getId())
                 .lessonName(request.getLessonName())
                 .videoUrl(lesson.getVideoUrl())
                 .lessonDescription(lesson.getDescription())
