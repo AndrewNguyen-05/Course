@@ -108,6 +108,7 @@ public class CommentService {
 
     @PreAuthorize("isAuthenticated()")
     public void deleteComment(Long commentId) {
+
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
@@ -128,6 +129,10 @@ public class CommentService {
 
     @PreAuthorize("isAuthenticated()")
     public UpdateCommentResponse updateComment (Long commentId, UpdateCommentRequest request){
+
+        if ( commentId <= 0 ){
+            throw new AppException(ErrorCode.INVALID_PATH_VARIABLE_ID);
+        }
 
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));

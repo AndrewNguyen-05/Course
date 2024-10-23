@@ -132,6 +132,9 @@ public class LessonService {
 
     @PreAuthorize("isAuthenticated()")
     public void deleteCommentLesson(Long reviewId) {
+        if ( reviewId <= 0 ){
+            throw new AppException(ErrorCode.INVALID_PATH_VARIABLE_ID);
+        }
         var email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 

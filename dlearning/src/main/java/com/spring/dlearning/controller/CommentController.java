@@ -56,7 +56,7 @@ public class CommentController {
     }
 
     @PutMapping("/update-comment/{commentId}")
-    ApiResponse<UpdateCommentResponse> updateComment (@PathVariable @Min(1) Long commentId,
+    ApiResponse<UpdateCommentResponse> updateComment (@PathVariable Long commentId,
                                                       @RequestBody @Valid UpdateCommentRequest request) {
         return ApiResponse.<UpdateCommentResponse>builder()
                 .code(HttpStatus.OK.value())

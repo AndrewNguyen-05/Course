@@ -108,6 +108,9 @@ public class PostService {
 
     @PreAuthorize("isAuthenticated()")
     public void deletePost (Long postId) {
+        if ( postId <= 0 ){
+            throw new AppException(ErrorCode.INVALID_PATH_VARIABLE_ID);
+        }
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 

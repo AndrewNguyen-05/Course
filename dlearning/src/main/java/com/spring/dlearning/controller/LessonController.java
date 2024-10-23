@@ -60,7 +60,7 @@ public class LessonController {
     }
 
     @DeleteMapping("/delete-comment-lesson/{reviewId}")
-    ApiResponse<CommentLessonResponse> deleteCommentLesson (@PathVariable @Min(1) Long reviewId) {
+    ApiResponse<CommentLessonResponse> deleteCommentLesson (@PathVariable Long reviewId) {
 
         lessonService.deleteCommentLesson(reviewId);
         return ApiResponse.<CommentLessonResponse>builder()

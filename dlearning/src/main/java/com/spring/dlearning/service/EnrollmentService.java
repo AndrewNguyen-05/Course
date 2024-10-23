@@ -85,6 +85,9 @@ public class EnrollmentService {
 
     @PreAuthorize("isAuthenticated()")
     public CoursePurchaseResponse checkPurchase (Long courseId) {
+        if ( courseId <= 0 ){
+            throw new AppException(ErrorCode.INVALID_PATH_VARIABLE_ID);
+        }
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 

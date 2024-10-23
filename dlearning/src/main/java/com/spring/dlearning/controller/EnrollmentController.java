@@ -42,7 +42,7 @@ public class EnrollmentController {
     }
 
     @GetMapping("/check-purchase/{courseId}")
-    ApiResponse<CoursePurchaseResponse> checkPurchase(@PathVariable @Min(1) Long courseId) {
+    ApiResponse<CoursePurchaseResponse> checkPurchase(@PathVariable Long courseId) {
         var result = enrollmentService.checkPurchase(courseId);
         log.info("---> {}", result);
 

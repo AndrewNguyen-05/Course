@@ -10,7 +10,6 @@ import com.spring.dlearning.entity.Post;
 import com.spring.dlearning.service.PostService;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -39,7 +38,7 @@ public class PostController {
     }
 
     @DeleteMapping("/delete-post/{postId}")
-    ApiResponse<Void> deletePost (@PathVariable @Min(1) Long postId) {
+    ApiResponse<Void> deletePost (@PathVariable Long postId) {
         postService.deletePost(postId);
 
         return ApiResponse.<Void>builder()

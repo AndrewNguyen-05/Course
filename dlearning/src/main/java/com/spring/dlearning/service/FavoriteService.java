@@ -62,6 +62,9 @@ public class FavoriteService {
     }
 
     public Favorite findById(Integer id) {
+        if ( id <= 0 ){
+            throw new AppException(ErrorCode.INVALID_PATH_VARIABLE_ID);
+        }
         return favoriteRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.FAVORITE_NOT_EXISTED));
     }
@@ -90,6 +93,10 @@ public class FavoriteService {
     @Transactional
     @PreAuthorize("isAuthenticated()")
     public void deleteFavorite(Integer favoriteId){
+        if ( favoriteId <= 0 ){
+            throw new AppException(ErrorCode.INVALID_PATH_VARIABLE_ID);
+        }
+
         String email = SecurityUtils.getCurrentUserLogin()
                         .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 

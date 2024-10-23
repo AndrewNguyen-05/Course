@@ -6,7 +6,6 @@ import com.spring.dlearning.dto.response.FavoriteResponse;
 import com.spring.dlearning.dto.response.PageResponse;
 import com.spring.dlearning.entity.Favorite;
 import com.spring.dlearning.service.FavoriteService;
-import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -34,7 +33,7 @@ public class FavoriteController {
     }
 
     @GetMapping("/favorite/{id}")
-    ApiResponse<Favorite> getFavorite (@PathVariable @Min(1) Integer id) {
+    ApiResponse<Favorite> getFavorite (@PathVariable Integer id) {
         var result = favoriteService.findById(id);
 
         return ApiResponse.<Favorite>builder()
@@ -44,7 +43,7 @@ public class FavoriteController {
     }
 
     @DeleteMapping("/delete-favorite/{favoriteId}")
-    ApiResponse<Void> deleteFavorite (@PathVariable @Min(1) Integer favoriteId){
+    ApiResponse<Void> deleteFavorite (@PathVariable Integer favoriteId){
         favoriteService.deleteFavorite(favoriteId);
         return ApiResponse.<Void>builder()
                 .code(HttpStatus.NO_CONTENT.value())
