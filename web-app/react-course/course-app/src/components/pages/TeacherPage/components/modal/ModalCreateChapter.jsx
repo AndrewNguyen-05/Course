@@ -1,16 +1,13 @@
-import React, { useState } from "react";
+const ModalCreateChapter = (props) => {
 
-const ModalCreateChapter = ({ onClose }) => {
-    const [chapterName, setChapterName] = useState("");
-    const [description, setDescription] = useState("");
-
-    const handleSave = () => {
-        // Thực hiện logic lưu Chapter, ví dụ: gửi dữ liệu lên server
-        console.log("Chapter Name:", chapterName);
-        console.log("Description:", description);
-        // Đóng modal sau khi lưu
-        onClose();
-    }
+    const {
+        chapterName,
+        setChapterName,
+        description,
+        setDescription,
+        onClose,
+        handleCreateChapter
+    } = props;
 
     return (
         <div className="create-chapter-modal">
@@ -39,7 +36,7 @@ const ModalCreateChapter = ({ onClose }) => {
                     </div>
                     <div className="create-chapter-actions">
                         <button type="button" className="create-chapter-btn-cancel" onClick={onClose}>Cancel</button>
-                        <button type="button" className="create-chapter-btn-save" onClick={handleSave}>Save</button>
+                        <button type="button" className="create-chapter-btn-save" onClick={handleCreateChapter}>Save</button>
                     </div>
                 </form>
             </div>

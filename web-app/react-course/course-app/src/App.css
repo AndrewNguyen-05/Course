@@ -15669,7 +15669,6 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   display: flex;
   max-width: 80%;
   margin: auto;
-  background: #f0f4f8;
   border-radius: 15px;
   margin-top: 30px;
 }
@@ -15677,6 +15676,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 /* Sidebar Styles */
 .manager-course-sidebar {
   width: 240px;
+  max-height: 440px;
   padding: 25px;
   background: #ffffff;
   border-radius: 12px;
@@ -15787,6 +15787,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   border: none;
   cursor: pointer;
   font-size: 14px;
+  transition: background 0.3s, box-shadow 0.3s;
   margin-bottom: 5px;
 }
 

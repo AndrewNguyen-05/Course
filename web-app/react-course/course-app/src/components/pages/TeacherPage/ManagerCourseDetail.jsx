@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
 import ModalCreateChapter from "./components/modal/ModalCreateChapter";
 import { FaPlus, FaEdit, FaTrashAlt } from "react-icons/fa";
 import SidebarManager from "./components/layouts/SidebarManager";
 import LoadingSpinner from "../../../utils/LoadingSpinner";
-import { getInfoCourse } from "../../../service/CourseService";
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { createChapter } from "../../../service/ChapterService";
+import { toast, ToastContainer } from "react-toastify";
+import { getInfoCourse } from "../../../service/CourseService";
 
 const ManagerCourseDetail = () => {
     const { id } = useParams();
@@ -12,7 +14,60 @@ const ManagerCourseDetail = () => {
     const [chapters, setChapters] = useState([]);
     const [lessons, setLessons] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [httpError, setHttpError] = useState('');
+    const [httpError, setHttpError] = useState("");
+    const [chapterName, setChapterName] = useState('');
+    const [description, setDescription] = useState('');
+
+    useEffect(() => {
+        const fetchInfoCourse = async () => {
+          try {
+            const data = await getInfoCourse(id);
+            const chapterData = data.result.chapters || [];
+            setChapters(chapterData);
+    
+            if (chapterData.length > 0) {
+              const allLessons = chapterData.flatMap((chap) =>
+                (chap.lessonDto || []).map((lesson) => ({
+                  ...lesson,
+                  chapterId: chap.chapterId,
+                }))
+              );
+              setLessons(allLessons);
+            }
+          } catch (error) {
+            setHttpError(error.message);
+            console.log(error);
+          } finally {
+            setIsLoading(false);
+          }
+        };
+        fetchInfoCourse();
+      }, [id]);
+
+      const handleCreateChapter = async () => {
+        const chapterData = {
+            courseId: id,
+            chapterName: chapterName,
+            description: description
+        }
+        try {
+            const data = await createChapter(chapterData);
+            if (data && data.code === 201) { 
+                toast.success("Create Chapter Successfully");
+                handleCloseModal();
+                setChapters((prevChapters) => [...prevChapters, data.result]);
+                return;
+            } else {
+                toast.error("Create Chapter Error");
+                return;
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("Create Chapter Error");
+            throw error;
+        }
+    }
+    
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -21,33 +76,6 @@ const ManagerCourseDetail = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
     };
-
-    useEffect(() => {
-        const fetchInfoCourse = async () => {
-            try {
-                const data = await getInfoCourse(id);
-                const chapterData = data.result.chapters || [];
-                setChapters(chapterData);
-
-                if (chapterData.length > 0) {
-                    const allLessons = chapterData.flatMap(chap => 
-                        (chap.lessonDto || []).map(lesson => ({
-                            ...lesson,
-                            chapterId: chap.chapterId
-                        }))
-                    );
-                    setLessons(allLessons);
-                }
-                setIsLoading(false);
-            } catch (error) {
-                setHttpError(error.message);
-                console.log(error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-        fetchInfoCourse();
-    }, [id]);
 
     if (isLoading) {
         return (<LoadingSpinner />);
@@ -68,7 +96,16 @@ const ManagerCourseDetail = () => {
                     </button>
                 </div>
 
-                {isModalOpen && <ModalCreateChapter onClose={handleCloseModal} />}
+                {isModalOpen && (
+                    <ModalCreateChapter
+                        onClose={handleCloseModal}
+                        handleCreateChapter={handleCreateChapter}
+                        chapterName={chapterName}
+                        setChapterName={setChapterName}
+                        description={description}
+                        setDescription={setDescription}
+                    />
+                )}
 
                 <div className="manager-courses-chapter-list">
                     {Array.isArray(chapters) && chapters.map((chapter) => (
@@ -99,8 +136,18 @@ const ManagerCourseDetail = () => {
                         </div>
                     ))}
                 </div>
-
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000} 
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </div>
     );
 };

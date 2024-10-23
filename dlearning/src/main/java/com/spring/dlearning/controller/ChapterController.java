@@ -22,7 +22,7 @@ public class ChapterController {
     ChapterService chapterService;
 
     @PostMapping("/create/chapter")
-    ApiResponse<CreationChapterResponse> createLesson(@RequestBody @Valid CreationChapterRequest request) {
+    ApiResponse<CreationChapterResponse> createChapter(@RequestBody @Valid CreationChapterRequest request) {
         return ApiResponse.<CreationChapterResponse>builder()
                 .code(HttpStatus.CREATED.value())
                 .result(chapterService.createChapter(request))
