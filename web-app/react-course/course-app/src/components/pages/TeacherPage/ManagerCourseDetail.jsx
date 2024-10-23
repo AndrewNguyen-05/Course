@@ -66,8 +66,7 @@ const ManagerCourseDetail = () => {
             toast.error("Create Chapter Error");
             throw error;
         }
-    }
-    
+    }   
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
