@@ -3,6 +3,7 @@ package com.spring.dlearning.controller;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.InfoTeacherByCourseResponse;
 import com.spring.dlearning.service.TeacherService;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +24,7 @@ public class TeacherController {
     TeacherService teacherService;
 
     @GetMapping("/info-teacher/{id}")
-    ApiResponse<InfoTeacherByCourseResponse> getInfoTeacherByCourse(@PathVariable Long id){
+    ApiResponse<InfoTeacherByCourseResponse> getInfoTeacherByCourse(@PathVariable @Min(1) Long id){
         return ApiResponse.<InfoTeacherByCourseResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Get information teacher successfully")

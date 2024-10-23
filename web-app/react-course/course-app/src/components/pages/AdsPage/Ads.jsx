@@ -4,6 +4,7 @@ import { getAdsByCurrentLogin } from "../../../service/AdsService";
 import { motion } from "framer-motion";
 import { AdsTable } from "./components/AdsTable";
 import ReactPaginate from "react-paginate";
+import LoadingSpinner from "../../../utils/LoadingSpinner";
 
 export const AdsPage = () => {
     const token = localStorage.getItem('token');
@@ -39,6 +40,12 @@ export const AdsPage = () => {
     // Thay đổi trang
     const handlePageClick = (data) => {
         setCurrentPage(data.selected + 1);
+    }
+
+    if (loading) {
+        return (
+            <LoadingSpinner />
+        )
     }
 
     return (

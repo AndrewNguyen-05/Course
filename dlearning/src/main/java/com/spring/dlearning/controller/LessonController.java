@@ -7,6 +7,7 @@ import com.spring.dlearning.dto.response.CommentLessonResponse;
 import com.spring.dlearning.dto.response.LessonCreationResponse;
 import com.spring.dlearning.service.LessonService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -39,7 +40,7 @@ public class LessonController {
     }
 
     @GetMapping("/get-comment-lesson/{lessonId}")
-    ApiResponse<List<CommentLessonResponse>> getCommentLesson (@PathVariable Long lessonId) {
+    ApiResponse<List<CommentLessonResponse>> getCommentLesson (@PathVariable @Min(1) Long lessonId) {
 
         var result = lessonService.getCommentByLesson(lessonId);
         return ApiResponse.<List<CommentLessonResponse>>builder()
@@ -59,7 +60,7 @@ public class LessonController {
     }
 
     @DeleteMapping("/delete-comment-lesson/{reviewId}")
-    ApiResponse<CommentLessonResponse> deleteCommentLesson (@PathVariable Long reviewId) {
+    ApiResponse<CommentLessonResponse> deleteCommentLesson (@PathVariable @Min(1) Long reviewId) {
 
         lessonService.deleteCommentLesson(reviewId);
         return ApiResponse.<CommentLessonResponse>builder()

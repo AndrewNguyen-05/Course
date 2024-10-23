@@ -43,14 +43,6 @@ public class NotificationService {
             return Collections.emptyList();
         }
 
-        for(Notification notification : notifications) {
-            simpMessagingTemplate.convertAndSendToUser(
-                    user.getEmail(),
-                    "/queue/notifications",
-                    notification
-            );
-
-        }
         return notifications;
     }
 

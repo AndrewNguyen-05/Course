@@ -26,7 +26,6 @@ import { ForgotPassword } from './components/pages/ModifyPasswordPage/ForgotPass
 import { ChangePassword } from './components/pages/ModifyPasswordPage/ChangePassword';
 import FavoriteCourses from './components/pages/FavoritePage/Favorite';
 import { AdsPage } from './components/pages/AdsPage/Ads';
-import AdsDetail from './components/pages/AdsPage/components/DetailAds';
 import { UploadCourse } from './components/pages/TeacherPage/UploadCourse';
 import { MyCourses } from './components/pages/HomePage/components/MyCourse';
 import ManagerCourse from './components/pages/TeacherPage/ManagerCourse';
@@ -122,7 +121,6 @@ function App() {
         } />
 
         <Route path="/my-account" element={<ProfilePage />} />
-        <Route path="/detail-ads" element={<AdsDetail />} />
         <Route path='/courses' element={<Courses />} />
         <Route path='/lesson-detail/:id' element={<LearningPage />} />
         <Route path="/oauth2/callback/:clientCode" element={<ProcessLoginOAuth2 />} />

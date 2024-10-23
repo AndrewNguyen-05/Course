@@ -6,6 +6,7 @@ import com.spring.dlearning.dto.response.BuyCourseResponse;
 import com.spring.dlearning.dto.response.CoursePurchaseResponse;
 import com.spring.dlearning.service.EnrollmentService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -41,7 +42,7 @@ public class EnrollmentController {
     }
 
     @GetMapping("/check-purchase/{courseId}")
-    ApiResponse<CoursePurchaseResponse> checkPurchase(@PathVariable Long courseId) {
+    ApiResponse<CoursePurchaseResponse> checkPurchase(@PathVariable @Min(1) Long courseId) {
         var result = enrollmentService.checkPurchase(courseId);
         log.info("---> {}", result);
 

@@ -8,6 +8,7 @@ import com.spring.dlearning.dto.response.DeleteCommentResponse;
 import com.spring.dlearning.dto.response.UpdateReviewResponse;
 import com.spring.dlearning.service.ReviewService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +27,7 @@ public class ReviewController {
     ReviewService reviewService;
 
     @GetMapping("/courses-review/{courseId}")
-    ApiResponse<List<ReviewResponse>> getReviewByCourseId(@PathVariable Long courseId){
+    ApiResponse<List<ReviewResponse>> getReviewByCourseId(@PathVariable @Min(1) Long courseId){
         return ApiResponse.<List<ReviewResponse>>builder()
                 .code(HttpStatus.OK.value())
                 .result(reviewService.getReviewByCourse(courseId))
@@ -42,7 +43,7 @@ public class ReviewController {
     }
 
     @DeleteMapping("/delete-review/{id}")
-    ApiResponse<DeleteCommentResponse> deleteReview(@PathVariable Long id) {
+    ApiResponse<DeleteCommentResponse> deleteReview(@PathVariable @Min(1) Long id) {
         return ApiResponse.<DeleteCommentResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(reviewService.deleteReviewById(id))
@@ -50,7 +51,7 @@ public class ReviewController {
     }
 
     @PutMapping("/update-review/{id}")
-    ApiResponse<UpdateReviewResponse> updateReview(@PathVariable Long id, @RequestBody UpdateReviewRequest request) {
+    ApiResponse<UpdateReviewResponse> updateReview(@PathVariable @Min(1) Long id, @RequestBody UpdateReviewRequest request) {
         return ApiResponse.<UpdateReviewResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(reviewService.updateReview(id, request))

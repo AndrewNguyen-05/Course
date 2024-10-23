@@ -7,6 +7,7 @@ import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.service.CourseService;
 import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -54,7 +55,7 @@ public class CourseController {
     }
 
     @GetMapping("/course/{id}")
-    ApiResponse<CourseResponse> getCourseById(@PathVariable Long id){
+    ApiResponse<CourseResponse> getCourseById(@PathVariable @Min(1) Long id){
         var result = courseService.getCourseById(id);
 
         return ApiResponse.<CourseResponse>builder()
@@ -103,7 +104,7 @@ public class CourseController {
     }
 
     @GetMapping("/info-course/{id}")
-    ApiResponse<CourseChapterResponse> infoCourse(@PathVariable Long id){
+    ApiResponse<CourseChapterResponse> infoCourse(@PathVariable @Min(1) Long id){
         return ApiResponse.<CourseChapterResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(courseService.getAllInfoCourse(id))

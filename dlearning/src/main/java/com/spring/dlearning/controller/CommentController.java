@@ -8,6 +8,7 @@ import com.spring.dlearning.dto.response.PageResponse;
 import com.spring.dlearning.dto.response.UpdateCommentResponse;
 import com.spring.dlearning.service.CommentService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +27,7 @@ public class CommentController {
 
     @GetMapping("/post-comment/{postId}")
     ApiResponse<PageResponse<CommentResponse>> findAll(
-            @PathVariable Long postId,
+            @PathVariable @Min(1) Long postId,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "size", required = false, defaultValue = "3") int size) {
 
@@ -45,7 +46,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/delete-comment/{commentId}")
-    ApiResponse<Void> deleteComment (@PathVariable Long commentId){
+    ApiResponse<Void> deleteComment (@PathVariable @Min(1) Long commentId){
         commentService.deleteComment(commentId);
 
         return ApiResponse.<Void>builder()
@@ -55,7 +56,8 @@ public class CommentController {
     }
 
     @PutMapping("/update-comment/{commentId}")
-    ApiResponse<UpdateCommentResponse> updateComment (@PathVariable Long commentId, @RequestBody @Valid UpdateCommentRequest request) {
+    ApiResponse<UpdateCommentResponse> updateComment (@PathVariable @Min(1) Long commentId,
+                                                      @RequestBody @Valid UpdateCommentRequest request) {
         return ApiResponse.<UpdateCommentResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Update Comment Successfully")

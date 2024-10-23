@@ -4,6 +4,7 @@ import com.spring.dlearning.dto.request.UserRegisterTeacherRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.UserRegisterTeacherResponse;
 import com.spring.dlearning.service.RegisterTeacherService;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -48,7 +49,7 @@ public class RegisterTeacherController {
     }
 
     @PostMapping("/save-teacher/{id}")
-    ApiResponse<UserRegisterTeacherResponse> saveTeacher (@PathVariable Long id) {
+    ApiResponse<UserRegisterTeacherResponse> saveTeacher (@PathVariable @Min(1) Long id) {
         var result = registerTeacherService.saveTeacher(id);
 
         return ApiResponse.<UserRegisterTeacherResponse>builder()
@@ -59,7 +60,7 @@ public class RegisterTeacherController {
     }
 
     @PostMapping("/reject-teacher/{id}")
-    ApiResponse<UserRegisterTeacherResponse> rejectTeacher(@PathVariable Long id) {
+    ApiResponse<UserRegisterTeacherResponse> rejectTeacher(@PathVariable @Min(1) Long id) {
         var result = registerTeacherService.rejectTeacher(id);
 
         return ApiResponse.<UserRegisterTeacherResponse>builder()

@@ -1,6 +1,6 @@
 import React from "react";
 
-export const AdsTable = ({ ads }) => {
+export const AdsTable = ({ ads, handleDetailAds }) => {
     return (
         <div className="ads-card">
             <div className="ads-card-body">
@@ -27,7 +27,7 @@ export const AdsTable = ({ ads }) => {
                         </thead>
                         <tbody>
                             {ads.map((ad) => (
-                                <tr key={ad.id} className="ads-table-row">
+                                <tr key={ad.id} className="ads-table-row" onClick={() => handleDetailAds(ad.id)}>
                                     <td>
                                         <div className="form-check custom-checkbox checkbox-success check-lg me-3">
                                             <input type="checkbox" className="form-check-input" id={`check${ad.id}`} />

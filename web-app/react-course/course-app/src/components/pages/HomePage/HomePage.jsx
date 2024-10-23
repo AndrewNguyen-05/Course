@@ -15,6 +15,7 @@ import { InstructorsSection } from "./components/InstructorsSection";
 import { FeedbackSection } from "./components/FeedbackSection";
 import { ContactSection } from "./components/ContactSection";
 import { PromoModal } from "../AdsPage/components/PromoModal";
+import LoadingSpinner from "../../../utils/LoadingSpinner";
 
 export const HomePage = () => {
   const token = localStorage.getItem("token");
@@ -114,9 +115,11 @@ export const HomePage = () => {
     }
   };
 
-  // if (loading && currentPage === 1) {
-  //     return <div>Loading...</div>;
-  // }
+  if (loading && currentPage === 1) {
+     return (
+      <LoadingSpinner />
+     );
+  }
 
   if (error) {
     return <div>Error: {error.message}</div>;

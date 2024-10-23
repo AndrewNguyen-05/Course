@@ -3,6 +3,7 @@ package com.spring.dlearning.controller;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.entity.Notification;
 import com.spring.dlearning.service.NotificationService;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,7 +32,7 @@ public class NotificationController {
     }
 
     @DeleteMapping("/notification/{id}")
-    ApiResponse<Boolean> deleteNotification(@PathVariable Long id) {
+    ApiResponse<Boolean> deleteNotification(@PathVariable @Min(1) Long id) {
         try {
             notificationService.deleteNotification(id);
             return ApiResponse.<Boolean>builder()
@@ -48,7 +49,7 @@ public class NotificationController {
     }
 
     @PutMapping("/is-read/{id}")
-    ApiResponse<Boolean> markAllAsRead(@PathVariable Long id) {
+    ApiResponse<Boolean> markAllAsRead(@PathVariable @Min(1) Long id) {
         try {
             notificationService.markAsRead(id);
             return ApiResponse.<Boolean>builder()
