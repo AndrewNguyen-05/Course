@@ -30,18 +30,20 @@ export const Header = () => {
 
     const wsClient = useWebsocket();
 
-    wsClient.onConnect = () => {
-        console.log("Connected to WebSocket");
-        wsClient.subscribe("/user/queue/notifications", (message) => {
-            const notification = JSON.parse(message.body);
-            setNotifications((prevNotifications) => [notification, ...prevNotifications]);
-            setUnreadCount((prevCount) => prevCount + 1);
-        });
-    };
+    useEffect(() => {
+        wsClient.onConnect = () => {
+            console.log("Connected to WebSocket");
+            wsClient.subscribe("/user/queue/notifications", (message) => {
+                const notification = JSON.parse(message.body);
+                setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+                setUnreadCount((prevCount) => prevCount + 1);
+            });
+        }
+    }, [wsClient]);
 
     useEffect(() => {
         if (!token || !isTokenValid) return;
-
+        console.log('Notification ........ >>>>>>>')
         notificationCurrentLogin()
             .then((data) => {
                 setNotifications(data.result || []);

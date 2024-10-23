@@ -32,14 +32,16 @@ export const AdminHeader = () => {
       .catch((error) => console.log(error));
   }, []);
 
-  wsClient.onConnect = () => {
-    console.log("Connected to WebSocket");
-    wsClient.subscribe("/user/queue/notifications", (message) => {
-      const notification = JSON.parse(message.body);
-      setNotifications((prevNotifications) => [notification, ...prevNotifications]);
-      setUnreadCount((prevCount) => prevCount + 1);
-    });
-  };
+  useEffect(() => {
+    wsClient.onConnect = () => {
+      console.log("Connected to WebSocket");
+      wsClient.subscribe("/user/queue/notifications", (message) => {
+        const notification = JSON.parse(message.body);
+        setNotifications((prevNotifications) => [notification, ...prevNotifications]);
+        setUnreadCount((prevCount) => prevCount + 1);
+      });
+    };
+  }, [wsClient]);
 
   const markAsRead = async (notificationId) => {
     try {
@@ -96,7 +98,10 @@ export const AdminHeader = () => {
         const urlAvatar = data.result;
         setAvatar(urlAvatar);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setLoading(false);
+      })
   }, [token]);
 
   useEffect(() => {
