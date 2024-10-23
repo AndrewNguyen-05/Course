@@ -7,66 +7,109 @@ import { useEffect, useState } from "react";
 import { createChapter } from "../../../service/ChapterService";
 import { toast, ToastContainer } from "react-toastify";
 import { getInfoCourse } from "../../../service/CourseService";
+import { createLesson } from "../../../service/LessonService";
+import ModalCreateLesson from "./components/modal/ModalCreateLesson";
 
 const ManagerCourseDetail = () => {
     const { id } = useParams();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalLessonOpen, setIsModalLessonOpen] = useState(false);
     const [chapters, setChapters] = useState([]);
     const [lessons, setLessons] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [httpError, setHttpError] = useState("");
     const [chapterName, setChapterName] = useState('');
-    const [description, setDescription] = useState('');
+    const [descriptionChapter, setDescriptionChapter] = useState('');
+    const [currentChapterId, setCurrentChapterId] = useState();
+    const [lessonName, setLessonName] = useState('');
+    const [descriptionLesson, setDescriptionLesson] = useState('');
+    const [video, setVideo] = useState(null);
+    const [loadingCreateLesson, setLoadingCreateLesson] = useState(false);
+
+    const handleCreateLesson = async () => {
+        if (!currentChapterId) {
+            toast.error("No chapter selected for this lesson.");
+            return;
+        }
+
+        setLoadingCreateLesson(true);
+
+        const formData = new FormData();
+        const lessonData = {
+            courseId: id,
+            chapterId: currentChapterId,
+            lessonName: lessonName,
+            description: descriptionLesson
+        };
+
+        formData.append("request", new Blob([JSON.stringify(lessonData)], { type: "application/json" }));
+        if (video) {
+            formData.append("video", video);
+        }
+
+        try {
+            const result = await createLesson(formData);
+            if (result && result.code === 201) {
+                toast.success("Lesson created successfully");
+                setLessons((prevLessons) => [...prevLessons, result.result]);
+                handleCloseModalLesson();
+            } else {
+                toast.error("Error creating lesson");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Error creating lesson");
+        } finally {
+            setLoadingCreateLesson(false);
+        }
+    };
 
     useEffect(() => {
         const fetchInfoCourse = async () => {
-          try {
-            const data = await getInfoCourse(id);
-            const chapterData = data.result.chapters || [];
-            setChapters(chapterData);
-    
-            if (chapterData.length > 0) {
-              const allLessons = chapterData.flatMap((chap) =>
-                (chap.lessonDto || []).map((lesson) => ({
-                  ...lesson,
-                  chapterId: chap.chapterId,
-                }))
-              );
-              setLessons(allLessons);
+            try {
+                const data = await getInfoCourse(id);
+                const chapterData = data.result.chapters || [];
+                setChapters(chapterData);
+
+                if (chapterData.length > 0) {
+                    const allLessons = chapterData.flatMap((chap) =>
+                        (chap.lessonDto || []).map((lesson) => ({
+                            ...lesson,
+                            chapterId: chap.chapterId,
+                        }))
+                    );
+                    setLessons(allLessons);
+                }
+            } catch (error) {
+                setHttpError(error.message);
+                console.log(error);
+            } finally {
+                setIsLoading(false);
             }
-          } catch (error) {
-            setHttpError(error.message);
-            console.log(error);
-          } finally {
-            setIsLoading(false);
-          }
         };
         fetchInfoCourse();
-      }, [id]);
+    }, [id]);
 
-      const handleCreateChapter = async () => {
+    const handleCreateChapter = async () => {
         const chapterData = {
             courseId: id,
             chapterName: chapterName,
-            description: description
-        }
+            description: descriptionChapter
+        };
         try {
             const data = await createChapter(chapterData);
-            if (data && data.code === 201) { 
+            if (data && data.code === 201) {
                 toast.success("Create Chapter Successfully");
                 handleCloseModal();
                 setChapters((prevChapters) => [...prevChapters, data.result]);
-                return;
             } else {
                 toast.error("Create Chapter Error");
-                return;
             }
         } catch (error) {
             console.log(error);
             toast.error("Create Chapter Error");
-            throw error;
         }
-    }   
+    };
 
     const handleOpenModal = () => {
         setIsModalOpen(true);
@@ -74,6 +117,16 @@ const ManagerCourseDetail = () => {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+    };
+
+    const handleOpenModalLesson = (chapterId) => {
+        setCurrentChapterId(chapterId);
+        setIsModalLessonOpen(true);
+    };
+
+    const handleCloseModalLesson = () => {
+        setIsModalLessonOpen(false);
+        setCurrentChapterId(null);
     };
 
     if (isLoading) {
@@ -101,8 +154,22 @@ const ManagerCourseDetail = () => {
                         handleCreateChapter={handleCreateChapter}
                         chapterName={chapterName}
                         setChapterName={setChapterName}
-                        description={description}
-                        setDescription={setDescription}
+                        descriptionChapter={descriptionChapter}
+                        setDescriptionChapter={setDescriptionChapter}
+                    />
+                )}
+
+                {isModalLessonOpen && (
+                    <ModalCreateLesson
+                        isModalLessonOpen={isModalLessonOpen}
+                        handleCloseModalLesson={handleCloseModalLesson}
+                        handleCreateLesson={handleCreateLesson}
+                        lessonName={lessonName}
+                        setLessonName={setLessonName}
+                        descriptionLesson={descriptionLesson}
+                        setDescriptionLesson={setDescriptionLesson}
+                        setVideo={setVideo}
+                        loadingCreateLesson={loadingCreateLesson}
                     />
                 )}
 
@@ -111,7 +178,10 @@ const ManagerCourseDetail = () => {
                         <div className="manager-courses-chapter" key={chapter.chapterId}>
                             <div className="manager-courses-chapter-header">
                                 <h3>{chapter.chapterName}</h3>
-                                <button className="manager-courses-btn-add-lesson">
+                                <button
+                                    className="manager-courses-btn-add-lesson"
+                                    onClick={() => handleOpenModalLesson(chapter.chapterId)}
+                                >
                                     <FaPlus /> Add Lesson
                                 </button>
                             </div>
@@ -138,7 +208,7 @@ const ManagerCourseDetail = () => {
             </div>
             <ToastContainer
                 position="top-right"
-                autoClose={3000} 
+                autoClose={3000}
                 hideProgressBar={false}
                 newestOnTop={false}
                 closeOnClick
