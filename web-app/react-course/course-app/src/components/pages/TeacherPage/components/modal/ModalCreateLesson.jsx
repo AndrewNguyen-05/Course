@@ -7,7 +7,7 @@ const ModalCreateLesson = (props) => {
         isModalLessonOpen, handleCloseModalLesson, handleCreateLesson,
         lessonName, setLessonName,
         descriptionLesson, setDescriptionLesson,
-        setVideo,
+        setVideo, video,
         loadingCreateLesson
     } = props;
 
@@ -84,6 +84,12 @@ const ModalCreateLesson = (props) => {
                             required
                         />
                     </div>
+                    {video && (
+                        <div className="current-video-preview">
+                            <label>Current Video:</label>
+                            <video src={typeof video === 'string' ? video : URL.createObjectURL(video)} controls width="100%" />
+                        </div>
+                    )}
                     <div className="create-lesson-form-actions">
                         <motion.button
                             type="button"
