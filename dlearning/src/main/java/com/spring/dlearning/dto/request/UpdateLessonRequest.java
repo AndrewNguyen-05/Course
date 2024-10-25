@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateLessonRequest {
     Long courseId;
-    Long ChapterId;
+    Long chapterId;
     Long lessonId;
     String lessonName;
     String description;

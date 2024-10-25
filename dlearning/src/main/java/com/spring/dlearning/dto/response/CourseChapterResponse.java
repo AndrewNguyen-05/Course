@@ -43,6 +43,7 @@ public class CourseChapterResponse {
     public static class LessonDto{
         Long lessonId;
         String lessonName;
+        String description;
         String videoUrl;
     }
 

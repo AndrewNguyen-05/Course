@@ -41,16 +41,6 @@ public class LessonController {
                 .build();
     }
 
-    @DeleteMapping("/delete-lesson/{lessonId}")
-    ApiResponse<Void> deleteLesson (@PathVariable @Min(1) Long lessonId ) {
-        lessonService.deleteLesson(lessonId);
-
-        return ApiResponse.<Void>builder()
-                .code(HttpStatus.OK.value())
-                .message("Lesson deleted successfully")
-                .build();
-    }
-
     @PutMapping("/update-lesson")
     ApiResponse<UpdateLessonResponse> updateLesson(
             @RequestPart("request") UpdateLessonRequest request,
@@ -61,6 +51,16 @@ public class LessonController {
         return ApiResponse.<UpdateLessonResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(result)
+                .build();
+    }
+
+    @DeleteMapping("/delete-lesson/{lessonId}")
+    ApiResponse<Void> deleteLesson (@PathVariable @Min(1) Long lessonId ) {
+        lessonService.deleteLesson(lessonId);
+
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.OK.value())
+                .message("Lesson deleted successfully")
                 .build();
     }
 

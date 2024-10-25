@@ -52,6 +52,7 @@ public final class CourseChapterAndLessonMapper {
         return CourseChapterResponse.LessonDto.builder()
                 .lessonId(lesson.getId())
                 .lessonName(lesson.getLessonName())
+                .description(lesson.getDescription())
                 .videoUrl(lesson.getVideoUrl())
                 .build();
     }

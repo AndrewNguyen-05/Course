@@ -1,5 +1,5 @@
 import ModalCreateChapter from "./components/modal/ModalCreateChapter";
-import { FaPlus, FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaPlus, FaEdit, FaTrashAlt, FaChevronUp, FaChevronDown } from "react-icons/fa";
 import SidebarManager from "./components/layouts/SidebarManager";
 import LoadingSpinner from "../../../utils/LoadingSpinner";
 import { useParams } from "react-router-dom";
@@ -7,9 +7,13 @@ import { useEffect, useState } from "react";
 import { createChapter } from "../../../service/ChapterService";
 import { toast, ToastContainer } from "react-toastify";
 import { getInfoCourse } from "../../../service/CourseService";
-import { createLesson, deleteLesson } from "../../../service/LessonService";
+import { createLesson, deleteLesson, updateLesson } from "../../../service/LessonService";
 import ModalCreateLesson from "./components/modal/ModalCreateLesson";
 import Swal from "sweetalert2";
+import ModalUpdateLesson from "./components/modal/ModalUpdateLesson";
+import StatisticsOverview from "./components/StatisticsOverview";
+import SearchLesson from "./components/SearchLesson";
+import ButtonNewChapter from "./components/BuutonNewChapter";
 
 const ManagerCourseDetail = () => {
     const { id } = useParams();
@@ -26,6 +30,72 @@ const ManagerCourseDetail = () => {
     const [descriptionLesson, setDescriptionLesson] = useState('');
     const [video, setVideo] = useState(null);
     const [loadingCreateLesson, setLoadingCreateLesson] = useState(false);
+
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [currentLessonId, setCurrentLessonId] = useState(null);
+    const [loadingUpdateLesson, setLoadingUpdateLesson] = useState(false);
+    const [isVideoUpdated, setIsVideoUpdated] = useState(false);
+    const [expandedChapters, setExpandedChapters] = useState([]); // Trạng thái cho các chapter đang mở rộng
+
+    const toggleChapter = (chapterId) => {
+        // Kiểm tra nếu chapter đang trong danh sách mở rộng thì xóa nó ra, ngược lại thì thêm vào
+        setExpandedChapters(prevState =>
+            prevState.includes(chapterId)
+                ? prevState.filter(id => id !== chapterId)
+                : [...prevState, chapterId]
+        );
+    };
+
+    const handleVideoChange = (e) => {
+        setVideo(e.target.files[0]);
+        setIsVideoUpdated(true);
+    };
+
+    const handleUpdateLesson = async () => {
+        setLoadingUpdateLesson(true);
+        const formData = new FormData();
+        const dataUpdateLesson = {
+            courseId: id,
+            chapterId: currentChapterId,
+            lessonId: currentLessonId,
+            lessonName: lessonName,
+            description: descriptionLesson
+        };
+
+        formData.append("request", new Blob([JSON.stringify(dataUpdateLesson)], { type: "application/json" }));
+
+        if (isVideoUpdated && video) {
+            formData.append("video", video);
+        }
+
+        try {
+            const result = await updateLesson(formData);
+            if (result && result.code === 200) {
+                toast.success("Lesson updated successfully");
+
+                setLessons((prevLessons) =>
+                    prevLessons.map((lesson) =>
+                        lesson.lessonId === currentLessonId
+                            ? {
+                                ...lesson, lessonName: result.result.lessonName,
+                                description: result.result.description,
+                                videoUrl: result.result.videoUrl
+                            }
+                            : lesson
+                    )
+                );
+                handleCloseUpdateLesson();
+            } else {
+                toast.error("Failed to update lesson");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("An error occurred while updating the lesson");
+        } finally {
+            setLoadingUpdateLesson(false);
+        }
+
+    }
 
     const handleCreateLesson = async () => {
         if (!currentChapterId) {
@@ -56,6 +126,8 @@ const ManagerCourseDetail = () => {
                 handleCloseModalLesson();
                 setLessonName('');
                 setDescriptionLesson('');
+                setVideo(null);
+                setCurrentChapterId(null);
             } else {
                 toast.error("Error creating lesson");
             }
@@ -126,9 +198,9 @@ const ManagerCourseDetail = () => {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'Cancel',
-            width: '360px', 
+            width: '360px',
             customClass: {
-                popup: 'custom-swal-popup' 
+                popup: 'custom-swal-popup'
             }
         }).then(async (result) => {
             if (result.isConfirmed) {
@@ -167,7 +239,29 @@ const ManagerCourseDetail = () => {
         setIsModalLessonOpen(false);
         setCurrentChapterId(null);
     };
-    
+
+    const handleOpenUpdateLesson = (lessonId) => {
+        const lesson = lessons.find((lesson) => lesson.lessonId === lessonId);
+        if (lesson) {
+            setCurrentLessonId(lessonId);
+            setLessonName(lesson.lessonName);
+            setDescriptionLesson(lesson.description);
+            setVideo(lesson.videoUrl);
+            setIsEditMode(true);
+        }
+    };
+
+    const handleCloseUpdateLesson = () => {
+        setCurrentLessonId(null);
+        setIsEditMode(false);
+        setIsVideoUpdated(false);
+        
+        setCurrentLessonId(null);
+        setLessonName('');
+        setDescriptionLesson('');
+        setVideo(null);
+    }; 
+
     if (isLoading) {
         return (<LoadingSpinner />);
     }
@@ -180,13 +274,6 @@ const ManagerCourseDetail = () => {
         <div className="manager-course-container">
             <SidebarManager />
             <div className="manager-course-content">
-                <div className="manager-courses-header">
-                    <h2>Manage Courses</h2>
-                    <button className="manager-courses-btn-create" onClick={handleOpenModal}>
-                        <FaPlus /> New Chapter
-                    </button>
-                </div>
-
                 {isModalOpen && (
                     <ModalCreateChapter
                         onClose={handleCloseModal}
@@ -197,7 +284,6 @@ const ManagerCourseDetail = () => {
                         setDescriptionChapter={setDescriptionChapter}
                     />
                 )}
-
                 {isModalLessonOpen && (
                     <ModalCreateLesson
                         isModalLessonOpen={isModalLessonOpen}
@@ -207,45 +293,83 @@ const ManagerCourseDetail = () => {
                         setLessonName={setLessonName}
                         descriptionLesson={descriptionLesson}
                         setDescriptionLesson={setDescriptionLesson}
+                        handleVideoChange={handleVideoChange}
                         setVideo={setVideo}
+                        video={video}
                         loadingCreateLesson={loadingCreateLesson}
                     />
                 )}
+                {isEditMode && (
+                    <ModalUpdateLesson
+                        isEditMode={isEditMode}
+                        handleCloseUpdateLesson={handleCloseUpdateLesson}
+                        lessonName={lessonName}
+                        setLessonName={setLessonName}
+                        descriptionLesson={descriptionLesson}
+                        setDescriptionLesson={setDescriptionLesson}
+                        handleVideoChange={handleVideoChange}
+                        loadingUpdateLesson={loadingUpdateLesson}
+                        handleUpdateLesson={handleUpdateLesson}
+                        video={video}
+                    />
+                )}
+
+                <StatisticsOverview />
+                <SearchLesson />
+                <ButtonNewChapter handleOpenModal={handleOpenModal} />
 
                 <div className="manager-courses-chapter-list">
                     {Array.isArray(chapters) && chapters.map((chapter) => (
                         <div className="manager-courses-chapter" key={chapter.chapterId}>
                             <div className="manager-courses-chapter-header">
                                 <h3>{chapter.chapterName}</h3>
-                                <button
-                                    className="manager-courses-btn-add-lesson"
-                                    onClick={() => handleOpenModalLesson(chapter.chapterId)}
-                                >
-                                    <FaPlus /> Add Lesson
-                                </button>
+                                <div>
+                                    <button
+                                        className="manager-courses-toggle-button"
+                                        onClick={() => toggleChapter(chapter.chapterId)}
+                                    >
+                                        {expandedChapters.includes(chapter.chapterId) ? (
+                                            <FaChevronUp />
+                                        ) : (
+                                            <FaChevronDown />
+                                        )}
+                                    </button>
+                                    <button
+                                        className="manager-courses-btn-add-lesson"
+                                        onClick={() => handleOpenModalLesson(chapter.chapterId)}
+                                    >
+                                        <FaPlus /> Add Lesson
+                                    </button>
+                                </div>
                             </div>
-                            <ul className="manager-courses-lesson-list">
-                                {Array.isArray(lessons) && lessons
-                                    .filter(lesson => lesson.chapterId === chapter.chapterId)
-                                    .map((lesson) => (
-                                        <li className="manager-courses-lesson" key={lesson.lessonId}>
-                                            <span>{lesson.lessonName}</span>
-                                            <div className="manager-courses-lesson-actions">
-                                                <button className="manager-courses-btn-edit">
-                                                    <FaEdit /> Edit
-                                                </button>
-                                                <button className="manager-courses-btn-remove"
-                                                    onClick={() => handleDeleteLesson(lesson.lessonId)}
-                                                >
-                                                    <FaTrashAlt /> Remove
-                                                </button>
-                                            </div>
-                                        </li>
-                                    ))}
-                            </ul>
+                            {/* Kiểm tra trạng thái mở rộng để hiển thị danh sách bài học */}
+                            {expandedChapters.includes(chapter.chapterId) && (
+                                <ul className="manager-courses-lesson-list">
+                                    {Array.isArray(lessons) && lessons
+                                        .filter(lesson => lesson.chapterId === chapter.chapterId)
+                                        .map((lesson) => (
+                                            <li className="manager-courses-lesson" key={lesson.lessonId}>
+                                                <span>{lesson.lessonName}</span>
+                                                <div className="manager-courses-lesson-actions">
+                                                    <button className="manager-courses-btn-edit"
+                                                        onClick={() => handleOpenUpdateLesson(lesson.lessonId)}
+                                                    >
+                                                        <FaEdit /> Edit
+                                                    </button>
+                                                    <button className="manager-courses-btn-remove"
+                                                        onClick={() => handleDeleteLesson(lesson.lessonId)}
+                                                    >
+                                                        <FaTrashAlt /> Remove
+                                                    </button>
+                                                </div>
+                                            </li>
+                                        ))}
+                                </ul>
+                            )}
                         </div>
                     ))}
                 </div>
+
             </div>
             <ToastContainer
                 position="top-right"

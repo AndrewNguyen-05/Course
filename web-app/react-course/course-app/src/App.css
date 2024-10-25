@@ -14958,28 +14958,18 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 
 .search-button {
   position: absolute;
-  /* Đặt nút tìm kiếm lên trên input */
   right: 10px;
-  /* Căn lề bên phải */
   top: 50%;
-  /* Giữa chiều cao */
   transform: translateY(-50%);
-  /* Giúp nút ở giữa ô nhập liệu */
   border: none;
-  /* Không viền */
   background: transparent;
-  /* Không màu nền */
   cursor: pointer;
-  /* Chuyển sang hình bàn tay khi hover */
   color: #007bff;
-  /* Màu chữ cho nút tìm kiếm */
   font-size: 20px;
-  /* Kích thước chữ cho biểu tượng tìm kiếm */
 }
 
 .search-button:hover {
   color: #0056b3;
-  /* Màu khi hover */
 }
 
 .deltail-ads-modal {
@@ -15666,9 +15656,16 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 .manager-course-container {
   display: flex;
   max-width: 80%;
+  flex-direction: column;
   margin: auto;
   border-radius: 15px;
   margin-top: 30px;
+}
+
+@media (min-width: 768px) {
+  .manager-course-container {
+    flex-direction: row;
+  }
 }
 
 /* Sidebar Styles */
@@ -15719,7 +15716,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 
 /* Content Container */
 .manager-course-content {
-  flex-grow: 1;
+  flex: 1;
   padding: 25px;
   background: #ffffff;
   border-radius: 12px;
@@ -15738,6 +15735,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   font-size: 26px;
   font-weight: 700;
   color: #333;
+  display: flex;
 }
 
 /* Button Create Chapter */
@@ -15752,7 +15750,8 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   display: flex;
   align-items: center;
   gap: 8px;
-  transition: background 0.3s, box-shadow 0.3s;
+  transition: background-color 0.3s,
+    box-shadow 0.3s;
 }
 
 .manager-courses-btn-create:hover {
@@ -15770,10 +15769,12 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   transition: background-color 0.3s, border-color 0.3s;
 }
 
-.manager-courses-chapter-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+@media (max-width: 768px) {
+  .manager-courses-lesson {
+    flex-direction: column;
+    align-items: flex-start;
+
+  }
 }
 
 /* Button Add Lesson */
@@ -15786,7 +15787,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   cursor: pointer;
   font-size: 14px;
   transition: background 0.3s, box-shadow 0.3s;
-  margin-bottom: 5px;
+  margin-bottom: 17px;
 }
 
 .manager-courses-btn-add-lesson:hover {
@@ -15794,15 +15795,6 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   box-shadow: 0 8px 20px rgba(33, 136, 56, 0.5);
 }
 
-/* Lesson Styles */
-.manager-courses-lesson {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #ccc;
-  transition: background-color 0.3s;
-}
 
 .manager-courses-lesson:hover {
   background: #e6f0ff;
@@ -15819,12 +15811,19 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   gap: 10px;
 }
 
-/* Edit and Remove Buttons */
-.manager-courses-btn-edit,
+.manager-courses-btn-edit {
+  background: none;
+  border: none;
+  color: #28a745;
+  cursor: pointer;
+  font-size: 15px;
+  transition: color 0.3s, transform 0.2s;
+}
+
 .manager-courses-btn-remove {
   background: none;
   border: none;
-  color: #007bff;
+  color: #dc3545;
   cursor: pointer;
   font-size: 15px;
   transition: color 0.3s, transform 0.2s;
@@ -15857,8 +15856,13 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 }
 
 @keyframes create-chapter-fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 .create-chapter-modal-content {
@@ -15874,8 +15878,15 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 }
 
 @keyframes create-chapter-slideIn {
-  from { transform: scale(0.8); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .create-chapter-modal-close {
@@ -15973,6 +15984,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   background-color: #45a049;
   transform: translateY(-3px);
 }
+
 /* Enhanced ModalCreateLesson.css */
 .create-lesson-modal-overlay {
   position: fixed;
@@ -16148,5 +16160,383 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 }
 
 .custom-swal-popup {
-  border-radius: 10px !important; 
+  border-radius: 10px !important;
+}
+
+.current-video-preview video {
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  margin-top: 10px;
+}
+
+
+
+.manager-course-container {
+  display: flex;
+}
+
+.manager-course-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.manager-courses-stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.stats-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 22%;
+  height: 150px;
+  margin-bottom: 30px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 45%;
+  max-width: 23%
+}
+
+@media (max-width: 768px) {
+  .stats-card {
+    flex: 1 1 100%;
+  }
+}
+
+.manager-courses-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.search-bar-lesson input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+}
+
+.manager-courses-controls .search-bar-lesson {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  margin-right: 10px;
+  margin-bottom: 20px;
+  max-width: 100%;
+}
+
+.manager-courses-controls input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 5px 0 0 5px;
+  /* Làm tròn góc bên trái */
+  border: 1px solid #ced4da;
+  margin-right: 0;
+  width: 100%;
+  max-width: 60%;
+}
+
+.manager-courses-controls .search-button-lesson {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 10px;
+  border-radius: 0 5px 5px 0;
+  border: none;
+  cursor: pointer;
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 41.4px;
+  width: 41px;
+}
+
+.manager-courses-controls .search-button-lesson:hover {
+  background-color: #0056b3;
+}
+
+.manager-courses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.manager-courses-btn-create {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.manager-courses-btn-create:hover {
+  background-color: #0056b3;
+}
+
+.manager-courses-chapter-list {
+  margin-top: 20px;
+}
+
+.manager-courses-chapter {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.manager-courses-chapter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.manager-courses-chapter-header h3 {
+  font-size: 26px;
+}
+
+.manager-courses-btn-add-lesson {
+  background-color: #28a745;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.manager-courses-btn-add-lesson:hover {
+  background-color: #218838;
+}
+
+.manager-courses-lesson-list {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.manager-courses-lesson {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.manager-courses-lesson-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.manager-courses-btn-edit {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  font-size: 15px;
+  transition: color 0.3s;
+}
+
+.manager-courses-btn-remove {
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+  font-size: 15px;
+  transition: color 0.3s;
+}
+
+.manager-courses-btn-edit:hover {
+  color: #0056b3;
+}
+
+.manager-courses-btn-remove:hover {
+  color: #c82333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .manager-courses-stats .stats-card {
+    width: 48%;
+    margin-bottom: 10px;
+  }
+
+  .manager-courses-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .manager-courses-controls .search-bar-lesson {
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .manager-courses-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .manager-courses-btn-create {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .manager-courses-stats .stats-card {
+    width: 100%;
+  }
+
+  .manager-courses-controls .search-bar-lesson {
+    flex-direction: column;
+  }
+
+  .manager-courses-controls input {
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+
+  .manager-courses-controls .search-button-lesson {
+    width: 100%;
+    border-radius: 5px;
+  }
+}
+
+.search-button-lesson {
+  height: 30px;
+}
+
+.manager-courses-toggle-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+/* Tăng cường CSS cho Modal để hỗ trợ Responsive */
+.create-lesson-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 10px;
+  /* Thêm padding để có không gian cho các thiết bị nhỏ */
+}
+
+.create-lesson-modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+/* Responsive cho các thiết bị nhỏ hơn */
+@media (max-width: 768px) {
+  .create-lesson-modal {
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 15px;
+  }
+
+  .create-lesson-modal-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .create-lesson-modal-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .create-lesson-form-group {
+    width: 100%;
+  }
+
+  .create-lesson-form-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .create-lesson-submit-button,
+  .create-lesson-cancel-button {
+    width: 100%;
+  }
+
+  .current-video-preview video {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Responsive cho các thiết bị rất nhỏ */
+@media (max-width: 480px) {
+  .create-lesson-modal {
+    max-width: 100%;
+    width: 95%;
+    padding: 10px;
+  }
+
+  .create-lesson-modal-header {
+    font-size: 18px;
+  }
+
+  .create-lesson-submit-button,
+  .create-lesson-cancel-button {
+    font-size: 16px;
+    padding: 10px;
+  }
+}
+
+.icons-lesson-detail-student {
+  color: #007bff;
+}
+
+.icons-lesson-detail-lessons {
+  color: #28a745;
+}
+
+.icons-lesson-detail-chapters {
+  color: #ffc107;
+}
+
+.icons-lesson-detail-completion {
+  color: #17a2b8;
+}
+
+.stats-card h3 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.stats-card p {
+  font-size: 16px;
+  margin: 0;
 }

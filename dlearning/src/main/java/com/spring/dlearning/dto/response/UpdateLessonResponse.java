@@ -18,5 +18,6 @@ public class UpdateLessonResponse {
     String chapterName;
     Long lessonId;
     String lessonName;
+    String description;
     String videoUrl;
 }

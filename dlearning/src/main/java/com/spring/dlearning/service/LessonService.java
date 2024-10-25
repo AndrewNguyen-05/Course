@@ -116,10 +116,20 @@ public class LessonService {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
-        userRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         if (request != null && request.getLessonId() != null) {
+            Course course = courseRepository.findById(request.getCourseId())
+                    .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
+
+            boolean isAdmin = Objects.equals(user.getRole().getName(), PredefinedRole.ADMIN_ROLE);
+            boolean isAuthor = Objects.equals(course.getAuthor().getId(), user.getId());
+
+            if (!isAdmin && !isAuthor) {
+                throw new AppException(ErrorCode.FORBIDDEN);
+            }
+
             Lesson lesson = lessonRepository.findById(request.getLessonId())
                     .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_EXIST));
             lessonMapper.updateLesson(request, lesson);
@@ -135,6 +145,7 @@ public class LessonService {
                     .chapterName(lesson.getChapter().getChapterName())
                     .lessonId(lesson.getId())
                     .lessonName(lesson.getLessonName())
+                    .description(lesson.getDescription())
                     .videoUrl(lesson.getVideoUrl())
                     .build();
         }
