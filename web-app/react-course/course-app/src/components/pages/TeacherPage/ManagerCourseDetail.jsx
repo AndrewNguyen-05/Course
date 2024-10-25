@@ -14,6 +14,9 @@ import ModalUpdateLesson from "./components/modal/ModalUpdateLesson";
 import StatisticsOverview from "./components/StatisticsOverview";
 import SearchLesson from "./components/SearchLesson";
 import ButtonNewChapter from "./components/BuutonNewChapter";
+import { Footer } from "../../layouts/Footer";
+import { TopBar } from "../../layouts/TopBar";
+import { Header } from "../../layouts/Header";
 
 const ManagerCourseDetail = () => {
     const { id } = useParams();
@@ -255,12 +258,12 @@ const ManagerCourseDetail = () => {
         setCurrentLessonId(null);
         setIsEditMode(false);
         setIsVideoUpdated(false);
-        
+
         setCurrentLessonId(null);
         setLessonName('');
         setDescriptionLesson('');
         setVideo(null);
-    }; 
+    };
 
     if (isLoading) {
         return (<LoadingSpinner />);
@@ -271,117 +274,122 @@ const ManagerCourseDetail = () => {
     }
 
     return (
-        <div className="manager-course-container">
-            <SidebarManager />
-            <div className="manager-course-content">
-                {isModalOpen && (
-                    <ModalCreateChapter
-                        onClose={handleCloseModal}
-                        handleCreateChapter={handleCreateChapter}
-                        chapterName={chapterName}
-                        setChapterName={setChapterName}
-                        descriptionChapter={descriptionChapter}
-                        setDescriptionChapter={setDescriptionChapter}
-                    />
-                )}
-                {isModalLessonOpen && (
-                    <ModalCreateLesson
-                        isModalLessonOpen={isModalLessonOpen}
-                        handleCloseModalLesson={handleCloseModalLesson}
-                        handleCreateLesson={handleCreateLesson}
-                        lessonName={lessonName}
-                        setLessonName={setLessonName}
-                        descriptionLesson={descriptionLesson}
-                        setDescriptionLesson={setDescriptionLesson}
-                        handleVideoChange={handleVideoChange}
-                        setVideo={setVideo}
-                        video={video}
-                        loadingCreateLesson={loadingCreateLesson}
-                    />
-                )}
-                {isEditMode && (
-                    <ModalUpdateLesson
-                        isEditMode={isEditMode}
-                        handleCloseUpdateLesson={handleCloseUpdateLesson}
-                        lessonName={lessonName}
-                        setLessonName={setLessonName}
-                        descriptionLesson={descriptionLesson}
-                        setDescriptionLesson={setDescriptionLesson}
-                        handleVideoChange={handleVideoChange}
-                        loadingUpdateLesson={loadingUpdateLesson}
-                        handleUpdateLesson={handleUpdateLesson}
-                        video={video}
-                    />
-                )}
+        <div className="content-page-course-detail">
+            <TopBar/>
+            <Header/>
+            <div className="manager-course-container content-page">
+                <SidebarManager />
+                <div className="manager-course-content">
+                    {isModalOpen && (
+                        <ModalCreateChapter
+                            onClose={handleCloseModal}
+                            handleCreateChapter={handleCreateChapter}
+                            chapterName={chapterName}
+                            setChapterName={setChapterName}
+                            descriptionChapter={descriptionChapter}
+                            setDescriptionChapter={setDescriptionChapter}
+                        />
+                    )}
+                    {isModalLessonOpen && (
+                        <ModalCreateLesson
+                            isModalLessonOpen={isModalLessonOpen}
+                            handleCloseModalLesson={handleCloseModalLesson}
+                            handleCreateLesson={handleCreateLesson}
+                            lessonName={lessonName}
+                            setLessonName={setLessonName}
+                            descriptionLesson={descriptionLesson}
+                            setDescriptionLesson={setDescriptionLesson}
+                            handleVideoChange={handleVideoChange}
+                            setVideo={setVideo}
+                            video={video}
+                            loadingCreateLesson={loadingCreateLesson}
+                        />
+                    )}
+                    {isEditMode && (
+                        <ModalUpdateLesson
+                            isEditMode={isEditMode}
+                            handleCloseUpdateLesson={handleCloseUpdateLesson}
+                            lessonName={lessonName}
+                            setLessonName={setLessonName}
+                            descriptionLesson={descriptionLesson}
+                            setDescriptionLesson={setDescriptionLesson}
+                            handleVideoChange={handleVideoChange}
+                            loadingUpdateLesson={loadingUpdateLesson}
+                            handleUpdateLesson={handleUpdateLesson}
+                            video={video}
+                        />
+                    )}
 
-                <StatisticsOverview />
-                <SearchLesson />
-                <ButtonNewChapter handleOpenModal={handleOpenModal} />
+                    <StatisticsOverview />
+                    <SearchLesson />
+                    <ButtonNewChapter handleOpenModal={handleOpenModal} />
 
-                <div className="manager-courses-chapter-list">
-                    {Array.isArray(chapters) && chapters.map((chapter) => (
-                        <div className="manager-courses-chapter" key={chapter.chapterId}>
-                            <div className="manager-courses-chapter-header">
-                                <h3>{chapter.chapterName}</h3>
-                                <div>
-                                    <button
-                                        className="manager-courses-toggle-button"
-                                        onClick={() => toggleChapter(chapter.chapterId)}
-                                    >
-                                        {expandedChapters.includes(chapter.chapterId) ? (
-                                            <FaChevronUp />
-                                        ) : (
-                                            <FaChevronDown />
-                                        )}
-                                    </button>
-                                    <button
-                                        className="manager-courses-btn-add-lesson"
-                                        onClick={() => handleOpenModalLesson(chapter.chapterId)}
-                                    >
-                                        <FaPlus /> Add Lesson
-                                    </button>
+                    <div className="manager-courses-chapter-list">
+                        {Array.isArray(chapters) && chapters.map((chapter) => (
+                            <div className="manager-courses-chapter" key={chapter.chapterId}>
+                                <div className="manager-courses-chapter-header">
+                                    <h3>{chapter.chapterName}</h3>
+                                    <div>
+                                        <button
+                                            className="manager-courses-toggle-button"
+                                            onClick={() => toggleChapter(chapter.chapterId)}
+                                        >
+                                            {expandedChapters.includes(chapter.chapterId) ? (
+                                                <FaChevronUp />
+                                            ) : (
+                                                <FaChevronDown />
+                                            )}
+                                        </button>
+                                        <button
+                                            className="manager-courses-btn-add-lesson"
+                                            onClick={() => handleOpenModalLesson(chapter.chapterId)}
+                                        >
+                                            <FaPlus /> Add Lesson
+                                        </button>
+                                    </div>
                                 </div>
+                                {/* Kiểm tra trạng thái mở rộng để hiển thị danh sách bài học */}
+                                {expandedChapters.includes(chapter.chapterId) && (
+                                    <ul className="manager-courses-lesson-list">
+                                        {Array.isArray(lessons) && lessons
+                                            .filter(lesson => lesson.chapterId === chapter.chapterId)
+                                            .map((lesson) => (
+                                                <li className="manager-courses-lesson" key={lesson.lessonId}>
+                                                    <span>{lesson.lessonName}</span>
+                                                    <div className="manager-courses-lesson-actions">
+                                                        <button className="manager-courses-btn-edit"
+                                                            onClick={() => handleOpenUpdateLesson(lesson.lessonId)}
+                                                        >
+                                                            <FaEdit /> Edit
+                                                        </button>
+                                                        <button className="manager-courses-btn-remove"
+                                                            onClick={() => handleDeleteLesson(lesson.lessonId)}
+                                                        >
+                                                            <FaTrashAlt /> Remove
+                                                        </button>
+                                                    </div>
+                                                </li>
+                                            ))}
+                                    </ul>
+                                )}
                             </div>
-                            {/* Kiểm tra trạng thái mở rộng để hiển thị danh sách bài học */}
-                            {expandedChapters.includes(chapter.chapterId) && (
-                                <ul className="manager-courses-lesson-list">
-                                    {Array.isArray(lessons) && lessons
-                                        .filter(lesson => lesson.chapterId === chapter.chapterId)
-                                        .map((lesson) => (
-                                            <li className="manager-courses-lesson" key={lesson.lessonId}>
-                                                <span>{lesson.lessonName}</span>
-                                                <div className="manager-courses-lesson-actions">
-                                                    <button className="manager-courses-btn-edit"
-                                                        onClick={() => handleOpenUpdateLesson(lesson.lessonId)}
-                                                    >
-                                                        <FaEdit /> Edit
-                                                    </button>
-                                                    <button className="manager-courses-btn-remove"
-                                                        onClick={() => handleDeleteLesson(lesson.lessonId)}
-                                                    >
-                                                        <FaTrashAlt /> Remove
-                                                    </button>
-                                                </div>
-                                            </li>
-                                        ))}
-                                </ul>
-                            )}
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
+                </div>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={3000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                />
             </div>
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-            />
+            <Footer/>
         </div>
     );
 };

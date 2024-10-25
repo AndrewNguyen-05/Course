@@ -15655,7 +15655,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 /* Container Styles */
 .manager-course-container {
   display: flex;
-  max-width: 80%;
+  max-width: 90%;
   flex-direction: column;
   margin: auto;
   border-radius: 15px;
@@ -15676,7 +15676,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   background: #ffffff;
   border-radius: 12px;
   margin-right: 30px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); */
 }
 
 .manager-course-sidebar h3 {
@@ -15692,7 +15692,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 }
 
 .manager-course-sidebar li {
-  font-size: 18px;
+  font-size: 24px;
   margin: 12px 0;
   color: #444;
   display: flex;
@@ -15720,7 +15720,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   padding: 25px;
   background: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); */
 }
 
 /* Header Styles */
@@ -16539,4 +16539,8 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 .stats-card p {
   font-size: 16px;
   margin: 0;
+}
+
+.content-page-course-detail {
+  margin-top: 150px;
 }

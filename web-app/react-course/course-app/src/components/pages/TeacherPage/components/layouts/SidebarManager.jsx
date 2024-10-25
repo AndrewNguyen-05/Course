@@ -3,7 +3,6 @@ import { FaCalendar, FaClipboard, FaFile, FaGraduationCap, FaMapMarkedAlt, FaQue
 const SidebarManager = () => {
     return (
         <div className="manager-course-sidebar">
-            <h3>Lessons</h3>
             <ul>
                 <li><FaGraduationCap className="icon" style={{ color: '#2ecc71' }} /> Lessons</li>
                 <li><FaClipboard className="icon" style={{ color: '#27ae60' }} /> Assignments</li>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 export const Footer = () => {
     return (
@@ -7,11 +8,11 @@ export const Footer = () => {
                 <div className="container mt-5 pt-3">
                     <div className="row">
                         <div className="col-md-6 mb-5">
-                            <a href="index.html" className="navbar-brand">
+                            <Link to="/" className="navbar-brand">
                                 <h1 className="mt-n2 text-uppercase text-white">
                                     <i className="fa fa-book-reader mr-3"></i>Edukate
                                 </h1>
-                            </a>
+                            </Link>
                             <p className="m-0">
                                 Accusam nonumy clita sed rebum kasd eirmod elitr. Ipsum ea lorem
                                 at et diam est, tempor rebum ipsum sit ea tempor stet et
@@ -35,30 +36,30 @@ export const Footer = () => {
                             <p><i className="fa fa-phone-alt mr-2"></i>+012 345 67890</p>
                             <p><i className="fa fa-envelope mr-2"></i>info@example.com</p>
                             <div className="d-flex justify-content-start mt-4">
-                                <a className="text-white mr-4" href="#"><i className="fab fa-2x fa-twitter"></i></a>
-                                <a className="text-white mr-4" href="#"><i className="fab fa-2x fa-facebook-f"></i></a>
-                                <a className="text-white mr-4" href="#"><i className="fab fa-2x fa-linkedin-in"></i></a>
-                                <a className="text-white" href="#"><i className="fab fa-2x fa-instagram"></i></a>
+                                <Link className="text-white mr-4" to="#"><i className="fab fa-2x fa-twitter"></i></Link>
+                                <Link className="text-white mr-4" to="#"><i className="fab fa-2x fa-facebook-f"></i></Link>
+                                <Link className="text-white mr-4" to="#"><i className="fab fa-2x fa-linkedin-in"></i></Link>
+                                <Link className="text-white" to="#"><i className="fab fa-2x fa-instagram"></i></Link>
                             </div>
                         </div>
                         <div className="col-md-4 mb-5">
                             <h3 className="text-white mb-4">Our Courses</h3>
                             <div className="d-flex flex-column">
-                                <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Web Design</a>
-                                <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Apps Design</a>
-                                <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Marketing</a>
-                                <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Research</a>
-                                <a className="text-white-50" href="#"><i className="fa fa-angle-right mr-2"></i>SEO</a>
+                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Web Design</Link>
+                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Apps Design</Link>
+                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Marketing</Link>
+                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Research</Link>
+                                <Link className="text-white-50" to="#"><i className="fa fa-angle-right mr-2"></i>SEO</Link>
                             </div>
                         </div>
                         <div className="col-md-4 mb-5">
                             <h3 className="text-white mb-4">Quick Links</h3>
                             <div className="d-flex flex-column">
-                                <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Privacy Policy</a>
-                                <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Terms & Condition</a>
-                                <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Regular FAQs</a>
-                                <a className="text-white-50 mb-2" href="#"><i className="fa fa-angle-right mr-2"></i>Help & Support</a>
-                                <a className="text-white-50" href="#"><i className="fa fa-angle-right mr-2"></i>Contact</a>
+                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Privacy Policy</Link>
+                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Terms & Condition</Link>
+                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Regular FAQs</Link>
+                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Help & Support</Link>
+                                <Link className="text-white-50" to="#"><i className="fa fa-angle-right mr-2"></i>Contact</Link>
                             </div>
                         </div>
                     </div>
@@ -70,7 +71,7 @@ export const Footer = () => {
                         <div className="col-md-6 text-center text-md-left mb-3 mb-md-0">
                             <p className="m-0">
                                 Copyright &copy;
-                                <a className="text-white" href="#">Your Site Name</a>. All Rights Reserved.
+                                <Link className="text-white" to="/">Your Site Name</Link>. All Rights Reserved.
                             </p>
                         </div>
                         <div className="col-md-6 text-center text-md-right">
@@ -79,7 +80,7 @@ export const Footer = () => {
                     </div>
                 </div>
             </div>
-            <a href="#" className="btn btn-lg btn-primary rounded-0 btn-lg-square back-to-top"><i className="fa fa-angle-double-up"></i></a>
+            <Link to="/" className="btn btn-lg btn-primary rounded-0 btn-lg-square back-to-top"><i className="fa fa-angle-double-up"></i></Link>
         </div>
     );
 };
