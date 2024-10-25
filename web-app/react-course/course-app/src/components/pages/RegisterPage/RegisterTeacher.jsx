@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import { getMyInfo, registerTeacher } from "../../../service/UserService";
 import RegisterTeachForm from "./components/RegisterTeacherFrom";
+import { TypeAnimation } from "react-type-animation";
 
 export const RegisterTeacher = () => {
 
@@ -97,7 +98,28 @@ export const RegisterTeacher = () => {
                 <div className="row justify-content-center">
                     <div className="col-md-8">
                         <div className="custom-card shadow-sm p-4 rounded-4">
-                            <h2 className="text-center mb-4 text-primary form-title">Become a Teacher</h2>
+                            <h2 className="text-center mb-4 text-primary form-title">
+                                <TypeAnimation
+                                    sequence={[
+                                        'Become a Teacher',
+                                        1000,
+                                        'Share Your Knowledge',
+                                        1000,
+                                    ]}
+                                    wrapper="span"
+                                    speed={50}
+                                    style={{
+                                        fontSize: '1.2em', 
+                                        fontWeight: 'bold', 
+                                        display: 'inline-block',
+                                        color: '#007bff', 
+                                        textShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', 
+                                        letterSpacing: '0.05em', 
+                                    }}
+                                    repeat={Infinity}
+                                />
+                            </h2>
+
                             <p className="text-center mb-5 text-muted form-subtitle">
                                 Share your expertise and join our community of professionals.
                             </p>

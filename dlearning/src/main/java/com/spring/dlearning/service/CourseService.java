@@ -112,7 +112,7 @@ public class CourseService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
         if(! Objects.equals(user.getRole().getName(), PredefinedRole.TEACHER_ROLE)){
-            throw new AppException(ErrorCode.ACCESSDENIED);
+            throw new AppException(ErrorCode.ACCESS_DENIED);
         }
 
         Course course = courseMapper.toCourse(request);

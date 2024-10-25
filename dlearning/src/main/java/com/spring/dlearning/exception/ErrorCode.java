@@ -70,10 +70,10 @@ public enum ErrorCode {
     EXPIRED_TOKEN(401, "EXPIRED_TOKEN", HttpStatus.UNAUTHORIZED),
     CHAPTER_NOT_EXIST(400, "Chapter is not exist", HttpStatus.BAD_REQUEST),
     LESSON_NOT_EXIST(400, "Lesson is not exist", HttpStatus.BAD_REQUEST),
-    ACCESSDENIED(403, "Only teachers and Admins have the right to create courses.", HttpStatus.FORBIDDEN),
-    CHAPTER_ID_INVALID(400, "Chapter id cannot be null", HttpStatus.BAD_REQUEST)
+    ACCESS_DENIED(403, "Only teachers and Admins have the right to create courses.", HttpStatus.FORBIDDEN),
+    CHAPTER_ID_INVALID(400, "Chapter id cannot be null", HttpStatus.BAD_REQUEST),
+    UPLOAD_LESSON_INVALID(400, "An error occurred while uploading the lesson, please try again.", HttpStatus.BAD_REQUEST)
     ;
-
 
     private final int code;
     private final String message;

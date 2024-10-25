@@ -3,8 +3,10 @@ package com.spring.dlearning.service;
 import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.CommentLessonRequest;
 import com.spring.dlearning.dto.request.LessonCreationRequest;
+import com.spring.dlearning.dto.request.UpdateLessonRequest;
 import com.spring.dlearning.dto.response.CommentLessonResponse;
 import com.spring.dlearning.dto.response.LessonCreationResponse;
+import com.spring.dlearning.dto.response.UpdateLessonResponse;
 import com.spring.dlearning.entity.*;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
@@ -49,7 +51,7 @@ public class LessonService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         if(! Objects.equals(user.getRole().getName(), PredefinedRole.TEACHER_ROLE)){
-            throw new AppException(ErrorCode.ACCESSDENIED);
+            throw new AppException(ErrorCode.ACCESS_DENIED);
         }
 
         Course course = courseRepository.findById(request.getCourseId())
@@ -77,6 +79,66 @@ public class LessonService {
                 .videoUrl(lesson.getVideoUrl())
                 .lessonDescription(lesson.getDescription())
                 .build();
+    }
+
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER', 'ADMIN')")
+    @Transactional
+    public void deleteLesson (Long lessonId) {
+        Lesson lesson = lessonRepository.findById(lessonId)
+                .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_EXIST));
+
+        Chapter chapter = lesson.getChapter();
+        Course course = chapter.getCourse();
+
+        User userCourse = course.getAuthor();
+
+        var email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        var useLogin = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if(Objects.equals(userCourse.getId(), useLogin.getId())
+            && Objects.equals(userCourse.getRole().getName(), PredefinedRole.TEACHER_ROLE)
+            && Objects.equals(useLogin.getRole().getName(), PredefinedRole.TEACHER_ROLE)
+            || Objects.equals(useLogin.getRole().getName(), PredefinedRole.ADMIN_ROLE)
+        ){
+            lessonRepository.delete(lesson);
+        }  else {
+            throw new AppException(ErrorCode.FORBIDDEN);
+        }
+    }
+
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN', 'TEACHER')")
+    public UpdateLessonResponse updateLesson(UpdateLessonRequest request, MultipartFile video)
+            throws IOException {
+
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        if (request != null && request.getLessonId() != null) {
+            Lesson lesson = lessonRepository.findById(request.getLessonId())
+                    .orElseThrow(() -> new AppException(ErrorCode.LESSON_NOT_EXIST));
+            lessonMapper.updateLesson(request, lesson);
+            if (video != null && !video.isEmpty()) {
+                String videoUrl = cloudinaryService.uploadVideoChunked(video, "courses")
+                        .get("url").toString();
+                lesson.setVideoUrl(videoUrl);
+            }
+            lessonRepository.save(lesson);
+            return UpdateLessonResponse.builder()
+                    .courseId(request.getCourseId())
+                    .chapterId(request.getChapterId())
+                    .chapterName(lesson.getChapter().getChapterName())
+                    .lessonId(lesson.getId())
+                    .lessonName(lesson.getLessonName())
+                    .videoUrl(lesson.getVideoUrl())
+                    .build();
+        }
+        throw new AppException(ErrorCode.UPLOAD_LESSON_INVALID);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -145,7 +207,7 @@ public class LessonService {
                 .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_EXISTED));
 
         if (!Objects.equals(user.getId(), review.getUser().getId())) {
-            throw new AppException(ErrorCode.ACCESSDENIED);
+            throw new AppException(ErrorCode.ACCESS_DENIED);
         }
         review.setLesson(null);
         review.setContent(null);

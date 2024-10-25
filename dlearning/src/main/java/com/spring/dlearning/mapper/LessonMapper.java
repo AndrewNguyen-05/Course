@@ -1,9 +1,13 @@
 package com.spring.dlearning.mapper;
 
+import com.spring.dlearning.dto.request.UpdateLessonRequest;
 import com.spring.dlearning.dto.response.CommentLessonResponse;
+import com.spring.dlearning.dto.response.UpdateLessonResponse;
+import com.spring.dlearning.entity.Lesson;
 import com.spring.dlearning.entity.Review;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface LessonMapper {
@@ -16,5 +20,8 @@ public interface LessonMapper {
     @Mapping(target = "avatar", source = "user.avatar")
     @Mapping(target = "reviewId", source = "id")
     CommentLessonResponse toCommentLessonResponse(Review review);
+
+
+    void updateLesson (UpdateLessonRequest request, @MappingTarget Lesson lesson);
 
 }

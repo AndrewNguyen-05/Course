@@ -42,7 +42,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = AccessDeniedException.class)
     ResponseEntity<ApiResponse<?>> handlingAccessDeniedException(AccessDeniedException exception) {
         log.error(exception.getMessage(), exception);
-        ErrorCode errorCode = ErrorCode.ACCESSDENIED;
+        ErrorCode errorCode = ErrorCode.ACCESS_DENIED;
 
         return ResponseEntity.status(errorCode.getStatusCode())
                 .body(ApiResponse.builder()

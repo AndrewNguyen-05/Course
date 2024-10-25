@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 import { createChapter } from "../../../service/ChapterService";
 import { toast, ToastContainer } from "react-toastify";
 import { getInfoCourse } from "../../../service/CourseService";
-import { createLesson } from "../../../service/LessonService";
+import { createLesson, deleteLesson } from "../../../service/LessonService";
 import ModalCreateLesson from "./components/modal/ModalCreateLesson";
+import Swal from "sweetalert2";
 
 const ManagerCourseDetail = () => {
     const { id } = useParams();
@@ -53,6 +54,8 @@ const ManagerCourseDetail = () => {
                 toast.success("Lesson created successfully");
                 setLessons((prevLessons) => [...prevLessons, result.result]);
                 handleCloseModalLesson();
+                setLessonName('');
+                setDescriptionLesson('');
             } else {
                 toast.error("Error creating lesson");
             }
@@ -102,6 +105,8 @@ const ManagerCourseDetail = () => {
                 toast.success("Create Chapter Successfully");
                 handleCloseModal();
                 setChapters((prevChapters) => [...prevChapters, data.result]);
+                setChapterName('');
+                setDescriptionChapter('');
             } else {
                 toast.error("Create Chapter Error");
             }
@@ -109,6 +114,40 @@ const ManagerCourseDetail = () => {
             console.log(error);
             toast.error("Create Chapter Error");
         }
+    };
+
+    const handleDeleteLesson = async (lessonId) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to delete this lesson? This action cannot be undone.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+            width: '360px', 
+            customClass: {
+                popup: 'custom-swal-popup' 
+            }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const data = await deleteLesson(lessonId);
+                    if (data && data.code === 200) {
+                        toast.success("Delete Lesson Successfully");
+                        setLessons((prevLessons) =>
+                            prevLessons.filter((lesson) => lesson.lessonId !== lessonId)
+                        );
+                    } else {
+                        toast.error(data.message);
+                    }
+                } catch (error) {
+                    console.log(error);
+                    toast.error("Error deleting lesson");
+                }
+            }
+        });
     };
 
     const handleOpenModal = () => {
@@ -128,7 +167,7 @@ const ManagerCourseDetail = () => {
         setIsModalLessonOpen(false);
         setCurrentChapterId(null);
     };
-
+    
     if (isLoading) {
         return (<LoadingSpinner />);
     }
@@ -195,7 +234,9 @@ const ManagerCourseDetail = () => {
                                                 <button className="manager-courses-btn-edit">
                                                     <FaEdit /> Edit
                                                 </button>
-                                                <button className="manager-courses-btn-remove">
+                                                <button className="manager-courses-btn-remove"
+                                                    onClick={() => handleDeleteLesson(lesson.lessonId)}
+                                                >
                                                     <FaTrashAlt /> Remove
                                                 </button>
                                             </div>

@@ -25,7 +25,7 @@ public class SecurityConfiguration {
     private final OAuth2SuccessHandler oAuth2SuccessHandler;
     private final CustomJwtDecoder jwtDecoder;
 
-    private static final String[] PUBLIC_ENDPOINT = {
+    private static final String[] PUBLIC_ENDPOINT = new String[]{
             "/api/v1/auth/token",
             "/api/v1/register",
             "/api/v1/auth/logout",

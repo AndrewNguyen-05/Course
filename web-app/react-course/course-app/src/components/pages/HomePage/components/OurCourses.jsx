@@ -39,7 +39,6 @@ export const OurCourses = (props) => {
                   {course.author}
                 </p>
               </div>
-
               {/* Nút "Course Detail" và "Thêm vào khóa học yêu thích" */}
               <div className="course-card-custom-footer text-center">
                 <Link
@@ -48,7 +47,6 @@ export const OurCourses = (props) => {
                 >
                   Course Detail
                 </Link>
-
                 {/* Nút thêm vào khóa học yêu thích với icon trái tim */}
                 <button
                   className="course-card-custom-btn-favorite mt-2"
@@ -61,7 +59,6 @@ export const OurCourses = (props) => {
           </div>
         ))}
       </div>
-
       {/* Xem thêm */}
       <div className="row justify-content-center mt-4">
         {hasMore ? (

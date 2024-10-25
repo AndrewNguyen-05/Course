@@ -2,9 +2,11 @@ package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.request.CommentLessonRequest;
 import com.spring.dlearning.dto.request.LessonCreationRequest;
+import com.spring.dlearning.dto.request.UpdateLessonRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.CommentLessonResponse;
 import com.spring.dlearning.dto.response.LessonCreationResponse;
+import com.spring.dlearning.dto.response.UpdateLessonResponse;
 import com.spring.dlearning.service.LessonService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -35,6 +37,29 @@ public class LessonController {
 
         return ApiResponse.<LessonCreationResponse>builder()
                 .code(HttpStatus.CREATED.value())
+                .result(result)
+                .build();
+    }
+
+    @DeleteMapping("/delete-lesson/{lessonId}")
+    ApiResponse<Void> deleteLesson (@PathVariable @Min(1) Long lessonId ) {
+        lessonService.deleteLesson(lessonId);
+
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.OK.value())
+                .message("Lesson deleted successfully")
+                .build();
+    }
+
+    @PutMapping("/update-lesson")
+    ApiResponse<UpdateLessonResponse> updateLesson(
+            @RequestPart("request") UpdateLessonRequest request,
+            @RequestPart(value = "video", required = false) MultipartFile video)
+            throws IOException {
+
+        var result = lessonService.updateLesson(request, video);
+        return ApiResponse.<UpdateLessonResponse>builder()
+                .code(HttpStatus.OK.value())
                 .result(result)
                 .build();
     }
