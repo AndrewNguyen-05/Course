@@ -1,7 +1,6 @@
 package com.spring.dlearning.repository;
 
 import com.spring.dlearning.entity.Course;
-import com.spring.dlearning.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -14,8 +13,4 @@ public interface CourseRepository extends JpaRepository<Course, Long>, JpaSpecif
 
     @Query("SELECT c FROM Course c JOIN c.author u WHERE u.id = :userId")
     List<Course> findByAuthorId(@Param("userId") Long userId);
-
-    @Query("SELECT c.title FROM Course c WHERE c.title LIKE %:query%")
-    List<String> findTitleSuggestions(String query);
-
 }

@@ -29,7 +29,7 @@ public class Lesson extends AbstractEntity<Long> {
     @Column(name = "content_url")
     String videoUrl;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "MEDIUMTEXT")
     String description; // Mô tả nội dung nếu cần
 
     @OneToMany(mappedBy = "lesson", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

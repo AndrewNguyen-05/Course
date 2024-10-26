@@ -10,6 +10,7 @@ import { ReviewSection } from "./components/ReviewSection";
 import { CourseFeatur } from "./components/CourseFeature";
 import { addReplyReview, addReview, deleteReview, editReview } from "../../../service/ReviewService";
 import { checkPurchase } from "../../../service/Enrollment";
+import LoadingSpinner from "../../../utils/LoadingSpinner";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
@@ -33,11 +34,9 @@ export const CourseDetail = () => {
         getCourseById(id)
             .then(data => {
                 setCourse(data.result);
-                setLoading(false);
             }).catch(error => {
                 console.log(error);
-                setLoading(false);
-            });
+            }).finally(() => setLoading(false));
     }, [id]);
 
     useEffect(() => {
@@ -82,7 +81,8 @@ export const CourseDetail = () => {
             }).catch(error => console.log(error));
     }, [id]);
 
-    if (loading) return <div>Loading...</div>;
+    if (loading)
+        return <div><LoadingSpinner /></div>;
 
     if (!course) {
         return <div>Course data is not available</div>;
@@ -322,7 +322,10 @@ export const CourseDetail = () => {
 
                     <CourseFeatur
                         course={course}
-                        handleEnrollNow={handleEnrollNow} />
+                        handleEnrollNow={handleEnrollNow}
+                        isPurchase={isPurchase}
+                        id={id}
+                    />
                 </div>
             </div>
             <ToastContainer

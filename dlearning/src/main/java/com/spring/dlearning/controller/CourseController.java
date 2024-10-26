@@ -44,16 +44,6 @@ public class CourseController {
                 .build();
     }
 
-    @GetMapping("/title")
-    public ApiResponse<List<String>> getTitleSuggestions(@RequestParam("query") String query) {
-        List<String> suggestions = courseService.getTitleSuggestions(query);
-        return ApiResponse.<List<String>>builder()
-                .code(HttpStatus.OK.value())
-                .message("Suggestions fetched successfully")
-                .result(suggestions)
-                .build();
-    }
-
     @GetMapping("/course/{id}")
     ApiResponse<CourseResponse> getCourseById(@PathVariable @Min(1) Long id){
         var result = courseService.getCourseById(id);
@@ -108,6 +98,16 @@ public class CourseController {
         return ApiResponse.<CourseChapterResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(courseService.getAllInfoCourse(id))
+                .build();
+    }
+
+    @DeleteMapping("/delete-courses/{courseId}")
+    ApiResponse<Void> deleteCourse (@PathVariable Long courseId) {
+        courseService.deleteCourse(courseId);
+
+        return ApiResponse.<Void>builder()
+                .code(HttpStatus.OK.value())
+                .message("Delete Course Successfully")
                 .build();
     }
 

@@ -22,7 +22,6 @@ const ProfilePage = () => {
     lastName: '',
   });
 
-
   // Lấy ảnh đại diện từ API
   useEffect(() => {
     if (!token) {

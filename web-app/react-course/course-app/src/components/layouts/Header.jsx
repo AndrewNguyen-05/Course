@@ -42,15 +42,18 @@ export const Header = () => {
     }, [wsClient]);
 
     useEffect(() => {
-        if (!token || !isTokenValid) return;
-        console.log('Notification ........ >>>>>>>')
+        if (!token || loggedOut || !isTokenValid) {
+            setLoading(false);
+            return;
+        }
         notificationCurrentLogin()
             .then((data) => {
                 setNotifications(data.result || []);
                 setUnreadCount(data.result.filter((n) => !n.isRead).length || []);
             })
             .catch((error) => console.log(error));
-    }, [token, isTokenValid]);
+    }, [token, isTokenValid, loggedOut]);
+
 
 
     useEffect(() => {
@@ -64,7 +67,7 @@ export const Header = () => {
     const isActive = (path) => location.pathname === path;
 
     useEffect(() => {
-        if (!token) {
+        if (!token || loggedOut || !isTokenValid) {
             setLoading(false);
             return;
         }
@@ -78,31 +81,30 @@ export const Header = () => {
             })
             .catch((error) => console.log(error))
             .finally(() => setLoading(false));
-    }, [token]);
+    }, [token, loggedOut, isTokenValid]);
 
     useEffect(() => {
-        if (!token) {
+        if (!token || loggedOut || !isTokenValid) {
             setLoading(false);
             return;
         }
         getAvatar()
             .then((data) => setAvatar(data.result))
             .catch((error) => {
-                console.log(error)
+                console.log(error);
                 setLoading(false);
             });
-    }, [token]);
+    }, [token, loggedOut, isTokenValid]);
 
     useEffect(() => {
         const fetchPoints = async () => {
-            if (!token) {
+            if (!token || loggedOut || !isTokenValid) {
                 setLoading(false);
                 return;
             }
             try {
                 const data = await getPointsByCurrentLogin();
                 setPoints(data.result.points);
-                setLoading(false);
             } catch (error) {
                 console.log(error);
             } finally {
@@ -110,8 +112,38 @@ export const Header = () => {
             }
         };
         fetchPoints();
-    }, [token]);
+    }, [token, loggedOut, isTokenValid]);
 
+    useEffect(() => {
+        if (!token || loggedOut || !isTokenValid) {
+            setLoading(false);
+            return;
+        }
+        getAvatar()
+            .then((data) => setAvatar(data.result))
+            .catch((error) => {
+                console.log(error);
+                setLoading(false);
+            });
+    }, [token, loggedOut, isTokenValid]);
+
+    useEffect(() => {
+        const fetchPoints = async () => {
+            if (!token || loggedOut || !isTokenValid) {
+                setLoading(false);
+                return;
+            }
+            try {
+                const data = await getPointsByCurrentLogin();
+                setPoints(data.result.points);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPoints();
+    }, [token, loggedOut, isTokenValid]);
 
     const markAsRead = async (notificationId) => {
         try {
@@ -161,7 +193,6 @@ export const Header = () => {
                             <NotificationDropdown notifications={notifications} unreadCount={unreadCount} markAsRead={markAsRead} />
                             <Advertisement />
                             <Favorites />
-
                             <ProfileDropdown avatar={avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"} isTokenValid={isTokenValid} role={role} handleLogout={handleLogout} />
                         </div>
                     </div>

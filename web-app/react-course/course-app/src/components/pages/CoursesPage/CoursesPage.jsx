@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Search } from './components/Search';
 import { SearchService } from '../../../service/CourseService';
-import { ViewCouses } from './components/ViewCourses';
+import { ViewCourses } from './components/ViewCourses';
 import { motion } from 'framer-motion';
 import ReactPaginate from 'react-paginate';
 import LoadingSpinner from '../../../utils/LoadingSpinner';
@@ -74,7 +74,7 @@ export const Courses = () => {
                             </div>
                         </div>
                     </div>
-                    <ViewCouses courses={courses} />
+                    <ViewCourses courses={courses} />
                     <ReactPaginate
                         previousLabel={'«'}
                         nextLabel={'»'}

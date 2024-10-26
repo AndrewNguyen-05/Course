@@ -1,31 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { myInfo } from "../UserService";
 
 export const ProcessLoginOAuth2 = () => {
   const navigate = useNavigate();
   const pathParams = useParams();
   const [query] = useSearchParams();
 
-  const fetchInfo = (token) => {
-    fetch(`http://localhost:8080/api/v1/my-info`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((userData) => {
-        if (userData.result && userData.result.noPassword) {
-          navigate("/create-password");
-        } else {
-          navigate("/home");
-        }
-      });
-  };
+  const fetchInfo = useCallback(async () => {
+    const result = await myInfo();
+    if (result && result.result.noPassword) {
+      navigate("/create-password");
+    } else {
+      navigate("/home");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const clientCode = pathParams.clientCode;
+
     if (clientCode === "facebook") {
       // exchange for access token
       fetch(`http://localhost:8080/login/oauth2/code/facebook?${query.toString()}`, {
@@ -36,7 +29,7 @@ export const ProcessLoginOAuth2 = () => {
           console.log(data);
           const token = data.token;
           localStorage.setItem("token", token);
-          fetchInfo(token);
+          fetchInfo();
         });
     } else {
       function handleAuthentication() {
@@ -53,8 +46,7 @@ export const ProcessLoginOAuth2 = () => {
             .then((data) => {
               if (data.result && data.result.token) {
                 localStorage.setItem("token", data.result.token);
-                let token = localStorage.getItem("token");
-                fetchInfo(token);
+                fetchInfo();
               }
             })
             .catch((error) => {
@@ -65,7 +57,7 @@ export const ProcessLoginOAuth2 = () => {
 
       handleAuthentication();
     }
-  }, []);
+  }, [fetchInfo, pathParams.clientCode, query]);
 
   return (
     <div className="container text-center">

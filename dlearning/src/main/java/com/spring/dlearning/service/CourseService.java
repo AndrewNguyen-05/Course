@@ -68,7 +68,9 @@ public class CourseService {
             CourseResponse courseResponse = courseMapper.toCourseResponse(course);
             courseResponse.setAverageRating(averageRating);
             return courseResponse;
-        }).toList();
+        }).sorted(Comparator.comparing(CourseResponse::getAverageRating)
+                        .reversed())
+                .toList();
 
         return PageResponse.<CourseResponse>builder()
                 .currentPage(page)
@@ -77,10 +79,6 @@ public class CourseService {
                 .totalElements(pageData.getTotalElements())
                 .data(courseResponses)
                 .build();
-    }
-
-    public List<String> getTitleSuggestions(String query) {
-        return courseRepository.findTitleSuggestions(query);
     }
 
     public CourseResponse getCourseById(Long id){
@@ -184,6 +182,24 @@ public class CourseService {
         courseLessonResponse.setChapters(sortedChapter);
 
         return courseLessonResponse;
+    }
+
+    @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN', 'TEACHER')")
+    public void deleteCourse (Long courseId) {
+        var email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        var user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
+
+        if(!Objects.equals(course.getAuthor().getId(), user.getId())
+         && !Objects.equals(user.getRole().getName(), PredefinedRole.ADMIN_ROLE)){
+            throw new AppException(ErrorCode.ACCESS_DENIED);
+        }
+            courseRepository.delete(course);
     }
 
 }

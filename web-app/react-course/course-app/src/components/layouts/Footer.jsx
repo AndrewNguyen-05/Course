@@ -36,30 +36,30 @@ export const Footer = () => {
                             <p><i className="fa fa-phone-alt mr-2"></i>+012 345 67890</p>
                             <p><i className="fa fa-envelope mr-2"></i>info@example.com</p>
                             <div className="d-flex justify-content-start mt-4">
-                                <Link className="text-white mr-4" to="#"><i className="fab fa-2x fa-twitter"></i></Link>
-                                <Link className="text-white mr-4" to="#"><i className="fab fa-2x fa-facebook-f"></i></Link>
-                                <Link className="text-white mr-4" to="#"><i className="fab fa-2x fa-linkedin-in"></i></Link>
-                                <Link className="text-white" to="#"><i className="fab fa-2x fa-instagram"></i></Link>
+                                <Link className="text-white mr-4" to="/"><i className="fab fa-2x fa-twitter"></i></Link>
+                                <Link className="text-white mr-4" to="/"><i className="fab fa-2x fa-facebook-f"></i></Link>
+                                <Link className="text-white mr-4" to="/"><i className="fab fa-2x fa-linkedin-in"></i></Link>
+                                <Link className="text-white" to="/"><i className="fab fa-2x fa-instagram"></i></Link>
                             </div>
                         </div>
                         <div className="col-md-4 mb-5">
                             <h3 className="text-white mb-4">Our Courses</h3>
                             <div className="d-flex flex-column">
-                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Web Design</Link>
-                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Apps Design</Link>
-                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Marketing</Link>
-                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Research</Link>
-                                <Link className="text-white-50" to="#"><i className="fa fa-angle-right mr-2"></i>SEO</Link>
+                                <Link className="text-white-50 mb-2" to="/"><i className="fa fa-angle-right mr-2"></i>Web Design</Link>
+                                <Link className="text-white-50 mb-2" to="/"><i className="fa fa-angle-right mr-2"></i>Apps Design</Link>
+                                <Link className="text-white-50 mb-2" to="/"><i className="fa fa-angle-right mr-2"></i>Marketing</Link>
+                                <Link className="text-white-50 mb-2" to="/"><i className="fa fa-angle-right mr-2"></i>Research</Link>
+                                <Link className="text-white-50" to="/"><i className="fa fa-angle-right mr-2"></i>SEO</Link>
                             </div>
                         </div>
                         <div className="col-md-4 mb-5">
                             <h3 className="text-white mb-4">Quick Links</h3>
                             <div className="d-flex flex-column">
-                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Privacy Policy</Link>
-                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Terms & Condition</Link>
-                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Regular FAQs</Link>
-                                <Link className="text-white-50 mb-2" to="#"><i className="fa fa-angle-right mr-2"></i>Help & Support</Link>
-                                <Link className="text-white-50" to="#"><i className="fa fa-angle-right mr-2"></i>Contact</Link>
+                                <Link className="text-white-50 mb-2" to="/"><i className="fa fa-angle-right mr-2"></i>Privacy Policy</Link>
+                                <Link className="text-white-50 mb-2" to="/"><i className="fa fa-angle-right mr-2"></i>Terms & Condition</Link>
+                                <Link className="text-white-50 mb-2" to="/"><i className="fa fa-angle-right mr-2"></i>Regular FAQs</Link>
+                                <Link className="text-white-50 mb-2" to="/"><i className="fa fa-angle-right mr-2"></i>Help & Support</Link>
+                                <Link className="text-white-50" to="/"><i className="fa fa-angle-right mr-2"></i>Contact</Link>
                             </div>
                         </div>
                     </div>

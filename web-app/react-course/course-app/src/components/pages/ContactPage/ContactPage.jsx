@@ -111,7 +111,6 @@ export const ContactPage = () => {
                 </div>
             )}
             <div className="container-fluid py-5">
-                {/* Thêm hình ảnh mới vào phần body */}
                 <div className="row justify-content-center mb-5">
                     <div className="col-lg-8 text-center">
                         <h6 className="d-inline-block text-secondary text-uppercase pb-2 ads-title-highlight">Need Help?</h6>

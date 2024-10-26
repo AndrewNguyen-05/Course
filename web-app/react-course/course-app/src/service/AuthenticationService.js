@@ -39,6 +39,11 @@ export const introspect = async () => {
     }
 };
 
+export const logout = async (token) => {
+    const response = await axios.post(`api/v1/auth/logout`, {token: token});
+    return response;
+}
+
 
 
 

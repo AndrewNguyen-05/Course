@@ -126,4 +126,9 @@ export const createPasswordForFirst = async (password) => {
     }
 };
 
+export const myInfo = async() => {
+    const response = await axios.get(`api/v1/my-info`);
+    return response.data;
+}
+
 

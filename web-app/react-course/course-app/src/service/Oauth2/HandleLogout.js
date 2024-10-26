@@ -8,7 +8,7 @@ export const HandleLogout = ({ setLoggedOut }) => {
 
         if (!token) {
             console.log('No token found');
-            setLoggedOut(true); // Cập nhật trạng thái logout
+            setLoggedOut(true);
             navigate('/login');
             return;
         }
