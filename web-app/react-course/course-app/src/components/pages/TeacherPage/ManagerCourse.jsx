@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { getCoursesByTeacher } from "../../../service/CourseService";
+import { deleteCourse, getCoursesByTeacher } from "../../../service/CourseService";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../../utils/LoadingSpinner";
+import Swal from "sweetalert2";
 
 const ManagerCourse = () => {
 
@@ -32,16 +33,40 @@ const ManagerCourse = () => {
         navigate(`/manager-course/${id}`)
     }
 
+    const handleDeleteCourse = async (courseId) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to delete this course?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete now!',
+            cancelButtonText: 'No, cancel.'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await deleteCourse(courseId);
+                    if (response && response.code === 200) {
+                        setCourses((prevCourses) => prevCourses.filter(course => course.id !== courseId));
+                        Swal.fire('Deleted!', 'The course has been deleted.', 'success');
+                    } else {
+                        Swal.fire('Error!', 'Failed to delete the course.', 'error');
+                    }
+                } catch (error) {
+                    Swal.fire('Error!', 'An unexpected error occurred.', 'error');
+                }
+            }
+        });
+    }
+
+
     if (isLoadingCourse) {
         return (
-           <LoadingSpinner />
+            <LoadingSpinner />
         );
     }
 
     if (httpError) {
-        <div>
-            {httpError}
-        </div>
+        return <div>{httpError}</div>;
     }
 
     return (
@@ -62,14 +87,14 @@ const ManagerCourse = () => {
                                     <div className="my-course-hover-overlay">
                                         <button
                                             className="btn btn-primary my-course-start-learning-btn"
-                                            onClick={() => handleDetail(course.id)} 
+                                            onClick={() => handleDetail(course.id)}
                                         >
                                             Detail
                                         </button>
 
                                         <button
                                             className="btn btn-primary my-course-remove-learning-btn"
-                                            // onClick={() => handleDetail(course.courseId)} 
+                                            onClick={() => handleDeleteCourse(course.id)}
                                         >
                                             Remove
                                         </button>

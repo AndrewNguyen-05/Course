@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { FaFileAlt, FaTimes, FaVideo } from "react-icons/fa";
 
 const ModalUpdateLesson = ({
-    isEditMode,
+    handleOpenUpdateLesson,
     handleCloseUpdateLesson,
     lessonName,
     setLessonName,
@@ -13,7 +13,7 @@ const ModalUpdateLesson = ({
     handleUpdateLesson,
     video
 }) => {
-    if (!isEditMode) return null;
+    if (!handleOpenUpdateLesson) return null;
 
     return (
         <div className="create-lesson-modal-overlay">
@@ -47,7 +47,7 @@ const ModalUpdateLesson = ({
                         <textarea
                             id="description"
                             placeholder="Enter lesson description"
-                            value={descriptionLesson}
+                            value={descriptionLesson || ""} 
                             onChange={(e) => setDescriptionLesson(e.target.value)}
                             required
                         ></textarea>

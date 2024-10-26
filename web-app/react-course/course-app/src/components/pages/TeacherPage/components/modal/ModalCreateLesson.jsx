@@ -4,10 +4,15 @@ import { motion } from 'framer-motion';
 
 const ModalCreateLesson = (props) => {
     const {
-        isModalLessonOpen, handleCloseModalLesson, handleCreateLesson,
-        lessonName, setLessonName,
-        descriptionLesson, setDescriptionLesson,
-        setVideo, video,
+        isModalLessonOpen, 
+        handleCloseModalLesson,
+        handleCreateLesson,
+        lessonName, 
+        setLessonName,
+        descriptionLesson, 
+        setDescriptionLesson,
+        setVideo, 
+        video,
         loadingCreateLesson
     } = props;
 

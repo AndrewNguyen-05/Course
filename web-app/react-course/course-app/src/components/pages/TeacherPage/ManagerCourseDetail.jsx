@@ -33,6 +33,7 @@ const ManagerCourseDetail = () => {
     const [descriptionLesson, setDescriptionLesson] = useState('');
     const [video, setVideo] = useState(null);
     const [loadingCreateLesson, setLoadingCreateLesson] = useState(false);
+    const [isLoadingCreateChapter, setLoadingIsCreateChapter] = useState(false);
 
     const [isEditMode, setIsEditMode] = useState(false);
     const [currentLessonId, setCurrentLessonId] = useState(null);
@@ -169,6 +170,7 @@ const ManagerCourseDetail = () => {
     }, [id]);
 
     const handleCreateChapter = async () => {
+        setLoadingIsCreateChapter(true);
         const chapterData = {
             courseId: id,
             chapterName: chapterName,
@@ -188,6 +190,8 @@ const ManagerCourseDetail = () => {
         } catch (error) {
             console.log(error);
             toast.error("Create Chapter Error");
+        } finally {
+            setLoadingIsCreateChapter(false);
         }
     };
 
@@ -275,8 +279,8 @@ const ManagerCourseDetail = () => {
 
     return (
         <div className="content-page-course-detail">
-            <TopBar/>
-            <Header/>
+            <TopBar />
+            <Header />
             <div className="manager-course-container content-page">
                 <SidebarManager />
                 <div className="manager-course-content">
@@ -288,6 +292,7 @@ const ManagerCourseDetail = () => {
                             setChapterName={setChapterName}
                             descriptionChapter={descriptionChapter}
                             setDescriptionChapter={setDescriptionChapter}
+                            isLoadingCreateChapter={isLoadingCreateChapter}
                         />
                     )}
                     {isModalLessonOpen && (
@@ -307,7 +312,7 @@ const ManagerCourseDetail = () => {
                     )}
                     {isEditMode && (
                         <ModalUpdateLesson
-                            isEditMode={isEditMode}
+                            handleOpenUpdateLesson={handleOpenUpdateLesson}
                             handleCloseUpdateLesson={handleCloseUpdateLesson}
                             lessonName={lessonName}
                             setLessonName={setLessonName}
@@ -389,7 +394,7 @@ const ManagerCourseDetail = () => {
                     pauseOnHover
                 />
             </div>
-            <Footer/>
+            <Footer />
         </div>
     );
 };
