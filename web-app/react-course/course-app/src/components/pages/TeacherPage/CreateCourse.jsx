@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaUpload } from 'react-icons/fa';
 import FormUploadCourse from './components/FormUploadCourse';
 
-export const UploadCourse = () => {
+export const CreateCourse = () => {
     const [courseTitle, setCourseTitle] = useState('');
     const [courseDescription, setCourseDescription] = useState('');
     const [level, setLevel] = useState('');

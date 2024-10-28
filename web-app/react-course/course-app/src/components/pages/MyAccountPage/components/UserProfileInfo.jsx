@@ -1,9 +1,11 @@
+import avatarDefault from '../../../../img/avatar-default.jpg'
+
 const UserProfileInfo = (props) => {
     const { avatar, info } = props
     return (
         <div className="my-account-profile-section">
             <div className="my-account-avatar-section">
-                <img src={avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"}
+                <img src={avatar || avatarDefault}
                     className="my-account-avatar"  alt="Avatar"/>
                 <button className="my-account-edit-photo">
                     <i className="fa-solid fa-camera"></i>

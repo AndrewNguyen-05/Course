@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { creationPost, getAllPosts } from '../../../service/PostService';
+import React, { useState, useEffect, useCallback } from 'react';
+import { creationPost, deletePost, getAllPosts } from '../../../service/PostService';
 import { toast, ToastContainer } from 'react-toastify';
 import { getAvatar } from '../../../service/ProfileService';
 import SidebarCommunity from './components/SidebarCommunity';
 import ModalCreatePost from './components/ModalCreatePost';
 import PostArticle from './components/PostArticle';
 import PostList from './components/PostList';
+import avatarDefault from '../../../img/avatar-default.jpg'
+import Swal from 'sweetalert2';
 
 export const Community = () => {
   const token = localStorage.getItem('token');
@@ -13,10 +15,9 @@ export const Community = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  const [avatar, setAvatar] = useState('https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg');
+  const [avatar, setAvatar] = useState(avatarDefault);
   const [newPost, setNewPost] = useState({ content: '', image: null });
   const [filterQuery, setFilterQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -33,34 +34,36 @@ export const Community = () => {
   }, [token]);
 
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     setLoading(true);
-
     try {
       const data = await getAllPosts(currentPage, filterQuery);
       if (data && data.result && Array.isArray(data.result.data)) {
         const newPosts = data.result.data;
-        console.log("Page", currentPage)
+        console.log("Page", currentPage);
         if (currentPage === 1) {
           setPosts(newPosts);
         } else {
-          setPosts((prevPosts) => [...prevPosts, ...newPosts.filter(post => !prevPosts.some(p => p.id === post.id))]);
+          setPosts((prevPosts) => [
+            ...prevPosts,
+            ...newPosts.filter((post) => !prevPosts.some((p) => p.id === post.id))
+          ]);
         }
-        setTotalPages(data.result.totalPages || 1);
         setHasMore(currentPage < data.result.totalPages);
       } else {
         setHasMore(false);
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
+      setIsSearching(false);
     }
-    setLoading(false);
-    setIsSearching(false);
-  };
+  }, [currentPage, filterQuery]);
 
   useEffect(() => {
-    fetchPosts(currentPage);
-  }, [currentPage]);
+    fetchPosts();
+  }, [fetchPosts]);
 
   const handlesearchPost = () => {
     setIsSearching(true);
@@ -113,6 +116,38 @@ export const Community = () => {
     }
   };
 
+  const handleDeletePost = (postId) => {
+    Swal.fire({
+        title: 'Are you sure ?',
+        text: 'Do you want to delete this post ?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete now',
+        cancelButtonText: "No, cancel",
+        width: "370px",
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            try {
+                await deletePost(postId);
+                setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: 'Your post has been deleted.',
+                    icon: 'success',
+                    width: "370px",
+                });
+            } catch (error) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: error.message || 'Đã xảy ra lỗi trong quá trình mua khóa học. Vui lòng thử lại sau.',
+                    icon: 'error'
+                });
+                console.error(error);
+            }
+        }
+    })
+}
+
   return (
     <div className='content-page'>
       <div className="community-container d-flex">
@@ -142,6 +177,7 @@ export const Community = () => {
             isSearching={isSearching}
             hasMore={hasMore}
             setCurrentPage={setCurrentPage}
+            handleDeletePost={handleDeletePost}
           />
         </div>
 

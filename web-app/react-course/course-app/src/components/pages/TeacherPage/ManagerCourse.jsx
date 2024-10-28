@@ -3,6 +3,7 @@ import { deleteCourse, getCoursesByTeacher } from "../../../service/CourseServic
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../../utils/LoadingSpinner";
 import Swal from "sweetalert2";
+import { GiOpenBook } from "react-icons/gi";
 
 const ManagerCourse = () => {
 
@@ -58,6 +59,10 @@ const ManagerCourse = () => {
         });
     }
 
+    const handleCreateCourse = () => {
+        navigate('/create-courses')
+    }
+
 
     if (isLoadingCourse) {
         return (
@@ -72,6 +77,14 @@ const ManagerCourse = () => {
     return (
         <div className='mycousrse-page'>
             <div className="container-fluid my-course-container my-5">
+                <div className="d-flex justify-content-end mb-4">
+                    <button
+                        className="btn btn-create-course d-flex align-items-center justify-content-center"
+                        onClick={handleCreateCourse}
+                    >
+                        <GiOpenBook size={20} className="mr-2" /> Create Course
+                    </button>
+                </div>
                 <div className="my-course-grid">
                     {courses.map(course => (
                         <div key={course.id} className="my-course-item">

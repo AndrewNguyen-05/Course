@@ -21,7 +21,7 @@ public class PostResponse {
     String content;
     String image;
     Integer likeCount;
-
+    boolean owner;
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     LocalDateTime createdAt;
 

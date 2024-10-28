@@ -42,7 +42,7 @@ public class Review extends AbstractEntity<Long> {
             CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "course_id", nullable = false)
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "comments"})
     Course course;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = {

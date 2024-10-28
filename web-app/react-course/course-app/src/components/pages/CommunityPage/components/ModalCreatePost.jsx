@@ -1,12 +1,13 @@
 import { Button, Form } from "react-bootstrap";
 import { FaImage, FaSmile, FaVideo } from "react-icons/fa";
+import avatarDefault from '../../../../img/avatar-default.jpg'
 
 const ModalCreatePost = (props) => {
     const {setShowModal, avatar} = props;
     return (
         <div className="create-post-container">
             <div className="create-post-header d-flex align-items-center">
-                <img src={avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"} alt="User Avatar" className="avatar-img me-3" />
+                <img src={avatar || avatarDefault} alt="User Avatar" className="avatar-img me-3" />
                 <Form.Control
                     type="text"
                     placeholder="Đức ơi, bạn đang nghĩ gì thế?"

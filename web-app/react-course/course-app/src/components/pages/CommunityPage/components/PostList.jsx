@@ -11,8 +11,10 @@ const PostList = (props) => {
         loading, 
         isSearching, 
         hasMore, 
-        setCurrentPage 
+        setCurrentPage,
+        handleDeletePost
     } = props;
+
     return (
         <Container>
             <Row className="justify-content-md-center">
@@ -47,7 +49,7 @@ const PostList = (props) => {
                                 !isSearching && (
                                     <div className="text-center my-3">
                                         <Spinner animation="border" />
-                                        <p>Đang tải thêm bài viết...</p>
+                                        <p>Loading more articles...</p>
                                     </div>
                                 )
                             }
@@ -69,7 +71,9 @@ const PostList = (props) => {
                                         image={post.image}
                                         likes={post.likes}
                                         comments={post.comments}
+                                        owner={post.owner}
                                         createdAt={post.createdAt}
+                                        handleDeletePost={handleDeletePost}
                                     />
                                 </motion.div>
                             ))}

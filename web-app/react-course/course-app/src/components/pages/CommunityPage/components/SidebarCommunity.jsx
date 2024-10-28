@@ -1,6 +1,7 @@
 import { Form } from "react-bootstrap";
-import { FaBook, FaBookmark, FaComments, FaHome, FaSearch } from "react-icons/fa";
-import { MdLibraryBooks, MdLiveTv } from "react-icons/md";
+import { FaHome, FaSearch } from "react-icons/fa";
+import { FaPen } from 'react-icons/fa';
+import { Link } from "react-router-dom";
 
 const SidebarCommunity = (props) => {
 
@@ -27,12 +28,8 @@ const SidebarCommunity = (props) => {
                 </button>
             </Form.Group>
             <div className="sidebar-menu">
-                <SidebarMenuItem title="Dashboard" icon={<FaHome />} />
-                <SidebarMenuItem title="Live Classes" icon={<MdLiveTv />} />
-                <SidebarMenuItem title="Discussions" icon={<FaComments />} />
-                <SidebarMenuItem title="Courses" icon={<MdLibraryBooks />} />
-                <SidebarMenuItem title="Resources" icon={<FaBook />} />
-                <SidebarMenuItem title="Saved Resources" icon={<FaBookmark />} />
+                <Link to="/community" ><SidebarMenuItem title="Dashboard" icon={<FaHome />} /></Link>
+                <Link to="/community/my-post"><SidebarMenuItem title="My Post" icon={<FaPen  />} /></Link>
             </div>
         </div>
     );

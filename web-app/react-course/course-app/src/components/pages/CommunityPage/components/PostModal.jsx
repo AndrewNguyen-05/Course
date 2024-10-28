@@ -9,6 +9,7 @@ import { PostFooter } from './PostFooter';
 import { CommentInput } from './CommentInput';
 import { addComment, deleteComment, getCommentByPostId, replyComment, updateComment } from '../../../../service/CommentService';
 import { getAvatar } from '../../../../service/ProfileService';
+import avatarDefault from '../../../../img/avatar-default.jpg'
 
 const PostModal = ({ show, handleClose, post }) => {
     const postId = post?.id;
@@ -142,7 +143,7 @@ const PostModal = ({ show, handleClose, post }) => {
     const handleDeleteComment = async (commentId) => {
         if (!token || !commentId) return;
         try {
-            await deleteComment(token, commentId);
+            await deleteComment(commentId);
 
             setComments((prevComments) => {
                 return prevComments.map((comment) => {
@@ -241,7 +242,7 @@ const PostModal = ({ show, handleClose, post }) => {
                         <ListGroup.Item key={cmt.id} className="post-comment-item">
                             <div className="d-flex align-items-start">
                                 <Image
-                                    src={cmt.avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"}
+                                    src={cmt.avatar || avatarDefault}
                                     roundedCircle
                                     width={30}
                                     height={30}

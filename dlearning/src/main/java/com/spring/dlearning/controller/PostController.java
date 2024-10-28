@@ -61,12 +61,13 @@ public class PostController {
 
     @GetMapping("/get-post-current-login")
     ApiResponse<PageResponse<PostResponse>> getPostByCurrentLogin(
+            @Filter Specification<Post> spec,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            @RequestParam(value = "size", required = false, defaultValue = "5") int size
+            @RequestParam(value = "size", required = false, defaultValue = "3") int size
     ){
         return ApiResponse.<PageResponse<PostResponse>>builder()
                 .code(HttpStatus.OK.value())
-                .result(postService.getPostByCurrentLogin(page, size))
+                .result(postService.getPostByCurrentLogin(spec, page, size))
                 .build();
     }
 

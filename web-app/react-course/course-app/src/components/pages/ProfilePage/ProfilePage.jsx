@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  getProfileInfo,
-  removeAvatar,
-  updateAvatar,
-  updateProfile,
-} from "../../../service/ProfileService";
+import { getProfileInfo, removeAvatar, updateAvatar, updateProfile } from "../../../service/ProfileService";
+import avatarDefault from '../../../img/avatar-default.jpg'
+
 import { FromUpdateProfile } from "./components/FromUpdateProfile";
 
 export const Profile = () => {
@@ -45,7 +42,7 @@ export const Profile = () => {
           });
           setSelectedImage(
             data.result.avatar ||
-              "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
+            avatarDefault
           );
         }
       })
@@ -93,7 +90,7 @@ export const Profile = () => {
     removeAvatar()
       .then(() => {
         setSelectedImage(
-          "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
+          avatarDefault
         );
         toast.success("Avatar removed successfully!");
       })

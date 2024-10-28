@@ -64,6 +64,12 @@ public class PostService {
     @PreAuthorize("isAuthenticated()")
     public PageResponse<PostResponse> getAllPost (Specification<Post> spec, int page, int size){
 
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
         Sort sort = Sort.by(Sort.Direction.DESC,"createdAt");
         Pageable pageable = PageRequest.of(page - 1, size, sort);
         Page<Post> posts = postRepository.findAll(spec, pageable);
@@ -71,6 +77,12 @@ public class PostService {
         List<PostResponse> postResponses = posts.getContent()
                 .stream().map(postMapper::toPostResponse)
                 .toList();
+
+        for(int i = 0; i < postResponses.size(); i++){
+            Post post = posts.getContent().get(i);
+            PostResponse postResponse = postResponses.get(i);
+            postResponse.setOwner(Objects.equals(user.getId(), post.getUser().getId()));
+        }
 
         return PageResponse.<PostResponse>builder()
                 .currentPage(page)
@@ -82,27 +94,40 @@ public class PostService {
     }
 
     @PreAuthorize("isAuthenticated()")
-    public PageResponse<PostResponse> getPostByCurrentLogin (int page, int size){
+    public PageResponse<PostResponse> getPostByCurrentLogin(Specification<Post> spec, int page, int size) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
-        Sort sort = Sort.by(Sort.Direction.DESC,"createdAt");
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
         Pageable pageable = PageRequest.of(page - 1, size, sort);
-        Page<Post> posts = postRepository.findPostByUser(user, pageable);
 
-        List<PostResponse> postResponse = posts.getContent()
-                .stream().map(postMapper::toPostResponse)
+        Specification<Post> userSpec = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("user"), user);
+
+        Specification<Post> combinedSpec = spec != null ? userSpec.and(spec) : userSpec;
+
+        Page<Post> posts = postRepository.findAll(combinedSpec, pageable);
+
+        List<PostResponse> postResponses = posts.getContent()
+                .stream()
+                .map(postMapper::toPostResponse)
                 .toList();
+
+        for(int i = 0; i < postResponses.size(); i++){
+            Post post = posts.getContent().get(i);
+            PostResponse postResponse = postResponses.get(i);
+            postResponse.setOwner(Objects.equals(user.getId(), post.getUser().getId()));
+        }
 
         return PageResponse.<PostResponse>builder()
                 .currentPage(page)
                 .pageSize(pageable.getPageSize())
                 .totalElements(posts.getTotalElements())
                 .totalPages(posts.getTotalPages())
-                .data(postResponse)
+                .data(postResponses)
                 .build();
     }
 
@@ -124,7 +149,6 @@ public class PostService {
                 !Objects.equals(user.getRole().getName(), PredefinedRole.ADMIN_ROLE)) {
             throw new AppException(ErrorCode.DELETE_POST_INVALID);
         }
-
         postRepository.delete(post);
     }
 

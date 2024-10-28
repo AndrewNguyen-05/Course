@@ -3,6 +3,7 @@ import { CommentReplies } from "./CommentReplies";
 import { Button, Form, Image } from "react-bootstrap";
 import CommentDropdown from "./CommentDropdown";
 import { FaReply, FaThumbsUp } from "react-icons/fa";
+import avatarDefault from '../../../../img/avatar-default.jpg'
 
 export const CommentParent = ({
     comment,
@@ -29,7 +30,7 @@ export const CommentParent = ({
         <div className="post-comment-item">
             <div className="d-flex align-items-start">
                 <Image
-                    src={comment.avatar || 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'}
+                    src={comment.avatar || avatarDefault}
                     roundedCircle
                     width={30}
                     height={30}

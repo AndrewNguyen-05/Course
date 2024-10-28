@@ -13,6 +13,7 @@ import { Favorites } from "../pages/Widgets/Favorites.jsx";
 import { ProfileDropdown } from "../pages/Widgets/ProfileDropdown.jsx";
 import { Advertisement } from "../pages/Widgets/Advertisement.jsx";
 import LoadingSpinner from "../../utils/LoadingSpinner.jsx";
+import avatarDefault from '../../img/avatar-default.jpg'
 
 export const Header = () => {
     const token = localStorage.getItem("token");
@@ -186,14 +187,14 @@ export const Header = () => {
                         <div className="navbar-nav ml-auto d-flex align-items-center">
                             <div className="nav-item d-flex align-items-center mx-3">
                                 <span className="points-display text-primary">
-                                    <i className="fa fa-coins"></i> {points} Points
+                                    <i className="fa fa-coins"></i> {points}
                                 </span>
                             </div>
 
                             <NotificationDropdown notifications={notifications} unreadCount={unreadCount} markAsRead={markAsRead} />
                             <Advertisement />
                             <Favorites />
-                            <ProfileDropdown avatar={avatar || "https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"} isTokenValid={isTokenValid} role={role} handleLogout={handleLogout} />
+                            <ProfileDropdown avatar={avatar || avatarDefault} isTokenValid={isTokenValid} role={role} handleLogout={handleLogout} />
                         </div>
                     </div>
                 </nav>

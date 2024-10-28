@@ -26,7 +26,7 @@ import { ForgotPassword } from './components/pages/ModifyPasswordPage/ForgotPass
 import { ChangePassword } from './components/pages/ModifyPasswordPage/ChangePassword';
 import FavoriteCourses from './components/pages/FavoritePage/Favorite';
 import { AdsPage } from './components/pages/AdsPage/Ads';
-import { UploadCourse } from './components/pages/TeacherPage/UploadCourse';
+import { CreateCourse } from './components/pages/TeacherPage/CreateCourse';
 import { MyCourses } from './components/pages/HomePage/components/MyCourse';
 import ManagerCourse from './components/pages/TeacherPage/ManagerCourse';
 import ManagerCourseDetail from './components/pages/TeacherPage/ManagerCourseDetail';
@@ -34,6 +34,7 @@ import { Accessdenied } from './components/pages/ErrorPage/Accessdenied';
 import { NotFound } from './components/pages/ErrorPage/NotFound';
 import { ProcessLoginOAuth2 } from './service/Oauth2/OAuth2';
 import { Authorization } from './service/Security/Authorization';
+import MyPost from './components/pages/CommunityPage/MyPost';
 
 function App() {
   return (
@@ -57,9 +58,14 @@ function App() {
           <Route path='/favorite' element={<FavoriteCourses />} />
           <Route path='/deposit' element={<DepositPage />} />
           <Route path='/courses' element={<Courses />}></Route>
-          <Route path="/comunity" element={
+          <Route path="/community" element={
             <PrivateRoute>
               <Community />
+            </PrivateRoute>} />
+
+          <Route path="/community/my-post" element={
+            <PrivateRoute>
+              <MyPost />
             </PrivateRoute>} />
 
           <Route path="/create-password" element={
@@ -101,9 +107,9 @@ function App() {
             <ForgotPassword />
           } />
 
-          <Route path="/teacher-add-courses" element={
+          <Route path="/create-courses" element={
             <Authorization requiredRole={["TEACHER"]}>
-              <UploadCourse />
+              <CreateCourse />
             </Authorization>
           } />
         </Route>
