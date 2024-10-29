@@ -13,7 +13,6 @@ export const AdsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
 
-
     useEffect(() => {
         document.title = 'Advertisement';
         const adsByCurrentLogin = async () => {

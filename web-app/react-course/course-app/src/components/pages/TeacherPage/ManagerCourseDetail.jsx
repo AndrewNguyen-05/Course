@@ -14,9 +14,6 @@ import ModalUpdateLesson from "./components/modal/ModalUpdateLesson";
 import StatisticsOverview from "./components/StatisticsOverview";
 import SearchLesson from "./components/SearchLesson";
 import ButtonNewChapter from "./components/BuutonNewChapter";
-import { Footer } from "../../layouts/Footer";
-import { TopBar } from "../../layouts/TopBar";
-import { Header } from "../../layouts/Header";
 
 const ManagerCourseDetail = () => {
     const { id } = useParams();
@@ -279,8 +276,6 @@ const ManagerCourseDetail = () => {
 
     return (
         <div className="content-page-course-detail">
-            <TopBar />
-            <Header />
             <div className="manager-course-container content-page">
                 <SidebarManager />
                 <div className="manager-course-content">
@@ -394,7 +389,6 @@ const ManagerCourseDetail = () => {
                     pauseOnHover
                 />
             </div>
-            <Footer />
         </div>
     );
 };
