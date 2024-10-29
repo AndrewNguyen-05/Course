@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from "react-toastify";
 import { ReviewLesson } from './components/ReviewLesson';
 import { addCommentLesson, getCommentLesson } from '../../../service/LessonComment';
@@ -8,6 +8,7 @@ import { getInfoCourse } from '../../../service/CourseService';
 import ProgressBar from './components/ProgressBar';
 import { FaChevronDown } from 'react-icons/fa';
 import LoadingSpinner from '../../../utils/LoadingSpinner';
+import { checkPurchase } from '../../../service/Enrollment';
 
 export const LearningPage = () => {
     useEffect(() => {
@@ -28,6 +29,27 @@ export const LearningPage = () => {
     const [replyContent, setReplyContent] = useState({});
     const [activeReply, setActiveReply] = useState(null);
     const [avatar, setAvatar] = useState();
+    const nagative = useNavigate();
+
+    useEffect(() => {
+        const fetchPurchaseStatus = async () => {
+            try {
+                const result = await checkPurchase(id);
+                if (result && result.result) {
+                    if (!result.result.purchased) {
+                        nagative('/home');
+                    }
+                }
+            } catch (error) {
+                console.error("Error checking purchase status:", error);
+                nagative('/home');
+            }
+        };
+    
+        if (id) {
+            fetchPurchaseStatus();
+        }
+    }, [id, nagative]);
 
     useEffect(() => {
         const fetchLessonByCourseId = async () => {

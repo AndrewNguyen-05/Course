@@ -43,7 +43,6 @@ public class EnrollmentController {
     @GetMapping("/check-purchase/{courseId}")
     ApiResponse<CoursePurchaseResponse> checkPurchase(@PathVariable Long courseId) {
         var result = enrollmentService.checkPurchase(courseId);
-        log.info("---> {}", result);
 
         return ApiResponse.<CoursePurchaseResponse>builder()
                 .code(HttpStatus.OK.value())

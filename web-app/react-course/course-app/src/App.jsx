@@ -13,7 +13,6 @@ import { ContactPage } from './components/pages/ContactPage/ContactPage';
 import { Courses } from './components/pages/CoursesPage/CoursesPage';
 import { About } from './components/pages/AboutPage/AboutPage';
 import DepositPage from './components/pages/DepositPage/DepositPage';
-import ProfilePage from './components/pages/MyAccountPage/MyAccount';
 import { Profile } from './components/pages/ProfilePage/ProfilePage';
 import { PaymentSuccess } from './components/pages/PaymentPage/PaymentSuccess';
 import { PaymentFail } from './components/pages/PaymentPage/PaymentFailed';
@@ -48,8 +47,6 @@ function App() {
           <Route path='/course-detail/:id' element={<CourseDetail />} />
         </Route>
 
-        <Route path='/manager-course/:id' element={<ManagerCourseDetail />} />
-
         <Route element={<HeaderAndFooterRouter />}>
           <Route path='/my-ads' element={<AdsPage />} />
           <Route path='/favorite' element={<FavoriteCourses />} />
@@ -58,6 +55,7 @@ function App() {
           <Route path='/favorite' element={<FavoriteCourses />} />
           <Route path='/deposit' element={<DepositPage />} />
           <Route path='/courses' element={<Courses />}></Route>
+          <Route path='/manager-course/:id' element={<ManagerCourseDetail />} />
           <Route path="/community" element={
             <PrivateRoute>
               <Community />
@@ -126,7 +124,6 @@ function App() {
           </Authorization>
         } />
 
-        <Route path="/my-account" element={<ProfilePage />} />
         <Route path='/courses' element={<Courses />} />
         <Route path='/lesson-detail/:id' element={<LearningPage />} />
         <Route path="/oauth2/callback/:clientCode" element={<ProcessLoginOAuth2 />} />

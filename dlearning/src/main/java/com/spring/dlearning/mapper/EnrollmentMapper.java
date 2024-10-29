@@ -18,7 +18,6 @@ public interface EnrollmentMapper {
     @Mapping(target = "createAt", source = "course.createdAt")
     BuyCourseResponse toBuyCourseResponse(Enrollment enrollment);
 
-
     @Mapping(source = "user.id", target = "userId")
     @Mapping(source = "course.id", target = "courseId")
     @Mapping(source = "purchased", target = "purchased")

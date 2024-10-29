@@ -8,7 +8,6 @@ import { UseAuth } from "../../../service/Oauth2/UseAuth";
 import { HandleLogout } from "../../../service/Oauth2/HandleLogout";
 
 export const AdminHeader = () => {
-  const wsClient = useWebsocket();
   const [loggedOut, setLoggedOut] = useState(false);
   const { isTokenValid } = UseAuth({ loggedOut });
   const { handleLogout } = HandleLogout({ setLoggedOut });
@@ -32,6 +31,7 @@ export const AdminHeader = () => {
       .catch((error) => console.log(error));
   }, []);
 
+  const wsClient = useWebsocket();
   useEffect(() => {
     wsClient.onConnect = () => {
       console.log("Connected to WebSocket");

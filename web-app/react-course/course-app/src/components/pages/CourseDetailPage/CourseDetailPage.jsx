@@ -81,13 +81,6 @@ export const CourseDetail = () => {
             }).catch(error => console.log(error));
     }, [id]);
 
-    if (loading)
-        return <div><LoadingSpinner /></div>;
-
-    if (!course) {
-        return <div>Course data is not available</div>;
-    }
-
     // Add a new comment
     const handleAddReview = async () => {
         if (!newComment.trim() && newRating === 0) {
@@ -285,6 +278,13 @@ export const CourseDetail = () => {
             setNewRating(rating);
         }
     };
+
+    if (loading)
+        return <div><LoadingSpinner /></div>;
+
+    if (!course) {
+        return <div>Course data is not available</div>;
+    }
 
     return (
         <div className="container-fluid py-5">
