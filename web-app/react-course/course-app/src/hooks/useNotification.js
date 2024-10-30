@@ -1,7 +1,12 @@
-import { useEffect, useState } from "react";
-import { markAsReadNotification, notificationCurrentLogin } from "../service/NotificationService";
+import { useContext, useEffect, useState } from "react";
+import AuthContext from "../context/AuthContext";
+import {
+  markAsReadNotification,
+  notificationCurrentLogin,
+} from "../service/NotificationService";
 
-export const useNotification = (wsClient, token, loggedOut, isTokenValid) => {
+export const useNotification = (wsClient) => {
+  const authContext = useContext(AuthContext);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -17,7 +22,7 @@ export const useNotification = (wsClient, token, loggedOut, isTokenValid) => {
   }, [wsClient]);
 
   useEffect(() => {
-    if (!token || loggedOut || !isTokenValid) {
+    if (!authContext.authenticated) {
       setLoading(false);
       return;
     }
@@ -30,7 +35,7 @@ export const useNotification = (wsClient, token, loggedOut, isTokenValid) => {
       })
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
-  }, [token, loggedOut, isTokenValid]);
+  }, [authContext]);
 
   const markAsRead = async (id) => {
     try {
