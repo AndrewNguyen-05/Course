@@ -40,7 +40,6 @@ public class UserController {
     @PostMapping("/check-exists-user")
     ApiResponse<Boolean> checkExistsUser(@RequestBody EmailRequest request){
         var result = userService.findByEmail(request);
-        System.out.println(result);
 
         return ApiResponse.<Boolean>builder()
                 .code(HttpStatus.OK.value())
@@ -138,7 +137,4 @@ public class UserController {
                 .build();
     }
 
-//    ApiResponse<String> userLogin() {
-//        return Api
-//    }
 }

@@ -84,6 +84,7 @@ public class AuthenticationService {
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
+        if(!user.getEnabled()) throw new AppException(ErrorCode.ACCOUNT_BANNED);
 
         var token = generateToken(user);
 

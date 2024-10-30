@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { introspect, login } from "../../../service/AuthenticationService";
 import { ToastContainer } from "react-toastify";
@@ -6,8 +6,10 @@ import { motion } from "framer-motion";
 import { LoginFrom } from "./components/LoginForm";
 import { OAuthConfig } from "../../config/OAuthConfig";
 import LoadingSpinner from "../../../utils/LoadingSpinner";
+import AuthContext from "../../../context/AuthContext";
 
 export const LoginPage = () => {
+  const authContext = useContext(AuthContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -63,7 +65,8 @@ export const LoginPage = () => {
   };
 
   const handleFacebookLogin = () => {
-    window.location.href = "http://localhost:8080/oauth2/authorization/facebook";
+    window.location.href =
+      "http://localhost:8080/oauth2/authorization/facebook";
   };
 
   const handleLogin = (event) => {
@@ -74,7 +77,7 @@ export const LoginPage = () => {
         if (data && data.result && data.result.token) {
           const token = data.result.token;
           localStorage.setItem("token", token);
-
+          authContext.refresh();
           introspect()
             .then((introspectData) => {
               if (introspectData && introspectData.valid) {
@@ -110,13 +113,11 @@ export const LoginPage = () => {
   };
 
   if (loading) {
-    return (
-      <LoadingSpinner />
-    )
+    return <LoadingSpinner />;
   }
 
   if (error) {
-    <div>{error}</div>
+    <div>{error}</div>;
   }
 
   return (
@@ -138,7 +139,11 @@ export const LoginPage = () => {
           handleFacebookLogin={handleFacebookLogin}
         />
 
-        <ToastContainer position="top-right" autoClose={3000} className="custom-toast-container" />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          className="custom-toast-container"
+        />
       </section>
     </motion.div>
   );

@@ -9,6 +9,7 @@ public enum ErrorCode {
 
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_PATH_VARIABLE_ID (400, "Id must be a number greater than zero ", HttpStatus.BAD_REQUEST),
+    ACCOUNT_BANNED(400, "Your account has been banned.", HttpStatus.BAD_REQUEST),
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
     USER_EXISTED(400, "User existed", HttpStatus.BAD_REQUEST),
     USERNAME_INVALID(400, "Username must be at least {min} characters", HttpStatus.BAD_REQUEST),

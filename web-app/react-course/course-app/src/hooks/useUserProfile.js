@@ -1,33 +1,37 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getAvatar } from "../service/ProfileService";
 import { getPointsByCurrentLogin } from "../service/UserService";
+import AuthContext from "../context/AuthContext";
 
-export const useUserProfile = (token, loggedOut, isTokenValid) => {
-    const [avatar, setAvatar] = useState(null);
-    const [points, setPoints] = useState(0);
-    const [loading, setLoading] = useState(true);
+export const useUserProfile = () => {
+  const authContext = useContext(AuthContext);
+  const [avatar, setAvatar] = useState(null);
+  const [points, setPoints] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        if (!token || loggedOut || !isTokenValid) {
-            setLoading(false);
-            return;
-        }
+  useEffect(() => {
+    if (!authContext.authenticated) {
+      setAvatar(null);
+      setPoints(0);
+      setLoading(false);
+      return;
+    }
 
-        const fetchUserProfile = async () => {
-            try {
-                const avatarData = await getAvatar();
-                setAvatar(avatarData.result);
-                const pointsData = await getPointsByCurrentLogin();
-                setPoints(pointsData.result.points);
-            } catch (error) {
-                console.log(error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const fetchUserProfile = async () => {
+      try {
+        const avatarData = await getAvatar();
+        setAvatar(avatarData.result);
+        const pointsData = await getPointsByCurrentLogin();
+        setPoints(pointsData.result.points);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-        fetchUserProfile();
-    }, [token, loggedOut, isTokenValid]);
+    fetchUserProfile();
+  }, [authContext]);
 
-    return { avatar, points, loading };
+  return { avatar, points, loading };
 };
