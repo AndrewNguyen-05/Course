@@ -1,11 +1,14 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useContext } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { myInfo } from "../UserService";
+import AuthContext from "../../context/AuthContext";
 
 export const ProcessLoginOAuth2 = () => {
+  const authContext = useContext(AuthContext)
   const navigate = useNavigate();
   const pathParams = useParams();
   const [query] = useSearchParams();
+  // k biet m gui thieu hay b copy thieu nhi
 
   const fetchInfo = useCallback(async () => {
     const result = await myInfo();
@@ -29,6 +32,7 @@ export const ProcessLoginOAuth2 = () => {
           console.log(data);
           const token = data.token;
           localStorage.setItem("token", token);
+          authContext.refresh();
           fetchInfo();
         });
     } else {
@@ -46,6 +50,7 @@ export const ProcessLoginOAuth2 = () => {
             .then((data) => {
               if (data.result && data.result.token) {
                 localStorage.setItem("token", data.result.token);
+                authContext.refresh();
                 fetchInfo();
               }
             })
@@ -57,7 +62,7 @@ export const ProcessLoginOAuth2 = () => {
 
       handleAuthentication();
     }
-  }, [fetchInfo, pathParams.clientCode, query]);
+  }, [fetchInfo, pathParams.clientCode, query, authContext]);
 
   return (
     <div className="container text-center">
