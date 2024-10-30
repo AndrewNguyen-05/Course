@@ -4765,9 +4765,7 @@ input[type="button"].btn-block {
   background-color: #007bff;
   transition: left 0.3s ease, width 0.3s ease;
   will-change: left, width;
-  /* Tối ưu hóa hiệu suất */
 }
-
 
 .nav-tabs .nav-link {
   border: 1px solid transparent;
@@ -16469,7 +16467,7 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 
 .btn-create-course {
   background: rgba(40, 167, 69, 0.85);
-  color: white; 
+  color: white;
   padding: 12px 20px;
   font-size: 0.7rem;
   font-weight: bold;
@@ -16483,8 +16481,8 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 }
 
 .btn-create-course:hover {
-  background: rgba(33, 136, 56, 0.9); 
-  color: white; 
+  background: rgba(33, 136, 56, 0.9);
+  color: white;
   transform: translateY(-3px);
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.4);
 }
@@ -16575,6 +16573,6 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 /* Responsive Layout */
 @media (max-width: 768px) {
   .create-course-form {
-      padding: 20px;
+    padding: 20px;
   }
 }
