@@ -1,3 +1,4 @@
+import { Button } from 'react-bootstrap';
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -7,7 +8,6 @@ export const ProfileDropdown = ({
   role,
   handleLogout,
 }) => {
-  console.log(isTokenValid);
 
   return (
     <div className="nav-item dropdown mx-2">
@@ -124,14 +124,13 @@ export const ProfileDropdown = ({
               </Link>
             </li>
             <li>
-              <Link
-                to="/login"
+              <Button
                 className="dropdown-item d-flex align-items-center"
                 id="logout"
                 onClick={handleLogout}
               >
                 <i className="fa-solid fa-sign-out-alt me-2"></i>Logout
-              </Link>
+              </Button>
             </li>
           </>
         ) : (

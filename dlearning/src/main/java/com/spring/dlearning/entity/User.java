@@ -105,6 +105,10 @@ public class User extends AbstractEntity<Long> {
     @JoinColumn(name = "role_id", nullable = false)
     Role role;
 
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    Set<Course> courses;
+
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "reviews"})
     Set<Review> reviews;

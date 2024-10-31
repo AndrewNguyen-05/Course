@@ -18,4 +18,7 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long>{
     @Query("SELECT e FROM Enrollment e WHERE e.user = :user AND e.course = :course")
     Optional<Enrollment> checkPurchase(User user, Course course);
 
+    @Query("SELECT COUNT(DISTINCT e.user.id) FROM Enrollment e WHERE e.course.author.id = :teacherId")
+    int totalStudentsByTeacher(Long teacherId);
+
 }

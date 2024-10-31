@@ -35,7 +35,7 @@ export const useNotification = (wsClient) => {
       })
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
-  }, [authContext]);
+  }, [authContext.authenticated]);
 
   const markAsRead = async (id) => {
     try {

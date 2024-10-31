@@ -1,8 +1,8 @@
 package com.spring.dlearning.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import java.math.BigDecimal;
 
 @Setter
@@ -11,13 +11,15 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class InfoTeacherByCourseResponse {
 
-    Long id;
-
-    String author;
+    Long userId;
+    String name;
+    String avatar;
+    BigDecimal avgRating;
     Integer reviewAmount;
-    BigDecimal rating;
+    Integer studentAmount;
     Integer courseAmount;
     String description;
 }

@@ -23,12 +23,12 @@ public class TeacherController {
 
     TeacherService teacherService;
 
-    @GetMapping("/info-teacher/{id}")
-    ApiResponse<InfoTeacherByCourseResponse> getInfoTeacherByCourse(@PathVariable @Min(1) Long id){
+    @GetMapping("/info-teacher/{courseId}")
+    ApiResponse<InfoTeacherByCourseResponse> getInfoTeacherByCourse(@PathVariable @Min(1) Long courseId){
         return ApiResponse.<InfoTeacherByCourseResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Get information teacher successfully")
-                .result(teacherService.getInfoTeacherByCourse(id))
+                .result(teacherService.infoTeacherByCourseId(courseId))
                 .build();
     }
 }

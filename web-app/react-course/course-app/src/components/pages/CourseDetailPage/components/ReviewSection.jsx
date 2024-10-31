@@ -23,8 +23,8 @@ export const ReviewSection = ({
 }) => {
     return (
         <div className="comments-section mt-5">
-            <h2 className="mb-4 text-secondary"><FaCommentDots className="mr-2" /> Comments</h2>
-            
+            <h2 className="mb-4 text-secondary"><FaCommentDots className="mr-2" /> Reviews</h2>
+
             {/* Add Comment */}
             {isPurchase && <div className="comment-form mb-5">
                 <textarea
@@ -38,7 +38,7 @@ export const ReviewSection = ({
                 {renderStars(newRating, handleRatingChange)}
 
                 <button className="btn btn-primary px-4 mt-3" onClick={handleAddReview}>
-                    Submit Comment
+                    Send
                 </button>
             </div>}
 
@@ -150,7 +150,7 @@ export const ReviewSection = ({
                                     onChange={(e) => setReplyContent({ ...replyContent, [comment.id]: e.target.value })}
                                 />
                                 <button className="btn btn-primary px-4" onClick={() => handleAddReply(comment.id)}>
-                                    Submit Reply
+                                    Send
                                 </button>
 
                             </div>

@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FaStar } from 'react-icons/fa';
+import { FaCommentDots, FaPlayCircle, FaStar, FaUsers } from 'react-icons/fa';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 import { buyCourse, getChapterById, getCommentByCourseId, getCourseById } from "../../../service/CourseService";
 import CourseContent from "./components/CourseContent";
 import { ReviewSection } from "./components/ReviewSection";
-import { CourseFeatur } from "./components/CourseFeature";
+import { CourseFeature } from "./components/CourseFeature";
 import { addReplyReview, addReview, deleteReview, editReview } from "../../../service/ReviewService";
 import { checkPurchase } from "../../../service/Enrollment";
 import LoadingSpinner from "../../../utils/LoadingSpinner";
+import { Tab, Nav } from 'react-bootstrap';
+import { fetchInfoTeacher } from "../../../service/TeacherService";
+import { RiStarSFill } from "react-icons/ri";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
@@ -26,6 +29,17 @@ export const CourseDetail = () => {
     const [chapter, setChapter] = useState(null);
     const [isPurchase, setIsPurchase] = useState(false);
 
+    const [infoTeacher, setInfoTeacher] = useState({
+        userId: null,
+        name: '',
+        avatar: '',
+        avgRating: 0,
+        reviewAmount: 0,
+        studentAmount: 0,
+        courseAmount: 0,
+        description: ''
+    });
+
     useEffect(() => {
         document.title = 'Courses Detail'
     })
@@ -37,6 +51,31 @@ export const CourseDetail = () => {
             }).catch(error => {
                 console.log(error);
             }).finally(() => setLoading(false));
+    }, [id]);
+
+    // Fetch Info Teacher
+
+    useEffect(() => {
+        const getInfoTeacher = async () => {
+            try {
+                const data = await fetchInfoTeacher(id);
+                if (data.code === 200) {
+                    setInfoTeacher({
+                        userId: data.result.userId,
+                        name: data.result.name,
+                        avatar: data.result.avatar,
+                        avgRating: data.result.avgRating,
+                        reviewAmount: data.result.reviewAmount,
+                        studentAmount: data.result.studentAmount,
+                        courseAmount: data.result.courseAmount,
+                        description: data.result.description
+                    });
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        getInfoTeacher();
     }, [id]);
 
     useEffect(() => {
@@ -292,35 +331,85 @@ export const CourseDetail = () => {
                 <div className="row">
                     <div className="col-lg-8">
                         <div className="mb-5">
-                            <h6 className="text-secondary text-uppercase pb-2">Course Detail</h6>
                             <h1 className="display-4">{course.title}</h1>
                             <img className="img-fluid rounded w-100 mb-4" src={course.thumbnail} alt="Course" />
                             <p>{course.description}</p>
                         </div>
-                        <CourseContent chapter={chapter} />
-                        <ReviewSection
-                            comments={comments}
-                            newComment={newComment}
-                            editingCommentId={editingCommentId}
-                            setEditingCommentId={setEditingCommentId}
-                            newRating={newRating}
-                            setNewComment={setNewComment}
-                            setNewRating={setNewRating}
-                            replyContent={replyContent}
-                            setReplyContent={setReplyContent}
-                            editContent={editContent}
-                            setEditContent={setEditContent}
-                            renderStars={renderStars}
-                            handleAddReview={handleAddReview}
-                            handleReplyToggle={handleReplyToggle}
-                            handleAddReply={handleAddReply}
-                            handleEditReview={handleEditReview}
-                            handleDeleteReview={handleDeleteReview}
-                            handleRatingChange={handleRatingChange}
-                            isPurchase={isPurchase}
-                        /> </div>
 
-                    <CourseFeatur
+                        <Tab.Container defaultActiveKey="course-detail">
+                            <Nav className="custom-tabs mb-4">
+                                <Nav.Item>
+                                    <Nav.Link eventKey="course-detail">Course Content</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link eventKey="info-teach">Instructor</Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link eventKey="review">Reviews</Nav.Link>
+                                </Nav.Item>
+                            </Nav>
+
+                            <Tab.Content>
+                                <Tab.Pane eventKey="course-detail">
+                                    <CourseContent chapter={chapter} />
+                                </Tab.Pane>
+
+                                <Tab.Pane eventKey="info-teach">
+                                    <div className="info-teacher-container">
+                                        <div className="info-teacher-profile">
+                                            <img src={infoTeacher.avatar} alt={`${infoTeacher.name}'s Avatar`} className="info-teacher-avatar" />
+                                            <div className="info-teacher-details">
+                                                <h4 className="info-teacher-name">{infoTeacher.name}</h4>
+                                                <div className="info-teacher-stats">
+                                                    <div className="info-teacher-stat-item">
+                                                        <span className="icon-star"><RiStarSFill /></span> {infoTeacher.avgRating} Instructor Rating
+                                                    </div>
+                                                    <div className="info-teacher-stat-item">
+                                                        <span className="icon-reviews"><FaCommentDots /></span> {infoTeacher.reviewAmount} Reviews
+                                                    </div>
+                                                    <div className="info-teacher-stat-item">
+                                                        <span className="icon-students"><FaUsers /></span> {infoTeacher.studentAmount} Students
+                                                    </div>
+                                                    <div className="info-teacher-stat-item">
+                                                        <span className="icon-courses"><FaPlayCircle /></span> {infoTeacher.courseAmount} Courses
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Tab.Pane>
+
+
+
+                                <Tab.Pane eventKey="review">
+                                    <ReviewSection
+                                        comments={comments}
+                                        newComment={newComment}
+                                        editingCommentId={editingCommentId}
+                                        setEditingCommentId={setEditingCommentId}
+                                        newRating={newRating}
+                                        setNewComment={setNewComment}
+                                        setNewRating={setNewRating}
+                                        replyContent={replyContent}
+                                        setReplyContent={setReplyContent}
+                                        editContent={editContent}
+                                        setEditContent={setEditContent}
+                                        renderStars={renderStars}
+                                        handleAddReview={handleAddReview}
+                                        handleReplyToggle={handleReplyToggle}
+                                        handleAddReply={handleAddReply}
+                                        handleEditReview={handleEditReview}
+                                        handleDeleteReview={handleDeleteReview}
+                                        handleRatingChange={handleRatingChange}
+                                        isPurchase={isPurchase}
+                                    />
+                                </Tab.Pane>
+
+                            </Tab.Content>
+                        </Tab.Container>
+                    </div>
+
+                    <CourseFeature
                         course={course}
                         handleEnrollNow={handleEnrollNow}
                         isPurchase={isPurchase}
@@ -328,11 +417,9 @@ export const CourseDetail = () => {
                     />
                 </div>
             </div>
-            <ToastContainer
-                position="top-right"
-                autoClose={3000}
-                className="custom-toast-container"
-            />
+            <ToastContainer position="top-right" autoClose={3000} className="custom-toast-container" />
         </div>
     );
+
+
 };

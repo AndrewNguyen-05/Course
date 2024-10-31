@@ -23,22 +23,20 @@ export const LoginPage = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
+    if (!token) {
+      setLoading(false);
+      return;
+    }
     if (token) {
       introspect(token)
         .then((data) => {
           if (data.valid) {
             navigate("/home");
-          } else {
-            setLoading(false);
           }
         })
         .catch((error) => {
           console.error("Error introspecting token:", error);
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
+        }).finally(() => setLoading(false));
     }
   }, [navigate]);
 
@@ -57,9 +55,6 @@ export const LoginPage = () => {
     const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
       callbackUrl
     )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
-
-    console.log(callbackUrl);
-    console.log(targetUrl);
 
     window.location.href = targetUrl;
   };

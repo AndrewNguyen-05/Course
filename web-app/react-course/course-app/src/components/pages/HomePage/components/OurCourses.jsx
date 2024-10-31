@@ -1,7 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const OurCourses = (props) => {
+
   const { courses, handleAddToFavorites, hasMore, loadMoreCourses } = props;
+  const navigate = useNavigate();
+  const hanleDetailCourse = (id) => {
+    navigate(`/course-detail/${id}`)
+  }
   return (
     <div className="container-fluid px-0 py-5">
       <div className="row mx-0 justify-content-center pt-5">
@@ -20,7 +25,7 @@ export const OurCourses = (props) => {
           <div className="col-lg-3 col-md-6 mb-4" key={course.id}>
             <div className="course-card-custom-design-container shadow-sm">
               {/* Ảnh bìa */}
-              <div className="course-card-custom-image-container">
+              <div className="course-card-custom-image-container" onClick={() => hanleDetailCourse(course.id)}>
                 <img
                   className="course-card-custom-image"
                   src={course.thumbnail}

@@ -1,4 +1,4 @@
-export const CourseFeatur = ({course, handleEnrollNow, isPurchase, id}) => {
+export const CourseFeature = ({ course, handleEnrollNow, isPurchase, id }) => {
     if (!course) {
         return <div>Course data is not available</div>;
     }
@@ -59,14 +59,14 @@ export const CourseFeatur = ({course, handleEnrollNow, isPurchase, id}) => {
                     <button
                         className="btn enroll-now-btn btn-block py-3 px-5"
                         onClick={() => {
-                            if(isPurchase){
+                            if (isPurchase) {
                                 window.location.href = `http://localhost:3000/lesson-detail/${id}`;
                             } else {
                                 handleEnrollNow();
                             }
                         }}
                     >
-                     {isPurchase ? "Learn Now" : "Enroll Now"}
+                        {isPurchase ? "Learn Now" : "Enroll Now"}
                     </button>
                 </div>
             </div>

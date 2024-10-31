@@ -1,9 +1,7 @@
 package com.spring.dlearning.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.spring.dlearning.utils.CourseLevel;
 import jakarta.persistence.*;
 import lombok.*;
@@ -57,9 +55,9 @@ public class Course  {
     @Column(name = "video_url")
     String videoUrl;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "author_id")
-    @JsonBackReference
+    @JsonIgnore
     User author;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
