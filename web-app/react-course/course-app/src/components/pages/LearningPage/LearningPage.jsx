@@ -17,6 +17,7 @@ export const LearningPage = () => {
     });
 
     const { id } = useParams();
+    const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const [loading, setLoading] = useState(true);
     const [httpError, setHttpError] = useState('');
@@ -30,14 +31,22 @@ export const LearningPage = () => {
     const [replyContent, setReplyContent] = useState({});
     const [activeReply, setActiveReply] = useState(null);
     const [avatar, setAvatar] = useState();
-    const [completionPercentage, setCompletionPercentage] = useState(0);
-    const navigate = useNavigate();
+
+    const [completionData, setCompletionData] = useState({
+        totalLessonComplete: 0,
+        totalLessons: 0,
+        completionPercentage: 0,
+    });
 
     useEffect(() => {
         const calculateCompletion = async () => {
             try {
                 const data = await getCompletionPercentage(id);
-                setCompletionPercentage(data.result);
+                setCompletionData({
+                    totalLessonComplete: data.result.totalLessonComplete,
+                    totalLessons: data.result.totalLessons,
+                    completionPercentage: data.result.completionPercentage
+                });
             } catch (error) {
                 console.log(error);
             }
@@ -259,7 +268,7 @@ export const LearningPage = () => {
 
     return (
         <div>
-            <ProgressBar courseTitle={courseTitle} completionPercentage={completionPercentage} />
+            <ProgressBar courseTitle={courseTitle} completionData={completionData} />
             <div className="lp-learning-container d-flex">
                 <div className="lp-lesson-list">
                     {chapters.map((chapter) => (

@@ -2,6 +2,7 @@ package com.spring.dlearning.service;
 
 import com.spring.dlearning.dto.request.LessonProgressRequest;
 import com.spring.dlearning.dto.response.LessonProgressResponse;
+import com.spring.dlearning.dto.response.UserCompletionResponse;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.Lesson;
 import com.spring.dlearning.entity.LessonProgress;
@@ -33,7 +34,7 @@ public class LessonProgressService {
     EnrollmentRepository enrollmentRepository;
     LessonRepository lessonRepository;
 
-    public BigDecimal calculateCompletion(Long courseId) {
+    public UserCompletionResponse calculateCompletion(Long courseId) {
 
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -48,21 +49,31 @@ public class LessonProgressService {
             throw new AppException(ErrorCode.COURSE_ACCESS_DENIED);
         }
 
-        int totalLesson = course.getChapters().stream()
+        int totalLessons  = course.getChapters().stream()
                 .mapToInt(chapter -> chapter.getLessons().size())
                 .sum();
 
         long completedLessons = lessonProgressRepository.countByUserAndCourseAndCompleted(user, course, true);
 
-        if (totalLesson == 0) {
-            return BigDecimal.ZERO;
+        if (totalLessons  == 0) {
+            return UserCompletionResponse.builder()
+                    .totalLessonComplete(0L)
+                    .totalLessons(0L)
+                    .completionPercentage(BigDecimal.ZERO)
+                    .build();
         }
 
         BigDecimal completed = BigDecimal.valueOf(completedLessons);
-        BigDecimal totalLessons = BigDecimal.valueOf(totalLesson);
-        BigDecimal percentage = completed.divide(totalLessons, 1, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+        BigDecimal total = BigDecimal.valueOf(totalLessons);
+        BigDecimal percentage = completed.divide(total, 3, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100))
+                .setScale(0, RoundingMode.HALF_UP);
 
-        return percentage;
+        return UserCompletionResponse.builder()
+                .totalLessonComplete(completedLessons)
+                .totalLessons((long) totalLessons)
+                .completionPercentage(percentage)
+                .build();
     }
 
     @PreAuthorize("isAuthenticated()")

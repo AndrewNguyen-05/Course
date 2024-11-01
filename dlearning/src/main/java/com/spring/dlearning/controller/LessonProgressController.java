@@ -3,6 +3,7 @@ package com.spring.dlearning.controller;
 import com.spring.dlearning.dto.request.LessonProgressRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.LessonProgressResponse;
+import com.spring.dlearning.dto.response.UserCompletionResponse;
 import com.spring.dlearning.service.LessonProgressService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ public class LessonProgressController {
     LessonProgressService lessonProgressService;
 
     @GetMapping("/calculate-completion/{courseId}")
-    ApiResponse<BigDecimal> calculateCompletion (@PathVariable Long courseId) {
+    ApiResponse<UserCompletionResponse> calculateCompletion (@PathVariable Long courseId) {
 
-        return ApiResponse.<BigDecimal>builder()
+        return ApiResponse.<UserCompletionResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(lessonProgressService.calculateCompletion(courseId))
                 .build();

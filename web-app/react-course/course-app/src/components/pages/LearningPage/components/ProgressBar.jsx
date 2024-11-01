@@ -2,20 +2,16 @@ import React from 'react';
 import { FaChevronLeft } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const ProgressBar = (props) => {
-    const currentLesson = 6;
-    const totalLessons = 172;
+const ProgressBar = ({ courseTitle, completionData }) => {
+    const { totalLessonComplete, totalLessons, completionPercentage } = completionData;
 
-    const progressPercentage = totalLessons > 0 ? Math.round((currentLesson / totalLessons) * 100) : 0;
-
-    // Tính toán strokeDashoffset để đảm bảo không bị NaN
-    const strokeDashoffset = !isNaN(progressPercentage) ? 88 - (progressPercentage * 88 / 100) : 88;
+    const strokeDashoffset = !isNaN(completionPercentage) ? 88 - (completionPercentage * 88 / 100) : 88;
 
     const navigate = useNavigate();
 
     const handleClickToHome = () => {
-        navigate("/")
-    }
+        navigate("/");
+    };
 
     return (
         <div className="progress-bar-container">
@@ -26,7 +22,7 @@ const ProgressBar = (props) => {
                     </button>
                 </div>
                 <div className="progress-bar-course-title">
-                    {props.courseTitle}
+                    {courseTitle}
                 </div>
                 <div className="progress-bar-right-section">
                     <div className="progress-bar-progress-details">
@@ -53,11 +49,11 @@ const ProgressBar = (props) => {
                                 />
                             </svg>
                             <span className="progress-bar-percentage-text">
-                                {props.completionPercentage}%
+                                {completionPercentage}%
                             </span>
                         </div>
                         <div className="progress-bar-lesson-info">
-                            {currentLesson}/{totalLessons} Lesson
+                            {totalLessonComplete}/{totalLessons} Lessons
                         </div>
                     </div>
                     <div className="progress-bar-extra-options">
