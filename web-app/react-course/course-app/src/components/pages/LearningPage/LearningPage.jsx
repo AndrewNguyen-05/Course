@@ -10,6 +10,7 @@ import { FaCheckCircle, FaChevronDown } from 'react-icons/fa';
 import LoadingSpinner from '../../../utils/LoadingSpinner';
 import { checkPurchase } from '../../../service/Enrollment';
 import { getCompletionPercentage, markLessonAsCompleted } from '../../../service/LessonProgress';
+import Swal from 'sweetalert2';
 
 export const LearningPage = () => {
     useEffect(() => {
@@ -48,8 +49,14 @@ export const LearningPage = () => {
             // Chặn tua video
             const handleSeeking = () => {
                 if (video.currentTime > lastTime + 5) {
-                    video.currentTime = lastTime;
-                    toast.warning("Fast forwarding is not allowed.");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Warning',
+                        text: 'Fast forwarding is not allowed.',
+                        confirmButtonText: 'OK'
+                    });
+
+                    video.currentTime = lastTime; // Quay lại thời gian trước khi tua
                 }
             };
 

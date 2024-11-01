@@ -16659,3 +16659,13 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   margin-right: 8px;
   color: #555;
 }
+
+.lesson-item.completed {
+  color: green;
+  font-weight: bold;
+}
+
+.checkmark {
+  margin-left: 8px;
+  color: green;
+}
