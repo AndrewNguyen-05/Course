@@ -53,7 +53,7 @@ const ProgressBar = (props) => {
                                 />
                             </svg>
                             <span className="progress-bar-percentage-text">
-                                {progressPercentage}%
+                                {props.completionPercentage}%
                             </span>
                         </div>
                         <div className="progress-bar-lesson-info">

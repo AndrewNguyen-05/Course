@@ -10985,9 +10985,7 @@ a.text-primary:focus {
 
 .text-secondary {
   color: #333333 !important;
-  font-size: 27px;
 }
-
 
 
 a.text-secondary:hover,
@@ -11258,7 +11256,7 @@ h6,
 
 .navbar-light .navbar-nav .nav-link {
   font-family: 'Jost', sans-serif;
-  padding: 30px 15px;
+  padding: 30px 30px;
   font-size: 18px;
   font-weight: 500;
   color: #120F2D;

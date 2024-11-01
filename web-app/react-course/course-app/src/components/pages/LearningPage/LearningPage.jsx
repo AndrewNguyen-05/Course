@@ -9,6 +9,7 @@ import ProgressBar from './components/ProgressBar';
 import { FaChevronDown } from 'react-icons/fa';
 import LoadingSpinner from '../../../utils/LoadingSpinner';
 import { checkPurchase } from '../../../service/Enrollment';
+import { getCompletionPercentage } from '../../../service/LessonProgress';
 
 export const LearningPage = () => {
     useEffect(() => {
@@ -29,7 +30,20 @@ export const LearningPage = () => {
     const [replyContent, setReplyContent] = useState({});
     const [activeReply, setActiveReply] = useState(null);
     const [avatar, setAvatar] = useState();
-    const nagative = useNavigate();
+    const [completionPercentage, setCompletionPercentage] = useState(0);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const calculateCompletion = async () => {
+            try {
+                const data = await getCompletionPercentage(id);
+                setCompletionPercentage(data.result);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        calculateCompletion();
+    }, [id])
 
     useEffect(() => {
         const fetchPurchaseStatus = async () => {
@@ -37,19 +51,19 @@ export const LearningPage = () => {
                 const result = await checkPurchase(id);
                 if (result && result.result) {
                     if (!result.result.purchased) {
-                        nagative('/home');
+                        navigate('/home');
                     }
                 }
             } catch (error) {
                 console.error("Error checking purchase status:", error);
-                nagative('/home');
+                navigate('/home');
             }
         };
-    
+
         if (id) {
             fetchPurchaseStatus();
         }
-    }, [id, nagative]);
+    }, [id, navigate]);
 
     useEffect(() => {
         const fetchLessonByCourseId = async () => {
@@ -93,7 +107,7 @@ export const LearningPage = () => {
         }
         getAvatar()
             .then(data => setAvatar(data.result))
-            .catch(error =>{
+            .catch(error => {
                 console.log(error)
                 setHttpError(error.message);
             });
@@ -245,7 +259,7 @@ export const LearningPage = () => {
 
     return (
         <div>
-            <ProgressBar courseTitle={courseTitle} />
+            <ProgressBar courseTitle={courseTitle} completionPercentage={completionPercentage} />
             <div className="lp-learning-container d-flex">
                 <div className="lp-lesson-list">
                     {chapters.map((chapter) => (

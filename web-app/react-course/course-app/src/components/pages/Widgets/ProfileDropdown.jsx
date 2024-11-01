@@ -58,7 +58,8 @@ export const ProfileDropdown = ({
                 <i className="fa-solid fa-address-card me-2"></i>Profile
               </Link>
             </li>
-            {role === "USER" && (
+
+            {(role === "USER" || role === "TEACHER") && (
               <li>
                 <Link
                   to="/my-courses"
