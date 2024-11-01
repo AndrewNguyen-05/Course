@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +65,17 @@ public class LessonProgressService {
                     .build();
         }
 
+        List<LessonProgress> lessonProgresses = lessonProgressRepository.findByUserAndCourse(user, course, true);
+        List<UserCompletionResponse.LessonComplete> listCompletedLessons = new ArrayList<>();
+        if(! lessonProgresses.isEmpty()) {
+            listCompletedLessons = lessonProgresses.stream()
+                    .map(lessonPro -> UserCompletionResponse.LessonComplete.builder()
+                            .lessonId(lessonPro.getLesson().getId())
+                            .lessonName(lessonPro.getLesson().getLessonName())
+                            .build()
+                    ).toList();
+        }
+
         BigDecimal completed = BigDecimal.valueOf(completedLessons);
         BigDecimal total = BigDecimal.valueOf(totalLessons);
         BigDecimal percentage = completed.divide(total, 3, RoundingMode.HALF_UP)
@@ -72,6 +85,7 @@ public class LessonProgressService {
         return UserCompletionResponse.builder()
                 .totalLessonComplete(completedLessons)
                 .totalLessons((long) totalLessons)
+                .lessonCompletes(listCompletedLessons)
                 .completionPercentage(percentage)
                 .build();
     }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from "react-toastify";
 import { ReviewLesson } from './components/ReviewLesson';
@@ -6,10 +6,10 @@ import { addCommentLesson, getCommentLesson } from '../../../service/LessonComme
 import { getAvatar } from '../../../service/ProfileService';
 import { getInfoCourse } from '../../../service/CourseService';
 import ProgressBar from './components/ProgressBar';
-import { FaChevronDown } from 'react-icons/fa';
+import { FaCheckCircle, FaChevronDown } from 'react-icons/fa';
 import LoadingSpinner from '../../../utils/LoadingSpinner';
 import { checkPurchase } from '../../../service/Enrollment';
-import { getCompletionPercentage } from '../../../service/LessonProgress';
+import { getCompletionPercentage, markLessonAsCompleted } from '../../../service/LessonProgress';
 
 export const LearningPage = () => {
     useEffect(() => {
@@ -31,12 +31,52 @@ export const LearningPage = () => {
     const [replyContent, setReplyContent] = useState({});
     const [activeReply, setActiveReply] = useState(null);
     const [avatar, setAvatar] = useState();
+    const [completedLessons, setCompletedLessons] = useState([]);
 
     const [completionData, setCompletionData] = useState({
         totalLessonComplete: 0,
         totalLessons: 0,
         completionPercentage: 0,
     });
+
+    const videoRef = useRef(null);
+    const [hasUpdatedCompletion, setHasUpdatedCompletion] = useState(false);
+    const [lastTime, setLastTime] = useState(0);
+    useEffect(() => {
+        const video = videoRef.current;
+        if (video) {
+            // Chặn tua video
+            const handleSeeking = () => {
+                if (video.currentTime > lastTime + 5) {
+                    video.currentTime = lastTime;
+                    toast.warning("Fast forwarding is not allowed.");
+                }
+            };
+
+            const handleTimeUpdate = () => {
+                setLastTime(video.currentTime);
+
+                if ((video.currentTime / video.duration) >= 0.8 && !hasUpdatedCompletion) {
+                    setHasUpdatedCompletion(true);
+                    markLessonAsCompleted(currentLesson.lessonId);
+                    setCompletedLessons(prev => [...prev, currentLesson.lessonId]);
+                    setCompletionData(prev => ({
+                        ...prev,
+                        totalLessonComplete: prev.totalLessonComplete + 1,
+                        completionPercentage: Math.round(((prev.totalLessonComplete + 1) / prev.totalLessons) * 100)
+                    }));
+                }
+            };
+
+            video.addEventListener('seeking', handleSeeking);
+            video.addEventListener('timeupdate', handleTimeUpdate);
+
+            return () => {
+                video.removeEventListener('seeking', handleSeeking);
+                video.removeEventListener('timeupdate', handleTimeUpdate);
+            };
+        }
+    }, [currentLesson, hasUpdatedCompletion, lastTime]);
 
     useEffect(() => {
         const calculateCompletion = async () => {
@@ -47,6 +87,8 @@ export const LearningPage = () => {
                     totalLessons: data.result.totalLessons,
                     completionPercentage: data.result.completionPercentage
                 });
+                const completedLessonIds = data.result.lessonCompletes.map(lesson => lesson.lessonId);
+                setCompletedLessons(completedLessonIds);
             } catch (error) {
                 console.log(error);
             }
@@ -291,6 +333,11 @@ export const LearningPage = () => {
                                             onClick={() => handleLessonClick(lesson, chapter.chapterId)}
                                         >
                                             {lesson.lessonName}
+                                            {completedLessons.includes(lesson.lessonId) && (
+                                                <span className="checkmark">
+                                                    <FaCheckCircle style={{ color: 'green', fontSize: '20px' }} />
+                                                </span>
+                                            )}
                                         </li>
                                     ))}
                                 </ul>
@@ -302,6 +349,7 @@ export const LearningPage = () => {
                     {currentLesson ? (
                         <div>
                             <video
+                                ref={videoRef}
                                 key={currentLesson.videoUrl}
                                 width="100%"
                                 height={750}
