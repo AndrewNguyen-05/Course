@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { FaCommentDots, FaPlayCircle, FaStar, FaUsers } from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
@@ -13,7 +13,7 @@ import { checkPurchase } from "../../../service/Enrollment";
 import LoadingSpinner from "../../../utils/LoadingSpinner";
 import { Tab, Nav } from 'react-bootstrap';
 import { fetchInfoTeacher } from "../../../service/TeacherService";
-import { RiStarSFill } from "react-icons/ri";
+import Instructor from "./components/Instructor";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
@@ -355,31 +355,9 @@ export const CourseDetail = () => {
                                 </Tab.Pane>
 
                                 <Tab.Pane eventKey="info-teach">
-                                    <div className="info-teacher-container">
-                                        <div className="info-teacher-profile">
-                                            <img src={infoTeacher.avatar} alt={`${infoTeacher.name}'s Avatar`} className="info-teacher-avatar" />
-                                            <div className="info-teacher-details">
-                                                <h4 className="info-teacher-name">{infoTeacher.name}</h4>
-                                                <div className="info-teacher-stats">
-                                                    <div className="info-teacher-stat-item">
-                                                        <span className="icon-star"><RiStarSFill /></span> {infoTeacher.avgRating} Instructor Rating
-                                                    </div>
-                                                    <div className="info-teacher-stat-item">
-                                                        <span className="icon-reviews"><FaCommentDots /></span> {infoTeacher.reviewAmount} Reviews
-                                                    </div>
-                                                    <div className="info-teacher-stat-item">
-                                                        <span className="icon-students"><FaUsers /></span> {infoTeacher.studentAmount} Students
-                                                    </div>
-                                                    <div className="info-teacher-stat-item">
-                                                        <span className="icon-courses"><FaPlayCircle /></span> {infoTeacher.courseAmount} Courses
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <Instructor
+                                        infoTeacher={infoTeacher} />
                                 </Tab.Pane>
-
-
 
                                 <Tab.Pane eventKey="review">
                                     <ReviewSection
