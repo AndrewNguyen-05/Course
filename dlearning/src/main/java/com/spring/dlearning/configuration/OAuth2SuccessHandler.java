@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 @RequiredArgsConstructor
@@ -71,7 +72,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         assert name != null;
         String[] nameParts = name.split(" ");
         String firstname = nameParts[0];
-        String lastname = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+        String lastname = nameParts.length > 1 ? String.join(" ", Arrays.copyOfRange(nameParts, 1, nameParts.length)) : "";
 
         Role roles = roleRepository.findByName(PredefinedRole.USER_ROLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
