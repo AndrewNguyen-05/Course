@@ -8,7 +8,6 @@ export const ProcessLoginOAuth2 = () => {
   const navigate = useNavigate();
   const pathParams = useParams();
   const [query] = useSearchParams();
-  // k biet m gui thieu hay b copy thieu nhi
 
   const fetchInfo = useCallback(async () => {
     const result = await myInfo();
@@ -25,6 +24,18 @@ export const ProcessLoginOAuth2 = () => {
     if (clientCode === "facebook") {
       // exchange for access token
       fetch(`http://localhost:8080/login/oauth2/code/facebook?${query.toString()}`, {
+        credentials: "include",
+      })
+        .then((data) => data.json())
+        .then((data) => {
+          console.log(data);
+          const token = data.token;
+          localStorage.setItem("token", token);
+          authContext.refresh();
+          fetchInfo();
+        });
+    } else if (clientCode === "github") {
+      fetch(`http://localhost:8080/login/oauth2/code/github?${query.toString()}`, {
         credentials: "include",
       })
         .then((data) => data.json())

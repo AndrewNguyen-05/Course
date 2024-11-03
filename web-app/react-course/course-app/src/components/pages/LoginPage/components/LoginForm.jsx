@@ -9,6 +9,7 @@ export const LoginFrom = (props) => {
     handleLogin,
     handleGoogleLogin,
     handleFacebookLogin,
+    handleGithubLogin
   } = props;
   return (
     <div className="container">
@@ -145,10 +146,11 @@ export const LoginFrom = (props) => {
                   </span>
                 </button>
 
-                <button className="btn bsb-btn-2xl btn-outline-dark rounded-0 d-flex align-items-center">
-                  <i className="bi bi-apple text-dark"></i>
+                <button className="btn bsb-btn-2xl btn-outline-dark rounded-0 d-flex align-items-center"
+                  onClick={handleGithubLogin}>
+                  <i className="bi bi-github"></i>
                   <span className="ms-2 fs-6 flex-grow-1">
-                    Continue with Apple
+                    Continue with Github
                   </span>
                 </button>
               </div>

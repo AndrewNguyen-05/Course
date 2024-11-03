@@ -64,6 +64,11 @@ export const LoginPage = () => {
       "http://localhost:8080/oauth2/authorization/facebook";
   };
 
+  const handleGithubLogin = () => {
+    window.location.href =
+      "http://localhost:8080/oauth2/authorization/github"
+  }
+
   const handleLogin = (event) => {
     event.preventDefault();
 
@@ -132,6 +137,7 @@ export const LoginPage = () => {
           setPassword={setPassword}
           handleGoogleLogin={handleGoogleLogin}
           handleFacebookLogin={handleFacebookLogin}
+          handleGithubLogin={handleGithubLogin}
         />
 
         <ToastContainer
