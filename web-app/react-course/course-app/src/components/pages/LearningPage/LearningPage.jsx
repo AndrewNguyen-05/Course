@@ -46,7 +46,6 @@ export const LearningPage = () => {
     useEffect(() => {
         const video = videoRef.current;
         if (video) {
-            // Chặn tua video
             const handleSeeking = () => {
                 if (video.currentTime > lastTime + 5) {
                     Swal.fire({
