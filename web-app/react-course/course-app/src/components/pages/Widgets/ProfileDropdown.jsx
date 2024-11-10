@@ -44,7 +44,7 @@ export const ProfileDropdown = ({
 
       <ul
         className="dropdown-menu dropdown-menu-end text-start"
-        style={{ transform: "translateX(-50%)", left: "50%" }}
+        style={{ transform: "translateX(-50%)", left: "18%" }}
       >
         {isTokenValid === null ? (
           <li></li>
@@ -56,6 +56,15 @@ export const ProfileDropdown = ({
                 className="dropdown-item d-flex align-items-center"
               >
                 <i className="fa-solid fa-address-card me-2"></i>Profile
+              </Link>
+            </li>
+
+            <li>
+              <Link
+                to="/my-certificates"
+                className="dropdown-item d-flex align-items-center"
+              >
+                <i className="fa-solid fa-certificate me-2"></i>Certificates
               </Link>
             </li>
 

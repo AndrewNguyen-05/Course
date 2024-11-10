@@ -11,7 +11,6 @@ import { HomePage } from './components/pages/HomePage/HomePage';
 import { LoginPage } from './components/pages/LoginPage/LoginPage';
 import { ContactPage } from './components/pages/ContactPage/ContactPage';
 import { Courses } from './components/pages/CoursesPage/CoursesPage';
-import { About } from './components/pages/AboutPage/AboutPage';
 import DepositPage from './components/pages/DepositPage/DepositPage';
 import { Profile } from './components/pages/ProfilePage/ProfilePage';
 import { PaymentSuccess } from './components/pages/PaymentPage/PaymentSuccess';
@@ -34,6 +33,8 @@ import { NotFound } from './components/pages/ErrorPage/NotFound';
 import { ProcessLoginOAuth2 } from './service/Oauth2/OAuth2';
 import { Authorization } from './service/Security/Authorization';
 import MyPost from './components/pages/CommunityPage/MyPost';
+import Certificate from './components/pages/CertificatePage/Certificate';
+import MyCertificate from './components/pages/CertificatePage/MyCertificate';
 
 function App() {
   return (
@@ -42,9 +43,10 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/home" element={<HomePage />} />
-          <Route path="/about" element={<About />} />
+          {/* <Route path="/about" element={<About />} /> */}
           <Route path="/contact" element={<ContactPage />} />
           <Route path='/course-detail/:id' element={<CourseDetail />} />
+          <Route path='/certificate' element={<Certificate />} />
         </Route>
 
         <Route element={<HeaderAndFooterRouter />}>
@@ -64,6 +66,11 @@ function App() {
           <Route path="/community/my-post" element={
             <PrivateRoute>
               <MyPost />
+            </PrivateRoute>} />
+
+          <Route path="/my-certificates" element={
+            <PrivateRoute>
+              <MyCertificate />
             </PrivateRoute>} />
 
           <Route path="/create-password" element={

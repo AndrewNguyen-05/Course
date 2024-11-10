@@ -14393,6 +14393,10 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   margin-top: 120px;
 }
 
+.main-certificate {
+  margin-top: 150px;
+}
+
 .content-profile {
   margin-top: 170px;
 }
@@ -16668,4 +16672,394 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 .checkmark {
   margin-left: 8px;
   color: green;
+}
+
+.certificate-page {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 40px;
+  font-family: 'Open Sans', sans-serif;
+  flex-wrap: wrap;
+}
+
+.motivation-section {
+  width: 55%;
+  padding: 20px;
+  color: #333;
+  line-height: 1.7;
+  margin-right: 20px;
+}
+
+.motivation-section h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2c3e50;
+}
+
+.motivation-section p {
+  margin-bottom: 18px;
+  font-size: 16px;
+  color: #555;
+}
+
+.motivation-section .red {
+  color: #d9534f;
+  font-weight: bold;
+}
+
+.motivation-section .green {
+  color: #5cb85c;
+  font-weight: bold;
+}
+
+.motivation-section .blue {
+  color: #5bc0de;
+  font-weight: bold;
+}
+
+.motivation-section .black-bold {
+  color: #333;
+  font-weight: bold;
+}
+
+.motivation-section blockquote {
+  font-style: italic;
+  color: #7f8c8d;
+  margin: 25px 0;
+  padding-left: 15px;
+  border-left: 4px solid #2c3e50;
+  font-size: 18px;
+}
+
+.certificate-container {
+  width: 40%;
+  background: #618597;
+  padding: 15px;
+  text-align: center;
+}
+
+.certificate-outer-border {
+  border: 2px solid #fff;
+  padding: 8px;
+}
+
+.certificate-inner-border {
+  border: 2px solid #555;
+  padding: 8px;
+}
+
+.certificate-content {
+  background-color: #fff;
+  border: 1px solid #E1E5F0;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.certificate-logo {
+  margin-bottom: 15px;
+}
+
+.certificate-logo img {
+  width: 90px;
+  height: auto;
+}
+
+.certificate-content h1 {
+  font-family: 'Pinyon Script', cursive;
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 0;
+}
+
+.certificate-title {
+  font-size: 16px;
+  color: #555;
+  margin: 8px 0 25px;
+  font-weight: 700;
+}
+
+.certificate-recipient-name {
+  font-size: 20px;
+  font-family: 'Pinyon Script', cursive;
+  color: #333;
+  border-bottom: 1px solid #777;
+  display: inline-block;
+  padding: 4px 15px;
+  margin: 15px 0;
+}
+
+.certificate-description {
+  font-size: 14px;
+  color: #555;
+  margin: 8px 0;
+}
+
+.certificate-course-title {
+  font-size: 18px;
+  color: #333;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-bottom: 1px solid #777;
+  display: inline-block;
+  margin-bottom: 25px;
+}
+
+.certificate-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  margin-top: 30px;
+}
+
+.certificate-center-signature {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #555;
+}
+
+.certificate-center-signature .certificate-signature-line {
+  border-top: 1px solid #333;
+  padding-top: 4px;
+  width: 180px;
+  margin: 0 auto;
+}
+
+.certificate-signature,
+.certificate-date-completed {
+  text-align: center;
+  width: 40%;
+}
+
+.certificate-signature-line,
+.certificate-date-line {
+  border-top: 1px solid #333;
+  padding-top: 4px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.certificate-footer span {
+  font-size: 13px;
+  color: #666;
+}
+
+.certificate-signature .certificate-signature-line {
+  font-family: 'Great Vibes', cursive;
+  font-size: 20px;
+  color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .certificate-page {
+    padding: 20px;
+  }
+
+  .motivation-section {
+    width: 60%;
+    padding: 15px;
+  }
+
+  .certificate-container {
+    width: 35%;
+  }
+}
+
+@media (max-width: 992px) {
+  .motivation-section {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .certificate-container {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .certificate-page {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .motivation-section,
+  .certificate-container {
+    width: 100%;
+    text-align: center;
+  }
+
+  .certificate-container {
+    padding: 10px;
+  }
+
+  .certificate-content {
+    padding: 15px;
+  }
+
+  .certificate-content h1 {
+    font-size: 24px;
+  }
+
+  .certificate-title,
+  .certificate-recipient-name,
+  .certificate-course-title,
+  .certificate-description {
+    font-size: 14px;
+  }
+
+  .certificate-signature-line,
+  .certificate-date-line {
+    width: 70%;
+  }
+
+  .certificate-footer {
+    padding: 0 10px;
+    margin-top: 20px;
+  }
+
+  .certificate-footer span {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 576px) {
+  .certificate-content h1 {
+    font-size: 20px;
+  }
+
+  .certificate-title,
+  .certificate-recipient-name,
+  .certificate-course-title {
+    font-size: 12px;
+  }
+
+  .certificate-description {
+    font-size: 12px;
+  }
+
+  .certificate-logo img {
+    width: 70px;
+  }
+}
+
+.my-certificate-page {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.my-certificate-container {
+  width: 30%;
+  background: #618597;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin: 10px;
+  border-radius: 8px;
+}
+
+.my-certificate-outer-border {
+  border: 2px solid #fff;
+  padding: 10px;
+}
+
+.my-certificate-inner-border {
+  border: 2px solid #555;
+  padding: 10px;
+}
+
+.my-certificate-content {
+  background-color: #fff;
+  border: 1px solid #E1E5F0;
+  padding: 20px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.my-certificate-logo img {
+  width: 60px;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.my-certificate-content h1 {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+/* Làm nổi bật tên người dùng */
+.my-certificate-recipient-name {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin: 10px 0;
+}
+
+/* Làm nổi bật tên khóa học */
+.my-certificate-course-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+/* Font chữ ký tay cho chữ ký tác giả */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+.my-certificate-signature-line {
+  font-family: 'Great Vibes', cursive;
+  font-size: 24px;
+  color: #333;
+}
+
+.my-certificate-title,
+.my-certificate-description {
+  margin: 5px 0;
+}
+
+.my-certificate-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #666;
+  margin-top: 20px;
+}
+
+.my-certificate-footer div {
+  width: 45%;
+}
+
+/* Responsive adjustments */
+@media (min-width: 1200px) {
+  .my-certificate-container {
+    width: 30%;
+  }
+}
+
+@media (max-width: 1199px) and (min-width: 768px) {
+  .my-certificate-container {
+    width: 45%;
+  }
+}
+
+@media (max-width: 767px) {
+  .my-certificate-container {
+    width: 90%;
+  }
+}
+
+.my-certificate-container {
+  transition: transform 0.3s;
+}
+
+.my-certificate-container:hover {
+  transform: scale(1.02);
+  cursor: pointer;
 }
