@@ -3,8 +3,8 @@ package com.spring.dlearning.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "certificates")
@@ -20,15 +20,15 @@ public class Certificate extends AbstractEntity<Long> {
     String name;
 
     @Column(name = "issue_date")
-    LocalDate issueDate;
+    LocalDateTime issueDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    User user; // Liên kết với User để lấy thông tin người nhận chứng chỉ
+    User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
-    Course course; // Liên kết với Course để lấy thông tin về khóa học
+    Course course;
 
     @Column(name = "certificate_url")
     String certificateUrl;

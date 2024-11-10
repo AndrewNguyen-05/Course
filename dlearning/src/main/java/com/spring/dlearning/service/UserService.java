@@ -51,40 +51,40 @@ public class UserService {
        return userRepository.existsByEmail(request.getEmail());
     }
 
-//    @Transactional
-//    public UserResponse createUser(UserCreationRequest request, String otp)  {
-//        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-//            throw new AppException(ErrorCode.USER_EXISTED);
-//        }
-//
-//        String storedOtp = otpService.getOtp(request.getEmail());
-//        if (storedOtp == null || !storedOtp.equals(otp)) {
-//            throw new AppException(ErrorCode.INVALID_OTP);
-//        }
-//
-//        User user = userMapper.toUser(request);
-//
-//        Role role = roleRepository.findByName(PredefinedRole.USER_ROLE)
-//                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
-//
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        user.setRole(role);
-//        user.setName(request.getFirstName() + " " + request.getLastName());
-//        userRepository.save(user);
-//
-//        otpService.deleteOtp(request.getEmail());
-//
-//        NotificationEvent event = NotificationEvent.builder()
-//                .channel("EMAIL")
-//                .recipient(user.getEmail())
-//                .templateCode("welcome-email")
-//                .subject("Welcome to DLearning")
-//                .build();
-//
-//        kafkaTemplate.send("notification-delivery", event);
-//
-//        return userMapper.toUserResponse(user);
-//    }
+    @Transactional
+    public UserResponse createUser(UserCreationRequest request, String otp)  {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+
+        String storedOtp = otpService.getOtp(request.getEmail());
+        if (storedOtp == null || !storedOtp.equals(otp)) {
+            throw new AppException(ErrorCode.INVALID_OTP);
+        }
+
+        User user = userMapper.toUser(request);
+
+        Role role = roleRepository.findByName(PredefinedRole.USER_ROLE)
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(role);
+        user.setName(request.getFirstName() + " " + request.getLastName());
+        userRepository.save(user);
+
+        otpService.deleteOtp(request.getEmail());
+
+        NotificationEvent event = NotificationEvent.builder()
+                .channel("EMAIL")
+                .recipient(user.getEmail())
+                .templateCode("welcome-email")
+                .subject("Welcome to DLearning")
+                .build();
+
+        kafkaTemplate.send("notification-delivery", event);
+
+        return userMapper.toUserResponse(user);
+    }
 
     @Transactional
     @PreAuthorize("isAuthenticated() and hasAuthority('USER')")

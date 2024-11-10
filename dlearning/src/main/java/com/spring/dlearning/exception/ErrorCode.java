@@ -75,7 +75,9 @@ public enum ErrorCode {
     CHAPTER_ID_INVALID(400, "Chapter id cannot be null", HttpStatus.BAD_REQUEST),
     UPLOAD_LESSON_INVALID(400, "An error occurred while uploading the lesson, please try again.", HttpStatus.BAD_REQUEST),
     COURSE_ACCESS_DENIED(400, "You do not have permission to view the progress of this course.", HttpStatus.BAD_REQUEST),
-    UNKNOWN_PROVIDER(400,"The OAuth2 provider is not recognized or not supported." , HttpStatus.BAD_REQUEST)
+    UNKNOWN_PROVIDER(400,"The OAuth2 provider is not recognized or not supported." , HttpStatus.BAD_REQUEST),
+    CERTIFICATE_EXISTED(400, "Certificate already existed", HttpStatus.BAD_REQUEST),
+
     ;
 
     private final int code;

@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import java.nio.file.AccessDeniedException;
 import java.util.Map;
 import java.util.Objects;
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse<?>> handlingAppException(AppException exception) {
-        log.error(exception.getMessage(), exception);
+        log.error(exception.getMessage());
         ErrorCode errorCode = exception.getErrorCode();
 
         ApiResponse<?> apiResponse = new ApiResponse<>();
@@ -86,5 +86,16 @@ public class GlobalExceptionHandler {
         String minValue = String.valueOf(attributes.get(MIN_ATTRIBUTE));
 
         return message.replace("{" + MIN_ATTRIBUTE + "}", minValue);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    ResponseEntity<ApiResponse<?>> handlingMethodArgumentTypeMismatchException (MethodArgumentTypeMismatchException exception) {
+        log.error(exception.getMessage());
+
+        ApiResponse<?> responseData = new ApiResponse<>();
+        responseData.setCode(404);
+        responseData.setMessage("Id invalid, id must be a number");
+
+        return ResponseEntity.status(404).body(responseData);
     }
 }

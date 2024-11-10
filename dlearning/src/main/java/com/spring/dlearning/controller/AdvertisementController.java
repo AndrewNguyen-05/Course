@@ -33,13 +33,13 @@ public class AdvertisementController {
                 .build();
     }
 
-//    @PutMapping("/approve-ads")
-//    ApiResponse<AdsApproveResponse> approveAds(@RequestBody AdsApproveRequest request) {
-//        return ApiResponse.<AdsApproveResponse>builder()
-//                .code(HttpStatus.OK.value())
-//                .result(advertisementService.approveAds(request))
-//                .build();
-//    }
+    @PutMapping("/approve-ads")
+    ApiResponse<AdsApproveResponse> approveAds(@RequestBody AdsApproveRequest request) {
+        return ApiResponse.<AdsApproveResponse>builder()
+                .code(HttpStatus.OK.value())
+                .result(advertisementService.approveAds(request))
+                .build();
+    }
 
     @GetMapping("/get-ads-current")
     ApiResponse<PageResponse<AdsCreationResponse>> getAllByCurrentLogin(
