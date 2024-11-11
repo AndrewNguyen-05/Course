@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long>{
 
     boolean existsByUserAndCourse(User user, Course course);
+
     List<Enrollment> findCourseByUser(User user);
 
     @Query("SELECT e FROM Enrollment e WHERE e.user = :user AND e.course = :course")
@@ -21,4 +22,8 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long>{
     @Query("SELECT COUNT(DISTINCT e.user.id) FROM Enrollment e WHERE e.course.author.id = :teacherId")
     int totalStudentsByTeacher(Long teacherId);
 
+    @Query("SELECT e.isComplete from Enrollment e where e.user=:user and e.course=:course ")
+    boolean isCourseCompleteByUser(User user, Course course);
+
+    Optional<Enrollment> findByCourseAndUser(Course course, User user);
 }

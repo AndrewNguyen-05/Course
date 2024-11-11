@@ -27,4 +27,12 @@ public class Enrollment extends AbstractEntity<Long>{
 
     @Column(name = "is_purchased")
     boolean purchased;
+
+    @Column(name = "is_complete")
+    boolean isComplete;
+
+    @PrePersist
+    public void prePersist () {
+        this.isComplete = false;
+    }
 }

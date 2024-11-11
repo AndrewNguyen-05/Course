@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoadingSpinner from '../../../../utils/LoadingSpinner';
+import { myCourse } from '../../../../service/CourseService';
 
 export const MyCourses = () => {
     const [loading, setLoading] = useState(true);
@@ -18,18 +19,21 @@ export const MyCourses = () => {
             setLoading(false);
             return;
         }
-
-        fetch(`http://localhost:8080/api/v1/users/me/courses`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-        }).then((response) => response.json())
-            .then(data => {
-                setCourses(data.result);
-                setLoading(false);
-            }).catch(error => console.log(error));
+        const fetchMyCourse = async () => {
+            try {
+                const data = await myCourse();
+                if (data && data.code === 200 && data.result) {
+                    setCourses(data.result);
+                } else {
+                    setCourses([]);
+                }
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchMyCourse();
     }, [token]);
 
     const handleLearnNow = (id) => {
@@ -60,7 +64,7 @@ export const MyCourses = () => {
                                             className="btn btn-primary my-course-start-learning-btn"
                                             onClick={() => handleLearnNow(course.courseId)} // Gọi hàm điều hướng
                                         >
-                                            Học ngay
+                                            Learn now
                                         </button>
                                     </div>
                                 </div>

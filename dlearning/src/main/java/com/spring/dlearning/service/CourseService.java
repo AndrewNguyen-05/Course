@@ -4,6 +4,7 @@ import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.CourseCreationRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.*;
+import com.spring.dlearning.entity.Certificate;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.Review;
 import com.spring.dlearning.entity.User;
@@ -11,6 +12,7 @@ import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.CourseChapterAndLessonMapper;
 import com.spring.dlearning.mapper.CourseMapper;
+import com.spring.dlearning.repository.CertificateRepository;
 import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.utils.SecurityUtils;
@@ -25,6 +27,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -43,6 +46,7 @@ public class CourseService {
     CloudinaryService cloudinaryService;
     CourseMapper courseMapper;
     CourseChapterAndLessonMapper courseChapterAndLessonMapper;
+    CertificateRepository certificateRepository;
 
     public PageResponse<CourseResponse> getAllCourses(Specification<Course> spec, int page, int size) {
 
@@ -102,7 +106,9 @@ public class CourseService {
 
     @Transactional
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('TEACHER', 'ADMIN')")
-    public CourseCreationResponse createCourse(CourseCreationRequest request, MultipartFile thumbnail, MultipartFile video)
+    public CourseCreationResponse createCourse(CourseCreationRequest request,
+                                               MultipartFile thumbnail,
+                                               MultipartFile video)
             throws IOException {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -163,8 +169,11 @@ public class CourseService {
 
     public CourseChapterResponse getAllInfoCourse (Long courseId){
 
-        courseRepository.findById(courseId)
+        Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
+
+        Long totalLessons = course.getChapters().stream()
+                .mapToLong(chapter -> chapter.getLessons().size()).sum();
 
         CourseChapterResponse courseLessonResponse =  courseChapterAndLessonMapper
                 .getCourserChapterAndLesson(courseId);
@@ -179,6 +188,7 @@ public class CourseService {
                 })
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
+        courseLessonResponse.setTotalLesson(totalLessons);
         courseLessonResponse.setChapters(sortedChapter);
 
         return courseLessonResponse;
@@ -199,6 +209,8 @@ public class CourseService {
          && !Objects.equals(user.getRole().getName(), PredefinedRole.ADMIN_ROLE)){
             throw new AppException(ErrorCode.ACCESS_DENIED);
         }
+            List<Certificate> certificates = certificateRepository.getAllCertificateById(course.getId());
+            certificateRepository.deleteAll(certificates);
             courseRepository.delete(course);
     }
 

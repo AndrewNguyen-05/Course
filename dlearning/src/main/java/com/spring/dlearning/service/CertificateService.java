@@ -3,14 +3,10 @@ package com.spring.dlearning.service;
 import com.spring.dlearning.dto.event.NotificationEvent;
 import com.spring.dlearning.dto.request.CertificateRequest;
 import com.spring.dlearning.dto.response.CertificateResponse;
-import com.spring.dlearning.entity.Certificate;
-import com.spring.dlearning.entity.Course;
-import com.spring.dlearning.entity.User;
+import com.spring.dlearning.entity.*;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
-import com.spring.dlearning.repository.CertificateRepository;
-import com.spring.dlearning.repository.CourseRepository;
-import com.spring.dlearning.repository.UserRepository;
+import com.spring.dlearning.repository.*;
 import com.spring.dlearning.utils.SecurityUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +30,9 @@ public class CertificateService {
     CertificateRepository certificateRepository;
     UserRepository userRepository;
     CourseRepository courseRepository;
+    LessonProgressRepository lessonProgressRepository;
     KafkaTemplate<String, Object> kafkaTemplate;
+    EnrollmentRepository enrollmentRepository;
 
     public CertificateResponse createCertificate (CertificateRequest request) {
 
@@ -47,8 +45,24 @@ public class CertificateService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
+        long totalLesson = course.getChapters().stream()
+                .mapToLong(chapter -> chapter.getLessons()
+                        .size()).sum();
+
+        if(!enrollmentRepository.existsByUserAndCourse(user, course))
+            throw new AppException(ErrorCode.COURSE_NOT_PURCHASED);
+
+        if(lessonProgressRepository.totalLessonComplete(user, course) < totalLesson)
+            throw new AppException(ErrorCode.INCOMPLETE_LESSONS);
+
         if(certificateRepository.existsByCourseAndUser(course, user))
             throw new AppException(ErrorCode.CERTIFICATE_EXISTED);
+
+        Enrollment enrollment = enrollmentRepository.findByCourseAndUser(course, user)
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_PURCHASED));
+
+        enrollment.setComplete(true);
+        enrollmentRepository.save(enrollment);
 
         Certificate certificate = Certificate.builder()
                 .name("DLearning Certificate of Completion")

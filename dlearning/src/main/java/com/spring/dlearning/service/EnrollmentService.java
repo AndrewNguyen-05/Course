@@ -1,8 +1,10 @@
 package com.spring.dlearning.service;
 
 import com.spring.dlearning.dto.request.BuyCourseRequest;
+import com.spring.dlearning.dto.request.IsCourseCompleteRequest;
 import com.spring.dlearning.dto.response.BuyCourseResponse;
 import com.spring.dlearning.dto.response.CoursePurchaseResponse;
+import com.spring.dlearning.dto.response.IsCourseCompleteResponse;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.entity.Enrollment;
 import com.spring.dlearning.entity.User;
@@ -108,5 +110,20 @@ public class EnrollmentService {
         }
 
         return enrollmentMapper.toCoursePurchaseResponse(enrollment.get());
+    }
+
+    public IsCourseCompleteResponse isCompleteCourse (IsCourseCompleteRequest request) {
+        Course course = courseRepository.findById(request.getCourseId())
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
+
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return IsCourseCompleteResponse.builder()
+                .isComplete(enrollmentRepository.isCourseCompleteByUser(user, course))
+                .build();
     }
 }

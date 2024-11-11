@@ -8,9 +8,11 @@ import { getInfoCourse } from '../../../service/CourseService';
 import ProgressBar from './components/ProgressBar';
 import { FaCheckCircle, FaChevronDown } from 'react-icons/fa';
 import LoadingSpinner from '../../../utils/LoadingSpinner';
-import { checkPurchase } from '../../../service/Enrollment';
+import { checkPurchase, isCourseComplete } from '../../../service/Enrollment';
 import { getCompletionPercentage, markLessonAsCompleted } from '../../../service/LessonProgress';
 import Swal from 'sweetalert2';
+import CongratulationsModal from './components/CompletetCourse';
+import { createCertificate } from '../../../service/CertificateService'
 
 export const LearningPage = () => {
     useEffect(() => {
@@ -20,6 +22,7 @@ export const LearningPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
+    const [totalLessons, setTotalLessons] = useState(null);
     const [loading, setLoading] = useState(true);
     const [httpError, setHttpError] = useState('');
     const [courseTitle, setCourseTitle] = useState('');
@@ -40,6 +43,8 @@ export const LearningPage = () => {
         completionPercentage: 0,
     });
 
+    const [showModalComplete, setShowModelComplete] = useState(false);
+
     const videoRef = useRef(null);
     const [hasUpdatedCompletion, setHasUpdatedCompletion] = useState(false);
     const [lastTime, setLastTime] = useState(0);
@@ -59,7 +64,7 @@ export const LearningPage = () => {
                 }
             };
 
-            const handleTimeUpdate = () => {
+            const handleTimeUpdate = async () => {
                 setLastTime(video.currentTime);
 
                 if ((video.currentTime / video.duration) >= 0.8 && !hasUpdatedCompletion) {
@@ -83,6 +88,21 @@ export const LearningPage = () => {
             };
         }
     }, [currentLesson, hasUpdatedCompletion, lastTime]);
+
+    useEffect(() => {
+        if (completionData.totalLessonComplete === totalLessons) {
+            const checkCourseCompletion = async () => {
+                const result = await isCourseComplete(id);
+                console.log(result);
+                if (result && result.complete === false) {
+                    setShowModelComplete(true);
+                    const resultCreate = await createCertificate(id);
+                    console.log(resultCreate);
+                }
+            };
+            checkCourseCompletion();
+        }
+    }, [completionData.totalLessonComplete, totalLessons, id]);
 
     useEffect(() => {
         const calculateCompletion = async () => {
@@ -133,6 +153,7 @@ export const LearningPage = () => {
                 setCourseTitle(data.result.courseTitle);
                 const chaptersData = data.result.chapters || [];
                 setChapters(chaptersData);
+                setTotalLessons(data.result.totalLesson);
 
                 if (chaptersData.length > 0) {
                     const firstLesson = chaptersData[0].lessonDto && chaptersData[0].lessonDto[0];
@@ -302,6 +323,11 @@ export const LearningPage = () => {
         setActiveReply(activeReply === id ? null : id);
     };
 
+    const handleCloseComplete = () => {
+        setShowModelComplete(false);
+        navigate('/my-certificates');
+    }
+
     if (loading) {
         return <LoadingSpinner />;
     }
@@ -351,6 +377,14 @@ export const LearningPage = () => {
                         </div>
                     ))}
                 </div>
+                {showModalComplete && (
+                    <div className="modal-overlay">
+                        <CongratulationsModal
+                            onClose={() => handleCloseComplete(false)}
+                        />
+                    </div>
+                )}
+
                 <div className="lp-video-content">
                     {currentLesson ? (
                         <div>
@@ -384,6 +418,7 @@ export const LearningPage = () => {
                     )}
                 </div>
             </div>
+
             <ToastContainer
                 position="top-right"
                 autoClose={3000}

@@ -89,7 +89,12 @@ export const getCoursesByTeacher = async () => {
   return response.data;
 };
 
-export const deleteCourse = async(courseId) => {
+export const deleteCourse = async (courseId) => {
   const response = await axios.delete(`api/v1/delete-courses/${courseId}`);
   return response.data;
-}
+};
+
+export const myCourse = async () => {
+  const response = await axios.get(`api/v1/users/me/courses`);
+  return response.data;
+};

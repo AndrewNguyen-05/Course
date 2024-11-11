@@ -1,36 +1,70 @@
 import React, { useEffect, useState } from 'react';
 import { FaUpload } from 'react-icons/fa';
 import FormUploadCourse from './components/FormUploadCourse';
+import axios from '../../../utils/CustomizeAxios';
+import { toast, ToastContainer } from 'react-toastify';
 
 export const CreateCourse = () => {
-    const [courseTitle, setCourseTitle] = useState('');
-    const [courseDescription, setCourseDescription] = useState('');
-    const [level, setLevel] = useState('');
-    const [duration, setDuration] = useState('');
-    const [coursePrice, setCoursePrice] = useState('');
-    const [courseThumbnail, setCourseThumbnail] = useState(null);
-    const [courseFile, setCourseFile] = useState(null);
-    const [language, setLanguage] = useState('');
     const [instructorName, setInstructorName] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         document.title = 'Create a Course';
+    }, []);
+
+    const [courseData, setCourseData] = useState({
+        courseTitle: '',
+        courseDescription: '',
+        level: '',
+        duration: '',
+        coursePrice: 0,
+        language: '',
+        instructorName: '',
+        courseThumbnail: null,
+        courseFile: null,
     });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log({
-            courseTitle,
-            courseDescription,
-            level,
-            duration,
-            coursePrice,
-            language,
-            instructorName,
-            courseThumbnail,
-            courseFile
-        });
+    const handleChange = (key, value) => {
+        setCourseData(prevData => ({
+            ...prevData,
+            [key]: value
+        }));
     };
+
+    const handleUploadCourse = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+
+        const formData = new FormData();
+
+        const dataCourse = new Blob([JSON.stringify({
+            title: courseData.courseTitle,
+            description: courseData.courseDescription,
+            points: courseData.coursePrice,
+            duration: courseData.duration,
+            language: courseData.language,
+            courseLevel: courseData.level
+        })], { type: 'application/json' });
+
+        formData.append('courseRequest', dataCourse);
+        formData.append('thumbnail', courseData.courseThumbnail);
+        formData.append('video', courseData.courseFile);
+
+        try {
+            const response = await axios.post(`api/v1/create-course`, formData);
+            console.log(response.data);
+
+            if (response && response.data && response.data.code === 201) {
+                toast.success('Created Course Successfully');
+            } else {
+                toast.error('Created Course Error');
+            }
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className='content-page'>
@@ -44,23 +78,10 @@ export const CreateCourse = () => {
                                         <FaUpload className="me-2" /> Upload New Course
                                     </h3>
                                     <FormUploadCourse
-                                        handleSubmit={handleSubmit}
-                                        courseTitle={courseTitle}
-                                        setCourseTitle={setCourseTitle}
-                                        level={level}
-                                        setLevel={setLevel}
-                                        language={language}
-                                        setLanguage={setLanguage}
-                                        duration={duration}
-                                        setDuration={setDuration}
-                                        coursePrice={coursePrice}
-                                        setCoursePrice={setCoursePrice}
-                                        instructorName={instructorName}
-                                        setInstructorName={setInstructorName}
-                                        courseDescription={courseDescription}
-                                        setCourseDescription={setCourseDescription}
-                                        setCourseFile={setCourseFile}
-                                        setCourseThumbnail={setCourseThumbnail}
+                                        handleSubmit={handleUploadCourse}
+                                        courseData={courseData}
+                                        handleChange={handleChange}
+                                        loading={loading}
                                     />
                                 </div>
                             </div>
@@ -68,6 +89,12 @@ export const CreateCourse = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                className="custom-toast-container"
+            />
         </div>
+
     );
 };

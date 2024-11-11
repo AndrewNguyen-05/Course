@@ -14,6 +14,7 @@ import java.util.Set;
 public class CourseChapterResponse {
 
     Long courseId;
+    Long totalLesson;
     String courseTitle;
     String courseDescription;
 

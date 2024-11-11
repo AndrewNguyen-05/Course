@@ -44,48 +44,32 @@ export const ProfileDropdown = ({
 
       <ul
         className="dropdown-menu dropdown-menu-end text-start"
-        style={{ transform: "translateX(-50%)", left: "18%" }}
-      >
-        {isTokenValid === null ? (
-          <li></li>
-        ) : isTokenValid ? (
+        style={{ transform: "translateX(-50%)", left: "18%" }} >
+        {isTokenValid === null ? (<li></li>) : isTokenValid ? (
           <>
             <li>
-              <Link
-                to="/profile"
-                className="dropdown-item d-flex align-items-center"
-              >
+              <Link to="/profile" className="dropdown-item d-flex align-items-center">
                 <i className="fa-solid fa-address-card me-2"></i>Profile
               </Link>
             </li>
 
             <li>
-              <Link
-                to="/my-certificates"
-                className="dropdown-item d-flex align-items-center"
-              >
+              <Link to="/my-certificates" className="dropdown-item d-flex align-items-center">
                 <i className="fa-solid fa-certificate me-2"></i>Certificates
               </Link>
             </li>
 
             {(role === "USER" || role === "TEACHER") && (
               <li>
-                <Link
-                  to="/my-courses"
-                  className="dropdown-item d-flex align-items-center"
-                >
-                  <i className="fa-solid fa-book me-2"></i>
-                  My Courses
+                <Link to="/my-courses" className="dropdown-item d-flex align-items-center">
+                  <i className="fa-solid fa-book me-2"></i>My Courses
                 </Link>
               </li>
             )}
 
             {role === "TEACHER" && (
               <li>
-                <Link
-                  to="/manager-courses"
-                  className="dropdown-item d-flex align-items-center"
-                >
+                <Link to="/manager-courses" className="dropdown-item d-flex align-items-center">
                   <i className="fa-solid fa-book me-2"></i>Manager
                 </Link>
               </li>
@@ -93,10 +77,7 @@ export const ProfileDropdown = ({
 
             {role === "USER" && (
               <li>
-                <Link
-                  to="/register-teacher"
-                  className="dropdown-item d-flex align-items-center"
-                >
+                <Link to="/register-teacher" className="dropdown-item d-flex align-items-center" >
                   <i className="fa-solid fa-user-graduate me-2"></i>Teach Now
                 </Link>
               </li>
@@ -104,10 +85,7 @@ export const ProfileDropdown = ({
 
             {role === "ADMIN" && (
               <li>
-                <Link
-                  to="/admin"
-                  className="dropdown-item d-flex align-items-center"
-                >
+                <Link to="/admin" className="dropdown-item d-flex align-items-center">
                   <i className="fa-solid fa-user-tie me-2"></i>Admin
                 </Link>
               </li>
@@ -115,10 +93,7 @@ export const ProfileDropdown = ({
 
             {(role === "USER" || role === "TEACHER") && (
               <li>
-                <Link
-                  to="/deposit"
-                  className="dropdown-item d-flex align-items-center"
-                >
+                <Link to="/deposit" className="dropdown-item d-flex align-items-center" >
                   <i className="fa-brands fa-bitcoin me-2"></i>
                   Deposit
                 </Link>
@@ -126,30 +101,21 @@ export const ProfileDropdown = ({
             )}
 
             <li>
-              <Link
-                to="/change-password"
-                className="dropdown-item d-flex align-items-center"
-              >
+              <Link to="/change-password" className="dropdown-item d-flex align-items-center">
                 <i className="fa-solid fa-key me-2"></i>Password
               </Link>
             </li>
+
             <li>
-              <Button
-                className="dropdown-item d-flex align-items-center"
-                id="logout"
-                onClick={handleLogout}
-              >
+              <Button className="dropdown-item d-flex align-items-center" id="logout"
+                onClick={handleLogout} >
                 <i className="fa-solid fa-sign-out-alt me-2"></i>Logout
               </Button>
             </li>
           </>
         ) : (
           <li>
-            <Link
-              to="/login"
-              className="dropdown-item d-flex align-items-center"
-              id="login"
-            >
+            <Link to="/login" className="dropdown-item d-flex align-items-center" id="login" >
               <i className="fa-solid fa-sign-in-alt me-2"></i>Login
             </Link>
           </li>

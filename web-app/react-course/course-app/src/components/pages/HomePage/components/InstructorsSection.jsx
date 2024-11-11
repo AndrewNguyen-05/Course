@@ -2,6 +2,7 @@ import instructor1Image from "./../../../../img/duc.jpg";
 import instructor2Image from "./../../../../img/duc1.jpg";
 import instructor3Image from "./../../../../img/vu.jpg";
 import instructor4Image from "./../../../../img/nam.jpg";
+import { Link } from "react-router-dom";
 
 export const InstructorsSection = () => {
   return (
@@ -25,21 +26,11 @@ export const InstructorsSection = () => {
                 <h5 className="mb-3">Instructor Name</h5>
                 <p className="mb-2">Web Design & Development</p>
                 <div className="d-flex justify-content-center">
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-linkedin-in"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-instagram"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-youtube"></i>
-                  </a>
+                  <Link to="/" className="mx-1 p-1"><i className="fab fa-twitter"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-facebook-f"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-linkedin-in"></i></Link>
+                  <Link to="/" className="mx-1 p-1"><i className="fab fa-instagram"></i></Link>
+                  <Link to="/" className="mx-1 p-1" > <i className="fab fa-youtube"></i></Link>
                 </div>
               </div>
             </div>
@@ -56,21 +47,11 @@ export const InstructorsSection = () => {
                 <h5 className="mb-3">Instructor Name</h5>
                 <p className="mb-2">Web Design & Development</p>
                 <div className="d-flex justify-content-center">
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-linkedin-in"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-instagram"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-youtube"></i>
-                  </a>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-twitter"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-facebook-f"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-linkedin-in"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-instagram"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-youtube"></i></Link>
                 </div>
               </div>
             </div>
@@ -87,21 +68,11 @@ export const InstructorsSection = () => {
                 <h5 className="mb-3">Instructor Name</h5>
                 <p className="mb-2">Web Design & Development</p>
                 <div className="d-flex justify-content-center">
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-linkedin-in"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-instagram"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-youtube"></i>
-                  </a>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-twitter"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-facebook-f"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-linkedin-in"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-instagram"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-youtube"></i></Link>
                 </div>
               </div>
             </div>
@@ -118,21 +89,11 @@ export const InstructorsSection = () => {
                 <h5 className="mb-3">Instructor Name</h5>
                 <p className="mb-2">Web Design & Development</p>
                 <div className="d-flex justify-content-center">
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-twitter"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-facebook-f"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-linkedin-in"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-instagram"></i>
-                  </a>
-                  <a className="mx-1 p-1" href="#">
-                    <i className="fab fa-youtube"></i>
-                  </a>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-twitter"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-facebook-f"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-linkedin-in"></i></Link>
+                  <Link to="/" className="mx-1 p-1" ><i className="fab fa-instagram"></i></Link>
+                  <Link to="/" className="mx-1 p-1"><i className="fab fa-youtube"></i></Link>
                 </div>
               </div>
             </div>

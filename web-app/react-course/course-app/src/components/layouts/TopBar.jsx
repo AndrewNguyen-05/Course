@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-scroll';
 
 export const TopBar = () => {
   return (
@@ -14,21 +15,21 @@ export const TopBar = () => {
           </div>
           <div className="col-lg-6 text-center text-lg-right">
             <div className="d-inline-flex align-items-center">
-              <a className="text-white px-2" href="#">
+              <Link to='/' className="text-white px-2" >
                 <i className="fab fa-facebook-f"></i>
-              </a>
-              <a className="text-white px-2" href="#">
+              </Link>
+              <Link to='/' className="text-white px-2" >
                 <i className="fab fa-twitter"></i>
-              </a>
-              <a className="text-white px-2" href="#">
+              </Link>
+              <Link to='/' className="text-white px-2" >
                 <i className="fab fa-linkedin-in"></i>
-              </a>
-              <a className="text-white px-2" href="#">
+              </Link>
+              <Link to='/' className="text-white px-2" >
                 <i className="fab fa-instagram"></i>
-              </a>
-              <a className="text-white pl-2" href="#">
+              </Link>
+              <Link to='/' className="text-white pl-2" >
                 <i className="fab fa-youtube"></i>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

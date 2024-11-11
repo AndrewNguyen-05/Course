@@ -17,5 +17,4 @@ public class CourseCreationRequest {
     String language;
     CourseLevel courseLevel;
     Long points;
-
 }

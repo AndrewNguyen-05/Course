@@ -1,24 +1,12 @@
-import { FaBook, FaClock, FaDollarSign, FaFileAlt, FaImage, FaLanguage, FaTags, FaUpload, FaUserTie } from "react-icons/fa";
+import { FaBook, FaClock, FaDollarSign, FaFileAlt, FaImage, FaLanguage, FaSpinner, FaTags, FaUpload, FaUserTie } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const FormUploadCourse = (props) => {
     const {
         handleSubmit,
-        courseTitle,
-        setCourseTitle,
-        level,
-        setLevel,
-        language,
-        setLanguage,
-        duration,
-        setDuration,
-        coursePrice,
-        setCoursePrice,
-        instructorName,
-        setInstructorName,
-        courseDescription,
-        setCourseDescription,
-        setCourseFile,
-        setCourseThumbnail
+        courseData,
+        handleChange,
+        loading
     } = props;
 
     return (
@@ -33,8 +21,8 @@ const FormUploadCourse = (props) => {
                         className="form-control create-course-input"
                         id="courseTitle"
                         placeholder="Enter the course title"
-                        value={courseTitle}
-                        onChange={(e) => setCourseTitle(e.target.value)}
+                        value={courseData.courseTitle}
+                        onChange={(e) => handleChange('courseTitle', e.target.value)}
                         required
                     />
                 </div>
@@ -45,8 +33,8 @@ const FormUploadCourse = (props) => {
                     <select
                         className="form-select create-course-input"
                         id="level"
-                        value={level}
-                        onChange={(e) => setLevel(e.target.value)}
+                        value={courseData.level}
+                        onChange={(e) => handleChange('level', e.target.value)}
                         required
                     >
                         <option value="" disabled>Choose a Level</option>
@@ -68,8 +56,8 @@ const FormUploadCourse = (props) => {
                         className="form-control create-course-input"
                         id="language"
                         placeholder="Enter the language"
-                        value={language}
-                        onChange={(e) => setLanguage(e.target.value)}
+                        value={courseData.language}
+                        onChange={(e) => handleChange('language', e.target.value)}
                         required
                     />
                 </div>
@@ -82,8 +70,8 @@ const FormUploadCourse = (props) => {
                         className="form-control create-course-input"
                         id="courseDuration"
                         placeholder="Enter the duration"
-                        value={duration}
-                        onChange={(e) => setDuration(e.target.value)}
+                        value={courseData.duration}
+                        onChange={(e) => handleChange('duration', e.target.value)}
                         min="0"
                         required
                     />
@@ -93,15 +81,15 @@ const FormUploadCourse = (props) => {
             <div className="row mb-4">
                 <div className="col-md-6">
                     <label htmlFor="coursePrice" className="create-course-label">
-                        <FaDollarSign className="me-2" /> Points (1 VND = 10 Points)
+                        <FaDollarSign className="me-2" /> Points (1000 VND = 10 Points)
                     </label>
                     <input
                         type="number"
                         className="form-control create-course-input"
                         id="coursePrice"
                         placeholder="Enter the price"
-                        value={coursePrice}
-                        onChange={(e) => setCoursePrice(e.target.value)}
+                        value={courseData.coursePrice}
+                        onChange={(e) => handleChange('coursePrice', e.target.value)}
                         min="0"
                         required
                     />
@@ -115,9 +103,8 @@ const FormUploadCourse = (props) => {
                         className="form-control create-course-input"
                         id="instructorName"
                         placeholder="Enter the instructor's name"
-                        value={instructorName}
+                        // value={courseData.instructorName}
                         readOnly
-                        onChange={(e) => setInstructorName(e.target.value)}
                         required
                     />
                 </div>
@@ -132,8 +119,8 @@ const FormUploadCourse = (props) => {
                     id="courseDescription"
                     rows="4"
                     placeholder="Enter the description"
-                    value={courseDescription}
-                    onChange={(e) => setCourseDescription(e.target.value)}
+                    value={courseData.courseDescription}
+                    onChange={(e) => handleChange('courseDescription', e.target.value)}
                     required
                 ></textarea>
             </div>
@@ -147,7 +134,7 @@ const FormUploadCourse = (props) => {
                         className="form-control create-course-input"
                         type="file"
                         id="courseThumbnail"
-                        onChange={(e) => setCourseThumbnail(e.target.files[0])}
+                        onChange={(e) => handleChange('courseThumbnail', (e.target.files[0]))}
                         required
                     />
                 </div>
@@ -159,16 +146,37 @@ const FormUploadCourse = (props) => {
                         className="form-control create-course-input"
                         type="file"
                         id="courseFile"
-                        onChange={(e) => setCourseFile(e.target.files[0])}
+                        onChange={(e) => handleChange('courseFile', (e.target.files[0]))}
                         required
                     />
                 </div>
             </div>
 
             <div className="d-grid">
-                <button type="submit" className="btn create-course-button">
-                    <FaUpload className="me-2" /> Upload Course
-                </button>
+                <motion.button
+                    type="submit"
+                    className="btn create-course-button"
+                    disabled={loading}
+                    initial={{ scale: 1 }}
+                    animate={loading ? { scale: 0.95 } : { scale: 1 }}
+                    whileHover={!loading ? { scale: 1.03 } : {}}
+                    transition={{ duration: 0.2 }}
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center" }}
+                >
+                    {loading ? (
+                        <motion.span
+                            animate={{ rotate: 360 }}
+                            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                            style={{ display: "inline-block" }}
+                        >
+                            <FaSpinner className="me-2" />
+                        </motion.span>
+                    ) : (
+                        <>
+                            <FaUpload className="me-2" /> Upload Course
+                        </>
+                    )}
+                </motion.button>
             </div>
         </form>
     );

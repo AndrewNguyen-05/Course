@@ -4,7 +4,7 @@ export const OurCourses = (props) => {
 
   const { courses, handleAddToFavorites, hasMore, loadMoreCourses } = props;
   const navigate = useNavigate();
-  const hanleDetailCourse = (id) => {
+  const handleDetailCourse = (id) => {
     navigate(`/course-detail/${id}`)
   }
   return (
@@ -24,8 +24,7 @@ export const OurCourses = (props) => {
         {courses.map((course) => (
           <div className="col-lg-3 col-md-6 mb-4" key={course.id}>
             <div className="course-card-custom-design-container shadow-sm">
-              {/* Ảnh bìa */}
-              <div className="course-card-custom-image-container" onClick={() => hanleDetailCourse(course.id)}>
+              <div className="course-card-custom-image-container" onClick={() => handleDetailCourse(course.id)}>
                 <img
                   className="course-card-custom-image"
                   src={course.thumbnail}
@@ -33,18 +32,14 @@ export const OurCourses = (props) => {
                 />
               </div>
 
-              {/* Nội dung khóa học */}
               <div className="course-card-custom-body text-center">
-                {/* Tiêu đề khóa học */}
                 <h5 className="course-card-custom-title">{course.title}</h5>
 
-                {/* Tác giả khóa học */}
                 <p className="course-card-custom-author">
                   <i className="fa fa-user mr-2"></i>
                   {course.author}
                 </p>
               </div>
-              {/* Nút "Course Detail" và "Thêm vào khóa học yêu thích" */}
               <div className="course-card-custom-footer text-center">
                 <Link
                   className="course-card-custom-btn"
@@ -52,7 +47,7 @@ export const OurCourses = (props) => {
                 >
                   Course Detail
                 </Link>
-                {/* Nút thêm vào khóa học yêu thích với icon trái tim */}
+
                 <button
                   className="course-card-custom-btn-favorite mt-2"
                   onClick={() => handleAddToFavorites(course.id)}
@@ -64,7 +59,7 @@ export const OurCourses = (props) => {
           </div>
         ))}
       </div>
-      {/* Xem thêm */}
+
       <div className="row justify-content-center mt-4">
         {hasMore ? (
           <button
@@ -72,10 +67,10 @@ export const OurCourses = (props) => {
             style={{ width: "150px" }}
             onClick={loadMoreCourses}
           >
-            Xem thêm
+            See more
           </button>
         ) : (
-          <p className="text-center">Đã tải hết các khóa học</p>
+          <p className="text-center">All courses loaded</p>
         )}
       </div>
     </div>

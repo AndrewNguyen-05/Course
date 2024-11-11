@@ -1,21 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export const PromoModal = ({ onClose, ads }) => {
     const [currentPromoIndex, setCurrentPromoIndex] = useState(0);
 
-    const handleNext = () => {
+    const handleNext = useCallback(() => {
         setCurrentPromoIndex((prevIndex) => (prevIndex + 1) % ads.length);
-    };
+    }, [ads.length]);
 
     const handlePrev = () => {
         setCurrentPromoIndex((prevIndex) => (prevIndex - 1 + ads.length) % ads.length);
     };
 
     useEffect(() => {
-        const interval = setInterval(handleNext, 5000); 
+        const interval = setInterval(handleNext, 5000);
         return () => clearInterval(interval);
-    }, []);
+    }, [handleNext]);
 
     // Kiểm tra trước khi render để đảm bảo ads[currentPromoIndex] tồn tại
     if (!ads || ads.length === 0 || !ads[currentPromoIndex]) {
@@ -41,7 +42,7 @@ export const PromoModal = ({ onClose, ads }) => {
                     </AnimatePresence>
                     <div className="promo-info">
                         <div className="promo-info-background">
-                            <a className="promo-btn" href={ads[currentPromoIndex].link}>Xem Ngay</a>
+                            <Link className="promo-btn" to={ads[currentPromoIndex].link}>Xem Ngay</Link>
                         </div>
                     </div>
                 </div>

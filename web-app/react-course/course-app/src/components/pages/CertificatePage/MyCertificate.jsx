@@ -32,11 +32,11 @@ const MyCertificate = () => {
     const handleDownload = (certificateId) => {
         const certificateElement = document.getElementById(`certificate-${certificateId}`);
         html2canvas(certificateElement, { scale: 5 }).then((canvas) => {
-            const imgData = canvas.toDataURL("image/png");
-            const pdf = new jsPDF("p", "mm", "a4");
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+            const imgData = canvas.toDataURL("image/png"); // lấy dữ liệu hình ảnh từ đối tượng canvas
+            const pdf = new jsPDF("p", "mm", "a4"); // Khởi Tạo Tệp PDF Với jsPDF
+            const pdfWidth = pdf.internal.pageSize.getWidth(); // Tính toán kích thước hình ảnh 
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Tính toán kích thước hình ảnh
+            pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight); // Thêm hình ảnh chứng chỉ vào file PFG
             pdf.save(`Certificate_${certificateId}.pdf`);
         });
     };

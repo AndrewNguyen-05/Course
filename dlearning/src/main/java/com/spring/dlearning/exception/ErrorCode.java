@@ -38,6 +38,7 @@ public enum ErrorCode {
     CONFIRM_PASSWORD_INVALID(400, "Confirmed password is incorrect", HttpStatus.BAD_REQUEST),
     INVALID_RATING(400, "Only rating greater than or equal to 0 and less than 5", HttpStatus.BAD_REQUEST),
     INVALID_COMMENT_OR_RATING(400, "Please provide at least a comment or a rating.", HttpStatus.BAD_REQUEST),
+    COURSE_NOT_PURCHASED(400, "You have not purchased this course yet. Please purchase to continue.", HttpStatus.BAD_REQUEST),
     COURSE_ALREADY_PURCHASED(400, "You already own this course", HttpStatus.BAD_REQUEST),
     TITLE_NOT_BLANK(400, "Title is mandatory", HttpStatus.BAD_REQUEST),
     DESCRIPTION_NOT_BLANK(400, "Description is mandatory", HttpStatus.BAD_REQUEST),
@@ -77,7 +78,7 @@ public enum ErrorCode {
     COURSE_ACCESS_DENIED(400, "You do not have permission to view the progress of this course.", HttpStatus.BAD_REQUEST),
     UNKNOWN_PROVIDER(400,"The OAuth2 provider is not recognized or not supported." , HttpStatus.BAD_REQUEST),
     CERTIFICATE_EXISTED(400, "Certificate already existed", HttpStatus.BAD_REQUEST),
-
+    INCOMPLETE_LESSONS(400, "User has not completed all required lessons", HttpStatus.BAD_REQUEST)
     ;
 
     private final int code;
