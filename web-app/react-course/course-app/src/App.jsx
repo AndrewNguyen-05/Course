@@ -138,7 +138,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFail />} />
-        <Route path="/payment-cancel" element={<PaymentCancel />} />
+        <Route path="/payment-cancel" element={<PaymentCancel />} />z
 
       </Routes>
     </div>
