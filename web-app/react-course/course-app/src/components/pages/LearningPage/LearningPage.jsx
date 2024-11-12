@@ -13,6 +13,7 @@ import { getCompletionPercentage, markLessonAsCompleted } from '../../../service
 import Swal from 'sweetalert2';
 import CongratulationsModal from './components/CompletetCourse';
 import { createCertificate } from '../../../service/CertificateService'
+import { getMyInfo } from '../../../service/UserService';
 
 export const LearningPage = () => {
     useEffect(() => {
@@ -36,6 +37,15 @@ export const LearningPage = () => {
     const [activeReply, setActiveReply] = useState(null);
     const [avatar, setAvatar] = useState();
     const [completedLessons, setCompletedLessons] = useState([]);
+    const [username, setUsername] = useState('');
+
+    useEffect(() => {
+        getMyInfo()
+            .then((response) => {
+                setUsername(response.result.firstName + ' ' + response.result.lastName);
+            })
+            .catch((error) => console.log(error));
+    })
 
     const [completionData, setCompletionData] = useState({
         totalLessonComplete: 0,
@@ -48,6 +58,7 @@ export const LearningPage = () => {
     const videoRef = useRef(null);
     const [hasUpdatedCompletion, setHasUpdatedCompletion] = useState(false);
     const [lastTime, setLastTime] = useState(0);
+
     useEffect(() => {
         const video = videoRef.current;
         if (video) {
@@ -69,13 +80,18 @@ export const LearningPage = () => {
 
                 if ((video.currentTime / video.duration) >= 0.8 && !hasUpdatedCompletion) {
                     setHasUpdatedCompletion(true);
-                    markLessonAsCompleted(currentLesson.lessonId);
-                    setCompletedLessons(prev => [...prev, currentLesson.lessonId]);
-                    setCompletionData(prev => ({
-                        ...prev,
-                        totalLessonComplete: prev.totalLessonComplete + 1,
-                        completionPercentage: Math.round(((prev.totalLessonComplete + 1) / prev.totalLessons) * 100)
-                    }));
+                    await markLessonAsCompleted(currentLesson.lessonId);
+
+                    setCompletedLessons((prev) => [...prev, currentLesson.lessonId]);
+                    setCompletionData((prev) => {
+                        const newCompletionData = {
+                            ...prev,
+                            totalLessonComplete: prev.totalLessonComplete + 1,
+                            completionPercentage: Math.round(((prev.totalLessonComplete + 1) / totalLessons) * 100),
+                        };
+                        console.log("Updated completionData:", newCompletionData);
+                        return newCompletionData;
+                    });
                 }
             };
 
@@ -87,14 +103,19 @@ export const LearningPage = () => {
                 video.removeEventListener('timeupdate', handleTimeUpdate);
             };
         }
-    }, [currentLesson, hasUpdatedCompletion, lastTime]);
+    }, [currentLesson, hasUpdatedCompletion, lastTime, totalLessons]);
+
+    useEffect(() => {
+        setHasUpdatedCompletion(false); // Reset trạng thái khi có bài học mới
+    }, [currentLesson]);
 
     useEffect(() => {
         if (completionData.totalLessonComplete === totalLessons) {
             const checkCourseCompletion = async () => {
                 const result = await isCourseComplete(id);
                 console.log(result);
-                if (result && result.complete === false) {
+                if (result && result.result && result.result.complete === false) {
+                    console.log("Setting showModalComplete to true");
                     setShowModelComplete(true);
                     const resultCreate = await createCertificate(id);
                     console.log(resultCreate);
@@ -381,6 +402,8 @@ export const LearningPage = () => {
                     <div className="modal-overlay">
                         <CongratulationsModal
                             onClose={() => handleCloseComplete(false)}
+                            avatar={avatar}
+                            username={username}
                         />
                     </div>
                 )}
