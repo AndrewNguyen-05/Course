@@ -3,6 +3,7 @@ import { FaUpload } from 'react-icons/fa';
 import FormUploadCourse from './components/FormUploadCourse';
 import axios from '../../../utils/CustomizeAxios';
 import { toast, ToastContainer } from 'react-toastify';
+import { getMyInfo } from '../../../service/UserService';
 
 export const CreateCourse = () => {
     const [instructorName, setInstructorName] = useState('');
@@ -23,6 +24,14 @@ export const CreateCourse = () => {
         courseThumbnail: null,
         courseFile: null,
     });
+
+    useEffect(() => {
+        getMyInfo()
+            .then((response) => {
+                setInstructorName(response.result.firstName + ' ' + response.result.lastName);
+            })
+            .catch((error) => console.log(error));
+    })
 
     const handleChange = (key, value) => {
         setCourseData(prevData => ({
@@ -82,6 +91,7 @@ export const CreateCourse = () => {
                                         courseData={courseData}
                                         handleChange={handleChange}
                                         loading={loading}
+                                        instructorName={instructorName}
                                     />
                                 </div>
                             </div>

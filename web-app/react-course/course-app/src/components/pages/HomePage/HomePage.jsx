@@ -116,9 +116,9 @@ export const HomePage = () => {
   };
 
   if (loading && currentPage === 1) {
-     return (
+    return (
       <LoadingSpinner />
-     );
+    );
   }
 
   if (error) {

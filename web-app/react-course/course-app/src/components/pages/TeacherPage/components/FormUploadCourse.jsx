@@ -6,6 +6,7 @@ const FormUploadCourse = (props) => {
         handleSubmit,
         courseData,
         handleChange,
+        instructorName,
         loading
     } = props;
 
@@ -103,7 +104,7 @@ const FormUploadCourse = (props) => {
                         className="form-control create-course-input"
                         id="instructorName"
                         placeholder="Enter the instructor's name"
-                        // value={courseData.instructorName}
+                        value={instructorName}
                         readOnly
                         required
                     />

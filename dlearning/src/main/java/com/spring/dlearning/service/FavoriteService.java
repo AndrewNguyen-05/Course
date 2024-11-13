@@ -83,7 +83,7 @@ public class FavoriteService {
 
         return PageResponse.<FavoriteResponse>builder()
                 .currentPage(page)
-                .pageSize(favorites.getSize())
+                .pageSize(size)
                 .totalPages(favorites.getTotalPages())
                 .totalElements(favorites.getTotalElements())
                 .data(favorites.getContent().stream().map(favoriteMapper::toFavoriteResponse).toList())

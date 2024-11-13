@@ -34,5 +34,6 @@ public class Enrollment extends AbstractEntity<Long>{
     @PrePersist
     public void prePersist () {
         this.isComplete = false;
+        this.purchased = true;
     }
 }

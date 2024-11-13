@@ -11,10 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -35,7 +32,7 @@ public class RevenueController {
                 .build();
     }
 
-    @GetMapping("/revenue-detail")
+    @PostMapping("/revenue-detail")
     ApiResponse<List<RevenueDetailResponse>> revenueDetail (@RequestBody PeriodTypeRequest request) {
         log.info("Revenue detail");
         return ApiResponse.<List<RevenueDetailResponse>>builder()

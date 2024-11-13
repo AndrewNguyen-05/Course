@@ -48,6 +48,7 @@ public class CourseService {
     EnrollmentRepository enrollmentRepository;
     EnrollmentMapper enrollmentMapper;
     PaymentRepository paymentRepository;
+    PaymentMethodRepository paymentMethodRepository;
 
     public PageResponse<CourseResponse> getAllCourses(Specification<Course> spec, int page, int size) {
 
@@ -240,11 +241,18 @@ public class CourseService {
         user.setPoints(pointsUser - pointsCourse);
         userRepository.save(user);
 
+//       Cộng tiền vào account author khi người dùng mua thành công
+        User authorCourse = course.getAuthor();
+        authorCourse.setPoints(authorCourse.getPoints() + pointsCourse);
+
+        PaymentMethod paymentMethod = paymentMethodRepository.findByMethodName(PaymentMethodName.BANK_TRANSFER)
+                .orElseGet(() -> paymentMethodRepository.save(PaymentMethod.builder()
+                                .methodName(PaymentMethodName.BANK_TRANSFER)
+                        .build()));
+
         Payment payment = Payment.builder()
                 .user(user)
-                .paymentMethod(PaymentMethod.builder()
-                        .methodName(PaymentMethodName.BANK_TRANSFER)
-                        .build())
+                .paymentMethod(paymentMethod)
                 .price(BigDecimal.valueOf(pointsCourse * 100))
                 .points(BigDecimal.valueOf(pointsUser))
                 .status(PaymentStatus.COMPLETED)

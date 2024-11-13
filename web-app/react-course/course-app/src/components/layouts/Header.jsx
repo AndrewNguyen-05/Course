@@ -13,6 +13,7 @@ import { NavigationMenu } from "../pages/Widgets/NavigationMenu.jsx";
 import { NotificationDropdown } from "../pages/Widgets/NotificationDropdown.jsx";
 import { ProfileDropdown } from "../pages/Widgets/ProfileDropdown.jsx";
 import { useWebsocket } from "../router/useWebSocket.js";
+import { ViewRevenue } from "../pages/Widgets/ViewRevenue.jsx";
 
 export const Header = () => {
   const authContext = useContext(AuthContext);
@@ -86,7 +87,8 @@ export const Header = () => {
                 markAsRead={markAsRead}
               />
               <Advertisement />
-              <Favorites />
+              <Favorites role={role} />
+              <ViewRevenue role={role} />
               <ProfileDropdown
                 avatar={avatar || avatarDefault}
                 isTokenValid={authContext.authenticated}

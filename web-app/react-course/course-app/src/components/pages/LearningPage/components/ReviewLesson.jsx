@@ -68,7 +68,7 @@ export const ReviewLesson = (props) => {
                                         <div key={reply.reviewId} className="comment-lesson-container comment-lesson-reply">
                                             <div className="comment-lesson-avatar">
                                                 <img
-                                                     src={reply.avatar}
+                                                    src={reply.avatar}
                                                     alt="User Avatar"
                                                     className="comment-lesson-avatar-img"
                                                 />

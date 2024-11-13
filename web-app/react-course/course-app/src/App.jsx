@@ -35,6 +35,8 @@ import { Authorization } from './service/Security/Authorization';
 import MyPost from './components/pages/CommunityPage/MyPost';
 import Certificate from './components/pages/CertificatePage/Certificate';
 import MyCertificate from './components/pages/CertificatePage/MyCertificate';
+import RevenuePage from './components/pages/RevenuePage/RevenuePage';
+import ManagerStudent from './components/pages/ManagerStudent/ManagerStudent';
 
 function App() {
   return (
@@ -62,6 +64,18 @@ function App() {
             <PrivateRoute>
               <Community />
             </PrivateRoute>} />
+
+          <Route path="/revenue" element={
+            <Authorization requiredRole={["TEACHER"]}>
+              <RevenuePage />
+            </Authorization>
+          } />
+
+          <Route path="/manager-student" element={
+            <Authorization requiredRole={["TEACHER"]}>
+              <ManagerStudent />
+            </Authorization>
+          } />
 
           <Route path="/community/my-post" element={
             <PrivateRoute>
@@ -131,6 +145,7 @@ function App() {
           </Authorization>
         } />
 
+
         <Route path='/courses' element={<Courses />} />
         <Route path='/lesson-detail/:id' element={<LearningPage />} />
         <Route path="/oauth2/callback/:clientCode" element={<ProcessLoginOAuth2 />} />
@@ -138,7 +153,7 @@ function App() {
         <Route path="*" element={<NotFound />} />
         <Route path="/payment-success" element={<PaymentSuccess />} />
         <Route path="/payment-failed" element={<PaymentFail />} />
-        <Route path="/payment-cancel" element={<PaymentCancel />} />z
+        <Route path="/payment-cancel" element={<PaymentCancel />} />
 
       </Routes>
     </div>
