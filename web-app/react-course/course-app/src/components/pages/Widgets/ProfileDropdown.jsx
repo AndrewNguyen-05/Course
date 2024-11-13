@@ -43,8 +43,7 @@ export const ProfileDropdown = ({
       </button>
 
       <ul
-        className="dropdown-menu dropdown-menu-end text-start"
-        style={{ transform: "translateX(-50%)", left: "18%" }} >
+        className="dropdown-menu dropdown-menu-end text-start">
         {isTokenValid === null ? (<li></li>) : isTokenValid ? (
           <>
             <li>
@@ -53,11 +52,19 @@ export const ProfileDropdown = ({
               </Link>
             </li>
 
-            <li>
+            {role === 'USER' && (<li>
               <Link to="/my-certificates" className="dropdown-item d-flex align-items-center">
                 <i className="fa-solid fa-certificate me-2"></i>Certificates
               </Link>
             </li>
+            )}
+
+            {role === 'TEACHER' && (<li>
+              <Link to="/manager-student" className="dropdown-item d-flex align-items-center">
+                <i className="fa-solid fa-user-graduate me-2"></i>Manager Student
+              </Link>
+            </li>
+            )}
 
             {(role === "USER" || role === "TEACHER") && (
               <li>
