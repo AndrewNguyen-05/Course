@@ -1,5 +1,6 @@
 package com.spring.dlearning.entity;
 
+import com.spring.dlearning.utils.PaymentMethodName;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,7 +15,8 @@ import lombok.experimental.FieldDefaults;
 public class PaymentMethod extends AbstractEntity<Long> {
 
     @Column(name = "method_name", nullable = false)
-    String methodName;
+    @Enumerated(EnumType.STRING)
+    PaymentMethodName methodName;
 
     @Column(name = "details")
     String details;

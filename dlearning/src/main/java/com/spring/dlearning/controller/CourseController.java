@@ -1,5 +1,6 @@
 package com.spring.dlearning.controller;
 
+import com.spring.dlearning.dto.request.BuyCourseRequest;
 import com.spring.dlearning.dto.request.CourseCreationRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.*;
@@ -108,6 +109,14 @@ public class CourseController {
         return ApiResponse.<Void>builder()
                 .code(HttpStatus.OK.value())
                 .message("Delete Course Successfully")
+                .build();
+    }
+
+    @PostMapping("/buy-course")
+    ApiResponse<BuyCourseResponse> buyCourse(@RequestBody @Valid BuyCourseRequest request) {
+        return ApiResponse.<BuyCourseResponse>builder()
+                .code(HttpStatus.OK.value())
+                .result(courseService.buyCourse(request))
                 .build();
     }
 

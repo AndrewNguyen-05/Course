@@ -5,14 +5,17 @@ import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.VNPAYResponse;
 import com.spring.dlearning.entity.Advertisement;
 import com.spring.dlearning.entity.Payment;
+import com.spring.dlearning.entity.PaymentMethod;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.repository.AdvertisementRepository;
+import com.spring.dlearning.repository.PaymentMethodRepository;
 import com.spring.dlearning.repository.PaymentRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.service.PaymentService;
 import com.spring.dlearning.utils.AdsStatus;
+import com.spring.dlearning.utils.PaymentMethodName;
 import com.spring.dlearning.utils.PaymentStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,6 +39,7 @@ public class PaymentController {
     PaymentRepository paymentRepository;
     UserRepository userRepository;
     AdvertisementRepository advertisementRepository;
+    PaymentMethodRepository paymentMethodRepository;
 
     @GetMapping("/vn-pay")
     public ApiResponse<VNPAYResponse> pay(HttpServletRequest request) {
@@ -77,7 +81,9 @@ public class PaymentController {
                     } else {
                         user.setPoints(user.getPoints() + pointsToAdd);
                     }
+
                     userRepository.save(user);
+                        break;
                 }
                 case PaymentType.ADVERTISEMENT: {
                     Advertisement advertisement = advertisementRepository.findById(Long.parseLong(refParts[1]))
@@ -86,7 +92,10 @@ public class PaymentController {
                         advertisement.setApprovalStatus(AdsStatus.ACTIVE);
                     }
                     advertisementRepository.save(advertisement);
+                    break;
                 }
+                default:
+                    throw new AppException(ErrorCode.INVALID_PAYMENT_TYPE);
             }
 
             redirectUrl = "http://localhost:3000/payment-success";
@@ -99,9 +108,18 @@ public class PaymentController {
     }
 
     private void recordPaymentTransaction(User user, BigDecimal amount, PaymentStatus status) {
+
+        PaymentMethod paymentMethod = paymentMethodRepository.findByMethodName(PaymentMethodName.BANK_TRANSFER)
+                .orElseGet(() -> paymentMethodRepository.save(
+                        PaymentMethod.builder()
+                                .methodName(PaymentMethodName.BANK_TRANSFER)
+                                .build()
+                ));
+
         Payment payment = Payment.builder()
                 .user(user)
                 .price(amount)
+                .paymentMethod(paymentMethod)
                 .status(status)
                 .build();
 

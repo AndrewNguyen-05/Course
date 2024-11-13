@@ -78,7 +78,8 @@ public enum ErrorCode {
     COURSE_ACCESS_DENIED(400, "You do not have permission to view the progress of this course.", HttpStatus.BAD_REQUEST),
     UNKNOWN_PROVIDER(400,"The OAuth2 provider is not recognized or not supported." , HttpStatus.BAD_REQUEST),
     CERTIFICATE_EXISTED(400, "Certificate already existed", HttpStatus.BAD_REQUEST),
-    INCOMPLETE_LESSONS(400, "User has not completed all required lessons", HttpStatus.BAD_REQUEST)
+    INCOMPLETE_LESSONS(400, "User has not completed all required lessons", HttpStatus.BAD_REQUEST),
+    INVALID_PAYMENT_TYPE(400, "Payment type invalid", HttpStatus.BAD_REQUEST)
     ;
 
     private final int code;

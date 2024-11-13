@@ -13,6 +13,7 @@ import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.EnrollmentMapper;
 import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.EnrollmentRepository;
+import com.spring.dlearning.repository.PaymentRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.utils.SecurityUtils;
 import lombok.AccessLevel;
@@ -36,6 +37,7 @@ public class EnrollmentService {
     UserRepository userRepository;
     CourseRepository courseRepository;
     EnrollmentMapper enrollmentMapper;
+    PaymentRepository paymentRepository;
 
     @PreAuthorize("isAuthenticated()")
     public List<BuyCourseResponse> getCourseByUserCurrent(){
@@ -48,41 +50,6 @@ public class EnrollmentService {
         List<Enrollment> enrollments = enrollmentRepository.findCourseByUser(user);
 
         return enrollments.stream().map(enrollmentMapper::toBuyCourseResponse).toList();
-    }
-
-    @Transactional
-    @PreAuthorize("isAuthenticated()")
-    public BuyCourseResponse buyCourse(BuyCourseRequest request){
-        String email = SecurityUtils.getCurrentUserLogin()
-                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        Course course = courseRepository.findById(request.getCourseId())
-                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
-
-        if (enrollmentRepository.existsByUserAndCourse(user, course)) {
-            throw new AppException(ErrorCode.COURSE_ALREADY_PURCHASED);
-        }
-
-        Long pointsCourse = Objects.requireNonNull(course.getPoints(), "Course points cannot be null");
-        Long pointsUser = Objects.requireNonNull(user.getPoints(), "User points cannot be null");
-
-        if(pointsUser < pointsCourse){
-            throw new AppException(ErrorCode.BUY_COURSE_INVALID);
-        }
-        user.setPoints(pointsUser - pointsCourse);
-        userRepository.save(user);
-
-        Enrollment enrollment = Enrollment.builder()
-                .user(user)
-                .course(course)
-                .purchased(true)
-                .build();
-
-        enrollmentRepository.save(enrollment);
-        return enrollmentMapper.toBuyCourseResponse(enrollment);
     }
 
     @PreAuthorize("isAuthenticated()")

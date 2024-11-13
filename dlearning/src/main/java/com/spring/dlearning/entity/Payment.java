@@ -22,8 +22,8 @@ public class Payment extends AbstractEntity<Long> {
     @Column(name = "transaction_id")
     String transactionId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_method_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
@@ -32,5 +32,8 @@ public class Payment extends AbstractEntity<Long> {
 
     @Column(name = "price", nullable = false)
     BigDecimal price;
+
+    @Column(name = "points")
+    BigDecimal points;
 
 }

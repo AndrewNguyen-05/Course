@@ -25,14 +25,6 @@ public class EnrollmentController {
 
     EnrollmentService enrollmentService;
 
-    @PostMapping("/buy-course")
-    ApiResponse<BuyCourseResponse> buyCourse(@RequestBody @Valid BuyCourseRequest request) {
-        return ApiResponse.<BuyCourseResponse>builder()
-                .code(HttpStatus.OK.value())
-                .result(enrollmentService.buyCourse(request))
-                .build();
-    }
-
     @GetMapping("/users/me/courses")
     ApiResponse<List<BuyCourseResponse>> getCourseByCurrentUser() {
         return ApiResponse.<List<BuyCourseResponse>>builder()

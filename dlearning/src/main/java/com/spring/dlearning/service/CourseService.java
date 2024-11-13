@@ -1,20 +1,19 @@
 package com.spring.dlearning.service;
 
 import com.spring.dlearning.constant.PredefinedRole;
+import com.spring.dlearning.dto.request.BuyCourseRequest;
 import com.spring.dlearning.dto.request.CourseCreationRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.*;
-import com.spring.dlearning.entity.Certificate;
-import com.spring.dlearning.entity.Course;
-import com.spring.dlearning.entity.Review;
-import com.spring.dlearning.entity.User;
+import com.spring.dlearning.entity.*;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.CourseChapterAndLessonMapper;
 import com.spring.dlearning.mapper.CourseMapper;
-import com.spring.dlearning.repository.CertificateRepository;
-import com.spring.dlearning.repository.CourseRepository;
-import com.spring.dlearning.repository.UserRepository;
+import com.spring.dlearning.mapper.EnrollmentMapper;
+import com.spring.dlearning.repository.*;
+import com.spring.dlearning.utils.PaymentMethodName;
+import com.spring.dlearning.utils.PaymentStatus;
 import com.spring.dlearning.utils.SecurityUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -47,6 +45,9 @@ public class CourseService {
     CourseMapper courseMapper;
     CourseChapterAndLessonMapper courseChapterAndLessonMapper;
     CertificateRepository certificateRepository;
+    EnrollmentRepository enrollmentRepository;
+    EnrollmentMapper enrollmentMapper;
+    PaymentRepository paymentRepository;
 
     public PageResponse<CourseResponse> getAllCourses(Specification<Course> spec, int page, int size) {
 
@@ -212,6 +213,53 @@ public class CourseService {
             List<Certificate> certificates = certificateRepository.getAllCertificateById(course.getId());
             certificateRepository.deleteAll(certificates);
             courseRepository.delete(course);
+    }
+
+    @Transactional
+    @PreAuthorize("isAuthenticated()")
+    public BuyCourseResponse buyCourse(BuyCourseRequest request){
+        String email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        Course course = courseRepository.findById(request.getCourseId())
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
+
+        if (enrollmentRepository.existsByUserAndCourse(user, course)) {
+            throw new AppException(ErrorCode.COURSE_ALREADY_PURCHASED);
+        }
+
+        Long pointsCourse = Objects.requireNonNull(course.getPoints(), "Course points cannot be null");
+        Long pointsUser = Objects.requireNonNull(user.getPoints(), "User points cannot be null");
+
+        if(pointsUser < pointsCourse){
+            throw new AppException(ErrorCode.BUY_COURSE_INVALID);
+        }
+        user.setPoints(pointsUser - pointsCourse);
+        userRepository.save(user);
+
+        Payment payment = Payment.builder()
+                .user(user)
+                .paymentMethod(PaymentMethod.builder()
+                        .methodName(PaymentMethodName.BANK_TRANSFER)
+                        .build())
+                .price(BigDecimal.valueOf(pointsCourse * 100))
+                .points(BigDecimal.valueOf(pointsUser))
+                .status(PaymentStatus.COMPLETED)
+                .build();
+
+        paymentRepository.save(payment);
+
+        Enrollment enrollment = Enrollment.builder()
+                .user(user)
+                .course(course)
+                .purchased(true)
+                .build();
+
+        enrollmentRepository.save(enrollment);
+        return enrollmentMapper.toBuyCourseResponse(enrollment);
     }
 
 }
