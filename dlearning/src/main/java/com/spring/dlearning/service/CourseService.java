@@ -252,6 +252,7 @@ public class CourseService {
 
         Payment payment = Payment.builder()
                 .user(user)
+                .course(course)
                 .paymentMethod(paymentMethod)
                 .price(BigDecimal.valueOf(pointsCourse * 100))
                 .points(BigDecimal.valueOf(pointsUser))

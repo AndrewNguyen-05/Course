@@ -75,6 +75,10 @@ public class Course  {
     @JsonIgnore
     Set<Chapter> chapters;
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    List<Payment> payments;
+
     @Column(name = "created_by")
     @CreatedBy
     String createdBy;

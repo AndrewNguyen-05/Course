@@ -4,12 +4,15 @@ import com.spring.dlearning.dto.request.PeriodTypeRequest;
 import com.spring.dlearning.dto.request.RevenueRequest;
 import com.spring.dlearning.dto.response.RevenueDetailResponse;
 import com.spring.dlearning.dto.response.RevenueResponse;
+import com.spring.dlearning.dto.response.RevenueSummaryResponse;
 import com.spring.dlearning.entity.Payment;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
+import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.PaymentRepository;
 import com.spring.dlearning.repository.UserRepository;
+import com.spring.dlearning.utils.PaymentStatus;
 import com.spring.dlearning.utils.PeriodType;
 import com.spring.dlearning.utils.SecurityUtils;
 import lombok.AccessLevel;
@@ -30,6 +33,7 @@ import java.util.List;
 public class RevenueService {
     PaymentRepository paymentRepository;
     UserRepository userRepository;
+    CourseRepository courseRepository;
 
     public RevenueResponse totalRevenue (RevenueRequest request) {
         String email = SecurityUtils.getCurrentUserLogin()
@@ -122,5 +126,71 @@ public class RevenueService {
         }
 
         return revenueDetails;
+    }
+
+    public RevenueSummaryResponse revenueTeacher (PeriodTypeRequest request) {
+        var email = SecurityUtils.getCurrentUserLogin()
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        List<RevenueDetailResponse> revenueDetails = new ArrayList<>();
+        BigDecimal totalRevenue = BigDecimal.ZERO;
+
+        if(request.getPeriodType().equals(PeriodType.YEAR) && request.getYear() != null && request.getMonth() == null) {
+            int year = request.getYear();
+            for(int month = 1; month <= 12; month ++) {
+                LocalDateTime start = LocalDateTime.of(year, month, 1,0, 0);
+                LocalDateTime end = start.plusMonths(1).minusDays(1);
+
+                List<Payment> payments = paymentRepository
+                        .findPaymentsByAuthorStatusAndDateRange(user, PaymentStatus.COMPLETED, start, end);
+
+                BigDecimal monthRevenue = payments.stream().map(Payment::getPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
+                totalRevenue = totalRevenue.add(monthRevenue);
+                RevenueDetailResponse detailMonth = RevenueDetailResponse.builder()
+                        .month(month)
+                        .year(year)
+                        .revenue(monthRevenue)
+                        .build();
+                revenueDetails.add(detailMonth);
+            }
+        } else if (request.getPeriodType().equals(PeriodType.YEAR) && request.getYear() != null) {
+            int year = request.getYear();
+            int month = request.getMonth();
+
+            LocalDateTime start = LocalDateTime.of(year, month, 1,0, 0);
+            LocalDateTime endOfMonth = start.withDayOfMonth(start.toLocalDate().lengthOfMonth())
+                    .toLocalDate().atTime(23,59,59);
+
+            int totalWeek = (int) Math.ceil((double) endOfMonth.getDayOfMonth() / 7);
+            for(int week = 1; week <= totalWeek; week ++) {
+                LocalDateTime end = start.plusWeeks(1).minusSeconds(1);
+                if(end.isAfter(endOfMonth)) {
+                    end = endOfMonth;
+                }
+
+                List<Payment> payments = paymentRepository
+                        .findPaymentsByAuthorStatusAndDateRange(user, PaymentStatus.COMPLETED, start, end);
+
+                BigDecimal weekRevenue = payments.stream().map(Payment::getPrice)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
+                totalRevenue = totalRevenue.add(weekRevenue);
+
+                RevenueDetailResponse detailMonth = RevenueDetailResponse.builder()
+                        .month(month)
+                        .year(year)
+                        .week(week)
+                        .revenue(weekRevenue)
+                        .build();
+                revenueDetails.add(detailMonth);
+                start = end.plusSeconds(1);
+            }
+        }
+        return RevenueSummaryResponse.builder()
+                .totalRevenue(totalRevenue)
+                .revenueDetails(revenueDetails)
+                .build();
     }
 }

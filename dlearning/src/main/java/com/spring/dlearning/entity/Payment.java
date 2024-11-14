@@ -19,6 +19,10 @@ public class Payment extends AbstractEntity<Long> {
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id")
+    Course course;
+
     @Column(name = "transaction_id")
     String transactionId;
 
