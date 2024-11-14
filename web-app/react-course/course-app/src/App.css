@@ -17327,3 +17327,54 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
   top: 0;
   z-index: 1;
 }
+
+.revenue-content-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+}
+
+.revenue-select-container {
+  margin: 20px 0;
+  text-align: center;
+}
+
+.revenue-select-dropdown {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.revenue-charts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-top: 40px;
+}
+
+.revenue-charts .recharts-responsive-container {
+  flex: 1;
+  min-width: 300px;
+  max-width: 48%;
+  margin-bottom: 20px;
+}
+
+/* Biểu đồ tròn Total Revenue */
+.total-revenue-amount {
+  font-size: 28px;
+  font-weight: bold;
+  color: #4CAF50;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .revenue-charts {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .revenue-charts .recharts-responsive-container {
+    max-width: 100%;
+  }
+}
