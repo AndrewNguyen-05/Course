@@ -1,5 +1,6 @@
 package com.spring.dlearning.controller;
 
+import com.spring.dlearning.dto.event.CertificateCreationEvent;
 import com.spring.dlearning.dto.request.CertificateRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.CertificateResponse;
@@ -22,11 +23,11 @@ public class CertificateController {
     CertificateService certificateService;
 
     @PostMapping("/creation")
-    ApiResponse<CertificateResponse> createCertification (@RequestBody CertificateRequest request) {
-        return ApiResponse.<CertificateResponse>builder()
+    ApiResponse<Void> createCertification (@RequestBody CertificateCreationEvent request) {
+        certificateService.createCertificate(request);
+        return ApiResponse.<Void>builder()
                 .code(HttpStatus.OK.value())
                 .message("Certificate created")
-                .result(certificateService.createCertificate(request))
                 .build();
     }
 

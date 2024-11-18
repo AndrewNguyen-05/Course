@@ -1,7 +1,6 @@
 package com.spring.dlearning.service;
 
-import com.spring.dlearning.dto.event.NotificationEvent;
-import com.spring.dlearning.dto.request.CertificateRequest;
+import com.spring.dlearning.dto.event.CertificateCreationEvent;
 import com.spring.dlearning.dto.response.CertificateResponse;
 import com.spring.dlearning.entity.*;
 import com.spring.dlearning.exception.AppException;
@@ -15,11 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,9 +29,8 @@ public class CertificateService {
     KafkaTemplate<String, Object> kafkaTemplate;
     EnrollmentRepository enrollmentRepository;
 
-    public CertificateResponse createCertificate (CertificateRequest request) {
-
-        Course course = courseRepository.findById(request.getCourseId())
+    public void createCertificate(CertificateCreationEvent event) {
+        Course course = courseRepository.findById(event.getCourseId())
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
         String email = SecurityUtils.getCurrentUserLogin()
@@ -46,17 +40,19 @@ public class CertificateService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         long totalLesson = course.getChapters().stream()
-                .mapToLong(chapter -> chapter.getLessons()
-                        .size()).sum();
+                .mapToLong(chapter -> chapter.getLessons().size()).sum();
 
-        if(!enrollmentRepository.existsByUserAndCourse(user, course))
+        if (!enrollmentRepository.existsByUserAndCourse(user, course)) {
             throw new AppException(ErrorCode.COURSE_NOT_PURCHASED);
+        }
 
-        if(lessonProgressRepository.totalLessonComplete(user, course) < totalLesson)
+        if (lessonProgressRepository.totalLessonComplete(user, course) < totalLesson) {
             throw new AppException(ErrorCode.INCOMPLETE_LESSONS);
+        }
 
-        if(certificateRepository.existsByCourseAndUser(course, user))
+        if (certificateRepository.existsByCourseAndUser(course, user)) {
             throw new AppException(ErrorCode.CERTIFICATE_EXISTED);
+        }
 
         Enrollment enrollment = enrollmentRepository.findByCourseAndUser(course, user)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_PURCHASED));
@@ -64,37 +60,11 @@ public class CertificateService {
         enrollment.setComplete(true);
         enrollmentRepository.save(enrollment);
 
-        Certificate certificate = Certificate.builder()
-                .name("DLearning Certificate of Completion")
-                .user(user)
-                .course(course)
-                .issueDate(LocalDateTime.now())
-                .build();
-        certificateRepository.save(certificate);
+        CertificateCreationEvent creationEvent = new CertificateCreationEvent(user.getId(), event.getCourseId());
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("recipient", certificate.getUser().getEmail());
-        data.put("courseName", certificate.getCourse().getTitle());
-        data.put("issueDate", certificate.getIssueDate().format(DateTimeFormatter.ofPattern("EEEE, dd MMMM yyyy - hh:mm:ss a")));
-        data.put("author", certificate.getCourse().getAuthor().getName());
+        kafkaTemplate.send("certificate-creation", creationEvent);
 
-        NotificationEvent event =  NotificationEvent.builder()
-                .channel("EMAIL")
-                .subject("DLearning Certificate of Completion")
-                .recipient(certificate.getUser().getEmail())
-                .templateCode("certificate-template")
-                .param(data)
-                .build();
-
-        kafkaTemplate.send("notification-delivery", event);
-
-        return CertificateResponse.builder()
-                .courseName(certificate.getCourse().getTitle())
-                .email(certificate.getUser().getEmail())
-                .username(certificate.getUser().getName())
-                .certificateUrl(certificate.getCertificateUrl())
-                .issueDate(certificate.getIssueDate())
-                .build();
+        log.info("Certificate creation event published for userId: {}, courseId: {}", event.getUserId(), event.getCourseId());
     }
 
     @PreAuthorize("isAuthenticated()")
