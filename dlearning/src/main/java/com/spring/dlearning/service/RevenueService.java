@@ -9,7 +9,6 @@ import com.spring.dlearning.entity.Payment;
 import com.spring.dlearning.entity.User;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
-import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.PaymentRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.utils.PaymentStatus;
@@ -19,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -33,8 +33,8 @@ import java.util.List;
 public class RevenueService {
     PaymentRepository paymentRepository;
     UserRepository userRepository;
-    CourseRepository courseRepository;
 
+    @PreAuthorize("isAuthenticated() && hasAnyAuthority('ADMIN', 'TEACHER')")
     public RevenueResponse totalRevenue (RevenueRequest request) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
@@ -66,6 +66,7 @@ public class RevenueService {
                 .build();
     }
 
+    @PreAuthorize("isAuthenticated() && hasAnyAuthority('ADMIN', 'TEACHER')")
     public List<RevenueDetailResponse> totalRevenueDetail (PeriodTypeRequest request) {
         String email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
@@ -128,6 +129,7 @@ public class RevenueService {
         return revenueDetails;
     }
 
+    @PreAuthorize("isAuthenticated() && hasAnyAuthority('ADMIN', 'TEACHER')")
     public RevenueSummaryResponse revenueTeacher (PeriodTypeRequest request) {
         var email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));

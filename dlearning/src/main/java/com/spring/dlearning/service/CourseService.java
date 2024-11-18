@@ -239,6 +239,7 @@ public class CourseService {
             throw new AppException(ErrorCode.BUY_COURSE_INVALID);
         }
         user.setPoints(pointsUser - pointsCourse);
+        course.setQuantity(course.getQuantity() + 1);
         userRepository.save(user);
 
 //       Cộng tiền vào account author khi người dùng mua thành công

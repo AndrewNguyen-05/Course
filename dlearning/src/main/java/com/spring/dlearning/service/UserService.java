@@ -33,6 +33,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
+import static com.spring.dlearning.utils.SecurityUtils.generateOtp;
+
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -111,6 +113,7 @@ public class UserService {
                 .stream().map(userMapper::toUserResponse).toList();
     }
 
+    @PreAuthorize("isAuthenticated()")
     public UserResponse getMyInfo() {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
@@ -236,27 +239,5 @@ public class UserService {
                 .points(user.getPoints())
                 .build();
     }
-
-    public String userLogin (){
-        String email = SecurityUtils.getCurrentUserLogin()
-                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
-
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-
-        return user.getName();
-    }
-
-    private static String generateOtp(){
-
-        Random random = new Random();
-        StringBuilder otp = new StringBuilder();
-        for(int i = 0; i < 6 ; i++){
-            otp.append(random.nextInt(10));
-        }
-        return otp.toString();
-
-    }
-
 }
 

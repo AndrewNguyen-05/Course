@@ -1,6 +1,6 @@
 package com.spring.dlearning.service;
 
-import com.spring.dlearning.dto.request.BuyCourseRequest;
+import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.IsCourseCompleteRequest;
 import com.spring.dlearning.dto.response.BuyCourseResponse;
 import com.spring.dlearning.dto.response.CoursePurchaseResponse;
@@ -13,7 +13,6 @@ import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.EnrollmentMapper;
 import com.spring.dlearning.repository.CourseRepository;
 import com.spring.dlearning.repository.EnrollmentRepository;
-import com.spring.dlearning.repository.PaymentRepository;
 import com.spring.dlearning.repository.UserRepository;
 import com.spring.dlearning.utils.SecurityUtils;
 import lombok.AccessLevel;
@@ -22,7 +21,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -37,7 +35,6 @@ public class EnrollmentService {
     UserRepository userRepository;
     CourseRepository courseRepository;
     EnrollmentMapper enrollmentMapper;
-    PaymentRepository paymentRepository;
 
     @PreAuthorize("isAuthenticated()")
     public List<BuyCourseResponse> getCourseByUserCurrent(){
@@ -65,6 +62,14 @@ public class EnrollmentService {
 
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
+
+        if(Objects.equals(userCurrent.getRole().getName(), PredefinedRole.ADMIN_ROLE)){
+            return CoursePurchaseResponse.builder()
+                    .userId(userCurrent.getId())
+                    .courseId(courseId)
+                    .purchased(true)
+                    .build();
+        }
 
         Optional<Enrollment> enrollment = enrollmentRepository.checkPurchase(userCurrent, course);
 

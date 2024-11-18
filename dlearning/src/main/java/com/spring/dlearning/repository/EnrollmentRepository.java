@@ -31,4 +31,5 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long>{
 
     @Query("SELECT e FROM Enrollment e WHERE e.course.author.id = :teacherId AND e.purchased = true")
     Page<Enrollment> findPurchasedUsersByTeacherId(Long teacherId, Pageable pageable);
+
 }

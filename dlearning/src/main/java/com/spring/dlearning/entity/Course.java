@@ -55,6 +55,9 @@ public class Course  {
     @Column(name = "video_url")
     String videoUrl;
 
+    @Column(name = "quantity", columnDefinition = "BIGINT DEFAULT 0")
+    Long quantity;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "author_id")
     @JsonIgnore

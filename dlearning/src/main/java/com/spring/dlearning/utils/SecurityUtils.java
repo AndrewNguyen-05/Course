@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class SecurityUtils {
@@ -28,5 +29,15 @@ public class SecurityUtils {
             return s;
         }
         return null;
+    }
+
+    public static String generateOtp(){
+
+        Random random = new Random();
+        StringBuilder otp = new StringBuilder();
+        for(int i = 0; i < 6 ; i++){
+            otp.append(random.nextInt(10));
+        }
+        return otp.toString();
     }
 }
