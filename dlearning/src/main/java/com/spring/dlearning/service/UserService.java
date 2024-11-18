@@ -31,7 +31,6 @@ import org.springframework.util.StringUtils;
 import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Random;
 
 import static com.spring.dlearning.utils.SecurityUtils.generateOtp;
 
