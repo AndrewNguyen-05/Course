@@ -47,7 +47,8 @@ public class SecurityConfiguration {
             "/api/v1/payment/vn-pay-callback",
             "/api/v1/payment/vn-pay/**",
             "/api/v1/get-ads-active",
-            "/api/v1/info-teacher/**"
+            "/api/v1/info-teacher/**",
+            "/api/v1/search-title"
     };
 
     @Bean

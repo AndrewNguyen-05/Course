@@ -1,12 +1,43 @@
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import { FaRegClock } from "react-icons/fa";
+import { GiTeacher } from "react-icons/gi";
+import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 export const OurCourses = (props) => {
+  const renderStars = (rating) => {
+    const stars = [];
+    const fullStars = Math.floor(rating); // Số sao đầy đủ
+    const hasHalfStar = rating - fullStars >= 0.5; // Có sao nửa không?
+    const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0); // Số sao trống
+
+    // Thêm sao đầy đủ
+    for (let i = 0; i < fullStars; i++) {
+      stars.push(<i key={`full-${i}`} className="fa fa-star text-warning"></i>);
+    }
+
+    // Thêm sao nửa nếu có
+    if (hasHalfStar) {
+      stars.push(
+        <i key="half" className="fa fa-star-half-alt text-warning"></i>
+      );
+    }
+
+    // Thêm sao trống
+    for (let i = 0; i < emptyStars; i++) {
+      stars.push(<i key={`empty-${i}`} className="fa fa-star-o text-warning"></i>);
+    }
+
+    return stars;
+  };
 
   const { courses, handleAddToFavorites, hasMore, loadMoreCourses } = props;
   const navigate = useNavigate();
+
   const handleDetailCourse = (id) => {
-    navigate(`/course-detail/${id}`)
-  }
+    navigate(`/course-detail/${id}`);
+  };
+
   return (
     <div className="container-fluid px-0 py-5">
       <div className="row mx-0 justify-content-center pt-5">
@@ -23,8 +54,12 @@ export const OurCourses = (props) => {
       <div className="row">
         {courses.map((course) => (
           <div className="col-lg-3 col-md-6 mb-4" key={course.id}>
-            <div className="course-card-custom-design-container shadow-sm">
-              <div className="course-card-custom-image-container" onClick={() => handleDetailCourse(course.id)}>
+            <div className="course-card-custom-design-container">
+              {/* Hình ảnh khóa học */}
+              <div
+                className="course-card-custom-image-container"
+                onClick={() => handleDetailCourse(course.id)}
+              >
                 <img
                   className="course-card-custom-image"
                   src={course.thumbnail}
@@ -32,29 +67,36 @@ export const OurCourses = (props) => {
                 />
               </div>
 
+              {/* Nội dung khóa học */}
               <div className="course-card-custom-body text-center">
                 <h5 className="course-card-custom-title">{course.title}</h5>
 
                 <p className="course-card-custom-author">
-                  <i className="fa fa-user mr-2"></i>
                   {course.author}
                 </p>
-              </div>
-              <div className="course-card-custom-footer text-center">
-                <Link
-                  className="course-card-custom-btn"
-                  to={`/course-detail/${course.id}`}
-                >
-                  Course Detail
-                </Link>
 
-                <button
-                  className="course-card-custom-btn-favorite mt-2"
-                  onClick={() => handleAddToFavorites(course.id)}
-                >
-                  <i className="fas fa-heart mr-2"></i>Add to Favorite
-                </button>
+                <div className="course-meta-home">
+                  <span className="d-block">
+                    {renderStars(course.averageRating)} ({course.averageRating.toFixed(1)})
+                  </span>
+                </div>
               </div>
+
+              <div className="course-card-custom-footer">
+                <div className="course-card-footer-item">
+                  <GiTeacher />
+                  <span>{course.author}</span>
+                </div>
+                <div className="course-card-footer-item">
+                  <FaRegClock />
+                  <span>{course.duration} hrs</span>
+                </div>
+                <div className="course-card-footer-item" onClick={() => handleAddToFavorites(course.id)}>
+                  <MdFavorite />
+                  <span>Favorite</span>
+                </div>
+              </div>
+
             </div>
           </div>
         ))}
@@ -64,10 +106,10 @@ export const OurCourses = (props) => {
         {hasMore ? (
           <button
             className="btn btn-primary"
-            style={{ width: "150px" }}
+            style={{ width: "120px" }}
             onClick={loadMoreCourses}
           >
-            See more
+            Show more
           </button>
         ) : (
           <p className="text-center">All courses loaded</p>

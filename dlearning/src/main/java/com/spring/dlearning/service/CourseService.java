@@ -3,8 +3,11 @@ package com.spring.dlearning.service;
 import com.spring.dlearning.constant.PredefinedRole;
 import com.spring.dlearning.dto.request.BuyCourseRequest;
 import com.spring.dlearning.dto.request.CourseCreationRequest;
+import com.spring.dlearning.dto.request.RelatedCourseRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.*;
+import com.spring.dlearning.elasticsearch.CourseDocument;
+import com.spring.dlearning.elasticsearch.DocumentCourseRepository;
 import com.spring.dlearning.entity.*;
 import com.spring.dlearning.exception.AppException;
 import com.spring.dlearning.exception.ErrorCode;
@@ -49,6 +52,7 @@ public class CourseService {
     EnrollmentMapper enrollmentMapper;
     PaymentRepository paymentRepository;
     PaymentMethodRepository paymentMethodRepository;
+    DocumentCourseRepository documentCourseRepository;
 
     public PageResponse<CourseResponse> getAllCourses(Specification<Course> spec, int page, int size) {
 
@@ -92,6 +96,19 @@ public class CourseService {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
 
+        var filteredComments = course.getComments().stream()
+                .filter(r -> r.getRating() > 0 )
+                .toList();
+
+        long totalRating = filteredComments.stream()
+                .mapToLong(Review::getRating)
+                .sum();
+
+        int numberOfValidReviews = filteredComments.size();
+        double averageRating = numberOfValidReviews > 0 ? BigDecimal.valueOf((double) totalRating / numberOfValidReviews)
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue() : 0.0 ;
+
         return CourseResponse.builder()
                 .id(course.getId())
                 .author(course.getAuthor().getName())
@@ -103,6 +120,7 @@ public class CourseService {
                 .thumbnail(course.getThumbnail())
                 .videoUrl(course.getVideoUrl())
                 .points(course.getPoints())
+                .averageRating(averageRating)
                 .build();
     }
 
@@ -123,13 +141,30 @@ public class CourseService {
 
         Course course = courseMapper.toCourse(request);
         String urlThumbnail = cloudinaryService.uploadImage(thumbnail);
-        String videoUrl = cloudinaryService.uploadVideoChunked(video, "courses").get("url").toString();
+        if(video != null) {
+            String videoUrl = cloudinaryService.uploadVideoChunked(video, "courses").get("url").toString();
+            course.setVideoUrl(videoUrl);
+        }
         course.setThumbnail(urlThumbnail);
-        course.setVideoUrl(videoUrl);
         course.setAuthor(user);
         courseRepository.save(course);
+        saveCourseDocument(course);
 
         return courseMapper.toCourseCreationResponse(course);
+    }
+
+    public void saveCourseDocument(Course course) {
+
+        CourseDocument courseDocument = CourseDocument.builder()
+                .id(String.valueOf(course.getId()))
+                .author(course.getAuthor().getName())
+                .title(course.getTitle())
+                .description(course.getDescription())
+                .thumbnail(course.getThumbnail())
+                .points(course.getPoints())
+                .build();
+
+        documentCourseRepository.save(courseDocument);
     }
 
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('USER', 'TEACHER', 'ADMIN')")
@@ -197,6 +232,7 @@ public class CourseService {
     }
 
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN', 'TEACHER')")
+    @Transactional
     public void deleteCourse (Long courseId) {
         var email = SecurityUtils.getCurrentUserLogin()
                 .orElseThrow(() -> new AppException(ErrorCode.EMAIL_INVALID));
@@ -214,6 +250,7 @@ public class CourseService {
             List<Certificate> certificates = certificateRepository.getAllCertificateById(course.getId());
             certificateRepository.deleteAll(certificates);
             courseRepository.delete(course);
+            documentCourseRepository.deleteById(String.valueOf(course.getId()));
     }
 
     @Transactional
@@ -272,4 +309,36 @@ public class CourseService {
         return enrollmentMapper.toBuyCourseResponse(enrollment);
     }
 
+    public List<CourseResponse> fetchRelatedCourses(RelatedCourseRequest request) {
+
+        Course course = courseRepository.findById(request.getCourseId())
+                .orElseThrow(() -> new AppException(ErrorCode.COURSE_NOT_EXISTED));
+
+        List<Review> filteredComments = course.getComments().stream()
+                .filter(r -> r.getRating() > 0 )
+                .toList();
+
+        long totalRating = filteredComments.stream()
+                .mapToLong(Review::getRating)
+                .sum();
+
+        int numberOfValidReviews = filteredComments.size();
+        double averageRating = numberOfValidReviews > 0 ? BigDecimal.valueOf((double) totalRating / numberOfValidReviews)
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue() : 0.0 ;
+
+        return courseRepository
+                .findRelatedCourses(request.getKeywords(), request.getCourseId())
+                .stream().map(c -> CourseResponse.builder()
+                        .id(c.getId())
+                        .title(c.getTitle())
+                        .averageRating(averageRating)
+                        .author(c.getAuthor().getName())
+                        .build())
+                .toList();
+    }
+
+    public List<CourseDocument> findByTitle(String title) {
+        return documentCourseRepository.findByTitle(title);
+    }
 }

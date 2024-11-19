@@ -97,4 +97,12 @@ public class Course  {
     @Column(name = "update_at")
     @UpdateTimestamp
     LocalDateTime updatedAt;
+
+    @PrePersist
+    private void prePersist() {
+        if (this.quantity == null) {
+            quantity = 0L;
+        }
+    }
+
 }

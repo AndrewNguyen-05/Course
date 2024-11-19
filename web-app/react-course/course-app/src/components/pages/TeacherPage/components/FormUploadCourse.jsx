@@ -148,7 +148,6 @@ const FormUploadCourse = (props) => {
                         type="file"
                         id="courseFile"
                         onChange={(e) => handleChange('courseFile', (e.target.files[0]))}
-                        required
                     />
                 </div>
             </div>

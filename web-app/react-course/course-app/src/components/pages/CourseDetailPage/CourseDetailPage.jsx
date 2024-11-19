@@ -14,11 +14,13 @@ import LoadingSpinner from "../../../utils/LoadingSpinner";
 import { Tab, Nav } from 'react-bootstrap';
 import { fetchInfoTeacher } from "../../../service/TeacherService";
 import Instructor from "./components/Instructor";
+import { getRelatedCourses } from "../../../service/ElasticSearchService";
 
 export const CourseDetail = () => {
     const token = localStorage.getItem('token');
     const { id } = useParams();
     const [course, setCourse] = useState(null);  // thông tin chi tiết về khóa học
+    const [relatedCourses, setRelatedCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [comments, setComments] = useState([]); // list comment
     const [newComment, setNewComment] = useState(""); // add comment
@@ -43,14 +45,28 @@ export const CourseDetail = () => {
     useEffect(() => {
         document.title = 'Courses Detail'
     })
-    // Fetch course details
     useEffect(() => {
-        getCourseById(id)
-            .then(data => {
-                setCourse(data.result);
-            }).catch(error => {
-                console.log(error);
-            }).finally(() => setLoading(false));
+        const fetchCourseData = async () => {
+            setLoading(true);
+            try {
+                const courseResponse = await getCourseById(id);
+                console.log(courseResponse)
+                if (courseResponse && courseResponse.result) {
+                    setCourse(courseResponse.result);
+
+                    const relatedCoursesResponse = await getRelatedCourses(courseResponse.result.title);
+                    if (relatedCoursesResponse && relatedCoursesResponse.result) {
+                        setRelatedCourses(relatedCoursesResponse.result.filter(c => c.title !== courseResponse.result.title));
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCourseData();
     }, [id]);
 
     // Fetch Info Teacher
@@ -391,6 +407,7 @@ export const CourseDetail = () => {
                         course={course}
                         handleEnrollNow={handleEnrollNow}
                         isPurchase={isPurchase}
+                        relatedCourses={relatedCourses}
                         id={id}
                     />
                 </div>

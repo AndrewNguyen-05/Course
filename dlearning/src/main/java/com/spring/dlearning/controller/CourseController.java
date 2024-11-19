@@ -2,8 +2,10 @@ package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.request.BuyCourseRequest;
 import com.spring.dlearning.dto.request.CourseCreationRequest;
+import com.spring.dlearning.dto.request.RelatedCourseRequest;
 import com.spring.dlearning.dto.request.UploadCourseRequest;
 import com.spring.dlearning.dto.response.*;
+import com.spring.dlearning.elasticsearch.CourseDocument;
 import com.spring.dlearning.entity.Course;
 import com.spring.dlearning.service.CourseService;
 import com.turkraft.springfilter.boot.Filter;
@@ -48,7 +50,6 @@ public class CourseController {
     @GetMapping("/course/{id}")
     ApiResponse<CourseResponse> getCourseById(@PathVariable @Min(1) Long id){
         var result = courseService.getCourseById(id);
-
         return ApiResponse.<CourseResponse>builder()
                 .code(HttpStatus.OK.value())
                 .message("Get Course Successfully")
@@ -60,7 +61,7 @@ public class CourseController {
     public ApiResponse<CourseCreationResponse> createCourse(
             @RequestPart("courseRequest") CourseCreationRequest courseRequest,
             @RequestPart("thumbnail") MultipartFile thumbnail,
-            @RequestPart("video") MultipartFile video) throws IOException {
+            @RequestPart(value = "video", required = false) MultipartFile video) throws IOException {
 
         var result = courseService.createCourse(courseRequest, thumbnail, video);
 
@@ -117,6 +118,22 @@ public class CourseController {
         return ApiResponse.<BuyCourseResponse>builder()
                 .code(HttpStatus.OK.value())
                 .result(courseService.buyCourse(request))
+                .build();
+    }
+
+    @GetMapping("/fetch-related-courses")
+    ApiResponse<List<CourseResponse>> fetchRelatedCourses(@RequestBody RelatedCourseRequest request) {
+        return ApiResponse.<List<CourseResponse>>builder()
+                .code(HttpStatus.OK.value())
+                .result(courseService.fetchRelatedCourses(request))
+                .build();
+    }
+
+    @GetMapping("/search-title")
+    ApiResponse<List<CourseDocument>> findByTitle(@RequestParam String title) {
+        return ApiResponse.<List<CourseDocument>>builder()
+                .code(HttpStatus.OK.value())
+                .result(courseService.findByTitle(title))
                 .build();
     }
 

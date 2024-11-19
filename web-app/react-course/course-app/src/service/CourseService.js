@@ -37,6 +37,7 @@ export const SearchService = async (currentPage, pageSize, filterQuery) => {
 export const getCourseById = async (id) => {
   try {
     const response = await axios.get(`api/v1/course/${id}`);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.log(error);

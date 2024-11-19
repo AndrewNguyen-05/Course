@@ -57,7 +57,9 @@ export const CreateCourse = () => {
 
         formData.append('courseRequest', dataCourse);
         formData.append('thumbnail', courseData.courseThumbnail);
-        formData.append('video', courseData.courseFile);
+        if (courseData.courseFile !== null) {
+            formData.append('video', courseData.courseFile);
+        }
 
         try {
             const response = await axios.post(`api/v1/create-course`, formData);

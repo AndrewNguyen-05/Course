@@ -11464,20 +11464,23 @@ h6,
 
 /* Tiêu đề khóa học */
 .course-card-custom-title {
-  font-size: 1.1rem;
-  margin: 20px 0 10px;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
+  font-family: "Playfair Display", serif;
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 10px;
+  color: #333;
+  transition: color 0.3s ease;
 }
 
-/* Tác giả khóa học */
+.course-card-custom-title:hover {
+  color: #007bff;
+  cursor: pointer;
+}
+
 .course-card-custom-author {
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-bottom: 8px;
 }
 
 .course-card-custom-author i {
@@ -11493,22 +11496,6 @@ h6,
   background-color: #ffffff;
 }
 
-/* Nút Course Detail */
-.course-card-custom-btn {
-  background-color: #007bff;
-  color: white;
-  padding: 10px 25px;
-  text-decoration: none;
-  border-radius: 50px;
-  display: inline-block;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  font-weight: 600;
-}
-
-.course-card-custom-btn:hover {
-  background-color: #0056b3;
-  transform: translateY(-2px);
-}
 
 .course-card-custom-body {
   border-bottom-left-radius: 15px;
@@ -11629,15 +11616,13 @@ h6,
 
 .fa-star.text-warning {
   color: #ffd700;
-  /* Yellow for Rating */
 }
 
 .add-favorite-toast {
   position: fixed !important;
   right: 20px;
-  top: 1900px !important;
+  top: 1800px !important;
   z-index: 9999 !important;
-  /* Đảm bảo thông báo xuất hiện phía trên mọi thành phần khác */
 }
 
 .fa-book.text-success {
@@ -11984,49 +11969,51 @@ h6,
   font-weight: normal;
 }
 
-/* Style chung cho cả 2 nút */
-.course-card-custom-btn,
+.col-lg-3,
+.col-md-6 {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.course-card-custom-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
 .course-card-custom-btn-favorite {
   display: inline-block;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 500;
-  border-radius: 30px;
+  padding: 10px 20px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 50px;
+  transition: all 0.3s ease;
   text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border: none;
   text-decoration: none;
 }
 
-/* Nút Course Detail */
-.course-card-custom-btn {
-  background-color: #007bff;
-  color: #fff;
-}
-
-.course-card-custom-btn:hover {
-  background-color: #0056b3;
-  transform: translateY(-3px);
-  /* Nổi lên khi hover */
-}
-
-/* Nút Add to Favorite */
 .course-card-custom-btn-favorite {
   background-color: #fff;
   color: #dc3545;
   border: 2px solid #dc3545;
-  margin-top: 10px;
-  font-size: 12px;
-  margin-left: 10px;
 }
 
 .course-card-custom-btn-favorite:hover {
   background-color: #dc3545;
   color: #fff;
   transform: translateY(-3px);
-  /* Nổi lên khi hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.course-card-custom-footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 15px 0;
+  gap: 10px;
 }
 
 .course-card-custom-btn-favorite i {
@@ -12036,133 +12023,6 @@ h6,
 
 .course-card-custom-btn-favorite:hover i {
   transform: scale(1.2);
-  /* Phóng to icon khi hover */
-}
-
-/* Hiệu ứng chuyển động mượt khi hover cho cả 2 nút */
-.course-card-custom-btn:hover,
-.course-card-custom-btn-favorite:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-/* Giảm khoảng cách giữa các thẻ khóa học */
-
-
-/* Có thể điều chỉnh khoảng cách giữa các cột nếu cần */
-.col-lg-3,
-.col-md-6 {
-  padding-left: 10px;
-  padding-right: 10px;
-  /* Giảm padding giữa các cột */
-}
-
-/* Thiết kế nút Course Detail */
-.course-card-custom-btn {
-  background-color: #007bff;
-  /* Màu nền */
-  color: #fff;
-  /* Màu chữ trắng */
-  padding: 10px 22px;
-  font-size: 16px;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none !important;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-right: 10px;
-}
-
-/* Màu sắc khi hover vào nút */
-.course-card-custom-btn:hover {
-  background-color: #0056b3;
-  /* Đổi màu nền khi hover */
-  color: #fff;
-  /* Đảm bảo màu chữ vẫn là trắng khi hover */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-  transform: translateY(-3px);
-}
-
-@media (max-width: 768px) {
-  .course-card-custom-btn {
-    flex: 1 1 100%;
-    /* Đặt chiều rộng của nút là 100% */
-    margin: 5px 5px;
-    /* Khoảng cách giữa các nút */
-    font-size: 14px;
-    /* Kích thước chữ nhỏ hơn */
-  }
-}
-
-@media (max-width: 768px) {
-  .course-card-custom-btn-favorite {
-    flex: 1 1 100%;
-    /* Đặt chiều rộng của nút là 100% */
-    margin: 5px 5px;
-    /* Khoảng cách giữa các nút */
-    font-size: 11px;
-    /* Kích thước chữ nhỏ hơn */
-  }
-}
-
-.course-card-custom-footer {
-  display: flex;
-  /* Sử dụng Flexbox */
-  flex-direction: row;
-  /* Hàng ngang */
-  justify-content: center;
-  /* Căn giữa */
-  align-items: center;
-  /* Căn giữa theo chiều dọc */
-  flex-wrap: wrap;
-  /* Cho phép các nút xếp chồng khi không đủ không gian */
-  padding: 10px;
-  /* Padding cho toàn bộ footer */
-}
-
-.course-card-custom-btn,
-.course-card-custom-btn-favorite {
-  margin: 5px;
-  /* Khoảng cách giữa các nút */
-  padding: 10px 22px;
-  /* Padding cho nút */
-  border-radius: 50px;
-  /* Bo tròn góc nút */
-  text-align: center;
-  /* Căn giữa chữ trong nút */
-  transition: all 0.3s ease;
-  /* Hiệu ứng chuyển động */
-}
-
-/* Nút Course Detail */
-.course-card-custom-btn {
-  background-color: #007bff;
-  /* Màu nền */
-  color: #fff;
-  /* Màu chữ trắng */
-}
-
-/* Nút Add to Favorite */
-.course-card-custom-btn-favorite {
-  background-color: #fff;
-  /* Màu nền */
-  color: #dc3545;
-  /* Màu chữ */
-  border: 2px solid #dc3545;
-  /* Viền cho nút */
-}
-
-/* Media Queries cho các kích thước màn hình nhỏ hơn */
-@media (max-width: 768px) {
-
-  .course-card-custom-btn,
-  .course-card-custom-btn-favorite {
-    flex: 1 1 100%;
-    /* Đặt chiều rộng của nút là 100% */
-    font-size: 14px;
-    /* Kích thước chữ nhỏ hơn */
-    margin: 5px 0;
-    /* Khoảng cách giữa các nút */
-  }
 }
 
 .table-custom {
@@ -17376,5 +17236,145 @@ my-account-cover-photo .post-container .post-comment-input-container input::plac
 
   .revenue-charts .recharts-responsive-container {
     max-width: 100%;
+  }
+}
+
+.course-card-custom-footer {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border-top: 1px solid #ddd;
+  padding: 10px 0;
+  margin-top: 15px;
+}
+
+.course-card-footer-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 12px;
+  color: #666;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.course-card-footer-item:hover {
+  color: #007bff;
+}
+
+.course-card-footer-item svg {
+  font-size: 20px;
+  margin-bottom: 5px;
+  color: #007bff;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.course-card-footer-item:hover svg {
+  transform: scale(1.1);
+  color: #0056b3;
+}
+
+.course-card-footer-item:first-child svg {
+  color: #007bff;
+}
+
+.course-card-footer-item:first-child:hover svg {
+  color: #007bff;
+}
+
+.course-card-footer-item:nth-child(2) svg {
+  color: #28a745;
+}
+
+.course-card-footer-item:nth-child(2):hover svg {
+  color: #218838;
+}
+
+.course-card-footer-item:last-child svg {
+  color: #dc3545;
+}
+
+.course-card-footer-item:last-child:hover svg {
+  color: #bd2130;
+}
+
+.related-courses-container {
+  margin-top: 20px;
+}
+
+.related-courses-container h4 {
+  font-size: 1.5rem;
+  color: #343a40;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+}
+
+/* Container của mỗi khóa học */
+.related-course-item {
+  display: flex;
+  align-items: center;
+  background-color: #292b2f;
+  /* Màu nền tối */
+  color: white;
+  border-radius: 8px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.related-course-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.3);
+  /* Hiệu ứng hover */
+}
+
+/* Thumbnail của khóa học */
+.related-course-thumbnail {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Title của khóa học */
+.course-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+/* Tác giả của khóa học */
+.course-author {
+  font-size: 14px;
+  color: #adb5bd;
+  /* Màu chữ xám nhạt */
+  margin: 0;
+}
+
+/* Điểm của khóa học */
+.course-points {
+  font-size: 14px;
+  background-color: #007bff;
+  /* Màu xanh dương */
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Tối ưu trên mobile */
+@media (max-width: 768px) {
+  .related-course-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .related-course-thumbnail {
+    margin-bottom: 10px;
+  }
+
+  .related-course-info {
+    text-align: left;
   }
 }
