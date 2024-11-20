@@ -1,8 +1,16 @@
+import { useNavigate } from "react-router-dom";
 
 export const CourseFeature = ({ course, handleEnrollNow, isPurchase, id, relatedCourses }) => {
+    const navigate = useNavigate();
     if (!course) {
         return <div>Course data is not available</div>;
     }
+
+
+    const handleCourseDetail = (courseId) => {
+        navigate(`/course-detail/${courseId}`); // Chuyển hướng đến đúng URL chi tiết
+    };
+
 
     return (
         <div className="col-lg-4 mt-5 mt-lg-0">
@@ -93,17 +101,16 @@ export const CourseFeature = ({ course, handleEnrollNow, isPurchase, id, related
                     {relatedCourses && relatedCourses.length > 0 ? (
                         relatedCourses.map((related) => (
                             <div
-                                key={related.id} // Đặt `key` duy nhất cho mỗi phần tử
+                                key={related.id}
+                                onClick={() => handleCourseDetail(related.id)}
                                 className="related-course-item d-flex align-items-center mb-3 p-3 bg-dark text-white rounded shadow-sm"
                             >
-                                {/* Hình ảnh khóa học */}
                                 <img
-                                    src={related.thumbnail} // Đường dẫn hình ảnh
-                                    alt={related.title} // Alt text cho hình ảnh
+                                    src={related.thumbnail}
+                                    alt={related.title}
                                     className="related-course-thumbnail rounded"
-                                    style={{ width: "70px", height: "70px", objectFit: "cover" }} // Styling
+                                    style={{ width: "70px", height: "70px", objectFit: "cover" }}
                                 />
-                                {/* Thông tin khóa học */}
                                 <div className="related-course-info ml-3">
                                     <h6 className="course-title mb-1">{related.title}</h6>
                                     <p className="course-author text-muted mb-1">By {related.author}</p>

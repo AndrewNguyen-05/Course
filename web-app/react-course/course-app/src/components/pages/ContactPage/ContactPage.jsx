@@ -89,7 +89,7 @@ export const ContactPage = () => {
             });
             setSelectedImage(null);
             setIsLoadingRegisterAds(false);
-            
+
         } catch (error) {
             setIsLoadingRegisterAds(false);
             toast.error(error.message);
@@ -252,7 +252,6 @@ export const ContactPage = () => {
                                             onChange={handleOnchangeImg}
                                         />
 
-                                        {/* Hiển thị hình ảnh xem trước nếu có */}
                                         {selectedImage && (
                                             <div className="mt-3">
                                                 <img src={selectedImage} alt="Selected Preview" className="img-thumbnail" style={{ maxWidth: "300px" }} />
