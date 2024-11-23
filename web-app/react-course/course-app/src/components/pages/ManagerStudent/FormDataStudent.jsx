@@ -1,11 +1,39 @@
 import React from 'react';
 import ReactPaginate from 'react-paginate';
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
 const FormDataStudent = ({ students, currentPage, handlePageClick, totalPages }) => {
+
+
+    const exportToExcel = (students) => {
+        const worksheet = XLSX.utils.json_to_sheet(students.map(student => ({
+            Name: student.name,
+            Email: student.email,
+            Avatar: student.avatar,
+            "Course Name": student.courseName,
+            "Created At": student.createAt,
+        })));
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
+
+        const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(data, "students.xlsx");
+    };
+
     return (
         <div className="student-card">
             <div className="student-card-body">
                 <div className="student-table-responsive">
+                    <div className="student-actions">
+                        <button
+                            className="btn btn-export"
+                            onClick={() => exportToExcel(students)}
+                        >
+                            Export to Excel
+                        </button>
+                    </div>
                     <table className="student-table">
                         <thead>
                             <tr>

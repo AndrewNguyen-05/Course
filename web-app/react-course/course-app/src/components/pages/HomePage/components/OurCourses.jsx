@@ -1,7 +1,7 @@
 import React from "react";
 import { FaRegClock } from "react-icons/fa";
 import { GiTeacher } from "react-icons/gi";
-import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { MdFavorite } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 export const OurCourses = (props) => {
