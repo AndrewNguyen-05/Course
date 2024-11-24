@@ -1,7 +1,6 @@
 package com.spring.dlearning.controller;
 
 import com.spring.dlearning.dto.event.CertificateCreationEvent;
-import com.spring.dlearning.dto.request.CertificateRequest;
 import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.CertificateResponse;
 import com.spring.dlearning.service.CertificateService;

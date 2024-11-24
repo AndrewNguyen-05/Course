@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+import static com.spring.dlearning.constant.PaymentType.DEPOSIT;
+
 @RestController
 @RequestMapping("/api/v1/payment")
 @RequiredArgsConstructor
@@ -62,10 +64,10 @@ public class PaymentController {
         if ("00".equals(transactionStatus)) {
             String paymentRef = request.getParameter("vnp_TxnRef");
             String[] refParts = paymentRef.split("_");
-            String paymentType = refParts[0];
+            PaymentType paymentType = PaymentType.valueOf(refParts[0]);
 
             switch (paymentType) {
-                case PaymentType.DEPOSIT: {
+                case DEPOSIT: {
                     User user = userRepository.findById(Long.parseLong(refParts[1]))
                             .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
@@ -85,7 +87,7 @@ public class PaymentController {
                     userRepository.save(user);
                         break;
                 }
-                case PaymentType.ADVERTISEMENT: {
+                case ADVERTISEMENT: {
                     Advertisement advertisement = advertisementRepository.findById(Long.parseLong(refParts[1]))
                             .orElseThrow(() -> new AppException(ErrorCode.ADVERTISEMENT_ID_INVALID));
                     if (actualAmount.compareTo(advertisement.getPrice()) >= 0) {

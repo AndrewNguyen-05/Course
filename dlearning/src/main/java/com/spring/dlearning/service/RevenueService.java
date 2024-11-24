@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -75,7 +76,7 @@ public class RevenueService {
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         if (request.getPeriodType() == null || request.getYear() == null) {
-            return null;
+            return Collections.emptyList();
         }
         List<RevenueDetailResponse> revenueDetails = new ArrayList<>();
         int year = request.getYear();

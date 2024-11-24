@@ -13,6 +13,11 @@ import java.util.Random;
 @Service
 public class SecurityUtils {
 
+    private SecurityUtils(){
+    }
+
+    private static final Random RANDOM = new Random();
+
     public static Optional<String> getCurrentUserLogin(){
         SecurityContext contextHolder = SecurityContextHolder.getContext();
         return Optional.ofNullable(extractPrincipal(contextHolder.getAuthentication()));
@@ -32,11 +37,9 @@ public class SecurityUtils {
     }
 
     public static String generateOtp(){
-
-        Random random = new Random();
         StringBuilder otp = new StringBuilder();
         for(int i = 0; i < 6 ; i++){
-            otp.append(random.nextInt(10));
+            otp.append(RANDOM.nextInt(10));
         }
         return otp.toString();
     }

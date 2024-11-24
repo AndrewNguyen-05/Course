@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AbstractEntity<T> implements Serializable {
+public class AbstractEntity<T extends Serializable> implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

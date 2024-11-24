@@ -91,7 +91,7 @@ public class UserController {
     }
 
     @PostMapping("/reset-password")
-    ApiResponse<?> resetPassword(@RequestBody @Valid PasswordCreationRequest request ){
+    ApiResponse<Void> resetPassword(@RequestBody @Valid PasswordCreationRequest request ){
         userService.resetPassword(request);
 
         return ApiResponse.<Void>builder()

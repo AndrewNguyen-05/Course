@@ -22,7 +22,7 @@ import java.util.HashSet;
 @SpringBootTest
 @Slf4j
 @AutoConfigureMockMvc(addFilters = false) // tạo mock request tới controller
-public class ChapterControllerTest {
+class ChapterControllerTest {
 
     @Autowired
     private MockMvc mockMvc; // -> gọi tới Api của chúng ta

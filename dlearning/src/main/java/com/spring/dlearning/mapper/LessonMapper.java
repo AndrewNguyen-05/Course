@@ -2,7 +2,6 @@ package com.spring.dlearning.mapper;
 
 import com.spring.dlearning.dto.request.UpdateLessonRequest;
 import com.spring.dlearning.dto.response.CommentLessonResponse;
-import com.spring.dlearning.dto.response.UpdateLessonResponse;
 import com.spring.dlearning.entity.Lesson;
 import com.spring.dlearning.entity.Review;
 import org.mapstruct.Mapper;

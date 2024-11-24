@@ -84,7 +84,7 @@ public class AuthenticationService {
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if (!authenticated) throw new AppException(ErrorCode.UNAUTHENTICATED);
-        if(!user.getEnabled()) throw new AppException(ErrorCode.ACCOUNT_BANNED);
+        if(!Boolean.TRUE.equals(user.getEnabled())) throw new AppException(ErrorCode.ACCOUNT_BANNED);
 
         var token = generateToken(user);
 
@@ -152,7 +152,7 @@ public class AuthenticationService {
             return jwsObject.serialize();
         } catch (JOSEException e) {
             log.error("Cannot create token", e);
-            throw new RuntimeException(e);
+            throw new AppException(ErrorCode.TOKEN_CREATION_FAIL);
         }
     }
 

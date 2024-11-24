@@ -3,6 +3,7 @@ package com.spring.dlearning.utils;
 import com.spring.dlearning.configuration.VNPAYConfiguration;
 import com.spring.dlearning.model.PaymentInfo;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.NonFinal;
 import org.springframework.stereotype.Component;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class VNPayUtil {
+
+    private static final Random RANDOM = new Random();
     private final VNPAYConfiguration vnPayConfig;
 
     public static String hmacSHA512(final String key, final String data) {
@@ -46,11 +49,10 @@ public class VNPayUtil {
     }
 
     public static String getRandomNumber(int len) {
-        Random rnd = new Random();
         String chars = "0123456789";
         StringBuilder sb = new StringBuilder(len);
         for (int i = 0; i < len; i++) {
-            sb.append(chars.charAt(rnd.nextInt(chars.length())));
+            sb.append(chars.charAt(RANDOM.nextInt(chars.length())));
         }
         return sb.toString();
     }

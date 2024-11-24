@@ -90,7 +90,9 @@ public class CloudinaryService {
                 "folder", folderName,
                 "chunk_size", 6000000
         ));
-        tempFile.delete(); // Xóa file tạm sau khi tải lên
+        if (!tempFile.delete()) {
+            log.info("Failed to delete temporary file: {}", tempFile.getAbsolutePath());
+        }
         return uploadResult;
     }
 

@@ -5,6 +5,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class CourseSpec {
 
+    private CourseSpec() {}
+
     public static Specification<Course> hasFirstName (String title) {
         return (root, query, criteriaBuilder) -> criteriaBuilder.like(root.get("title"), "%" + title + "%");
     }
