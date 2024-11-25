@@ -28,7 +28,7 @@ public class SendEmailScheduler {
                 .toList();
 
         if(!users.isEmpty()) {
-            String subject = "Khám phá những khóa học mới trong tuần!";
+            String subject = "A Warm Thank You from DLearning";
             String content = """
         <h1>Hello,</h1>
         <p>Thank you for being a valued part of our community. We truly appreciate your trust and commitment to learning with us.</p>
