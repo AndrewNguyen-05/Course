@@ -106,7 +106,6 @@ public class AdvertisementService {
 
         kafkaTemplate.send("notification-delivery", event);
 
-
         return adsMapper.toAdsApproveResponse(advertisement);
     }
 
