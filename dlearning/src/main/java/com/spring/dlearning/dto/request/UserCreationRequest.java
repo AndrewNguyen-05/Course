@@ -21,6 +21,6 @@ public class UserCreationRequest {
     String firstName;
     String lastName;
     @DateTimeFormat(pattern = "yyyy/MM/dd")
-    @DateOfBirth
+    @DateOfBirth(message = "INVALID_DOB")
     LocalDate dob;
 }

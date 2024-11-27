@@ -10,7 +10,7 @@ public class DateOfBirthValidator implements ConstraintValidator<DateOfBirth, Lo
     @Override
     public boolean isValid(LocalDate localDate, ConstraintValidatorContext constraintValidatorContext) {
         if( localDate == null) {
-            return false;
+            return true;
         }
         LocalDate minTime = LocalDate.of(1950, 1, 1);
         LocalDate now = LocalDate.now();

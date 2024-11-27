@@ -103,7 +103,7 @@ export const Profile = () => {
       });
   };
 
-  const handleUpdateProfile = () => {
+  const handleUpdateProfile = async () => {
     const filteredData = {};
     Object.keys(profileData).forEach((key) => {
       if (profileData[key] !== null && profileData[key] !== "") {
@@ -111,14 +111,16 @@ export const Profile = () => {
       }
     });
 
-    updateProfile(filteredData)
-      .then(() => {
+    try {
+      const data = await updateProfile(filteredData);
+      if (data.code === 200) {
         toast.success("Profile updated successfully");
-      })
-      .catch((error) => {
-        toast.error("Error updating profile");
-        console.error(error);
-      });
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const handleInputChange = (e) => {

@@ -5,6 +5,7 @@ import com.spring.dlearning.dto.response.ApiResponse;
 import com.spring.dlearning.dto.response.UserProfileResponse;
 import com.spring.dlearning.service.CloudinaryService;
 import com.spring.dlearning.service.ProfileService;
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,7 +27,7 @@ public class ProfileController {
     CloudinaryService cloudinaryService;
 
     @PutMapping("/update-profile")
-    ApiResponse<Void> updateProfile( @RequestBody UserProfileRequest request){
+    ApiResponse<Void> updateProfile( @RequestBody @Valid UserProfileRequest request){
         profileService.updateProfile(request);
 
         return ApiResponse.<Void>builder()
