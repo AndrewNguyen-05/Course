@@ -1,6 +1,7 @@
 package com.spring.dlearning.service;
 
 import com.spring.dlearning.dto.request.ReviewRequest;
+import com.spring.dlearning.dto.request.UpdateReviewRequest;
 import com.spring.dlearning.dto.response.ReviewResponse;
 import com.spring.dlearning.dto.response.DeleteCommentResponse;
 import com.spring.dlearning.dto.response.UpdateReviewResponse;
