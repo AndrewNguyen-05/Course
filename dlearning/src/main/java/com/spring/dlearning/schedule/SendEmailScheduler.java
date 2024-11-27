@@ -35,7 +35,7 @@ public class SendEmailScheduler {
         <p>As the week comes to a close, we wanted to take a moment to express our gratitude and let you know that we're here to support you every step of the way.</p>
         <p>If you have any feedback or need assistance, please don't hesitate to reach out. Your success is our top priority, and we're always happy to hear from you.</p>
         <p>Best wishes for a productive and fulfilling week ahead!</p>
-        <p>Warm regards,<br>The [Website Name] Team</p>""";
+        <p>Warm regards,<br>The DLearning Team</p>""";
             List<String> emailList  = users.stream()
                     .map(User::getEmail)
                     .toList();
