@@ -1,6 +1,6 @@
 package com.spring.dlearning.entity;
 
-import com.spring.dlearning.utils.StatusChat;
+import com.spring.dlearning.common.StatusChat;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

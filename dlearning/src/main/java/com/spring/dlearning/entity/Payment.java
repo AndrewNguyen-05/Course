@@ -1,6 +1,6 @@
 package com.spring.dlearning.entity;
 
-import com.spring.dlearning.utils.PaymentStatus;
+import com.spring.dlearning.common.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

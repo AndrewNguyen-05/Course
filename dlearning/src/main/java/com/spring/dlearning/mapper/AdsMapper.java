@@ -7,7 +7,7 @@ import com.spring.dlearning.dto.response.AdsCreationResponse;
 import com.spring.dlearning.entity.Advertisement;
 import com.spring.dlearning.repository.AdvertisementRepository;
 import com.spring.dlearning.repository.UserRepository;
-import com.spring.dlearning.utils.AdsStatus;
+import com.spring.dlearning.common.AdsStatus;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.time.LocalDate;

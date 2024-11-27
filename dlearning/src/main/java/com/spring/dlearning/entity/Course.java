@@ -2,7 +2,7 @@ package com.spring.dlearning.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.spring.dlearning.utils.CourseLevel;
+import com.spring.dlearning.common.CourseLevel;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

@@ -1,6 +1,6 @@
 package com.spring.dlearning.dto.request;
 
-import com.spring.dlearning.utils.CourseLevel;
+import com.spring.dlearning.common.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

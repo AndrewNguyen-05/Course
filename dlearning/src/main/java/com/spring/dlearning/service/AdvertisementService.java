@@ -15,7 +15,7 @@ import com.spring.dlearning.mapper.AdsMapper;
 import com.spring.dlearning.model.PaymentInfo;
 import com.spring.dlearning.repository.AdvertisementRepository;
 import com.spring.dlearning.repository.UserRepository;
-import com.spring.dlearning.utils.AdsStatus;
+import com.spring.dlearning.common.AdsStatus;
 import com.spring.dlearning.utils.SecurityUtils;
 import com.spring.dlearning.utils.VNPayUtil;
 import lombok.AccessLevel;

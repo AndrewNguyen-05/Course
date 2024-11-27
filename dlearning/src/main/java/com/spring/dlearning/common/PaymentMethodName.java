@@ -1,4 +1,4 @@
-package com.spring.dlearning.utils;
+package com.spring.dlearning.common;
 
 public enum PaymentMethodName {
     CREDIT_CARD,   // Thẻ tín dụng

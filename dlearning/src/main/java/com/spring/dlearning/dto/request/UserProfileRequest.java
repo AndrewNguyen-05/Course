@@ -2,8 +2,8 @@ package com.spring.dlearning.dto.request;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.spring.dlearning.utils.CourseLevel;
-import com.spring.dlearning.utils.Gender;
+import com.spring.dlearning.common.CourseLevel;
+import com.spring.dlearning.common.Gender;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

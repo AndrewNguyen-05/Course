@@ -1,6 +1,6 @@
 package com.spring.dlearning.dto.response;
 
-import com.spring.dlearning.utils.RegistrationStatus;
+import com.spring.dlearning.common.RegistrationStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

@@ -10,7 +10,7 @@ import com.spring.dlearning.exception.ErrorCode;
 import com.spring.dlearning.mapper.RegisterTeacherMapper;
 import com.spring.dlearning.repository.RoleRepository;
 import com.spring.dlearning.repository.UserRepository;
-import com.spring.dlearning.utils.RegistrationStatus;
+import com.spring.dlearning.common.RegistrationStatus;
 import com.spring.dlearning.utils.SecurityUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

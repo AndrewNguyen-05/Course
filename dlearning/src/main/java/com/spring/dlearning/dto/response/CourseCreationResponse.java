@@ -1,7 +1,7 @@
 package com.spring.dlearning.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.spring.dlearning.utils.CourseLevel;
+import com.spring.dlearning.common.CourseLevel;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

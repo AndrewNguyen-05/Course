@@ -2,7 +2,7 @@ package com.spring.dlearning.schedule;
 
 import com.spring.dlearning.entity.Advertisement;
 import com.spring.dlearning.repository.AdvertisementRepository;
-import com.spring.dlearning.utils.AdsStatus;
+import com.spring.dlearning.common.AdsStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

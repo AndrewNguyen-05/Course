@@ -1,7 +1,7 @@
 package com.spring.dlearning.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.spring.dlearning.utils.PeriodType;
+import com.spring.dlearning.common.PeriodType;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

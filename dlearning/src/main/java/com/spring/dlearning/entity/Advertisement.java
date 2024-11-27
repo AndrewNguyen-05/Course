@@ -1,6 +1,6 @@
 package com.spring.dlearning.entity;
 
-import com.spring.dlearning.utils.AdsStatus;
+import com.spring.dlearning.common.AdsStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;

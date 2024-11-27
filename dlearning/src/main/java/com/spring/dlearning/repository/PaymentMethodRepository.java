@@ -1,7 +1,7 @@
 package com.spring.dlearning.repository;
 
 import com.spring.dlearning.entity.PaymentMethod;
-import com.spring.dlearning.utils.PaymentMethodName;
+import com.spring.dlearning.common.PaymentMethodName;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;

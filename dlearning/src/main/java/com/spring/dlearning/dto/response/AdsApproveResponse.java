@@ -1,6 +1,6 @@
 package com.spring.dlearning.dto.response;
 
-import com.spring.dlearning.utils.AdsStatus;
+import com.spring.dlearning.common.AdsStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import java.math.BigDecimal;

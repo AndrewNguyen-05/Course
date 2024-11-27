@@ -2,7 +2,7 @@ package com.spring.dlearning.repository;
 
 import com.spring.dlearning.entity.Payment;
 import com.spring.dlearning.entity.User;
-import com.spring.dlearning.utils.PaymentStatus;
+import com.spring.dlearning.common.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
