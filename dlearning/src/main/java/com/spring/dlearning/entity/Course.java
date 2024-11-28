@@ -57,6 +57,9 @@ public class Course  {
     @Column(name = "video_url")
     String videoUrl;
 
+    @Column(name = "quantity", columnDefinition = "BIGINT DEFAULT 0")
+    Long quantity;
+
     @ManyToOne
     @JoinColumn(name = "author_id")
     @JsonBackReference
@@ -92,4 +95,14 @@ public class Course  {
     @Column(name = "update_at")
     @UpdateTimestamp
     LocalDateTime updatedAt;
+
+    @Column(name = "enabled", nullable = false)
+    Boolean enabled;
+
+    @PrePersist
+    private void prePersist() {
+        if (this.quantity == null) {
+            quantity = 0L;
+        }
+    }
 }

@@ -6,7 +6,14 @@ import org.springframework.http.HttpStatusCode;
 
 @Getter
 public enum ErrorCode {
-
+    COURSE_NOT_FOUND(404, "Course not found", HttpStatus.NOT_FOUND),
+    COURSE_ALREADY_BANNED(400, "Course is already banned", HttpStatus.BAD_REQUEST),
+    COURSE_NOT_BANNED(400, "Course is not banned", HttpStatus.BAD_REQUEST),
+    APPLICATION_NOT_PENDING(400, "Application is not pending", HttpStatus.BAD_REQUEST),
+    REGISTRATION_NOT_PENDING(400, "Registration is not pending", HttpStatus.BAD_REQUEST),
+    USER_ALREADY_BANNED(400, "User is already banned", HttpStatus.BAD_REQUEST),
+    USER_NOT_BANNED(400, "User is not banned", HttpStatus.BAD_REQUEST),
+    PREVIOUS_ROLE_NOT_FOUND(400, "Previous role not found for the user", HttpStatus.BAD_REQUEST),
     UNCATEGORIZED_EXCEPTION(9999, "Uncategorized error", HttpStatus.INTERNAL_SERVER_ERROR),
     INVALID_KEY(1001, "Uncategorized error", HttpStatus.BAD_REQUEST),
     USER_EXISTED(400, "User existed", HttpStatus.BAD_REQUEST),

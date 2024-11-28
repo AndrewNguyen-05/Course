@@ -1,0 +1,176 @@
+.course-manage {
+  padding: 20px;
+  color: #f1f1f1;
+}
+
+.course-manage-title {
+  font-size: 24px;
+  color: #fff;
+}
+
+.course-manage-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.course-manage-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.course-manage-search input {
+  width: 250px;
+  padding: 10px 35px 10px 15px; /* Thêm padding bên phải để chừa khoảng trống cho icon */
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background-color: #2c2f33;
+  color: #fff;
+}
+
+.course-manage-search .search-icon {
+  position: absolute;
+  right: 15px; /* Điều chỉnh vị trí của icon */
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999; /* Màu sắc cho icon */
+  font-size: 18px; /* Kích thước icon */
+  pointer-events: none; /* Không cho phép click vào icon */
+}
+
+.course-manage-sort select {
+  background-color: #2c2f33;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  color: #fff;
+}
+
+.course-manage-table {
+  margin-top: 15px;
+}
+
+.course-manage-table table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #fff;
+}
+
+.course-manage-table th,
+.course-manage-table td {
+  padding: 15px;
+  border-bottom: 1px solid #444;
+}
+
+.course-manage-table th {
+  background-color: #2c2f33;
+}
+
+.course-manage-table tr:hover {
+  background-color: #3a3d42;
+}
+
+.table-icon {
+  margin-right: 8px;
+  color: #999;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px; /* Tăng chiều rộng để chứa chữ */
+  height: 30px; /* Tăng chiều cao nếu cần */
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #f44336;
+  transition: 0.4s;
+  border-radius: 25px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 24px; /* Điều chỉnh chiều cao */
+  width: 24px; /* Điều chỉnh chiều rộng */
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #4caf50;
+}
+
+input:checked + .slider:before {
+  transform: translateX(
+    30px
+  ); /* Điều chỉnh khoảng cách để phù hợp với chiều rộng */
+}
+.course-manage-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.course-manage-search {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.course-manage-search input {
+  width: 250px;
+  padding: 8px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.course-manage-sort {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.course-manage-sort select {
+  padding: 8px;
+  margin-right: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.course-manage-filters {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.filter-button.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.filter-button:hover {
+  background-color: #007bff;
+  color: #fff;
+}

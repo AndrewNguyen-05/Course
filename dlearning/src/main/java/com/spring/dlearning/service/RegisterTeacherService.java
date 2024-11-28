@@ -99,7 +99,7 @@ public class RegisterTeacherService {
 
         String roleName = user.getRole().getName();
 
-        Role role = roleRepository.findByName(PredefinedRole.TEACHER_ROLE)
+        Role role = roleRepository.findByName(PredefinedRole.ADMIN_ROLE)
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_EXISTED));
 
         if(user.getRegistrationStatus().equals(RegistrationStatus.PENDING)

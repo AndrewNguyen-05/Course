@@ -24,6 +24,7 @@ public class Role extends AbstractEntity<Long> {
     @OneToMany(mappedBy = "role")
     Set<User> users;
 
+
     @ManyToMany
     Set<Permission> permissions;
 }
