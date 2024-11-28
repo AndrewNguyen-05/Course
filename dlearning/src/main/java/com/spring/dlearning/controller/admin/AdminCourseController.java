@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/admin/courses")
 @RequiredArgsConstructor
-public class Admin_CourseController {
+public class AdminCourseController {
 
     private final Admin_CourseService courseService;
 
