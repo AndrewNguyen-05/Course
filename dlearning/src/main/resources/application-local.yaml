@@ -1,0 +1,58 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ""  # Nếu không có mật khẩu
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: duclkde170045@fpt.edu.vn
+    password: liccjzpfvszbrssa
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: 1184572409447891
+            client-secret: bcf09ccad760216ccae41807e1a82d1f
+            redirect-uri: "http://localhost:3000/oauth2/callback/facebook"
+            scope:
+              - email
+              - public_profile
+
+jwt:
+  signerKey: "1TjXchw5FloESb63Kc+DFhTARvpWL4jUGCwfGWxuG5SIf/1y/LgJxHnMqaF6A/ij"
+  valid-duration: 20
+  refreshable-duration: 50
+
+outbound:
+  identity:
+    client-id: "1063674841920-mtlapuiv2d8gc3rgf6b4oi4vlaa31pah.apps.googleusercontent.com"
+    client-secret: "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"
+    redirect-uri: "http://localhost:3000/oauth2/callback/google"
+
+cloudinary:
+  cloud-name: "dznef2sae"
+  api-key: "537285485346489"
+  api-secret: "PHu0HBagBqf1rgfKMSJpSLUh29M"
+
+payment:
+  vnPay:
+    url: "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html"
+    tmnCode: "RJ6E6CST"
+    secretKey: "1D86H2KMRRIDLKPIZPOF5350JO7FSG8C"
+    returnUrl: "http://localhost:8080/api/v1/payment/vn-pay-callback"
+    version: "2.1.0"
+    command: "pay"
+    orderType: "other"
+
+upload-file:
+  base-uri: file:///D:/Learning/CourseManagement/upload/
